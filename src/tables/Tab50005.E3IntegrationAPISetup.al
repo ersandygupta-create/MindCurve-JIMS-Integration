@@ -181,6 +181,23 @@ table 50005 "E3 Integration API Setup"
             Caption = 'Sub Group Site API Enabled';
             DataClassification = CustomerContent;
         }
+        field(36; "Vendor Master API"; Text[100])
+        {
+            Caption = 'Vendor Master API';
+            DataClassification = CustomerContent;
+        }
+        field(37; "Vendor Master API Enabled"; Boolean)
+        {
+            Caption = 'Vendor Master API Enabled';
+            DataClassification = CustomerContent;
+
+            // trigger OnValidate()
+            // begin
+            //     EnqueueJobEntry('FAILOVERSUPPLIER')
+            // end;
+        }
+
+
     }
 
     keys

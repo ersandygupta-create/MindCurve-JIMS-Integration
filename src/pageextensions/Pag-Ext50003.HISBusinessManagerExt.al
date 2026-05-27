@@ -323,6 +323,14 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         RunPageMode = Create;
                         ToolTip = 'Executes the Integration API Setup action.';
                     }
+                    action(E3SupplerLogs)
+                    {
+                        Caption = 'Supplier Sync Logs';
+                        ApplicationArea = all;
+                        RunObject = page "E3 API Supplier Update Logs";
+                        ToolTip = 'Executes the Supplier Sync Logs action.';
+                    }
+
                 }
                 group("Item Component")
                 {
