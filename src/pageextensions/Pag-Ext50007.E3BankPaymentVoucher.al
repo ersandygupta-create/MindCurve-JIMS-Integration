@@ -1,0 +1,83 @@
+pageextension 50007 "E3 Bank Payment Voucher" extends "Bank Payment Voucher"
+{
+    layout
+    {
+        addafter(Comment)
+        {
+            field("Posting Group"; Rec."Posting Group")
+            {
+                Editable = true;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Posting Group Field.';
+            }
+
+            field("E3 Narration"; Rec."E3 Narration")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Narrantion field.';
+            }
+            field("E3 UTR No."; Rec."E3 UTR No.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the UTR No. field.';
+            }
+            field("E3 HIS Module"; Rec."E3 HIS Module")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the HIS Module field.';
+            }
+            field("E3 HIS Document Type"; Rec."E3 HIS Document Type")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the HIS Document Type field.';
+            }
+            field("E3 Store Code"; Rec."E3 Store Code")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Store Code field.';
+            }
+            field("E3 Sub Group Code"; Rec."E3 Sub Group Code")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Sub Group Code field.';
+            }
+            field("E3 Receipt No."; Rec."E3 Receipt No.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Receipt No. field.';
+            }
+
+            field("E3 UHID"; Rec."E3 UHID")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the UHID field.';
+            }
+            field("E3 Patient Name"; Rec."E3 Patient Name")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Patient Name field.';
+            }
+            field("E3 Validation Key"; Rec."E3 Validation Key")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Vaidation Key field.';
+            }
+            field("Purchase Order No."; Rec."Purchase Order No.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Purchase Order No. field.';
+            }
+            field("Recipient Bank Account"; Rec."Recipient Bank Account")
+            {
+                Caption = 'Vendor Bank';
+                ToolTip = 'Specifies the value of the Purchase Recipient Bank Account field.';
+                ApplicationArea = All;
+            }
+
+        }
+    }
+    actions
+    {
+
+    }
+}

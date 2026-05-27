@@ -1,0 +1,74 @@
+page 50143 "E3 Item Make Master"
+{
+    PageType = List;
+    ApplicationArea = All;
+    UsageCategory = Lists;
+    SourceTable = "E3 Item Make Master";
+    Editable = true;
+    Caption = 'Item Make Master';
+
+    layout
+    {
+        area(Content)
+        {
+            repeater(General)
+            {
+                field(Code; Rec.Code)
+                {
+                    ToolTip = 'Specifies the value of the Code field';
+                    ApplicationArea = All;
+                }
+                field("Company Name"; Rec."Company Name")
+                {
+                    ToolTip = 'Specifies the value of the Company Name field';
+                    ApplicationArea = All;
+                }
+                field("Filter Item Type"; Rec."Filter Item Type")
+                {
+                    ToolTip = 'Specifies the value of the Filter Item Type field';
+                    ApplicationArea = All;
+                }
+                field("Short Name"; Rec."Short Name")
+                {
+                    ToolTip = 'Specifies the value of the Short Name field';
+                    ApplicationArea = All;
+                }
+                field(IsSent; Rec.IsSent)
+                {
+                    ToolTip = 'Specifies the value of the Is Sent field';
+                    ApplicationArea = All;
+                }
+                field(Response; Rec.Response)
+                {
+                    ToolTip = 'Specifies the value of the Response field';
+                    ApplicationArea = All;
+                }
+                field("Last Sent"; Rec."Last Sent")
+                {
+                    ToolTip = 'Specifies the value of the Last Sent field';
+                    ApplicationArea = All;
+                }
+            }
+        }
+    }
+    actions
+    {
+        area(Processing)
+        {
+            action(SENDTOSTAGING)
+            {
+                ApplicationArea = all;
+                Caption = 'Send Data to Staging';
+                ToolTip = 'Sends the data to staging tables for processing';
+                Promoted = true;
+                PromotedIsBig = true;
+                PromotedCategory = Process;
+                Image = SendTo;
+                trigger OnAction()
+
+                begin
+                end;
+            }
+        }
+    }
+}
