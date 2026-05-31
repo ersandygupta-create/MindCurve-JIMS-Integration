@@ -38,7 +38,7 @@ table 50029 "E3 Item Type"
     }
     keys
     {
-        key(PK; Code)
+        key(PK; Code, Name)
         {
             Clustered = true;
         }

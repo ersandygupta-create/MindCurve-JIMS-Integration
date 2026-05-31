@@ -43,7 +43,7 @@ table 50036 "E3 Item Make Master"
     }
     keys
     {
-        key(PK; Code)
+        key(PK; Code, "Company Name")
         {
             Clustered = true;
         }

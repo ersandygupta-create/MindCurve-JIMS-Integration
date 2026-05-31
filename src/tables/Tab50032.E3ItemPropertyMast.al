@@ -43,7 +43,7 @@ table 50032 "E3 Item Property Master"
     }
     keys
     {
-        key(PK; Code)
+        key(PK; Code, Name)
         {
             Clustered = true;
         }

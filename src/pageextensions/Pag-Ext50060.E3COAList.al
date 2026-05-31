@@ -4,6 +4,12 @@ pageextension 50060 "E3 Chart of Accounts List" extends "Chart of Accounts"
     {
         addafter(Name)
         {
+            field("Name 2"; Rec."Name 2")
+            {
+                ApplicationArea = All;
+                Caption = 'Name 2';
+                ToolTip = 'Specifies the value of the Name 2 field.';
+            }
             field("DebitAmount"; Rec."Debit Amount")
             {
                 ApplicationArea = All;
@@ -25,16 +31,16 @@ pageextension 50060 "E3 Chart of Accounts List" extends "Chart of Accounts"
         }
     }
 
-    trigger OnAfterGetCurrRecord()
-    begin
-        CheckBln := USERID;
-        UserSetup.RESET;
-        UserSetup.SETRANGE("User ID", CheckBln);
-        IF UserSetup.FIND('-') THEN BEGIN
-            IF UserSetup."GL View" <> TRUE THEN
-                ERROR('Permission of COA is not added in your access. If required, please contact to IT Administrator ');
-        END;
-    end;
+    // trigger OnAfterGetCurrRecord()
+    // var
+    //     UserSetup: Record "User Setup";
+    // begin
+    //     if UserSetup.Get(UserId) then begin
+    //         if not UserSetup."GL View" then
+    //             Error(
+    //               'Permission of COA is not added in your access. If required, please contact the IT Administrator.');
+    //     end;
+    // end;
 
     var
         CheckBln: Code[30];

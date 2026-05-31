@@ -43,7 +43,7 @@ table 50037 "E3 Medicine Component Master"
     }
     keys
     {
-        key(PK; Code)
+        key(PK; Code, Name)
         {
             Clustered = true;
         }

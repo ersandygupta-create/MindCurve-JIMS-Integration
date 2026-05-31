@@ -33,7 +33,7 @@ table 50041 "E3 Restricted Group Master"
     }
     keys
     {
-        key(PK; Code)
+        key(PK; Code, Name)
         {
             Clustered = true;
         }

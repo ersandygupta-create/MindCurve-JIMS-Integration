@@ -43,7 +43,7 @@ table 50035 "E3 Item Category Master"
     }
     keys
     {
-        key(PK; Code)
+        key(PK; Code, Name)
         {
             Clustered = true;
         }

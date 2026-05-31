@@ -38,7 +38,7 @@ table 50034 "E3 Sub-Group Nature"
     }
     keys
     {
-        key(PK; Code)
+        key(PK; Code, Name)
         {
             Clustered = true;
         }

@@ -33,7 +33,7 @@ table 50033 "E3 Medicine Sub-Category Mast"
     }
     keys
     {
-        key(PK; Code)
+        key(PK; Code, Name)
         {
             Clustered = true;
         }

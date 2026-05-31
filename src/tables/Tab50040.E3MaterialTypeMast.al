@@ -33,7 +33,7 @@ table 50040 "E3 Material Type Master"
     }
     keys
     {
-        key(PK; Code)
+        key(PK; Code, Name)
         {
             Clustered = true;
         }
