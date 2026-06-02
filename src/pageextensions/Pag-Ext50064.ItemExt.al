@@ -176,6 +176,44 @@ pageextension 50064 "Item Ext" extends "Item Card"
 
     actions
     {
+        addlast(Processing)
+        {
+            group("ItemSend")
+            {
+                Caption = 'Integration';
+                Image = SendTo;
+
+                action(SendToJIMS)
+                {
+                    ApplicationArea = all;
+                    Caption = 'Send to JIMS';
+                    ToolTip = 'Send to JIMS';
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Process;
+                    Image = SendTo;
+                    trigger OnAction()
+                    var
+                        E3IntegrationMgmt: Codeunit "E3 Item Integration Mgmt.";
+                        ItemRec: Record Item;
+                    begin
+                        // Get the vendor record for this address
+                        if ItemRec.Get(Rec."No.") then
+                            E3IntegrationMgmt.ManualSendToJIMS(ItemRec);
+                    end;
+                }
+                action(SyncLog)
+                {
+                    Caption = 'Item Sync Logs';
+                    ToolTip = 'JIMS System Sync Logs.';
+                    Image = Log;
+                    ApplicationArea = all;
+                    RunObject = page "E3 API Item Update Log";
+                    RunPageLink = "No." = field("No.");
+                    RunPageMode = View;
+                }
+            }
+        }
     }
 
     trigger OnQueryClosePage(CloseAction: Action): Boolean

@@ -196,6 +196,21 @@ table 50005 "E3 Integration API Setup"
             //     EnqueueJobEntry('FAILOVERSUPPLIER')
             // end;
         }
+        field(38; "Item Master API"; Text[100])
+        {
+            Caption = 'Item Master API';
+            DataClassification = CustomerContent;
+        }
+        field(39; "Item Master API Enabled"; Boolean)
+        {
+            Caption = 'Item Master API Enabled';
+            DataClassification = CustomerContent;
+
+            // trigger OnValidate()
+            // begin
+            //     EnqueueJobEntry('FAILOVERITEM')
+            // end;
+        }
 
 
     }

@@ -198,6 +198,8 @@ permissionset 50000 "E3 HIS Permission"
     tabledata "E3 Posted Gate Entry Header" = RIMD,
     tabledata "E3 Posted Gate Entry Line" = RIMD,
     table "E3 API Supplier Update Log" = X,
-    tabledata "E3 API Supplier Update Log" = RIMD;
+    tabledata "E3 API Supplier Update Log" = RIMD,
+    table "E3 API Item Update Log" = X,
+    tabledata "E3 API Item Update Log" = RIMD;
 
 }
