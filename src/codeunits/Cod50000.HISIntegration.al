@@ -538,6 +538,54 @@ codeunit 50000 "E3 HIS Integration Mgmt."
 
     END;
 
+    //ak
+
+    procedure InitItemMaster1(EntryNo: Integer)
+    var
+        Item: Record Item;
+        InventorySetup: Record "Inventory Setup";
+        NoSeriesMgmt: Codeunit "No. Series";
+        ItemRec: Record Item;
+        NewItemDesc: text;
+        masterStaging: Record "E3 HIS Master Staging";
+    begin
+        IntegrationSetup.Get();
+        IntegrationSetup.TestField("Integration Enabled", true);
+        IntegrationSetup.TestField("Item Creation Enabled", true);
+
+        HisMasterStaging.Reset();
+        HisMasterStaging.SetRange("Party Type", HisMasterStaging."Party Type"::"Item Master");
+        HisMasterStaging.SetRange("Entry No.", EntryNo);
+        HisMasterStaging.SetRange(IsCreated, false);
+        HisMasterStaging.SetFilter(Name, '<>%1', '');
+
+        if HisMasterStaging.FindSet() then
+            repeat
+                NewItemDesc := HisMasterStaging.Name + '-' + HisMasterStaging."Material Category" + '-' + HisMasterStaging.Strength;
+                ItemRec.Reset();
+                ItemRec.SetRange(Description, NewItemDesc);
+                if not ItemRec.FindFirst() then begin
+                    Item.INIT();
+                    //Item.VALIDATE("No.", HisMasterStaging."HIS Code");
+                    InventorySetup.Get();
+                    InventorySetup.TESTFIELD("Item Nos.");
+                    Item."No." := NoSeriesMgmt.GetNextNo(InventorySetup."Item Nos.", Today, true);
+                    Item.VALIDATE(Description, NewItemDesc);
+                    Item.Validate("Material Category", HisMasterStaging."Material Category");
+                    Item.Validate(Strength, HisMasterStaging.Strength);
+                    Item.Validate("Item Type", HisMasterStaging."Item Type 1");
+                    Item.INSERT();
+
+                    masterStaging := HisMasterStaging;
+                    masterStaging.IsCreated := true;
+                    masterStaging.Modify(true)
+;
+                end;
+
+            until HisMasterStaging.Next() = 0;
+
+    end;    //ak
+
     procedure CollectionValidation()
     var
         temRevenueStaging: Record "E3 HIS Revenue Staging Table";

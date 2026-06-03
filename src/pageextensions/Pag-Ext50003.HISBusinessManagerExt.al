@@ -209,16 +209,16 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                             RunPageMode = Create;
                             ToolTip = 'Check a new Employees for Payroll Entries.';
                         }
-                        // action("E3 HIS items List")
-                        // {
-                        //     AccessByPermission = TableData "E3 HIS Master Staging" = IMD;
-                        //     ApplicationArea = Basic, Suite;
-                        //     Caption = 'Items List';
-                        //     Image = NewOrder;
-                        //     RunObject = Page "E3 HIS Item List";
-                        //     RunPageMode = Create;
-                        //     ToolTip = 'Create a new Item for Purchase or Sales.';
-                        // }
+                        action("E3 HIS items List")
+                        {
+                            AccessByPermission = TableData "E3 HIS Master Staging" = IMD;
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Items List';
+                            Image = NewOrder;
+                            RunObject = Page "E3 Item Master List";
+                            RunPageMode = Create;
+                            ToolTip = 'Create a new Item for Purchase or Sales.';
+                        }
                         // action("HIS Pending items List")
                         // {
                         //     AccessByPermission = TableData "E3 HIS Master Staging" = IMD;

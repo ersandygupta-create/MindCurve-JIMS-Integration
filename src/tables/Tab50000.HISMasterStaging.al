@@ -16,7 +16,7 @@ table 50000 "E3 HIS Master Staging"
         field(2; "Party Type"; Option)
         {
             Caption = 'Party Type';
-            OptionMembers = ,Vendor,Customer,Employee,Item,Doctor;
+            OptionMembers = ,Vendor,Customer,Employee,Item,Doctor,"Item Master";
             DataClassification = CustomerContent;
         }
         field(3; Name; Text[100])
@@ -551,6 +551,24 @@ table 50000 "E3 HIS Master Staging"
         {
             Caption = 'Item Status';
             DataClassification = CustomerContent;
+        }
+        field(102; "Item Type 1"; Text[60])
+        {
+            Caption = 'Item Type 1';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Type".Name;
+        }
+        field(103; "Material Category"; Text[60])
+        {
+            Caption = 'Material Category';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Material Category Master".Name;
+        }
+        field(104; Strength; Text[60])
+        {
+            Caption = 'Strength';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Strength Master".Name;
         }
 
     }

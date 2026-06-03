@@ -7,7 +7,7 @@ page 50015 "E3 HIS Item List"
     Editable = true;
     CardPageId = 50016;
 
-    SourceTableView = SORTING("HIS Code") WHERE(IsCreated = FILTER(false), "Item Status" = filter(New), "Party Type" = FILTER(Item));
+    SourceTableView = SORTING("HIS Code") WHERE("Party Type" = FILTER(Item));
 
     SourceTable = "E3 HIS Master Staging";
     UsageCategory = Lists;
