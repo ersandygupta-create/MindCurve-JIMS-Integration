@@ -561,7 +561,7 @@ codeunit 50000 "E3 HIS Integration Mgmt."
 
         if HisMasterStaging.FindSet() then
             repeat
-                NewItemDesc := HisMasterStaging.Name + '-' + HisMasterStaging."Material Category" + '-' + HisMasterStaging.Strength;
+                NewItemDesc := HisMasterStaging."Material Category" + '-' + HisMasterStaging.Name + '-' + HisMasterStaging.Strength;
                 ItemRec.Reset();
                 ItemRec.SetRange(Description, NewItemDesc);
                 if not ItemRec.FindFirst() then begin

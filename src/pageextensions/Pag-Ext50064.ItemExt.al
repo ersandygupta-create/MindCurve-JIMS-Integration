@@ -9,16 +9,19 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Item Type"; Rec."Item Type")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the value of Item Type field.';
                 }
                 field("Material Category"; Rec."Material Category")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the value of Meterial Category field.';
                 }
                 field(Strength; Rec.Strength)
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the value of Strength field.';
                 }
                 field("Medicine Group"; Rec."Medicine Group")
