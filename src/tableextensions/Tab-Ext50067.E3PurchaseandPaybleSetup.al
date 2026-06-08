@@ -19,6 +19,12 @@ tableextension 50067 "E3 Purchase & Payable Setup" extends "Purchases & Payables
             Caption = 'Order Address No Series';
             TableRelation = "No. Series".Code;
         }
+        field(50003; "Gate Entry Receipt Series"; Code[20])
+        {
+            Caption = 'Gate Entry Receipt Series';
+            TableRelation = "No. Series".Code;
+            DataClassification = CustomerContent;
+        }
 
 
     }

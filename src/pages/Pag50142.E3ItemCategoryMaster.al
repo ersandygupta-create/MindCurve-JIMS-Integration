@@ -58,16 +58,24 @@ page 50142 "E3 Item Category Master"
             action(SENDTOSTAGING)
             {
                 ApplicationArea = all;
-                Caption = 'Send Data to Staging';
+                Caption = 'Send Data to DB';
                 ToolTip = 'Sends the data to staging tables for processing';
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Process;
                 Image = SendTo;
                 trigger OnAction()
-
+                var
+                    ItemCategory: Record "E3 Item Category Master";
+                    ItemCategoryMgmt: Codeunit "E3 Item Category Mgmt.";
                 begin
+                    ItemCategory.Get(Rec.Code, Rec.Name);
+                    if ItemCategoryMgmt.SendItemCategoryDetails(ItemCategory) then
+                        Message('Data sent successfully.')
+                    else
+                        Message('Failed to send data.');
                 end;
+
             }
         }
     }

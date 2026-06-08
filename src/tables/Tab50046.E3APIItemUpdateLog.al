@@ -170,12 +170,6 @@ table 50046 "E3 API Item Update Log"
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Type".Name;
         }
-        field(50023; "Item Property"; Text[60])
-        {
-            Caption = 'Item Property';
-            DataClassification = CustomerContent;
-            TableRelation = "E3 Item Property Master".Name;
-        }
         field(50024; "Medicine SubCategory"; Text[60])
         {
             Caption = 'Medicine SubCategory';

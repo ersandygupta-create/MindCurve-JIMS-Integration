@@ -7,9 +7,7 @@ table 50044 "E3 Posted Gate Entry Header"
         field(1; "Entry No."; Integer)
         {
             Caption = 'Entry No.';
-            AutoIncrement = true;
-            BlankZero = true;
-            MinValue = 1;
+
             Editable = false;
             DataClassification = ToBeClassified;
         }
@@ -109,11 +107,22 @@ table 50044 "E3 Posted Gate Entry Header"
             Caption = 'Remarks';
             DataClassification = CustomerContent;
         }
+        field(19; PostedNo; Code[20])
+        {
+            Caption = 'No.';
+            DataClassification = CustomerContent;
+        }
+        field(20; "Posted Entry No."; Integer)
+        {
+            Caption = 'Posted Entry No.';
+            AutoIncrement = true;
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
     {
-        key(PK; "Entry No.")
+        key(PK; "Posted Entry No.")
         {
             Clustered = true;
         }

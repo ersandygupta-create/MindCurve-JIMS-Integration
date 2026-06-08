@@ -8,9 +8,9 @@ table 50045 "E3 Posted Gate Entry Line"
         field(1; "Entry No."; Integer)
         {
             Caption = 'Entry No.';
-            AutoIncrement = true;
-            BlankZero = true;
-            MinValue = 1;
+            // AutoIncrement = true;
+            // BlankZero = true;
+            // MinValue = 1;
             Editable = false;
             DataClassification = CustomerContent;
         }
@@ -51,9 +51,9 @@ table 50045 "E3 Posted Gate Entry Line"
             Caption = 'Quantity';
             DataClassification = CustomerContent;
         }
-        field(9; "Received Qty"; Decimal)
+        field(9; "Qty to Receive"; Decimal)
         {
-            Caption = 'Received Qty';
+            Caption = 'Qty to Receive';
             DataClassification = CustomerContent;
         }
         field(10; "Pending Qty"; Decimal)
@@ -91,11 +91,31 @@ table 50045 "E3 Posted Gate Entry Line"
             Caption = 'Ship Qty';
             DataClassification = CustomerContent;
         }
+        field(17; "Quantity Received"; Decimal)
+        {
+            AutoFormatType = 0;
+            Caption = 'Quantity Received';
+            DecimalPlaces = 0 : 5;
+            Editable = false;
+            ToolTip = 'Specifies how many units of the item on the line have been posted as received.';
+
+        }
+        field(18; PostedNo; Code[20])
+        {
+            Caption = 'No.';
+            DataClassification = CustomerContent;
+        }
+        field(19; "Posted Entry No."; Integer)
+        {
+            Caption = 'Posted Entry No.';
+            AutoIncrement = true;
+            DataClassification = CustomerContent;
+        }
 
     }
     keys
     {
-        key(PK; "Entry No.", "Document No.", "Line No.")
+        key(PK; "Posted Entry No.")
         {
             Clustered = true;
         }

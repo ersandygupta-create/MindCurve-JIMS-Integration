@@ -152,14 +152,11 @@ permissionset 50000 "E3 HIS Permission"
     tabledata "E3 Item Model Master" = RIMD,
     table "E3 Item Strength Master" = X,
     tabledata "E3 Item Strength Master" = RIMD,
-    table "E3 Item Property Master" = X,
-    tabledata "E3 Item Property Master" = RIMD,
     table "E3 Medicine Sub-Category Mast" = X,
     tabledata "E3 Medicine Sub-Category Mast" = RIMD,
     page "E3 Item Type" = X,
     page "E3 Item Model Master" = X,
     page "E3 Item Strength Master" = X,
-    page "E3 Item Property" = X,
     page "E3 Medicine SubCategory" = X,
     table "E3 Sub-Group Nature" = X,
     tabledata "E3 Sub-Group Nature" = RIMD,
@@ -200,6 +197,12 @@ permissionset 50000 "E3 HIS Permission"
     table "E3 API Supplier Update Log" = X,
     tabledata "E3 API Supplier Update Log" = RIMD,
     table "E3 API Item Update Log" = X,
-    tabledata "E3 API Item Update Log" = RIMD;
+    tabledata "E3 API Item Update Log" = RIMD,
+    table "E3 Property List" = X,
+    tabledata "E3 Property List" = RIMD,
+    table "E3 Item Group" = X,
+    tabledata "E3 Item Group" = RIMD,
+    table "E3 Filter Item Type" = X,
+    tabledata "E3 Filter Item Type" = RIMD;
 
 }

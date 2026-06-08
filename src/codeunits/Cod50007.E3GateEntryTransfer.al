@@ -1,24 +1,87 @@
 codeunit 50007 "E3 Gate Entry Transfer"
 {
-    procedure CreateInwardEntry(var OutwardHeader: Record "E3 Gate Entry Header")
+    procedure PostOutwardGateEntry(var GateEntryHeader: Record "E3 Gate Entry Header")
+    var
+        GateEntryLine: Record "E3 Gate Entry Line";
+        PostedHeader: Record "E3 Posted Gate Entry Header";
+        PostedLine: Record "E3 Posted Gate Entry Line";
+        NoSeriesMgt: Codeunit "No. Series";
+        ShipmentNo: Code[20];
+    begin
+        // Validate Lines
+        GateEntryLine.Reset();
+        GateEntryLine.SetRange("Document No.", GateEntryHeader."Document No.");
+
+        if not GateEntryLine.FindFirst() then
+            Error('No lines exist for posting.');
+
+        ShipmentNo := NoSeriesMgt.GetNextNo('SHIPMENT', Today, true);
+
+        PostedHeader.Init();
+        PostedHeader.TransferFields(GateEntryHeader);
+
+        PostedHeader."Reference Document No." := ShipmentNo;
+        PostedHeader."Posting Date/Time" := CurrentDateTime;
+
+        PostedHeader.Insert(true);
+
+        GateEntryLine.Reset();
+        GateEntryLine.SetRange("Document No.", GateEntryHeader."Document No.");
+
+        if GateEntryLine.FindSet() then
+            repeat
+                PostedLine.Init();
+                PostedLine.TransferFields(GateEntryLine);
+
+                PostedLine."Document No." := PostedHeader."Document No.";
+
+                PostedLine.Insert(true);
+
+            until GateEntryLine.Next() = 0;
+
+        //-----------------------------------------
+        // Create Inward Entry
+        //-----------------------------------------
+        CreateInwardEntry(GateEntryHeader, ShipmentNo);
+
+        //-----------------------------------------
+        // Update Original Document Status
+        //-----------------------------------------
+        GateEntryHeader.Status := GateEntryHeader.Status::Posted;
+        GateEntryHeader.Modify(true);
+        GateEntryLine.Reset();
+        GateEntryLine.SetRange("Document No.", GateEntryHeader."Document No.");
+        if GateEntryLine.FindSet() then
+            GateEntryLine.DeleteAll();
+        GateEntryHeader.DeleteAll();
+        Message('Shipment %1 posted successfully and inward entry created.', ShipmentNo);
+    end;
+
+    local procedure CreateInwardEntry(var OutwardHeader: Record "E3 Gate Entry Header"; ShipmentNo: Code[20])
     var
         OutwardLine: Record "E3 Gate Entry Line";
         InwardHeader: Record "E3 Gate Entry Header";
         InwardLine: Record "E3 Gate Entry Line";
         NoSeriesMgt: Codeunit "No. Series";
     begin
-
+        //-----------------------------------------
+        // Validate Quantity
+        //-----------------------------------------
         OutwardLine.Reset();
         OutwardLine.SetRange("Document No.", OutwardHeader."Document No.");
-        OutwardLine.SetFilter("Ship Qty", '>%1', 0);
+        OutwardLine.SetFilter(Quantity, '>%1', 0);
 
         if not OutwardLine.FindFirst() then
-            Error('No shipped quantity available.');
+            Error('No quantity available.');
 
+        //-----------------------------------------
+        // Create Inward Header
+        //-----------------------------------------
         InwardHeader.Init();
+
         InwardHeader."Entry Type" := InwardHeader."Entry Type"::Inward;
+        InwardHeader."Document No." := NoSeriesMgt.GetNextNo('INWARD', Today, true);
         InwardHeader."Gate Pass Type" := OutwardHeader."Gate Pass Type";
-        InwardHeader."Document No." := OutwardHeader."Document No.";
         InwardHeader."Purpose Code" := OutwardHeader."Purpose Code";
         InwardHeader."Vehicle No." := OutwardHeader."Vehicle No.";
         InwardHeader."Department Code" := OutwardHeader."Department Code";
@@ -27,32 +90,25 @@ codeunit 50007 "E3 Gate Entry Transfer"
         InwardHeader."Vendor No." := OutwardHeader."Vendor No.";
         InwardHeader."Vendor Name" := OutwardHeader."Vendor Name";
         InwardHeader."Employee Code" := OutwardHeader."Employee Code";
-        InwardHeader.Status := OutwardHeader.Status;
+        InwardHeader.Status := InwardHeader.Status::Open;
         InwardHeader."Expected Return Date" := OutwardHeader."Expected Return Date";
         InwardHeader."Reference Document No." := OutwardHeader."Document No.";
         InwardHeader.Remarks := OutwardHeader.Remarks;
 
-        //If using No. Series
-        InwardHeader."Document No." :=
-            NoSeriesMgt.GetNextNo('INWARD', Today, true);
-
         InwardHeader.Insert(true);
 
-        // Create Inward Lines
         OutwardLine.Reset();
         OutwardLine.SetRange("Document No.", OutwardHeader."Document No.");
-        OutwardLine.SetFilter("Ship Qty", '>%1', 0);
+        OutwardLine.SetFilter(Quantity, '>%1', 0);
 
         if OutwardLine.FindSet() then
             repeat
                 InwardLine.Init();
-
                 InwardLine."Document No." := InwardHeader."Document No.";
                 InwardLine."Line No." := OutwardLine."Line No.";
                 InwardLine."Item No." := OutwardLine."Item No.";
                 InwardLine."Item Name" := OutwardLine."Item Name";
                 InwardLine.Quantity := OutwardLine.Quantity;
-                InwardLine.Quantity := OutwardLine."Ship Qty";
                 InwardLine."Variant Code" := OutwardLine."Variant Code";
                 InwardLine."Unit of Measurement" := OutwardLine."Unit of Measurement";
                 InwardLine."Estimated Value" := OutwardLine."Estimated Value";
@@ -61,12 +117,8 @@ codeunit 50007 "E3 Gate Entry Transfer"
                 InwardLine."Lot No." := OutwardLine."Lot No.";
                 InwardLine.Remarks := OutwardLine.Remarks;
 
-                InwardLine.Insert();
+                InwardLine.Insert(true);
 
             until OutwardLine.Next() = 0;
-
-        Message(
-            'Inward Entry %1 created successfully.',
-            InwardHeader."Document No.");
     end;
 }

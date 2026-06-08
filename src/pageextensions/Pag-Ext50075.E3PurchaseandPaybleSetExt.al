@@ -17,6 +17,10 @@ pageextension 50075 "E3 Purchase & Payable Ext" extends "Purchases & Payables Se
             {
                 ApplicationArea = All;
             }
+            field("Gate Entry Receipt Series"; Rec."Gate Entry Receipt Series")
+            {
+                ApplicationArea = All;
+            }
 
         }
 

@@ -372,16 +372,6 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         RunPageMode = Create;
                         ToolTip = 'Check Item Strength List.';
                     }
-                    action("Item Property")
-                    {
-                        AccessByPermission = TableData "E3 Item Property Master" = R;
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Item Property';
-                        Image = NewOrder;
-                        RunObject = Page "E3 Item Property";
-                        RunPageMode = Create;
-                        ToolTip = 'Check Item Property List.';
-                    }
                     action("Item MedicineSubcategory")
                     {
                         AccessByPermission = TableData "E3 Medicine Sub-Category Mast" = R;
@@ -491,6 +481,36 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         RunObject = Page "E3 Sub Group Site List";
                         RunPageMode = Create;
                         ToolTip = 'Check Sub Group Site List.';
+                    }
+                    action("Property List")
+                    {
+                        AccessByPermission = TableData "E3 Property List" = R;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Property List';
+                        Image = NewOrder;
+                        RunObject = Page "E3 Property List";
+                        RunPageMode = Create;
+                        ToolTip = 'Check Property List.';
+                    }
+                    action("Item Group")
+                    {
+                        AccessByPermission = TableData "E3 Item Group" = R;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Item Group';
+                        Image = NewOrder;
+                        RunObject = Page "E3 Item Group";
+                        RunPageMode = Create;
+                        ToolTip = 'Check Item Group';
+                    }
+                    action("Filter Item Type")
+                    {
+                        AccessByPermission = TableData "E3 Filter Item Type" = R;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Filter Item Type';
+                        Image = NewOrder;
+                        RunObject = Page "E3 Filter Item Type";
+                        RunPageMode = Create;
+                        ToolTip = 'Check Filter Item Type';
                     }
                 }
                 group("E3 HIS Collection Staging")
@@ -627,35 +647,54 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                 {
                     Caption = 'Gate Entry';
 
-                    action("E3 Gate Entry Inward")
+                    group("E3 Gate Entry Creation")
                     {
-                        AccessByPermission = TableData "E3 Gate Entry Header" = IMD;
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Create Gate Entry Inward';
-                        Image = Archive;
-                        RunObject = Page "E3 Gate Entry Inward List";
-                        RunPageMode = Create;
-                        ToolTip = 'Create a new Gate Entry Inward for Vendor.';
+                        Caption = 'Gate Entry Creation';
+                        action("E3 Gate Entry Outward")
+                        {
+                            AccessByPermission = TableData "E3 Gate Entry Header" = R;
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Create Gate Entry Outward';
+                            Image = Archive;
+                            RunObject = Page "E3 Gate Entry Outward List";
+                            RunPageMode = Create;
+                            ToolTip = 'Created a Gate Entry Outward for Vendor.';
+                        }
+                        action("E3 Gate Entry Inward")
+                        {
+                            AccessByPermission = TableData "E3 Gate Entry Header" = IMD;
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Create Gate Entry Inward';
+                            Image = Archive;
+                            RunObject = Page "E3 Gate Entry Inward List";
+                            RunPageMode = Create;
+                            ToolTip = 'Create a new Gate Entry Inward for Vendor.';
+                        }
                     }
-                    action("E3 Posted Gate Entry Inward")
+
+                    group("E3 Posted Gate Entry")
                     {
-                        AccessByPermission = TableData "E3 Posted Gate Entry Header" = IMD;
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Posted Gate Entry Inward';
-                        Image = Archive;
-                        RunObject = Page "E3 Posted Gate Ent Inward List";
-                        RunPageMode = Create;
-                        ToolTip = 'Create a new Gate Entry Inward for Vendor.';
-                    }
-                    action("E3 Gate Entry Outward")
-                    {
-                        AccessByPermission = TableData "E3 Gate Entry Header" = R;
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Create Gate Entry Outward';
-                        Image = Archive;
-                        RunObject = Page "E3 Gate Entry Outward List";
-                        RunPageMode = Create;
-                        ToolTip = 'Created a Gate Entry Outward for Vendor.';
+                        Caption = 'Posted Gate Entry';
+                        action("E3 Posted Gate Entry Inward")
+                        {
+                            AccessByPermission = TableData "E3 Posted Gate Entry Header" = IMD;
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Posted Gate Entry Inward';
+                            Image = Archive;
+                            RunObject = Page "E3 Posted Gate Ent Inward List";
+                            RunPageMode = Create;
+                            ToolTip = 'Create a new Gate Entry Inward for Vendor.';
+                        }
+                        action("E3 Posted Gate Entry Outward")
+                        {
+                            AccessByPermission = TableData "E3 Posted Gate Entry Header" = IMD;
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Posted Gate Entry Outward';
+                            Image = Archive;
+                            RunObject = Page "E3Posted Gate Ent Outward List";
+                            RunPageMode = Create;
+                            ToolTip = 'Create a new Gate Entry Outward for Vendor.';
+                        }
                     }
                 }
             }

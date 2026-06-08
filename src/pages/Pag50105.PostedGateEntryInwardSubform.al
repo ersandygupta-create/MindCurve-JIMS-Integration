@@ -8,6 +8,7 @@ page 50105 "E3 Posted Gate Ent Inward Line"
     PageType = ListPart;
     SourceTable = "E3 Posted Gate Entry Line";
     SourceTableView = sorting("Entry No.");
+    Editable = false;
 
     layout
     {
@@ -50,14 +51,20 @@ page 50105 "E3 Posted Gate Ent Inward Line"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Qty field.';
                 }
-                field("Received Qty"; Rec."Received Qty")
+                field("Qty to Receive"; Rec."Qty to Receive")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Received Qty field.';
+                    ToolTip = 'Specifies the value of the Qty to Receive field.';
+                }
+                field("Quantity Received"; Rec."Quantity Received")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Pending Qty"; Rec."Pending Qty")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the value of the Pending Qty field.';
                 }
                 field("Estimated Value"; Rec."Estimated Value")

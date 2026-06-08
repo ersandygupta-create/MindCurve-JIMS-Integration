@@ -29,7 +29,7 @@ table 50035 "E3 Item Category Master"
             Caption = 'IsSent';
             DataClassification = CustomerContent;
         }
-        field(6; Response; Text[60])
+        field(6; Response; Text[200])
         {
             Caption = 'Response';
             DataClassification = CustomerContent;

@@ -1,4 +1,4 @@
-page 50135 "E3 Gate Entry Outward Subform"
+page 50108 "E3Posted Gate Ent Outward Line"
 {
     Caption = 'Gate Entry Outward Subform';
     AutoSplitKey = true;
@@ -6,8 +6,9 @@ page 50135 "E3 Gate Entry Outward Subform"
     LinksAllowed = false;
     MultipleNewLines = true;
     PageType = ListPart;
-    SourceTable = "E3 Gate Entry Line";
+    SourceTable = "E3 Posted Gate Entry Line";
     SourceTableView = sorting("Entry No.");
+    Editable = false;
 
     layout
     {
@@ -50,30 +51,14 @@ page 50135 "E3 Gate Entry Outward Subform"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Qty field.';
                 }
-                field("Ship Qty"; Rec."Ship Qty")
-                {
-                    ApplicationArea = All;
-                    Visible = false;
-                    ToolTip = 'Specifies the value of the Ship Qty field.';
-                }
                 field("Qty to Receive"; Rec."Qty to Receive")
                 {
                     ApplicationArea = All;
-                    Caption = 'Qty to Receive';
                     ToolTip = 'Specifies the value of the Qty to Receive field.';
-                    Visible = false;
-                }
-                field("Quantity Received"; Rec."Quantity Received")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Quantity Received';
-                    Visible = false;
-                    ToolTip = 'Specifies how many units of the item on the line have been posted as received.';
                 }
                 field("Pending Qty"; Rec."Pending Qty")
                 {
                     ApplicationArea = All;
-                    Visible = false;
                     ToolTip = 'Specifies the value of the Pending Qty field.';
                 }
                 field("Estimated Value"; Rec."Estimated Value")

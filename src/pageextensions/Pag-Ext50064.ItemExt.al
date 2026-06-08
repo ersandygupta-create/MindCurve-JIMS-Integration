@@ -24,6 +24,11 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     Editable = false;
                     ToolTip = 'Specifies the value of Strength field.';
                 }
+                field("Item Group"; Rec."Item Group")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of Item Group field.';
+                }
                 field("Medicine Group"; Rec."Medicine Group")
                 {
                     ApplicationArea = All;
@@ -33,12 +38,6 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of Medicine Company field.';
-                }
-                field("Rate Margin Fix"; Rec."Rate Margin Fix")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Rate/Margin Fix';
-                    ToolTip = 'Specifies the value of Rate Margin Fix field.';
                 }
                 field(Model; Rec.Model)
                 {
@@ -64,11 +63,6 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of Res. Group field.';
-                }
-                field("Item Property"; Rec."Item Property")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of Item Property field.';
                 }
                 field("Sub Group Nature"; Rec."Sub Group Nature")
                 {
@@ -104,6 +98,26 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of Sub Group Site field.';
+                }
+                field("Property List"; Rec."Property List")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of Property List field.';
+                }
+                field("Tolerance excess"; Rec."Tolerance excess")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of Tolerance Excess field.';
+                }
+                field("Tolerance Shortage"; Rec."Tolerance Shortage")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of Tolerance Shortage field.';
+                }
+                field("Margin Fix"; Rec."Margin Fix")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of Margin Fix field.';
                 }
             }
         }
@@ -171,6 +185,11 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of BarCode Active field.';
+                }
+                field("Filter Item Type"; Rec."Filter Item Type")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of Filter Item Type field.';
                 }
 
             }

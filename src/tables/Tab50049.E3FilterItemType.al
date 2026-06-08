@@ -1,42 +1,52 @@
-table 50032 "E3 Item Property Master"
+table 50049 "E3 Filter Item Type"
 {
     DataPerCompany = false;
 
     fields
     {
-        field(1; Code; Integer)
+        field(1; Code; Code[20])
         {
             Caption = 'Code';
             DataClassification = CustomerContent;
         }
-        field(2; Name; Text[60])
+        field(2; Name; Text[100])
         {
             Caption = 'Name';
             DataClassification = CustomerContent;
         }
-        field(3; IsSent; Boolean)
-        {
-            Caption = 'IsSent';
-            DataClassification = CustomerContent;
-        }
-        field(4; Response; Text[60])
-        {
-            Caption = 'Response';
-            DataClassification = CustomerContent;
-        }
-        field(5; "Last Sent"; DateTime)
-        {
-            Caption = 'Last Sent';
-            DataClassification = CustomerContent;
-        }
-        field(6; "Manual Code"; Text[60])
+        field(3; "Manual Code"; Text[10])
         {
             Caption = 'Manual Code';
             DataClassification = CustomerContent;
         }
-        field(7; IsActive; Boolean)
+        field(4; IsSent; Boolean)
         {
-            Caption = 'IsActive';
+            Caption = 'IsSent';
+            DataClassification = CustomerContent;
+        }
+        field(5; Response; Text[30])
+        {
+            Caption = 'Response';
+            DataClassification = CustomerContent;
+        }
+        field(6; "Last Sent"; DateTime)
+        {
+            Caption = 'Last Sent';
+            DataClassification = CustomerContent;
+        }
+        field(7; Segment1; Text[60])
+        {
+            Caption = 'Segment1';
+            DataClassification = CustomerContent;
+        }
+        field(8; Segment2; Text[60])
+        {
+            Caption = 'Segment2';
+            DataClassification = CustomerContent;
+        }
+        field(9; Segment3; Text[60])
+        {
+            Caption = 'Segmen3';
             DataClassification = CustomerContent;
         }
 

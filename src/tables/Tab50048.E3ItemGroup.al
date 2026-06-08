@@ -1,45 +1,35 @@
-table 50042 "E3 Medicine Composition"
+table 50048 "E3 Item Group"
 {
     DataPerCompany = false;
 
     fields
     {
-        field(1; Code; Integer)
+        field(1; Code; Code[20])
         {
             Caption = 'Code';
             DataClassification = CustomerContent;
         }
-        field(2; "SNo"; Integer)
+        field(2; Name; Text[100])
         {
-            Caption = 'SNo';
+            Caption = 'Name';
             DataClassification = CustomerContent;
         }
-        field(3; "Composition Code"; Code[20])
+        field(3; "Filter Item Type"; Decimal)
         {
-            Caption = 'Composition Code';
+            Caption = 'Filter Item Type';
             DataClassification = CustomerContent;
         }
-        field(4; IsBase; Boolean)
-        {
-            Caption = 'IsBase';
-            DataClassification = CustomerContent;
-        }
-        field(5; Power; Decimal)
-        {
-            Caption = 'Power';
-            DataClassification = CustomerContent;
-        }
-        field(6; IsSent; Boolean)
+        field(4; IsSent; Boolean)
         {
             Caption = 'IsSent';
             DataClassification = CustomerContent;
         }
-        field(7; Response; Text[30])
+        field(5; Response; Text[30])
         {
             Caption = 'Response';
             DataClassification = CustomerContent;
         }
-        field(8; "Last Sent"; DateTime)
+        field(6; "Last Sent"; DateTime)
         {
             Caption = 'Last Sent';
             DataClassification = CustomerContent;
@@ -48,7 +38,7 @@ table 50042 "E3 Medicine Composition"
     }
     keys
     {
-        key(PK; Code, "Composition Code")
+        key(PK; Code, Name)
         {
             Clustered = true;
         }

@@ -29,6 +29,12 @@ table 50014 "E3 Gate Entry Line"
             Caption = 'Item No.';
             DataClassification = CustomerContent;
             TableRelation = Item;
+            trigger OnValidate()
+            begin
+                "Item Name" := '';
+                if Item.Get("Item No.") then
+                    "Item Name" := Item.Description;
+            end;
         }
         field(5; "Item Name"; Text[100])
         {
@@ -51,10 +57,15 @@ table 50014 "E3 Gate Entry Line"
             Caption = 'Quantity';
             DataClassification = CustomerContent;
         }
-        field(9; "Received Qty"; Decimal)
+        field(9; "Qty to Receive"; Decimal)
         {
-            Caption = 'Received Qty';
+            Caption = 'Qty to Receive';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if (Rec."Quantity Received" + Rec."Qty to Receive" > rec.Quantity) then
+                    Error('Quantity received and quantity to receive shoul not more than Quantity');
+            end;
         }
         field(10; "Pending Qty"; Decimal)
         {
@@ -91,6 +102,15 @@ table 50014 "E3 Gate Entry Line"
             Caption = 'Ship Qty';
             DataClassification = CustomerContent;
         }
+        field(17; "Quantity Received"; Decimal)
+        {
+            AutoFormatType = 0;
+            Caption = 'Quantity Received';
+            DecimalPlaces = 0 : 5;
+            Editable = false;
+            ToolTip = 'Specifies how many units of the item on the line have been posted as received.';
+
+        }
 
     }
     keys
@@ -118,5 +138,6 @@ table 50014 "E3 Gate Entry Line"
 
     var
         GateEntryHdr: Record "E3 Gate Entry Header";
+        Item: Record Item;
 
 }

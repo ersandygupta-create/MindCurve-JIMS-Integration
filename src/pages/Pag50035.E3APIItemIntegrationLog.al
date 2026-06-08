@@ -116,10 +116,6 @@ page 50035 "E3 API Item Update Log"
                 {
                     ToolTip = 'Specifies the value of the Item Type field.';
                 }
-                field("Item Property"; Rec."Item Property")
-                {
-                    ToolTip = 'Specifies the value of the Item Property field.';
-                }
                 field("Medicine SubCategory"; Rec."Medicine SubCategory")
                 {
                     ToolTip = 'Specifies the value of the Medicine SubCategory field.';

@@ -110,7 +110,7 @@ table 50013 "E3 Gate Entry Header"
             Caption = 'Remarks';
             DataClassification = CustomerContent;
         }
-        field(19; "No. Series"; Code[20])
+        field(21; "No. Series"; Code[20])
         {
             Caption = 'No. Series';
             Editable = false;
@@ -138,10 +138,10 @@ table 50013 "E3 Gate Entry Header"
             PurchasesPayablesSetup.Get();
             PurchasesPayablesSetup.TestField("Gate Entry Nos.");
 
-            "No. Series" := PurchasesPayablesSetup."Gate Entry Nos.";
+            Rec."No. Series" := PurchasesPayablesSetup."Gate Entry Nos.";
 
             "Document No." :=
-                NoSeries.GetNextNo("No. Series");
+                NoSeries.GetNextNo(Rec."No. Series", WorkDate(), true);
         end;
     end;
 

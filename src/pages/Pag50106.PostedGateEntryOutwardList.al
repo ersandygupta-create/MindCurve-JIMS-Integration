@@ -1,20 +1,21 @@
-page 50134 "E3 Gate Entry Outward Header"
+page 50106 "E3Posted Gate Ent Outward List"
 {
-    Caption = 'Gate Entry Outward Header';
-    PageType = Document;
-    DelayedInsert = true;
-    RefreshOnActivate = true;
-    SourceTable = "E3 Gate Entry Header";
-    SourceTableView = sorting("Entry No.") where("Entry Type" = Filter(Outward));
-
+    ApplicationArea = All;
+    Caption = 'Gate Entry Outward List';
+    PageType = List;
+    Editable = false;
+    CardPageId = "E3 Posted Gate Ent Outward Hdr";
+    InsertAllowed = false;
+    SourceTable = "E3 Posted Gate Entry Header";
+    SourceTableView = sorting("Entry No.") where("Entry Type" = filter(Outward));
+    UsageCategory = Lists;
 
     layout
     {
         area(Content)
         {
-            group(General)
+            repeater(General)
             {
-                Caption = 'General';
                 field("Gate Pass Type"; Rec."Gate Pass Type")
                 {
                     ToolTip = 'Specifies the value of the Gate Pass Type field';
@@ -29,7 +30,6 @@ page 50134 "E3 Gate Entry Outward Header"
                 {
                     ToolTip = 'Specifies the value of the Document No. field';
                     ApplicationArea = All;
-                    Editable = false;
                 }
                 field("Purpose Code"; Rec."Purpose Code")
                 {
@@ -92,13 +92,6 @@ page 50134 "E3 Gate Entry Outward Header"
                     ApplicationArea = All;
                 }
             }
-            part(HISPurchaseSubform; "E3 Gate Entry Outward Subform")
-            {
-                ApplicationArea = Basic, Suite;
-                UpdatePropagation = Both;
-                SubPageLink = "Document No." = FIELD("Document No.");
-                Caption = 'Gate Entry Outward Line';
-            }
         }
     }
 
@@ -106,37 +99,17 @@ page 50134 "E3 Gate Entry Outward Header"
     {
         area(Processing)
         {
-            action(Ship)
+            action(ActionName)
             {
-                Caption = 'Ship';
-                Image = Shipment;
-                ApplicationArea = All;
-                Promoted = true;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-                ShortCutKey = 'F9';
 
                 trigger OnAction()
-                var
-                    GateTransfer: Codeunit "E3 Gate Entry Transfer";
                 begin
-                    GateTransfer.PostOutwardGateEntry(Rec);
+
                 end;
             }
         }
     }
 
-    trigger OnNewRecord(BelowxRec: Boolean)
     var
-        PurchasesPayablesSetup: Record "Purchases & Payables Setup";
-        NoSeries: Codeunit "No. Series";
-    begin
-        Rec."Entry Type" := Rec."Entry Type"::Outward;
-        PurchasesPayablesSetup.Get();
-        PurchasesPayablesSetup.TestField("Gate Entry Nos.");
-
-        Rec."No. Series" := PurchasesPayablesSetup."Gate Entry Nos.";
-        Rec."Document No." := NoSeries.GetNextNo(Rec."No. Series", WorkDate(), true);
-    end;
-
+        myInt: Integer;
 }

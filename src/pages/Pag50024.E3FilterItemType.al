@@ -1,11 +1,11 @@
-page 50149 "E3 Medicine Composition"
+page 50024 "E3 Filter Item Type"
 {
     PageType = List;
     ApplicationArea = All;
     UsageCategory = Lists;
-    SourceTable = "E3 Medicine Composition";
+    SourceTable = "E3 Filter Item Type";
     Editable = true;
-    Caption = 'Medicine Composition';
+    Caption = 'Filter Item Type';
 
     layout
     {
@@ -18,24 +18,14 @@ page 50149 "E3 Medicine Composition"
                     ToolTip = 'Specifies the value of the Code field';
                     ApplicationArea = All;
                 }
-                field(SNo; Rec.SNo)
+                field(Name; Rec.Name)
                 {
-                    ToolTip = 'Specifies the value of the SNo field';
+                    ToolTip = 'Specifies the value of the Name field';
                     ApplicationArea = All;
                 }
-                field("Composition Code"; Rec."Composition Code")
+                field("Manual Code"; Rec."Manual Code")
                 {
-                    ToolTip = 'Specifies the value of the Composition Code field';
-                    ApplicationArea = All;
-                }
-                field(IsBase; Rec.IsBase)
-                {
-                    ToolTip = 'Specifies the value of the Is Base field';
-                    ApplicationArea = All;
-                }
-                field(Power; Rec.Power)
-                {
-                    ToolTip = 'Specifies the value of the Power field';
+                    ToolTip = 'Specifies the value of the Manual Code field';
                     ApplicationArea = All;
                 }
                 field(IsSent; Rec.IsSent)
@@ -51,6 +41,21 @@ page 50149 "E3 Medicine Composition"
                 field("Last Sent"; Rec."Last Sent")
                 {
                     ToolTip = 'Specifies the value of the Last Sent field';
+                    ApplicationArea = All;
+                }
+                field(Segment1; Rec.Segment1)
+                {
+                    ToolTip = 'Specifies the value of the Segmant1 field';
+                    ApplicationArea = All;
+                }
+                field(Segment2; Rec.Segment2)
+                {
+                    ToolTip = 'Specifies the value of the Segment2 field';
+                    ApplicationArea = All;
+                }
+                field(Segment3; Rec.Segment3)
+                {
+                    ToolTip = 'Specifies the value of the Segment3 field';
                     ApplicationArea = All;
                 }
             }
@@ -70,8 +75,12 @@ page 50149 "E3 Medicine Composition"
                 PromotedCategory = Process;
                 Image = SendTo;
                 trigger OnAction()
-
+                var
+                    E3APIIntegrationMgmt: Codeunit "E3 API Integration Mgmt.";
+                    E3ItemType: Record "E3 Item Type";
                 begin
+                    if E3ItemType.Get(Rec.Code) then
+                        E3APIIntegrationMgmt.SendItemTypeDetails(E3ItemType);
                 end;
             }
         }

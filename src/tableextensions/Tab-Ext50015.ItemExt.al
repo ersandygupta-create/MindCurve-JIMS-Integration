@@ -41,20 +41,17 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Medicine Group';
             DataClassification = CustomerContent;
         }
-        field(50007; "Rate Margin Fix"; Text[50])
-        {
-            Caption = 'Rate Margin Fix';
-            DataClassification = CustomerContent;
-        }
         field(50008; "Medicine Manufacturer"; Text[50])
         {
             Caption = 'Medicine Manufacturer';
             DataClassification = CustomerContent;
+            TableRelation = "E3 Item Make Master"."Company Name";
         }
         field(50009; "Medicine Company"; Text[50])
         {
             Caption = 'Medicine Company';
             DataClassification = CustomerContent;
+            TableRelation = "E3 Item Make Master"."Company Name";
         }
         field(50010; Packing; Text[60])
         {
@@ -123,12 +120,6 @@ tableextension 50015 "E3 HIS Item" extends Item
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Type".Name;
         }
-        field(50023; "Item Property"; Text[60])
-        {
-            Caption = 'Item Property';
-            DataClassification = CustomerContent;
-            TableRelation = "E3 Item Property Master".Name;
-        }
         field(50024; "Medicine SubCategory"; Text[60])
         {
             Caption = 'Medicine SubCategory';
@@ -137,7 +128,7 @@ tableextension 50015 "E3 HIS Item" extends Item
         }
         field(50025; "Sub Group Nature"; Text[60])
         {
-            Caption = 'Sub Group namture';
+            Caption = 'Sub Group nature';
             DataClassification = CustomerContent;
             TableRelation = "E3 Sub-Group Nature".Name;
         }
@@ -181,6 +172,39 @@ tableextension 50015 "E3 HIS Item" extends Item
         {
             Caption = 'Narcotics & Control Substances';
             DataClassification = CustomerContent;
+        }
+        field(50033; "Item Group"; Text[60])
+        {
+            Caption = 'Item Group';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Group".Name;
+        }
+        field(50034; "Filter Item Type"; Text[60])
+        {
+            Caption = 'Filter Item Type';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Filter Item Type".Name;
+        }
+        field(50035; "Tolerance excess"; Decimal)
+        {
+            Caption = 'tl_ExcessPer';
+            DataClassification = CustomerContent;
+        }
+        field(50036; "Tolerance Shortage"; Decimal)
+        {
+            Caption = 'tl_ShortagePer';
+            DataClassification = CustomerContent;
+        }
+        field(50037; "Margin Fix"; Enum "E3 Margin Fix")
+        {
+            Caption = 'Margin Fix';
+            DataClassification = CustomerContent;
+        }
+        field(50038; "Property List"; Text[60])
+        {
+            Caption = 'Property List';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Property List".Name;
         }
 
     }

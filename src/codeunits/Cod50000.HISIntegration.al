@@ -571,6 +571,7 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                     InventorySetup.TESTFIELD("Item Nos.");
                     Item."No." := NoSeriesMgmt.GetNextNo(InventorySetup."Item Nos.", Today, true);
                     Item.VALIDATE(Description, NewItemDesc);
+                    Item.Validate("Description 2", HisMasterStaging.Name);
                     Item.Validate("Material Category", HisMasterStaging."Material Category");
                     Item.Validate(Strength, HisMasterStaging.Strength);
                     Item.Validate("Item Type", HisMasterStaging."Item Type 1");

@@ -2,7 +2,7 @@ page 50131 "E3 Gate Entry Inward Header"
 {
     Caption = 'Gate Entry Inward Header';
     PageType = Document;
-    DelayedInsert = true;
+    DelayedInsert = false;
     RefreshOnActivate = true;
     SourceTable = "E3 Gate Entry Header";
     SourceTableView = sorting("Entry No.") where("Entry Type" = Filter(Inward));
@@ -124,8 +124,12 @@ page 50131 "E3 Gate Entry Inward Header"
         }
     }
     trigger OnNewRecord(BelowxRec: Boolean)
+    var
+        PurchasesPayablesSetup: Record "Purchases & Payables Setup";
+        NoSeries: Codeunit "No. Series";
     begin
         Rec."Entry Type" := Rec."Entry Type"::Inward;
+
     end;
 
 }

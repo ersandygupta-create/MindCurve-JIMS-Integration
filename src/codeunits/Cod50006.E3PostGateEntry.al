@@ -32,10 +32,10 @@ codeunit 50006 "E3 Post Gate Entry"
             END;
 
             GateEntryLine.LOCKTABLE;
-
+            PurchPayble.Get();
             PostedGateEntryHeader.INIT;
             PostedGateEntryHeader.TRANSFERFIELDS(GateEntryHeader);
-            PostedGateEntryHeader."Document No." := "Document No.";
+            PostedGateEntryHeader.PostedNo := NoSeries.GetNextNo(PurchPayble."Gate Entry Receipt Series", WorkDate(), true);
 
             IF GUIALLOWED THEN
                 Window.UPDATE(1, STRSUBSTNO(Text16503, "Document No.", PostedGateEntryHeader."Document No."));
@@ -50,24 +50,61 @@ codeunit 50006 "E3 Post Gate Entry"
                     IF GUIALLOWED THEN
                         Window.UPDATE(2, LineCount);
                     PostedGateEntryLine.INIT;
-                    PostedGateEntryLine.TRANSFERFIELDS(GateEntryLine);
+                    PostedGateEntryLine."Item No." := GateEntryLine."Item No.";
+                    PostedGateEntryLine."Item Name" := GateEntryLine."Item Name";
+                    PostedGateEntryLine."Line No." := GateEntryLine."Line No.";
+                    PostedGateEntryLine."Variant Code" := GateEntryLine."Variant Code";
+                    PostedGateEntryLine."Unit of Measurement" := GateEntryLine."Unit of Measurement";
+                    PostedGateEntryLine.Quantity := GateEntryLine.Quantity;
+                    PostedGateEntryLine."Quantity Received" := GateEntryLine."Qty to Receive";
                     PostedGateEntryLine."Document No." := PostedGateEntryHeader."Document No.";
+                    PostedGateEntryLine."Estimated Value" := GateEntryLine."Estimated Value";
+                    PostedGateEntryLine."Asset No." := GateEntryLine."Asset No.";
+                    PostedGateEntryLine."Serial No." := GateEntryLine."Serial No.";
+                    PostedGateEntryLine."Lot No." := GateEntryLine."Lot No.";
+                    PostedGateEntryLine.Remarks := GateEntryLine.Remarks;
+                    PostedGateEntryLine.PostedNo := PostedGateEntryHeader.PostedNo;
                     PostedGateEntryLine.INSERT;
+
+                    GateEntryLineUpd := GateEntryLine;
+                    GateEntryLineUpd."Quantity Received" := GateEntryLineUpd."Quantity Received" + GateEntryLineUpd."Qty to Receive";
+                    GateEntryLineUpd."Qty to Receive" := GateEntryLineUpd.Quantity - GateEntryLineUpd."Quantity Received";
+                    GateEntryLineUpd.Modify(true);
                 UNTIL GateEntryLine.NEXT = 0;
 
-            DELETE;
-            GateEntryLine.DELETEALL;
+            if not CheckDocDeleteionStatus(GateEntryHeader) then begin
+                DELETE;
+                GateEntryLine.DELETEALL;
+            end;
+
         END;
         IF GUIALLOWED THEN
             Window.CLOSE;
         Rec := GateEntryHeader;
     end;
 
+    local procedure CheckDocDeleteionStatus(var GateEntryHeader: Record "E3 Gate Entry Header"): Boolean
+    var
+        GateEntryLine: Record "E3 Gate Entry Line";
+    begin
+        GateEntryLine.Reset();
+        GateEntryLine.SetRange("Document No.", GateEntryHeader."Document No.");
+        if GateEntryLine.FindSet() then
+            repeat
+                if GateEntryLine.Quantity <> GateEntryLine."Quantity Received" then
+                    exit(true);
+            until GateEntryLine.Next() = 0;
+        exit(false);
+    end;
+
     var
         GateEntryHeader: Record 50013;
         GateEntryLine: Record 50014;
+        PurchPayble: Record "Purchases & Payables Setup";
+        GateEntryLineUpd: Record 50014;
         PostedGateEntryHeader: Record 50044;
         PostedGateEntryLine: Record 50045;
+        NoSeries: Codeunit "No. Series";
         Text16500: Label 'There is nothing to post.';
         Text16501: Label 'Posting Lines #2######\';
         Text16502: Label 'Gate Entry.';

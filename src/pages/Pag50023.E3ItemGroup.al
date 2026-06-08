@@ -1,11 +1,11 @@
-page 50139 "E3 Item Property"
+page 50023 "E3 Item Group"
 {
     PageType = List;
     ApplicationArea = All;
     UsageCategory = Lists;
-    SourceTable = "E3 Item Property Master";
+    SourceTable = "E3 Item Group";
     Editable = true;
-    Caption = 'Item Property';
+    Caption = 'Item Group';
 
     layout
     {
@@ -23,6 +23,11 @@ page 50139 "E3 Item Property"
                     ToolTip = 'Specifies the value of the Name field';
                     ApplicationArea = All;
                 }
+                field("Filter Item Type"; Rec."Filter Item Type")
+                {
+                    ToolTip = 'Specifies the value of the Filter Item Type field';
+                    ApplicationArea = All;
+                }
                 field(IsSent; Rec.IsSent)
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
@@ -36,16 +41,6 @@ page 50139 "E3 Item Property"
                 field("Last Sent"; Rec."Last Sent")
                 {
                     ToolTip = 'Specifies the value of the Last Sent field';
-                    ApplicationArea = All;
-                }
-                field("Manual Code"; Rec."Manual Code")
-                {
-                    ToolTip = 'Specifies the value of the Manual Code field';
-                    ApplicationArea = All;
-                }
-                field(IsActive; Rec.IsActive)
-                {
-                    ToolTip = 'Specifies the value of the Is Active field';
                     ApplicationArea = All;
                 }
             }
@@ -65,8 +60,12 @@ page 50139 "E3 Item Property"
                 PromotedCategory = Process;
                 Image = SendTo;
                 trigger OnAction()
-
+                var
+                    E3APIIntegrationMgmt: Codeunit "E3 API Integration Mgmt.";
+                    E3ItemType: Record "E3 Item Type";
                 begin
+                    if E3ItemType.Get(Rec.Code) then
+                        E3APIIntegrationMgmt.SendItemTypeDetails(E3ItemType);
                 end;
             }
         }

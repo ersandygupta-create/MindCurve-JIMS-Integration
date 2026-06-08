@@ -235,7 +235,6 @@ codeunit 50019 "E3 Item Integration Mgmt."
         JChildObj.Add('MedicineSubcategory', ItemUpdateLog."Medicine Subcategory");
         JChildObj.Add('MedicineManufacturer', ItemUpdateLog."Medicine Manufacturer");
         JChildObj.Add('Res.Group', ItemUpdateLog."Res. Group");
-        JChildObj.Add('ItemProperty', ItemUpdateLog."Item Property");
         JChildObj.Add('SubGroupNature', ItemUpdateLog."Sub Group Nature");
         JChildObj.Add('Maker', ItemUpdateLog.Make);
         JChildObj.Add(('MedicineComponent'), ItemUpdateLog."Medicine Component");

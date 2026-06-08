@@ -4,24 +4,37 @@ codeunit 50004 "E3 Gate Entry Mgmt."
 
     trigger OnRun()
     begin
-        GateEntryHeader.COPY(Rec);
-        Code;
+        GateEntryHeader.Copy(Rec);
+        Code();
         Rec := GateEntryHeader;
     end;
 
     var
         Text16500: Label 'Do you want to Post the Gate Entry?';
-        GateEntryHeader: Record 50013;
-        GateEntryPost: Codeunit 50006;
         Text16501: Label 'Gate Entry Posted successfully.';
+        Text16502: Label 'Received Qty must be greater than 0 for at least one line.';
 
-    local procedure "Code"()
+        GateEntryHeader: Record 50013;
+        GateEntryLine: Record 50014;
+        GateEntryPost: Codeunit 50006;
+
+    local procedure Code()
     begin
-        IF NOT CONFIRM(Text16500, FALSE) THEN
-            EXIT;
-        GateEntryPost.RUN(GateEntryHeader);
-        COMMIT;
-        MESSAGE(Text16501);
-    end;
+        if not Confirm(Text16500, false) then
+            exit;
 
+        // Validate Qty to Receive
+        GateEntryLine.Reset();
+        GateEntryLine.SetRange("Document No.", GateEntryHeader."Document No.");
+        GateEntryLine.SetFilter("Qty to Receive", '>%1', 0);
+
+        if not GateEntryLine.FindFirst() then
+            Error(Text16502);
+
+        GateEntryPost.Run(GateEntryHeader);
+
+        Commit();
+
+        Message(Text16501);
+    end;
 }
