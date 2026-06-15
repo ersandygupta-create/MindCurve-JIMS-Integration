@@ -27,16 +27,19 @@ page 50141 "E3 Sub Group Nature"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field(Response; Rec.Response)
                 {
                     ToolTip = 'Specifies the value of the Response field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Last Sent"; Rec."Last Sent")
                 {
                     ToolTip = 'Specifies the value of the Last Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
             }
         }
@@ -55,8 +58,15 @@ page 50141 "E3 Sub Group Nature"
                 PromotedCategory = Process;
                 Image = SendTo;
                 trigger OnAction()
-
+                var
+                    ItemSubGroupNatureMgmt: Codeunit "E3 Sub Group Nature Mgmt.";
+                    ItemSubGroupNature: Record "E3 Sub-Group Nature";
                 begin
+                    ItemSubGroupNature.Get(Rec.Code, Rec.Name);
+                    if ItemSubGroupNatureMgmt.SendSubGroupNatureDetails(ItemSubGroupNature) then
+                        Message('Data sent successfully.')
+                    else
+                        Message('Failed to send data.');
                 end;
             }
         }

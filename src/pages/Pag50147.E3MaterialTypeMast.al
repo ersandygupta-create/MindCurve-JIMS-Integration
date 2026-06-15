@@ -27,16 +27,19 @@ page 50147 "E3 material Type Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field(Response; Rec.Response)
                 {
                     ToolTip = 'Specifies the value of the Response field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Last Sent"; Rec."Last Sent")
                 {
                     ToolTip = 'Specifies the value of the Last Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
             }
         }
@@ -55,8 +58,15 @@ page 50147 "E3 material Type Master"
                 PromotedCategory = Process;
                 Image = SendTo;
                 trigger OnAction()
-
+                var
+                    MaterialTypeMgmt: Codeunit "E3 Material Type Mgmt.";
+                    MaterialTypeMast: Record "E3 Material Type Master";
                 begin
+                    MaterialTypeMast.Get(Rec.Code, Rec.Name);
+                    if MaterialTypeMgmt.SendMaterialTypeDetails(MaterialTypeMast) then
+                        Message('Data sent successfully.')
+                    else
+                        Message('Failed to send data.');
                 end;
             }
         }

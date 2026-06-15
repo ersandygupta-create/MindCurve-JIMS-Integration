@@ -40,6 +40,7 @@ tableextension 50015 "E3 HIS Item" extends Item
         {
             Caption = 'Medicine Group';
             DataClassification = CustomerContent;
+            TableRelation = "E3 Sub Group Master"."Manual Code";
         }
         field(50008; "Medicine Manufacturer"; Text[50])
         {
@@ -166,41 +167,41 @@ tableextension 50015 "E3 HIS Item" extends Item
         {
             Caption = 'Sub Group Site';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Sub Group Site List"."Sub Code";
+            TableRelation = "E3 Sub Group Site List"."Site Code";
         }
         field(50032; "Narcotics Control Substances"; Boolean)
         {
             Caption = 'Narcotics & Control Substances';
             DataClassification = CustomerContent;
         }
-        field(50033; "Item Group"; Text[60])
+        field(50040; "Item Group"; Text[60])
         {
             Caption = 'Item Group';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Group".Name;
         }
-        field(50034; "Filter Item Type"; Text[60])
+        field(50041; "Filter Item Type"; Text[60])
         {
             Caption = 'Filter Item Type';
             DataClassification = CustomerContent;
             TableRelation = "E3 Filter Item Type".Name;
         }
-        field(50035; "Tolerance excess"; Decimal)
+        field(50042; "Tolerance excess"; Decimal)
         {
             Caption = 'tl_ExcessPer';
             DataClassification = CustomerContent;
         }
-        field(50036; "Tolerance Shortage"; Decimal)
+        field(50043; "Tolerance Shortage"; Decimal)
         {
             Caption = 'tl_ShortagePer';
             DataClassification = CustomerContent;
         }
-        field(50037; "Margin Fix"; Enum "E3 Margin Fix")
+        field(50044; "Margin Fix"; Enum "E3 Margin Fix")
         {
             Caption = 'Margin Fix';
             DataClassification = CustomerContent;
         }
-        field(50038; "Property List"; Text[60])
+        field(50045; "Property List"; Text[60])
         {
             Caption = 'Property List';
             DataClassification = CustomerContent;
@@ -208,4 +209,9 @@ tableextension 50015 "E3 HIS Item" extends Item
         }
 
     }
+    trigger OnBeforeRename()
+    begin
+        if (Rec."No." <> xRec."No.") and (xRec."No." <> '') then
+            Error('You cannot modify the Item No.');
+    end;
 }

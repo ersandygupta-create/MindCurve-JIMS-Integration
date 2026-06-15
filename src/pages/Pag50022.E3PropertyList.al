@@ -31,17 +31,20 @@ page 50022 "E3 Property List"
                 field(IsSent; Rec.IsSent)
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
+                    Editable = false;
                     ApplicationArea = All;
                 }
                 field(Response; Rec.Response)
                 {
                     ToolTip = 'Specifies the value of the Response field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Last Sent"; Rec."Last Sent")
                 {
                     ToolTip = 'Specifies the value of the Last Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field(IsActive; Rec.IsActive)
                 {
@@ -66,11 +69,14 @@ page 50022 "E3 Property List"
                 Image = SendTo;
                 trigger OnAction()
                 var
-                    E3APIIntegrationMgmt: Codeunit "E3 API Integration Mgmt.";
-                    E3ItemType: Record "E3 Item Type";
+                    ItemPropertyListMgmt: Codeunit "E3 Item Property List Mgmt.";
+                    E3ItemPropertyList: Record "E3 Property List";
                 begin
-                    if E3ItemType.Get(Rec.Code) then
-                        E3APIIntegrationMgmt.SendItemTypeDetails(E3ItemType);
+                    E3ItemPropertyList.Get(Rec.Code, Rec.Name);
+                    if ItemPropertyListMgmt.SendItemPropertyListDetails(E3ItemPropertyList) then
+                        Message('Data sent successfully.')
+                    else
+                        Message('Failed to send data.');
                 end;
             }
         }

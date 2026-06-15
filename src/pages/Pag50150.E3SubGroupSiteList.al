@@ -47,16 +47,19 @@ page 50150 "E3 Sub Group Site List"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field(Response; Rec.Response)
                 {
                     ToolTip = 'Specifies the value of the Response field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Last Sent"; Rec."Last Sent")
                 {
                     ToolTip = 'Specifies the value of the Last Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
             }
         }
@@ -75,8 +78,15 @@ page 50150 "E3 Sub Group Site List"
                 PromotedCategory = Process;
                 Image = SendTo;
                 trigger OnAction()
-
+                var
+                    SubGrpSiteListMgmt: Codeunit "E3 Sub Group Site Mgmt.";
+                    SubGroupSiteMast: Record "E3 Sub Group Site List";
                 begin
+                    SubGroupSiteMast.Get(Rec."Site Code");
+                    if SubGrpSiteListMgmt.SendSubGroupSiteListDetails(SubGroupSiteMast) then
+                        Message('Data sent successfully.')
+                    else
+                        Message('Failed to send data.');
                 end;
             }
         }

@@ -27,16 +27,19 @@ page 50140 "E3 Medicine SubCategory"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field(Response; Rec.Response)
                 {
                     ToolTip = 'Specifies the value of the Response field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Last Sent"; Rec."Last Sent")
                 {
                     ToolTip = 'Specifies the value of the Last Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
             }
         }
@@ -55,8 +58,15 @@ page 50140 "E3 Medicine SubCategory"
                 PromotedCategory = Process;
                 Image = SendTo;
                 trigger OnAction()
-
+                var
+                    E3MedicineSubCatMgmt: Codeunit "E3 Medicine Sub-Category Mgmt.";
+                    MedicineSubCat: Record "E3 Medicine Sub-Category Mast";
                 begin
+                    MedicineSubCat.Get(Rec.Code, Rec.Name);
+                    if E3MedicineSubCatMgmt.SendItemMedicineSubCatDetails(MedicineSubCat) then
+                        Message('Data sent successfully.')
+                    else
+                        Message('Failed to send data.');
                 end;
             }
         }

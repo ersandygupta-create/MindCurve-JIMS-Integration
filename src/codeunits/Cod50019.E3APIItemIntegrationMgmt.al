@@ -46,21 +46,21 @@ codeunit 50019 "E3 Item Integration Mgmt."
 
 
     //[NonDebuggable]
-    local procedure GetAuthorizationText(): Text
-    var
-        Base64Converter: Codeunit "Base64 Convert";
-        Authorization: Text;
-        BasicCred: Text;
-    begin
-        E3APISetup.get();
-        E3APISetup.TestField(Username);
-        E3APISetup.TestField(Password);
+    // local procedure GetAuthorizationText(): Text
+    // var
+    //     Base64Converter: Codeunit "Base64 Convert";
+    //     Authorization: Text;
+    //     BasicCred: Text;
+    // begin
+    //     E3APISetup.get();
+    //     E3APISetup.TestField(Username);
+    //     E3APISetup.TestField(Password);
 
-        BasicCred := E3APISetup.Username + ':' + E3APISetup.Password;
-        Authorization := 'Basic ' + Base64Converter.ToBase64(BasicCred); //, TextEncoding::UTF8);
+    //     BasicCred := E3APISetup.Username + ':' + E3APISetup.Password;
+    //     Authorization := 'Basic ' + Base64Converter.ToBase64(BasicCred); //, TextEncoding::UTF8);
 
-        exit(Authorization);
-    end;
+    //     exit(Authorization);
+    // end;
 
     [EventSubscriber(ObjectType::Table, Database::Item, 'OnAfterModifyEvent', '', false, false)]
     local procedure E3ItemOnModify(var xRec: Record Item; var Rec: Record Item; RunTrigger: Boolean)
@@ -207,59 +207,63 @@ codeunit 50019 "E3 Item Integration Mgmt."
 
         if not E3APISetup."Item Master API Enabled" then
             exit;
-
         E3APISetup.TestField("Item Master API");
 
         Clear(JObject);
         Clear(JChildObj);
         Clear(JArray);
 
-        JChildObj.Add('UniqueID', ItemUpdateLog."No.");
-        JChildObj.Add('No. 2', ItemUpdateLog."No. 2");
-        JChildObj.Add('ItemName', ItemUpdateLog.Description);
-        JChildObj.Add('ItemName2', ItemUpdateLog."Description 2");
-        JChildObj.Add('Type', ItemUpdateLog.Type);
-        JChildObj.Add('BaseUnitofMeasure', ItemUpdateLog."Base Unit of Measure");
-        JChildObj.Add('GST Group Code', ItemUpdateLog."GST Group Code");
-        JChildObj.Add('HSN/SAC Code', ItemUpdateLog."HSN/SAC Code");
-        JChildObj.Add('SalesUnitofMeasure', ItemUpdateLog."Sales Unit of Measure");
-        JChildObj.Add('PurchUnitofMeasure', ItemUpdateLog."Purch. Unit of Measure");
-        JChildObj.Add('ItemType', ItemUpdateLog."Item Type");
-        JChildObj.Add('MaterialCategory', ItemUpdateLog."Material Category");
-        JChildObj.Add('Strength', ItemUpdateLog."Strength");
-        JChildObj.Add('MedicineGroup', ItemUpdateLog."Medicine Group");
-        JChildObj.Add('MedicineCompany', ItemUpdateLog."Medicine Company");
-        JChildObj.Add('RateMarginFix', ItemUpdateLog."Rate Margin Fix");
-        JChildObj.Add('Model', ItemUpdateLog.Model);
-        JChildObj.Add('Category', ItemUpdateLog.Category);
-        JChildObj.Add('MedicineSubcategory', ItemUpdateLog."Medicine Subcategory");
-        JChildObj.Add('MedicineManufacturer', ItemUpdateLog."Medicine Manufacturer");
-        JChildObj.Add('Res.Group', ItemUpdateLog."Res. Group");
-        JChildObj.Add('SubGroupNature', ItemUpdateLog."Sub Group Nature");
-        JChildObj.Add('Maker', ItemUpdateLog.Make);
-        JChildObj.Add(('MedicineComponent'), ItemUpdateLog."Medicine Component");
-        JChildObj.Add('Speciality', ItemUpdateLog.Speciality);
-        JChildObj.Add('MaterialType', ItemUpdateLog."Material Type");
-        JChildObj.Add('MedicineComposition', ItemUpdateLog."Medicine Composition");
-        JChildObj.Add('SubGroupSite', ItemUpdateLog."Sub Group Site");
-        JChildObj.Add('Packing', ItemUpdateLog.Packing);
-        JChildObj.Add('Scheme', ItemUpdateLog.Scheme);
-        JChildObj.Add('NarcoticsControlSubstances', ItemUpdateLog."Narcotics Control Substances");
-        JChildObj.Add('IncudeinFreeQtyinSales', ItemUpdateLog."Incl Free Qty in Sale Rate");
-        JChildObj.Add('SaleDiscountAllow', ItemUpdateLog."Sale Discount Allow");
-        JChildObj.Add('SaleRateEditable', ItemUpdateLog."Sale Rate Editable");
-        JChildObj.Add('AllowMRPDiscount', ItemUpdateLog."Allow MRP Discount");
-        JChildObj.Add('ConsignmentItem', ItemUpdateLog."Consignment Item");
-        JChildObj.Add('SaleReturnableItem', ItemUpdateLog."Sale Returnable Item");
-        JChildObj.Add('QuatationRequired', ItemUpdateLog."Quatation Required");
-        JChildObj.Add('Active', ItemUpdateLog.Active);
-        JChildObj.Add('BarCodeActive', ItemUpdateLog."BarCode Active");
-        JChildObj.Add('ProcessIndicator', 'R');
-        JChildObj.Add('CreationDate', format(DT2Date(ItemUpdateLog."Last Modified Date Time"), 0, '<Day,2>-<Month,2>-<Year4>'));
-        JChildObj.Add('CreationTime', format(DT2Time(ItemUpdateLog."Last Modified Date Time")));
+        JChildObj.Add('code', ItemUpdateLog."No.");
+        JChildObj.Add('name', ItemUpdateLog.Description);
+        JChildObj.Add('displayName', ItemUpdateLog."Description 2");
+        JChildObj.Add('manualCode', ItemUpdateLog."Manual Code");
+        JChildObj.Add('itemDesc', ItemUpdateLog."Description 2");
+        JChildObj.Add('itemType', Format(ItemUpdateLog.Type));
+        JChildObj.Add('skuName', '');
+        JChildObj.Add('purchaseUnitName', ItemUpdateLog."Purch. Unit of Measure");
+        JChildObj.Add('saleUnitName', ItemUpdateLog."Sales Unit of Measure");
+        JChildObj.Add('itemPacking', '');
+        JChildObj.Add('purchaseUnitConversionRate', 0);
+        JChildObj.Add('saleUnitConversionRate', 0);
+        JChildObj.Add('hsnCode', ItemUpdateLog."HSN/SAC Code");
+        JChildObj.Add('modelName', ItemUpdateLog.Model);
+        JChildObj.Add('strengthName', ItemUpdateLog.Strength);
+        JChildObj.Add('propertyList', ItemUpdateLog."Property List");
+        JChildObj.Add('itemCategoryCodeName', ItemUpdateLog.Category);
+        JChildObj.Add('subCategoryCodeName', '');
+        JChildObj.Add('compositionCodeName', '');
+        JChildObj.Add('materialCategoryCodeName', ItemUpdateLog."Material Category");
+        JChildObj.Add('materialTypeCodeName', ItemUpdateLog."Material Type");
+        JChildObj.Add('marketingCompanyName', ItemUpdateLog."Medicine Company");
+        JChildObj.Add('itemGroupName', '');
+        JChildObj.Add('itemMakeCodeName', ItemUpdateLog.Make);
+        JChildObj.Add('filterItemType', ItemUpdateLog."Filter Item Type");
+        JChildObj.Add('manufacturerCodeName', ItemUpdateLog.Make);
+        JChildObj.Add('isActive', true);
+        JChildObj.Add('isBarcodeActive', ItemUpdateLog."BarCode Active");
+        JChildObj.Add('isConsignment', true);
+        JChildObj.Add('isNarcotics', ItemUpdateLog."Narcotics Control Substances");
+        JChildObj.Add('isReturnableItem', ItemUpdateLog."Sale Returnable Item");
+        JChildObj.Add('isSaleRateEditable', ItemUpdateLog."Sale Rate Editable");
+        JChildObj.Add('isIncludeFreeQtyInSaleRate', ItemUpdateLog."Incl Free Qty in Sale Rate");
+        JChildObj.Add('isDiscountAllow', ItemUpdateLog."Sale Discount Allow");
+        JChildObj.Add('isQuotationMandatory', ItemUpdateLog."Quatation Required");
+        JChildObj.Add('allowMRPDiscPattern', '');
+        JChildObj.Add('marginRateFix', Format(ItemUpdateLog."Margin Fix"));
+        JChildObj.Add('remark', '');
+        JChildObj.Add('tl_ExcessPer', '');
+        JChildObj.Add('tl_ShortagePer', '');
+        JChildObj.Add('isStatus', '');
+        JChildObj.Add('segment1', '');
+        JChildObj.Add('segment2', '');
+        JChildObj.Add('segment3', '');
+        JChildObj.Add('segment4', '');
+        JChildObj.Add('segment5', '');
+        JChildObj.Add('ProcessIndicator', 'P');
+        JChildObj.Add('processDatetime', format(DT2Time(ItemUpdateLog."Last Modified Date Time")));
         JChildObj.Add('ErrorMsg', '');
         JArray.Add(JChildObj);
-        JObject.Add('ItemMaster', JArray);
+        JObject.Add('d365_itemCat', JArray);
 
         JObject.WriteTo(ReqPayload);
 
@@ -270,7 +274,7 @@ codeunit 50019 "E3 Item Integration Mgmt."
         HttpWebContent.GetHeaders(ContentHeaders);
         ContentHeaders.Clear();
         ContentHeaders.Add('Content-Type', 'application/json');
-        HttpWebClient.DefaultRequestHeaders().Add('Authorization', GetAuthorizationText());
+        //HttpWebClient.DefaultRequestHeaders().Add('Authorization', GetAuthorizationText());
         RequestMessage.Content := HttpWebContent;
         RequestMessage.SetRequestUri(E3APISetup."Item Master API");
         RequestMessage.Method := 'POST';
@@ -278,7 +282,8 @@ codeunit 50019 "E3 Item Integration Mgmt."
 
         if not ResponseMessage.IsSuccessStatusCode then begin
             ItemUpdateLog."Sync Status" := ItemUpdateLog."Sync Status"::Error;
-            ItemUpdateLog."Error Message" := CopyStr(ResponseMessage.ReasonPhrase, 1, 250);
+            ItemUpdateLog."Error Message" := CopyStr(ResponseMessage.ReasonPhrase, 1, MaxStrLen(ItemUpdateLog."Error Message"));
+            ItemUpdateLog.Modify();
         end else begin
             HttpWebContent := ResponseMessage.Content;
             HttpWebContent.ReadAs(JsonResponse);
@@ -288,26 +293,47 @@ codeunit 50019 "E3 Item Integration Mgmt."
 
             Clear(JObject);
             JObject.ReadFrom(JsonResponse);
-            if JObject.SelectToken('ItemMasterStatus', JToken) then
+
+            if JObject.SelectToken('d365_itemStatus', JToken) then
                 if JToken.IsArray then
                     JToken.AsArray().WriteTo(JsonResponse)
                 else
                     JsonResponse := JToken.AsValue().AsText();
 
             Clear(JArray);
-            Clear(JObject);
-            Clear(JToken);
             JArray.ReadFrom(JsonResponse);
+
             for J := 0 to JArray.Count - 1 do begin
                 JArray.Get(J, JToken);
-
                 JObject := JToken.AsObject();
-                IF JObject.SelectToken('ErrorMsg', CJToken) then
+
+                Clear(IsSuccess);
+
+                // API returns errorMsg
+                if JObject.SelectToken('errorMsg', CJToken) then
                     IsSuccess := CJToken.AsValue().AsText();
 
-                if IsSuccess = 'Item Created Successfully' then begin
+                if GuiAllowed then
+                    Message('API Message: %1', IsSuccess);
+
+                if (StrPos(UpperCase(IsSuccess), 'CREATED') > 0) or
+                   (StrPos(UpperCase(IsSuccess), 'SUCCESS') > 0) then begin
+
                     ItemUpdateLog."Sync Status" := ItemUpdateLog."Sync Status"::Synced;
+                    ItemUpdateLog."Error Message" := 'Created Successfully';
+                    ItemUpdateLog.Modify();
+
                     exit(true);
+                end else begin
+                    ItemUpdateLog."Sync Status" := ItemUpdateLog."Sync Status"::Error;
+
+                    if IsSuccess <> '' then
+                        ItemUpdateLog."Error Message" :=
+                            CopyStr(IsSuccess, 1, MaxStrLen(ItemUpdateLog."Error Message"))
+                    else
+                        ItemUpdateLog."Error Message" := 'Unknown Error';
+
+                    ItemUpdateLog.Modify();
                 end;
             end;
         end;

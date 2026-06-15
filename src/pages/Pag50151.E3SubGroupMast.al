@@ -1,11 +1,11 @@
-page 50142 "E3 Item Category Master"
+page 50151 "E3 Sub Group Master"
 {
     PageType = List;
     ApplicationArea = All;
     UsageCategory = Lists;
-    SourceTable = "E3 Item Category Master";
+    SourceTable = "E3 Sub Group Master";
     Editable = true;
-    Caption = 'Item Category Master';
+    Caption = 'Sub Group';
 
     layout
     {
@@ -13,24 +13,24 @@ page 50142 "E3 Item Category Master"
         {
             repeater(General)
             {
-                field(Code; Rec.Code)
+                field("Sub Code"; Rec."Sub Code")
                 {
-                    ToolTip = 'Specifies the value of the Code field';
+                    ToolTip = 'Specifies the value of the Sub Code field';
+                    ApplicationArea = All;
+                }
+                field("Manual Code"; Rec."Manual Code")
+                {
+                    ToolTip = 'Specifies the value of the Manual Code field';
+                    ApplicationArea = All;
+                }
+                field(Initial; Rec.Initial)
+                {
+                    ToolTip = 'Specifies the value of the Initial field';
                     ApplicationArea = All;
                 }
                 field(Name; Rec.Name)
                 {
                     ToolTip = 'Specifies the value of the Name field';
-                    ApplicationArea = All;
-                }
-                field("Filter Item Type"; Rec."Filter Item Type")
-                {
-                    ToolTip = 'Specifies the value of the Filter Item Type field';
-                    ApplicationArea = All;
-                }
-                field(SaleRateProfitMargin; Rec.SaleRateProfitMargin)
-                {
-                    ToolTip = 'Specifies the value of the Sale Rate Profit Margin field';
                     ApplicationArea = All;
                 }
                 field(IsSent; Rec.IsSent)
@@ -61,24 +61,16 @@ page 50142 "E3 Item Category Master"
             action(SENDTOSTAGING)
             {
                 ApplicationArea = all;
-                Caption = 'Send Data to DB';
+                Caption = 'Send Data to Staging';
                 ToolTip = 'Sends the data to staging tables for processing';
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Process;
                 Image = SendTo;
                 trigger OnAction()
-                var
-                    ItemCategory: Record "E3 Item Category Master";
-                    ItemCategoryMgmt: Codeunit "E3 Item Category Mgmt.";
-                begin
-                    ItemCategory.Get(Rec.Code, Rec.Name);
-                    if ItemCategoryMgmt.SendItemCategoryDetails(ItemCategory) then
-                        Message('Data sent successfully.')
-                    else
-                        Message('Failed to send data.');
-                end;
 
+                begin
+                end;
             }
         }
     }

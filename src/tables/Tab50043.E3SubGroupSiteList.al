@@ -62,7 +62,7 @@ table 50043 "E3 Sub Group Site List"
     }
     keys
     {
-        key(PK; "Entry No.")
+        key(PK; "Site Code")
         {
             Clustered = true;
         }

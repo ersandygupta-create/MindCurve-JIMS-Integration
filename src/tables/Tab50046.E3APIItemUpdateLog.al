@@ -25,6 +25,11 @@ table 50046 "E3 API Item Update Log"
             Caption = 'Description 2';
             ToolTip = 'Specifies information in addition to the description.';
         }
+        field(6; "Manual Code"; Code[20])
+        {
+            Caption = 'Manual Code';
+            DataClassification = CustomerContent;
+        }
         field(8; "Base Unit of Measure"; Code[10])
         {
             Caption = 'Base Unit of Measure';
@@ -43,6 +48,11 @@ table 50046 "E3 API Item Update Log"
         {
             Caption = 'Inventory Posting Group';
             ToolTip = 'Specifies links between business transactions made for the item and an inventory account in the general ledger, to group amounts for that item type.';
+        }
+        field(54; Blocked; Boolean)
+        {
+            Caption = 'Blocked';
+            ToolTip = 'Specifies that transactions with the item cannot be posted, for example, because the item is in quarantine.';
         }
         field(5425; "Sales Unit of Measure"; Code[10])
         {
@@ -178,7 +188,7 @@ table 50046 "E3 API Item Update Log"
         }
         field(50025; "Sub Group Nature"; Text[60])
         {
-            Caption = 'Sub Group namture';
+            Caption = 'Sub Group nature';
             DataClassification = CustomerContent;
             TableRelation = "E3 Sub-Group Nature".Name;
         }
@@ -255,6 +265,50 @@ table 50046 "E3 API Item Update Log"
         {
             Caption = 'Last Modified Date Time';
         }
+        field(50040; "Item Group"; Text[60])
+        {
+            Caption = 'Item Group';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Group".Name;
+        }
+        field(50041; "Filter Item Type"; Text[60])
+        {
+            Caption = 'Filter Item Type';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Filter Item Type".Name;
+
+        }
+        field(50042; "Tolerance excess"; Decimal)
+        {
+            Caption = 'tl_ExcessPer';
+            DataClassification = CustomerContent;
+        }
+        field(50043; "Tolerance Shortage"; Decimal)
+        {
+            Caption = 'tl_ShortagePer';
+            DataClassification = CustomerContent;
+        }
+        field(50044; "Margin Fix"; Enum "E3 Margin Fix")
+        {
+            Caption = 'Margin Fix';
+            DataClassification = CustomerContent;
+        }
+        field(50045; "Property List"; Text[60])
+        {
+            Caption = 'Property List';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Property List".Name;
+        }
+        field(50046; SkuName; Text[100])
+        {
+            Caption = 'SkuName';
+            DataClassification = CustomerContent;
+        }
+        field(91; "Gen. Prod. Posting Group"; Code[20])
+        {
+            Caption = 'Gen. Prod. Posting Group';
+            ToolTip = 'Specifies the item''s product type to link transactions made for this item with the appropriate general ledger account according to the general posting setup.';
+        }
         field(98; "GST Group Code"; Code[20])
         {
             Caption = 'GST Group Code';
@@ -269,7 +323,7 @@ table 50046 "E3 API Item Update Log"
 
     keys
     {
-        key(PK; "No.", "Unique Log No.")
+        key(PK; "No.")
         {
             Clustered = true;
         }

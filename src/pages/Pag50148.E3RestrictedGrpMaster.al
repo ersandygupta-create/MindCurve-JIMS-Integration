@@ -27,16 +27,19 @@ page 50148 "E3 Restricted Group Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field(Response; Rec.Response)
                 {
                     ToolTip = 'Specifies the value of the Response field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Last Sent"; Rec."Last Sent")
                 {
                     ToolTip = 'Specifies the value of the Last Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
             }
         }
@@ -55,8 +58,15 @@ page 50148 "E3 Restricted Group Master"
                 PromotedCategory = Process;
                 Image = SendTo;
                 trigger OnAction()
-
+                var
+                    RestrictedGrpMgmt: Codeunit "E3 Restricted Group Mgmt.";
+                    RestrictedGrpMast: Record "E3 Restricted Group Master";
                 begin
+                    RestrictedGrpMast.Get(Rec.Code, Rec.Name);
+                    if RestrictedGrpMgmt.SendRestrictedGroupDetails(RestrictedGrpMast) then
+                        Message('Data sent successfully.')
+                    else
+                        Message('Failed to send data.');
                 end;
             }
         }

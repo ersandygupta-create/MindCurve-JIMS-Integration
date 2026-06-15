@@ -153,6 +153,14 @@ page 50012 "E3 Integration API Setup"
                 {
                     ToolTip = 'Specifies the value of the Sub Group Site API Enabled field.';
                 }
+                field("Item Master API"; Rec."Item Master API")
+                {
+                    ToolTip = 'Specifies the value of the Item Master API Enabled field.';
+                }
+                field("Item Master API Enabled"; Rec."Item Master API Enabled")
+                {
+                    ToolTip = 'Specifies the value of the Item Master API Enabled field.';
+                }
             }
         }
     }

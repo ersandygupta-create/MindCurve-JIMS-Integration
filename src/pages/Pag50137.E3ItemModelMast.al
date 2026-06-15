@@ -27,16 +27,19 @@ page 50137 "E3 Item Model Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field(Response; Rec.Response)
                 {
                     ToolTip = 'Specifies the value of the Response field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Last Sent"; Rec."Last Sent")
                 {
                     ToolTip = 'Specifies the value of the Last Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
             }
         }
@@ -55,8 +58,15 @@ page 50137 "E3 Item Model Master"
                 PromotedCategory = Process;
                 Image = SendTo;
                 trigger OnAction()
-
+                var
+                    E3ItemModelMgmt: Codeunit "E3 Item Model Mgmt.";
+                    ItemModelMst: Record "E3 Item Model Master";
                 begin
+                    ItemModelMst.Get(Rec.Code, Rec.Name);
+                    if E3ItemModelMgmt.SendItemModelDetails(ItemModelMst) then
+                        Message('Data sent successfully.')
+                    else
+                        Message('Failed to send data.');
                 end;
             }
         }

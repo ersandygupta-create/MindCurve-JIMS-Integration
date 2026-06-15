@@ -37,16 +37,19 @@ page 50143 "E3 Item Make Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field(Response; Rec.Response)
                 {
                     ToolTip = 'Specifies the value of the Response field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Last Sent"; Rec."Last Sent")
                 {
                     ToolTip = 'Specifies the value of the Last Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
             }
         }
@@ -65,8 +68,15 @@ page 50143 "E3 Item Make Master"
                 PromotedCategory = Process;
                 Image = SendTo;
                 trigger OnAction()
-
+                var
+                    ItemMakeMastMgmt: Codeunit "E3 Item Make Master Mgmt.";
+                    ItemMakeMast: Record "E3 Item Make Master";
                 begin
+                    ItemMakeMast.Get(Rec.Code, Rec."Company Name");
+                    if ItemMakeMastMgmt.SendItemMakeMastDetails(ItemMakeMast) then
+                        Message('Data sent successfully.')
+                    else
+                        Message('Failed to send data.');
                 end;
             }
         }

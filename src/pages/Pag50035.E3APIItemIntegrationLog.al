@@ -19,18 +19,35 @@ page 50035 "E3 API Item Update Log"
                 field("No."; Rec."No.")
                 {
                     ToolTip = 'Specifies the value of the No. field.';
+                    Caption = 'Code';
                 }
                 field("No. 2"; Rec."No. 2")
                 {
                     ToolTip = 'Specifies the value of the No. 2 field.';
+                    Visible = false;
                 }
                 field(Description; Rec.Description)
                 {
                     ToolTip = 'Specifies the value of the Description field.';
+                    Caption = 'Name';
                 }
                 field("Description 2"; Rec."Description 2")
                 {
                     ToolTip = 'Specifies the value of the Description 2 field.';
+                    Caption = 'Display Name';
+                }
+                field("Manual Code"; Rec."Manual Code")
+                {
+                    ToolTip = 'Specifies the value of the Base Unit of Measure field.';
+                }
+                field(Type; Rec.Type)
+                {
+                    ToolTip = 'Specifies the value of the Type field.';
+                    Caption = 'Item Type';
+                }
+                field(SkuName; Rec.SkuName)
+                {
+                    ToolTip = 'Specifies the value of the Type field.';
                 }
                 field("Base Unit of Measure"; Rec."Base Unit of Measure")
                 {
@@ -40,9 +57,9 @@ page 50035 "E3 API Item Update Log"
                 {
                     ToolTip = 'Specifies the value of the Price Unit Conversion field.';
                 }
-                field(Type; Rec.Type)
+                field("HSN/SAC Code"; Rec."HSN/SAC Code")
                 {
-                    ToolTip = 'Specifies the value of the Type field.';
+                    ToolTip = 'Specifies the value of the HSN/SAC Code field.';
                 }
                 field("Inventory Posting Group"; Rec."Inventory Posting Group")
                 {
@@ -59,10 +76,6 @@ page 50035 "E3 API Item Update Log"
                 field("GST Group Code"; Rec."GST Group Code")
                 {
                     ToolTip = 'Specifies the value of the GST Group Code field.';
-                }
-                field("HSN/SAC Code"; Rec."HSN/SAC Code")
-                {
-                    ToolTip = 'Specifies the value of the HSN/SAC Code field.';
                 }
                 field("E3 Item Type"; Rec."E3 Item Type")
                 {
@@ -187,6 +200,32 @@ page 50035 "E3 API Item Update Log"
                 field("Narcotics Control Substances"; Rec."Narcotics Control Substances")
                 {
                     ToolTip = 'Specifies the value of the Narcotics Control Substances field.';
+                }
+                field("Item Group"; Rec."Item Group")
+                {
+                    ToolTip = 'Specifies the value of the Item Group field.';
+                }
+                field("Filter Item Type"; Rec."Filter Item Type")
+                {
+                    ToolTip = 'Specifies the value of the Filter Item Type field.';
+                }
+                field("Tolerance excess"; Rec."Tolerance excess")
+                {
+                    ToolTip = 'Specifies the value of the Tolerance excess field.';
+                    Caption = 'tl_ExcessPer';
+                }
+                field("Tolerance Shortage"; Rec."Tolerance Shortage")
+                {
+                    ToolTip = 'Specifies the value of the Tolerance Shortage field.';
+                    Caption = 'tl_ShortagePer';
+                }
+                field("Margin Fix"; Rec."Margin Fix")
+                {
+                    ToolTip = 'Specifies the value of the Margin Fix field.';
+                }
+                field("Property List"; Rec."Property List")
+                {
+                    ToolTip = 'Specifies the value of the Property List field.';
                 }
                 field("Unique Log No."; Rec."Unique Log No.")
                 {

@@ -512,6 +512,16 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         RunPageMode = Create;
                         ToolTip = 'Check Filter Item Type';
                     }
+                    action("Sub Group Master")
+                    {
+                        AccessByPermission = TableData "E3 Sub Group Master" = R;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Sub Group';
+                        Image = NewOrder;
+                        RunObject = Page "E3 Sub Group Master";
+                        RunPageMode = Create;
+                        ToolTip = 'Check Filter Sub Group Master';
+                    }
                 }
                 group("E3 HIS Collection Staging")
                 {

@@ -37,16 +37,19 @@ page 50144 "E3 Medicine Component Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field(Response; Rec.Response)
                 {
                     ToolTip = 'Specifies the value of the Response field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Last Sent"; Rec."Last Sent")
                 {
                     ToolTip = 'Specifies the value of the Last Sent field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
             }
         }
@@ -65,8 +68,15 @@ page 50144 "E3 Medicine Component Master"
                 PromotedCategory = Process;
                 Image = SendTo;
                 trigger OnAction()
-
+                var
+                    MedicineCompMastMgmt: Codeunit "E3 Medicine Comp Master Mgmt.";
+                    MedicineCompMast: Record "E3 Medicine Component Master";
                 begin
+                    MedicineCompMast.Get(Rec.Name);
+                    if MedicineCompMastMgmt.SendMedicineCompMastDetails(MedicineCompMast) then
+                        Message('Data sent successfully.')
+                    else
+                        Message('Failed to send data.');
                 end;
             }
         }
