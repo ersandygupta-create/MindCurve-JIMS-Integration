@@ -97,6 +97,7 @@ codeunit 50019 "E3 Item Integration Mgmt."
         ItemLog: Record "E3 API Item Update Log";
         LastLog: Record "E3 API Item Update Log";
         UniqueID: Integer;
+        itemUOM: Record "Item Unit of Measure";
     begin
         LastLog.Reset();
         LastLog.SetRange("No.", ItemRec."No.");
@@ -118,6 +119,10 @@ codeunit 50019 "E3 Item Integration Mgmt."
 
             ItemLog.Init();
             ItemLog.TransferFields(ItemRec);
+            // itemUOM.Get(ItemRec."Purch. Unit of Measure");
+            // ItemLog."Purch. Qty. Per Rate" := itemUOM."Qty. per Unit of Measure";
+            // ItemLog.Get(ItemRec."Sales Unit of Measure");
+            // ItemLog."Sale Qty. Per Rate" := itemUOM."Qty. per Unit of Measure";
             ItemLog."Unique Log No." := UniqueID;
             ItemLog."Entry Type" := ItemLog."Entry Type"::Update;
             ItemLog.Insert();

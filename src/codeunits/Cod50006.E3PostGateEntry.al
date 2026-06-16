@@ -40,12 +40,18 @@ codeunit 50006 "E3 Post Gate Entry"
             IF GUIALLOWED THEN
                 Window.UPDATE(1, STRSUBSTNO(Text16503, "Document No.", PostedGateEntryHeader."Document No."));
             PostedGateEntryHeader.INSERT;
-
+            PostedGateEntryBuffer.Reset();
+            PostedGateEntryBuffer.SetCurrentKey("Posted Entry No.");
+            if PostedGateEntryBuffer.FindLast() then
+                LastEntryno := PostedGateEntryBuffer."Entry No." + 1
+            else
+                LastEntryno := 1;
             GateEntryLine.RESET;
             GateEntryLine.SETRANGE("Document No.", "Document No.");
             LineCount := 0;
             IF GateEntryLine.FINDSET THEN
                 REPEAT
+
                     LineCount += 1;
                     IF GUIALLOWED THEN
                         Window.UPDATE(2, LineCount);
@@ -64,7 +70,9 @@ codeunit 50006 "E3 Post Gate Entry"
                     PostedGateEntryLine."Lot No." := GateEntryLine."Lot No.";
                     PostedGateEntryLine.Remarks := GateEntryLine.Remarks;
                     PostedGateEntryLine.PostedNo := PostedGateEntryHeader.PostedNo;
+                    PostedGateEntryBuffer."Posted Entry No." := LastEntryno;
                     PostedGateEntryLine.INSERT;
+                    LastEntryno += 1;
 
                     GateEntryLineUpd := GateEntryLine;
                     GateEntryLineUpd."Quantity Received" := GateEntryLineUpd."Quantity Received" + GateEntryLineUpd."Qty to Receive";
@@ -113,6 +121,8 @@ codeunit 50006 "E3 Post Gate Entry"
         Window: Dialog;
         ModifyHeader: Boolean;
         LineCount: Integer;
+        PostedGateEntryBuffer: Record "E3 Posted Gate Entry Line";
+        LastEntryno: Integer;
 
 
 }

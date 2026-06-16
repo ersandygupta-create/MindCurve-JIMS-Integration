@@ -7,6 +7,9 @@ codeunit 50007 "E3 Gate Entry Transfer"
         PostedLine: Record "E3 Posted Gate Entry Line";
         NoSeriesMgt: Codeunit "No. Series";
         ShipmentNo: Code[20];
+        LastEntryno: Integer;
+        PostedGateEntryBuffer: Record "E3 Posted Gate Entry Line";
+
     begin
         // Validate Lines
         GateEntryLine.Reset();
@@ -30,11 +33,17 @@ codeunit 50007 "E3 Gate Entry Transfer"
 
         if GateEntryLine.FindSet() then
             repeat
+
+                PostedGateEntryBuffer.Reset();
+                if PostedGateEntryBuffer.FindLast() then
+                    LastEntryno := PostedGateEntryBuffer."Entry No." + 1
+                else
+                    LastEntryno := 1;
                 PostedLine.Init();
                 PostedLine.TransferFields(GateEntryLine);
 
                 PostedLine."Document No." := PostedHeader."Document No.";
-
+                PostedLine."Posted Entry No." := LastEntryno;
                 PostedLine.Insert(true);
 
             until GateEntryLine.Next() = 0;
@@ -128,7 +137,7 @@ codeunit 50007 "E3 Gate Entry Transfer"
                 InwardLine."Lot No." := OutwardLine."Lot No.";
                 InwardLine.Remarks := OutwardLine.Remarks;
 
-                InwardLine.Insert(true);
+                InwardLine.Insert();
 
             until OutwardLine.Next() = 0;
     end;
