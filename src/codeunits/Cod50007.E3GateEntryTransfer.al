@@ -63,6 +63,8 @@ codeunit 50007 "E3 Gate Entry Transfer"
         InwardHeader: Record "E3 Gate Entry Header";
         InwardLine: Record "E3 Gate Entry Line";
         NoSeriesMgt: Codeunit "No. Series";
+        GateEntrLine: Record "E3 Gate Entry Line";
+        LastEntryNo: Integer;
     begin
         //-----------------------------------------
         // Validate Quantity
@@ -103,12 +105,21 @@ codeunit 50007 "E3 Gate Entry Transfer"
 
         if OutwardLine.FindSet() then
             repeat
+
+                GateEntrLine.Reset();
+                If GateEntrLine.FindLast() Then
+                    LastEntryNo := GateEntrLine."Entry No." + 1
+                else
+                    LastEntryNo := 1;
                 InwardLine.Init();
+                InwardLine."Entry No." := LastEntryNo;
                 InwardLine."Document No." := InwardHeader."Document No.";
                 InwardLine."Line No." := OutwardLine."Line No.";
                 InwardLine."Item No." := OutwardLine."Item No.";
                 InwardLine."Item Name" := OutwardLine."Item Name";
                 InwardLine.Quantity := OutwardLine.Quantity;
+                InwardLine."Cost/Qty" := OutwardLine."Cost/Qty";
+                InwardLine."Estimated Value" := OutwardLine."Estimated Value";
                 InwardLine."Variant Code" := OutwardLine."Variant Code";
                 InwardLine."Unit of Measurement" := OutwardLine."Unit of Measurement";
                 InwardLine."Estimated Value Receive" := OutwardLine."Qty to Receive" * OutwardLine."Cost/Qty";
