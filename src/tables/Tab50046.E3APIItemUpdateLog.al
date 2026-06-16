@@ -25,11 +25,6 @@ table 50046 "E3 API Item Update Log"
             Caption = 'Description 2';
             ToolTip = 'Specifies information in addition to the description.';
         }
-        field(6; "Manual Code"; Code[20])
-        {
-            Caption = 'Manual Code';
-            DataClassification = CustomerContent;
-        }
         field(8; "Base Unit of Measure"; Code[10])
         {
             Caption = 'Base Unit of Measure';
@@ -302,6 +297,21 @@ table 50046 "E3 API Item Update Log"
         field(50046; SkuName; Text[100])
         {
             Caption = 'SkuName';
+            DataClassification = CustomerContent;
+        }
+        field(50047; "Manual Code"; Code[20])
+        {
+            Caption = 'Manual Code';
+            DataClassification = CustomerContent;
+        }
+        field(50049; "Purch. Qty. Per Rate"; Decimal)
+        {
+            Caption = 'Purch. Unit Conversion Rate';
+            DataClassification = CustomerContent;
+        }
+        field(50050; "Sale Qty. Per Rate"; Decimal)
+        {
+            Caption = 'Sale Unit Conversion Rate';
             DataClassification = CustomerContent;
         }
         field(91; "Gen. Prod. Posting Group"; Code[20])

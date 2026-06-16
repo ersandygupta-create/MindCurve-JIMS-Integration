@@ -207,6 +207,16 @@ tableextension 50015 "E3 HIS Item" extends Item
             DataClassification = CustomerContent;
             TableRelation = "E3 Property List".Name;
         }
+        field(50047; "Manual Code"; Text[20])
+        {
+            Caption = 'Manual Code';
+            DataClassification = CustomerContent;
+        }
+        field(50048; Remarks; Text[100])
+        {
+            Caption = 'Remarks';
+            DataClassification = CustomerContent;
+        }
 
     }
     trigger OnBeforeRename()

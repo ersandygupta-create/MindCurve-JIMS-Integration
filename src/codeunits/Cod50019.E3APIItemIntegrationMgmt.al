@@ -43,6 +43,7 @@ codeunit 50019 "E3 Item Integration Mgmt."
 
     var
         E3APISetup: Record "E3 Integration API Setup";
+        ItemUOM: Record "Item Unit of Measure";
 
 
     //[NonDebuggable]
@@ -219,10 +220,10 @@ codeunit 50019 "E3 Item Integration Mgmt."
         JChildObj.Add('manualCode', ItemUpdateLog."Manual Code");
         JChildObj.Add('itemDesc', ItemUpdateLog."Description 2");
         JChildObj.Add('itemType', Format(ItemUpdateLog.Type));
-        JChildObj.Add('skuName', '');
+        JChildObj.Add('skuName', ItemUpdateLog."Base Unit of Measure");
         JChildObj.Add('purchaseUnitName', ItemUpdateLog."Purch. Unit of Measure");
         JChildObj.Add('saleUnitName', ItemUpdateLog."Sales Unit of Measure");
-        JChildObj.Add('itemPacking', '');
+        JChildObj.Add('itemPacking', ItemUpdateLog.Packing);
         JChildObj.Add('purchaseUnitConversionRate', 0);
         JChildObj.Add('saleUnitConversionRate', 0);
         JChildObj.Add('hsnCode', Format(ItemUpdateLog."HSN/SAC Code"));
@@ -230,25 +231,25 @@ codeunit 50019 "E3 Item Integration Mgmt."
         JChildObj.Add('strengthName', ItemUpdateLog.Strength);
         JChildObj.Add('propertyList', ItemUpdateLog."Property List");
         JChildObj.Add('itemCategoryCodeName', ItemUpdateLog.Category);
-        JChildObj.Add('subCategoryCodeName', '');
-        JChildObj.Add('compositionCodeName', '');
+        JChildObj.Add('subCategoryCodeName', ItemUpdateLog."Medicine SubCategory");
+        JChildObj.Add('compositionCodeName', ItemUpdateLog."Medicine Composition");
         JChildObj.Add('materialCategoryCodeName', ItemUpdateLog."Material Category");
         JChildObj.Add('materialTypeCodeName', ItemUpdateLog."Material Type");
         JChildObj.Add('marketingCompanyName', ItemUpdateLog."Medicine Company");
-        JChildObj.Add('itemGroupName', '');
+        JChildObj.Add('itemGroupName', ItemUpdateLog."Item Group");
         JChildObj.Add('itemMakeCodeName', ItemUpdateLog.Make);
         JChildObj.Add('filterItemType', ItemUpdateLog."Filter Item Type");
         JChildObj.Add('manufacturerCodeName', ItemUpdateLog.Make);
-        JChildObj.Add('isActive', true);
+        JChildObj.Add('isActive', ItemUpdateLog.Blocked);
         JChildObj.Add('isBarcodeActive', ItemUpdateLog."BarCode Active");
-        JChildObj.Add('isConsignment', true);
+        JChildObj.Add('isConsignment', ItemUpdateLog."Consignment Item");
         JChildObj.Add('isNarcotics', ItemUpdateLog."Narcotics Control Substances");
         JChildObj.Add('isReturnableItem', ItemUpdateLog."Sale Returnable Item");
         JChildObj.Add('isSaleRateEditable', ItemUpdateLog."Sale Rate Editable");
         JChildObj.Add('isIncludeFreeQtyInSaleRate', ItemUpdateLog."Incl Free Qty in Sale Rate");
         JChildObj.Add('isDiscountAllow', ItemUpdateLog."Sale Discount Allow");
         JChildObj.Add('isQuotationMandatory', ItemUpdateLog."Quatation Required");
-        JChildObj.Add('allowMRPDiscPattern', '');
+        JChildObj.Add('allowMRPDiscPattern', Format(ItemUpdateLog."Allow MRP Discount"));
         JChildObj.Add('marginRateFix', Format(ItemUpdateLog."Margin Fix"));
         JChildObj.Add('remark', '');
         JChildObj.Add('tl_ExcessPer', Format(ItemUpdateLog."Tolerance excess"));

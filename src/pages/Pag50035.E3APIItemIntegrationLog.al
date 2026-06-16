@@ -69,9 +69,17 @@ page 50035 "E3 API Item Update Log"
                 {
                     ToolTip = 'Specifies the value of the Sales Unit of Measure field.';
                 }
+                field("Sale Qty. Per Rate"; Rec."Sale Qty. Per Rate")
+                {
+                    ToolTip = 'Specifies the value of the Sale Qty. Per Rate field.';
+                }
                 field("Purch. Unit of Measure"; Rec."Purch. Unit of Measure")
                 {
                     ToolTip = 'Specifies the value of the Purch. Unit of Measure field.';
+                }
+                field("Purch. Qty. Per Rate"; Rec."Purch. Qty. Per Rate")
+                {
+                    ToolTip = 'Specifies the value of the Purch. Qty. Per Rate field.';
                 }
                 field("GST Group Code"; Rec."GST Group Code")
                 {

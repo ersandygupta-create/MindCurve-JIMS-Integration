@@ -119,6 +119,11 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of Margin Fix field.';
                 }
+                field("Manual Code"; Rec."Manual Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of Manual Code field.';
+                }
             }
         }
         addafter("JIMS Attributes")
@@ -191,7 +196,11 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of Filter Item Type field.';
                 }
-
+                field(Remarks; Rec.Remarks)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of Remarks field.';
+                }
             }
         }
     }
