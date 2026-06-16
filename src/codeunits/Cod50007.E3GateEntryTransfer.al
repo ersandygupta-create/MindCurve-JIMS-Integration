@@ -111,7 +111,7 @@ codeunit 50007 "E3 Gate Entry Transfer"
                 InwardLine.Quantity := OutwardLine.Quantity;
                 InwardLine."Variant Code" := OutwardLine."Variant Code";
                 InwardLine."Unit of Measurement" := OutwardLine."Unit of Measurement";
-                InwardLine."Estimated Value" := OutwardLine."Estimated Value";
+                InwardLine."Estimated Value Receive" := OutwardLine."Qty to Receive" * OutwardLine."Cost/Qty";
                 InwardLine."Asset No." := OutwardLine."Asset No.";
                 InwardLine."Serial No." := OutwardLine."Serial No.";
                 InwardLine."Lot No." := OutwardLine."Lot No.";

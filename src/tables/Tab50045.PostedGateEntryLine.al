@@ -105,7 +105,17 @@ table 50045 "E3 Posted Gate Entry Line"
             Caption = 'No.';
             DataClassification = CustomerContent;
         }
-        field(19; "Posted Entry No."; Integer)
+        field(31; "Cost/Qty"; Decimal)
+        {
+            Caption = 'Cost per Qty';
+        }
+        field(32; "Estimated Value Receive"; Decimal)
+        {
+            Caption = 'Estimated Value';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(99; "Posted Entry No."; Integer)
         {
             Caption = 'Posted Entry No.';
             AutoIncrement = true;

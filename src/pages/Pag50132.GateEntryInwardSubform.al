@@ -88,7 +88,7 @@ page 50132 "E3 Gate Entry Inward Subform"
                     Visible = false;
                     ToolTip = 'Specifies the value of the Pending Qty field.';
                 }
-                field("Estimated Value"; Rec."Estimated Value")
+                field("Estimated Value"; Rec."Estimated Value Receive")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Estimated Value field.';

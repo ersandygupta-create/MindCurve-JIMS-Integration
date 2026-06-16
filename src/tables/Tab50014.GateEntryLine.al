@@ -58,6 +58,11 @@ table 50014 "E3 Gate Entry Line"
         {
             Caption = 'Quantity';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if (Quantity <> 0) then
+                    rec."Cost/Qty" := "Estimated Value" / Quantity;
+            end;
         }
         field(9; "Qty to Receive"; Decimal)
         {
@@ -67,6 +72,7 @@ table 50014 "E3 Gate Entry Line"
             begin
                 if (Rec."Quantity Received" + Rec."Qty to Receive" > rec.Quantity) then
                     Error('Quantity received and quantity to receive shoul not more than Quantity');
+                rec."Estimated Value Receive" := "Qty to Receive" * "Cost/Qty";
             end;
         }
         field(10; "Pending Qty"; Decimal)
@@ -78,7 +84,13 @@ table 50014 "E3 Gate Entry Line"
         {
             Caption = 'Estimated Value';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if (rec.Quantity <> 0) then
+                    rec."Cost/Qty" := "Estimated Value" / Quantity;
+            end;
         }
+
         field(12; "Asset No."; Code[20])
         {
             Caption = 'Asset No.';
@@ -112,6 +124,16 @@ table 50014 "E3 Gate Entry Line"
             Editable = false;
             ToolTip = 'Specifies how many units of the item on the line have been posted as received.';
 
+        }
+        field(31; "Cost/Qty"; Decimal)
+        {
+            Caption = 'Cost per Qty';
+        }
+        field(32; "Estimated Value Receive"; Decimal)
+        {
+            Caption = 'Estimated Value';
+            DataClassification = CustomerContent;
+            Editable = false;
         }
 
     }
