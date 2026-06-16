@@ -20,14 +20,17 @@ page 50012 "E3 Integration API Setup"
                 field(Username; Rec.Username)
                 {
                     ToolTip = 'Specifies the value of the Username field.';
+                    Visible = false;
                 }
                 field(Password; Rec.Password)
                 {
                     ToolTip = 'Specifies the value of the Password field.';
+                    Visible = false;
                 }
                 field(Host; Rec.Host)
                 {
                     ToolTip = 'Specifies the value of the Host field.';
+                    Visible = false;
                 }
             }
             group(API)

@@ -25,6 +25,7 @@ page 50107 "E3 Posted Gate Ent Outward Hdr"
                 {
                     ToolTip = 'Specifies the value of the Entry Type field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Document No."; Rec."Document No.")
                 {

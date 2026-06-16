@@ -21,6 +21,7 @@ table 50013 "E3 Gate Entry Header"
         field(3; "Entry Type"; Enum "E3 Gate Pass Entry Type")
         {
             Caption = 'Entry Type';
+            Editable = false;
             DataClassification = CustomerContent;
         }
         field(4; "Document No."; Code[20])

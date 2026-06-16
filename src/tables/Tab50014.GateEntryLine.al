@@ -32,8 +32,10 @@ table 50014 "E3 Gate Entry Line"
             trigger OnValidate()
             begin
                 "Item Name" := '';
+                "Unit of Measurement" := '';
                 if Item.Get("Item No.") then
                     "Item Name" := Item.Description;
+                "Unit of Measurement" := Item."Base Unit of Measure";
             end;
         }
         field(5; "Item Name"; Text[100])

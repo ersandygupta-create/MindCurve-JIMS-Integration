@@ -225,7 +225,7 @@ codeunit 50019 "E3 Item Integration Mgmt."
         JChildObj.Add('itemPacking', '');
         JChildObj.Add('purchaseUnitConversionRate', 0);
         JChildObj.Add('saleUnitConversionRate', 0);
-        JChildObj.Add('hsnCode', ItemUpdateLog."HSN/SAC Code");
+        JChildObj.Add('hsnCode', Format(ItemUpdateLog."HSN/SAC Code"));
         JChildObj.Add('modelName', ItemUpdateLog.Model);
         JChildObj.Add('strengthName', ItemUpdateLog.Strength);
         JChildObj.Add('propertyList', ItemUpdateLog."Property List");
@@ -251,8 +251,8 @@ codeunit 50019 "E3 Item Integration Mgmt."
         JChildObj.Add('allowMRPDiscPattern', '');
         JChildObj.Add('marginRateFix', Format(ItemUpdateLog."Margin Fix"));
         JChildObj.Add('remark', '');
-        JChildObj.Add('tl_ExcessPer', '');
-        JChildObj.Add('tl_ShortagePer', '');
+        JChildObj.Add('tl_ExcessPer', Format(ItemUpdateLog."Tolerance excess"));
+        JChildObj.Add('tl_ShortagePer', Format(ItemUpdateLog."Tolerance Shortage"));
         JChildObj.Add('isStatus', '');
         JChildObj.Add('segment1', '');
         JChildObj.Add('segment2', '');

@@ -255,11 +255,17 @@ page 50035 "E3 API Item Update Log"
                 ToolTip = 'Executes the Sync action.';
                 trigger OnAction()
                 var
+                    ItemRec: Record "E3 API Item Update Log";
                     E3AkhilMgmt: Codeunit "E3 Item Integration Mgmt.";
                 begin
-                    Clear(E3AkhilMgmt);
-                    E3AkhilMgmt.SendItemDetails(Rec);
-                    Rec.Modify(false);
+                    CurrPage.SetSelectionFilter(ItemRec);
+
+                    if ItemRec.FindSet() then
+                        repeat
+                            Clear(E3AkhilMgmt);
+                            E3AkhilMgmt.SendItemDetails(ItemRec);
+                        until ItemRec.Next() = 0;
+
                     CurrPage.Update(false);
                 end;
             }

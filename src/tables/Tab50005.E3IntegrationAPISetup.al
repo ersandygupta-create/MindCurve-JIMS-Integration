@@ -1,7 +1,6 @@
 table 50005 "E3 Integration API Setup"
 {
-    Caption = 'Integration API Setup';
-    DataClassification = ToBeClassified;
+    DataPerCompany = false;
 
     fields
     {

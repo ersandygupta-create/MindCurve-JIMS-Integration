@@ -224,16 +224,21 @@ pageextension 50064 "Item Ext" extends "Item Card"
                             E3IntegrationMgmt.ManualSendToJIMS(ItemRec);
                     end;
                 }
-                action(SyncLog)
-                {
-                    Caption = 'Item Sync Logs';
-                    ToolTip = 'JIMS System Sync Logs.';
-                    Image = Log;
-                    ApplicationArea = all;
-                    RunObject = page "E3 API Item Update Log";
-                    RunPageLink = "No." = field("No.");
-                    RunPageMode = View;
-                }
+            }
+        }
+        addafter(SendToJIMS)
+        {
+            action(SyncLog)
+            {
+                ApplicationArea = All;
+                Caption = 'Item Sync Log';
+                ToolTip = 'View Item Sync Log.';
+                Image = Log;
+                Promoted = true;
+                PromotedCategory = Process;
+                RunObject = page "E3 API Item Update Log";
+                RunPageLink = "No." = field("No.");
+                RunPageMode = View;
             }
         }
     }

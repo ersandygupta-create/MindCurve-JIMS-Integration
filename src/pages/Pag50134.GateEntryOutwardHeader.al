@@ -120,6 +120,8 @@ page 50134 "E3 Gate Entry Outward Header"
                 var
                     GateTransfer: Codeunit "E3 Gate Entry Transfer";
                 begin
+                    if Rec."Gate Pass Type" = Rec."Gate Pass Type"::"Non-Returnable" then
+                        Error('Inward cannot be created for Gate Pass Type Non-Returnable.');
                     GateTransfer.PostOutwardGateEntry(Rec);
                 end;
             }
