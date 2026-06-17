@@ -96,8 +96,8 @@ codeunit 50019 "E3 Item Integration Mgmt."
     var
         ItemLog: Record "E3 API Item Update Log";
         LastLog: Record "E3 API Item Update Log";
+        ItemUOM: Record "Item Unit of Measure";
         UniqueID: Integer;
-        itemUOM: Record "Item Unit of Measure";
     begin
         LastLog.Reset();
         LastLog.SetRange("No.", ItemRec."No.");
@@ -106,9 +106,23 @@ codeunit 50019 "E3 Item Integration Mgmt."
         if LastLog.FindFirst() then begin
             ItemLog := LastLog;
             ItemLog.TransferFields(ItemRec);
+
+            // Purchase UOM Qty
+            Clear(ItemUOM);
+            if ItemUOM.Get(ItemRec."No.", ItemRec."Purch. Unit of Measure") then
+                ItemLog."Purch. Qty. Per Rate" := ItemUOM."Qty. per Unit of Measure"
+            else
+                ItemLog."Purch. Qty. Per Rate" := 0;
+
+            // Sales UOM Qty
+            Clear(ItemUOM);
+            if ItemUOM.Get(ItemRec."No.", ItemRec."Sales Unit of Measure") then
+                ItemLog."Sale Qty. Per Rate" := ItemUOM."Qty. per Unit of Measure"
+            else
+                ItemLog."Sale Qty. Per Rate" := 0;
+
             ItemLog.Modify(false);
         end else begin
-
             LastLog.Reset();
             LastLog.SetRange("No.", ItemRec."No.");
 
@@ -119,13 +133,24 @@ codeunit 50019 "E3 Item Integration Mgmt."
 
             ItemLog.Init();
             ItemLog.TransferFields(ItemRec);
-            // itemUOM.Get(ItemRec."Purch. Unit of Measure");
-            // ItemLog."Purch. Qty. Per Rate" := itemUOM."Qty. per Unit of Measure";
-            // ItemLog.Get(ItemRec."Sales Unit of Measure");
-            // ItemLog."Sale Qty. Per Rate" := itemUOM."Qty. per Unit of Measure";
+
+            // Purchase UOM Qty
+            Clear(ItemUOM);
+            if ItemUOM.Get(ItemRec."No.", ItemRec."Purch. Unit of Measure") then
+                ItemLog."Purch. Qty. Per Rate" := ItemUOM."Qty. per Unit of Measure"
+            else
+                ItemLog."Purch. Qty. Per Rate" := 0;
+
+            // Sales UOM Qty
+            Clear(ItemUOM);
+            if ItemUOM.Get(ItemRec."No.", ItemRec."Sales Unit of Measure") then
+                ItemLog."Sale Qty. Per Rate" := ItemUOM."Qty. per Unit of Measure"
+            else
+                ItemLog."Sale Qty. Per Rate" := 0;
+
             ItemLog."Unique Log No." := UniqueID;
             ItemLog."Entry Type" := ItemLog."Entry Type"::Update;
-            ItemLog.Insert();
+            ItemLog.Insert(false);
         end;
     end;
 

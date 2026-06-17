@@ -72,7 +72,7 @@ page 50144 "E3 Medicine Component Master"
                     MedicineCompMastMgmt: Codeunit "E3 Medicine Comp Master Mgmt.";
                     MedicineCompMast: Record "E3 Medicine Component Master";
                 begin
-                    MedicineCompMast.Get(Rec.Name);
+                    MedicineCompMast.Get(Rec.Code, Rec.Name);
                     if MedicineCompMastMgmt.SendMedicineCompMastDetails(MedicineCompMast) then
                         Message('Data sent successfully.')
                     else

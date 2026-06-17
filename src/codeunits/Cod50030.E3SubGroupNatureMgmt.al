@@ -56,6 +56,7 @@ codeunit 50030 "E3 Sub Group Nature Mgmt."
 
         ItemObj.Add('code', Format(SubGroupNatureUpdateLog.Code));
         ItemObj.Add('name', Format(SubGroupNatureUpdateLog.Name));
+        ItemObj.Add('manualCode', SubGroupNatureUpdateLog."Manual Code");
         ItemObj.Add('segment1', 'string');
         ItemObj.Add('segment2', 'string');
         ItemObj.Add('segment3', 'string');

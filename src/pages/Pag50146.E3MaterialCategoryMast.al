@@ -72,7 +72,7 @@ page 50146 "E3 material Category Master"
                     MaterialCatMgmt: Codeunit "E3 Material Category Mgmt.";
                     MaterialCatMast: Record "E3 Material Category Master";
                 begin
-                    MaterialCatMast.Get(Rec.Name);
+                    MaterialCatMast.Get(Rec.Code, Rec.Name);
                     if MaterialCatMgmt.SendMaterialCategoryDetails(MaterialCatMast) then
                         Message('Data sent successfully.')
                     else

@@ -62,7 +62,7 @@ page 50145 "E3 Item Speciality Master"
                     ItemSpecialityMgmt: Codeunit "E3 Item Speciality Mgmt.";
                     ItemSpecialityMast: Record "E3 Item Speciality Master";
                 begin
-                    ItemSpecialityMast.Get(Rec.Name);
+                    ItemSpecialityMast.Get(Rec.Code, Rec.Name);
                     if ItemSpecialityMgmt.SendItemSpecialityDetails(ItemSpecialityMast) then
                         Message('Data sent successfully.')
                     else
