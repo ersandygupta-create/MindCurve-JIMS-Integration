@@ -36,7 +36,7 @@ codeunit 50007 "E3 Gate Entry Transfer"
 
                 PostedGateEntryBuffer.Reset();
                 if PostedGateEntryBuffer.FindLast() then
-                    LastEntryno := PostedGateEntryBuffer."Entry No." + 1
+                    LastEntryno := PostedGateEntryBuffer."Posted Entry No." + 1
                 else
                     LastEntryno := 1;
                 PostedLine.Init();
