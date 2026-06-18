@@ -67,6 +67,15 @@ table 50013 "E3 Gate Entry Header"
             Caption = 'To Destination';
             DataClassification = CustomerContent;
             TableRelation = Location.Code;
+            trigger OnValidate()
+            var
+                LocationRec: Record Location;
+            begin
+                if LocationRec.Get("To Destination") then
+                    "Location Name" := LocationRec.Name
+                else
+                    "Location Name" := '';
+            end;
         }
         field(12; "Vendor No."; Code[20])
         {
@@ -122,8 +131,7 @@ table 50013 "E3 Gate Entry Header"
         {
             Caption = 'Location Name';
             Editable = false;
-            FieldClass = FlowField;
-            CalcFormula = lookup(Location.Name where(Code = field("To Destination")));
+            DataClassification = CustomerContent;
         }
     }
 
