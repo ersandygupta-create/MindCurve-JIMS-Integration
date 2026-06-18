@@ -830,6 +830,23 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                 }
             }
         }
+        addbefore(Action39)
+        {
+            group("E3 Indent Module")
+            {
+                Caption = 'Indent Module';
+                action("E3 Indent Entries")
+                {
+                    AccessByPermission = TableData "E3 Indent Header" = IMD;
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Create Indent Entries';
+                    Image = Archive;
+                    RunObject = Page "E3 Indent List";
+                    RunPageMode = Create;
+                    ToolTip = 'Executes the Create Indent Entries action.';
+                }
+            }
+        }
     }
 }
 

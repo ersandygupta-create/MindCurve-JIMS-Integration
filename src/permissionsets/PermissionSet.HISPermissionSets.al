@@ -206,6 +206,13 @@ permissionset 50000 "E3 HIS Permission"
     table "E3 Item Group" = X,
     tabledata "E3 Item Group" = RIMD,
     table "E3 Filter Item Type" = X,
-    tabledata "E3 Filter Item Type" = RIMD;
+    tabledata "E3 Filter Item Type" = RIMD,
+    table "E3 Indent Header" = X,
+    tabledata "E3 Indent Header" = RIMD,
+    table "E3 Indent Line" = X,
+    tabledata "E3 Indent Line" = RIMD,
+    page "E3 Indent List" = X,
+    page "E3 Indent Card" = X,
+    page "E3 Indent Subform" = X;
 
 }
