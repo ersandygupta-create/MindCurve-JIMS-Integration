@@ -43,7 +43,7 @@ codeunit 50006 "E3 Post Gate Entry"
             PostedGateEntryBuffer.Reset();
             PostedGateEntryBuffer.SetCurrentKey("Posted Entry No.");
             if PostedGateEntryBuffer.FindLast() then
-                LastEntryno := PostedGateEntryBuffer."Entry No." + 1
+                LastEntryno := PostedGateEntryBuffer."Posted Entry No." + 1
             else
                 LastEntryno := 1;
             GateEntryLine.RESET;
@@ -70,13 +70,14 @@ codeunit 50006 "E3 Post Gate Entry"
                     PostedGateEntryLine."Lot No." := GateEntryLine."Lot No.";
                     PostedGateEntryLine.Remarks := GateEntryLine.Remarks;
                     PostedGateEntryLine.PostedNo := PostedGateEntryHeader.PostedNo;
-                    PostedGateEntryBuffer."Posted Entry No." := LastEntryno;
+                    PostedGateEntryLine."Posted Entry No." := LastEntryno;
                     PostedGateEntryLine.INSERT;
                     LastEntryno += 1;
 
                     GateEntryLineUpd := GateEntryLine;
                     GateEntryLineUpd."Quantity Received" := GateEntryLineUpd."Quantity Received" + GateEntryLineUpd."Qty to Receive";
                     GateEntryLineUpd."Qty to Receive" := GateEntryLineUpd.Quantity - GateEntryLineUpd."Quantity Received";
+                    GateEntryLineUpd."Estimated Value Receive" := GateEntryLineUpd."Qty to Receive" * GateEntryLineUpd."Cost/Qty";
                     GateEntryLineUpd.Modify(true);
                 UNTIL GateEntryLine.NEXT = 0;
 

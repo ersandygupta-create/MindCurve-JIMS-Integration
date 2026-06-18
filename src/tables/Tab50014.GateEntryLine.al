@@ -134,6 +134,7 @@ table 50014 "E3 Gate Entry Line"
             Caption = 'Estimated Value';
             DataClassification = CustomerContent;
             Editable = false;
+            FieldClass = Normal;
         }
 
     }
