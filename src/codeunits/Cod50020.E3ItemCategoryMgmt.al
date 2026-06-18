@@ -77,9 +77,9 @@ codeunit 50020 "E3 Item Category Mgmt."
         ItemObj.Add('name', Format(ItemCategoryUpdateLog.Name));
         ItemObj.Add('saleRateProffitMargine', ItemCategoryUpdateLog.SaleRateProfitMargin);
         ItemObj.Add('filterItemType', ItemCategoryUpdateLog."Filter Item Type");
-        ItemObj.Add('segment1', 'string');
-        ItemObj.Add('segment2', 'string');
-        ItemObj.Add('segment3', 'string');
+        ItemObj.Add('segment1', '');
+        ItemObj.Add('segment2', '');
+        ItemObj.Add('segment3', '');
 
         ItemArray.Add(ItemObj);
 

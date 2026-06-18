@@ -62,10 +62,11 @@ table 50013 "E3 Gate Entry Header"
             ValidateTableRelation = false;
             DataClassification = CustomerContent;
         }
-        field(11; "To Destination"; Text[100])
+        field(11; "To Destination"; Code[20])
         {
             Caption = 'To Destination';
             DataClassification = CustomerContent;
+            TableRelation = Location.Code;
         }
         field(12; "Vendor No."; Code[20])
         {
@@ -116,6 +117,13 @@ table 50013 "E3 Gate Entry Header"
             Caption = 'No. Series';
             Editable = false;
             TableRelation = "No. Series";
+        }
+        field(22; "Location Name"; Text[100])
+        {
+            Caption = 'Location Name';
+            Editable = false;
+            FieldClass = FlowField;
+            CalcFormula = lookup(Location.Name where(Code = field("To Destination")));
         }
     }
 

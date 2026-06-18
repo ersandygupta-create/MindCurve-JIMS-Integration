@@ -57,9 +57,9 @@ codeunit 50021 "E3 Item Type Mgmt."
         ItemObj.Add('code', Format(ItemTypeUpdateLog.Code));
         ItemObj.Add('name', Format(ItemTypeUpdateLog.Name));
         ItemObj.Add('manualCode', ItemTypeUpdateLog."Manual Code");
-        ItemObj.Add('segment1', 'string');
-        ItemObj.Add('segment2', 'string');
-        ItemObj.Add('segment3', 'string');
+        ItemObj.Add('segment1', '');
+        ItemObj.Add('segment2', '');
+        ItemObj.Add('segment3', '');
 
         ItemArray.Add(ItemObj);
 

@@ -56,9 +56,9 @@ codeunit 50036 "E3 Restricted Group Mgmt."
 
         ItemObj.Add('code', Format(RestrictedGroupUpdateLog.Code));
         ItemObj.Add('name', Format(RestrictedGroupUpdateLog.Name));
-        ItemObj.Add('segment1', 'string');
-        ItemObj.Add('segment2', 'string');
-        ItemObj.Add('segment3', 'string');
+        ItemObj.Add('segment1', '');
+        ItemObj.Add('segment2', '');
+        ItemObj.Add('segment3', '');
 
         ItemArray.Add(ItemObj);
 

@@ -14,10 +14,11 @@ table 50037 "E3 Medicine Component Master"
             Caption = 'Name';
             DataClassification = CustomerContent;
         }
-        field(3; "Restrict Group Code"; Integer)
+        field(3; "Restrict Group Code"; Code[20])
         {
             Caption = 'Restrict Group Code';
             DataClassification = CustomerContent;
+            TableRelation = "E3 Restricted Group Master".Code;
         }
         field(4; IsActive; Boolean)
         {

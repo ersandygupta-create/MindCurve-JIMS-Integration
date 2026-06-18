@@ -56,9 +56,9 @@ codeunit 50035 "E3 Material Type Mgmt."
 
         ItemObj.Add('code', Format(MaterialTypeUpdateLog.Code));
         ItemObj.Add('name', Format(MaterialTypeUpdateLog.Name));
-        ItemObj.Add('segment1', 'string');
-        ItemObj.Add('segment2', 'string');
-        ItemObj.Add('segment3', 'string');
+        ItemObj.Add('segment1', '');
+        ItemObj.Add('segment2', '');
+        ItemObj.Add('segment3', '');
 
         ItemArray.Add(ItemObj);
 

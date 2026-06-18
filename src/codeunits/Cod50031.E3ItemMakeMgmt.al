@@ -58,9 +58,9 @@ codeunit 50031 "E3 Item Make Master Mgmt."
         ItemObj.Add('companyName', Format(ItemMakeMastUpdateLog."Company Name"));
         ItemObj.Add('filterItemType', ItemMakeMastUpdateLog."Filter Item Type");
         ItemObj.Add('shortName', ItemMakeMastUpdateLog."Short Name");
-        ItemObj.Add('segment1', 'string');
-        ItemObj.Add('segment2', 'string');
-        ItemObj.Add('segment3', 'string');
+        ItemObj.Add('segment1', '');
+        ItemObj.Add('segment2', '');
+        ItemObj.Add('segment3', '');
 
         ItemArray.Add(ItemObj);
 

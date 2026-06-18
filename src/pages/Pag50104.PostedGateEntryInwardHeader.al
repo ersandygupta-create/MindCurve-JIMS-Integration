@@ -56,6 +56,13 @@ page 50104 "E3 Posted Gate Ent Inward Hdr"
                 {
                     ToolTip = 'Specifies the value of the To Destination field';
                     ApplicationArea = All;
+                    Caption = 'Location Code';
+                }
+                field("Location Name"; Rec."Location Name")
+                {
+                    ToolTip = 'Specifies the value of the Location Name field';
+                    ApplicationArea = All;
+                    Caption = 'Location Name';
                 }
                 field("Vendor No."; Rec."Vendor No.")
                 {

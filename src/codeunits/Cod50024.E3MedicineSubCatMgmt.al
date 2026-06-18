@@ -56,9 +56,9 @@ codeunit 50024 "E3 Medicine Sub-Category Mgmt."
 
         ItemObj.Add('code', Format(MedicineSubCatUpdateLog.Code));
         ItemObj.Add('name', Format(MedicineSubCatUpdateLog.Name));
-        ItemObj.Add('segment1', 'string');
-        ItemObj.Add('segment2', 'string');
-        ItemObj.Add('segment3', 'string');
+        ItemObj.Add('segment1', '');
+        ItemObj.Add('segment2', '');
+        ItemObj.Add('segment3', '');
 
         ItemArray.Add(ItemObj);
 

@@ -58,9 +58,9 @@ codeunit 50034 "E3 Material Category Mgmt."
         ItemObj.Add('name', Format(MaterialCategoryUpdateLog.Name));
         ItemObj.Add('filterItemType', MaterialCategoryUpdateLog."Filter Item Type");
         ItemObj.Add('isCommon', MaterialCategoryUpdateLog.IsCommon);
-        ItemObj.Add('segment1', 'string');
-        ItemObj.Add('segment2', 'string');
-        ItemObj.Add('segment3', 'string');
+        ItemObj.Add('segment1', '');
+        ItemObj.Add('segment2', '');
+        ItemObj.Add('segment3', '');
 
         ItemArray.Add(ItemObj);
 

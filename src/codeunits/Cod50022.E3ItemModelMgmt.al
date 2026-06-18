@@ -56,9 +56,9 @@ codeunit 50022 "E3 Item Model Mgmt."
 
         ItemObj.Add('code', Format(ItemModelUpdateLog.Code));
         ItemObj.Add('name', Format(ItemModelUpdateLog.Name));
-        ItemObj.Add('segment1', 'string');
-        ItemObj.Add('segment2', 'string');
-        ItemObj.Add('segment3', 'string');
+        ItemObj.Add('segment1', '');
+        ItemObj.Add('segment2', '');
+        ItemObj.Add('segment3', '');
 
         ItemArray.Add(ItemObj);
 

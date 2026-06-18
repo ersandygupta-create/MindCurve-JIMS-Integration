@@ -60,9 +60,9 @@ codeunit 50038 "E3 Sub Group Site Mgmt."
         ItemObj.Add('allowForSite', Format(SubGroupSiteListUpdateLog."Allow For Site"));
         ItemObj.Add('isIpdConsultant', Format(SubGroupSiteListUpdateLog."Is Ipd Consultant"));
         ItemObj.Add('drugLicenseNo', SubGroupSiteListUpdateLog."Drug License No.");
-        ItemObj.Add('segment1', 'string');
-        ItemObj.Add('segment2', 'string');
-        ItemObj.Add('segment3', 'string');
+        ItemObj.Add('segment1', '');
+        ItemObj.Add('segment2', '');
+        ItemObj.Add('segment3', '');
 
         ItemArray.Add(ItemObj);
 
