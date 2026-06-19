@@ -115,6 +115,11 @@ table 50045 "E3 Posted Gate Entry Line"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(33; "Fixed Asset Name"; Text[100])
+        {
+            Caption = 'Fixed Asset Name';
+            DataClassification = CustomerContent;
+        }
         field(99; "Posted Entry No."; Integer)
         {
             Caption = 'Posted Entry No.';

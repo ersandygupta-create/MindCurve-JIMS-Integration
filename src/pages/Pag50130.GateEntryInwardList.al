@@ -41,9 +41,9 @@ page 50130 "E3 Gate Entry Inward List"
                     ToolTip = 'Specifies the value of the Vehicle No. field';
                     ApplicationArea = All;
                 }
-                field("Posting Date/Time"; Rec."Posting Date/Time")
+                field("Posting Date"; Rec."Posting Date")
                 {
-                    ToolTip = 'Specifies the value of the Posting Date/Time field';
+                    ToolTip = 'Specifies the value of the Posting Date field';
                     ApplicationArea = All;
                 }
                 field("Department Code"; Rec."Department Code")
@@ -66,9 +66,9 @@ page 50130 "E3 Gate Entry Inward List"
                     ToolTip = 'Specifies the value of the Vendor Name field';
                     ApplicationArea = All;
                 }
-                field("Employee Code"; Rec."Employee Code")
+                field(Person; Rec.Person)
                 {
-                    ToolTip = 'Specifies the value of the Employee Code field';
+                    ToolTip = 'Specifies the value of the Person field';
                     ApplicationArea = All;
                 }
                 field(Status; Rec.Status)

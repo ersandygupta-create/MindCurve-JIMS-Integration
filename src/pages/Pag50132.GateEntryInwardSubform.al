@@ -107,6 +107,7 @@ page 50132 "E3 Gate Entry Inward Subform"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Lot No. field.';
+                    Visible = false;
                 }
                 field(Remarks; Rec.Remarks)
                 {

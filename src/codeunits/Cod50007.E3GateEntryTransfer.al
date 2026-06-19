@@ -24,7 +24,7 @@ codeunit 50007 "E3 Gate Entry Transfer"
         PostedHeader.TransferFields(GateEntryHeader);
 
         PostedHeader."Reference Document No." := ShipmentNo;
-        PostedHeader."Posting Date/Time" := CurrentDateTime;
+        PostedHeader."Posting Date" := Today;
 
         PostedHeader.Insert(true);
 
@@ -97,14 +97,17 @@ codeunit 50007 "E3 Gate Entry Transfer"
         InwardHeader."Vehicle No." := OutwardHeader."Vehicle No.";
         InwardHeader."Department Code" := OutwardHeader."Department Code";
         InwardHeader."To Destination" := OutwardHeader."To Destination";
-        InwardHeader."Posting Date/Time" := CurrentDateTime;
+        InwardHeader."Posting Date" := Today;
         InwardHeader."Vendor No." := OutwardHeader."Vendor No.";
         InwardHeader."Vendor Name" := OutwardHeader."Vendor Name";
-        InwardHeader."Employee Code" := OutwardHeader."Employee Code";
+        InwardHeader.Person := OutwardHeader.Person;
         InwardHeader.Status := InwardHeader.Status::Open;
         InwardHeader."Expected Return Date" := OutwardHeader."Expected Return Date";
         InwardHeader."Reference Document No." := OutwardHeader."Document No.";
         InwardHeader.Remarks := OutwardHeader.Remarks;
+        InwardHeader."To Department Name" := OutwardHeader."To Department Name";
+        InwardHeader."From Department Code" := OutwardHeader."From Department Code";
+        InwardHeader."From Department Name" := OutwardHeader."From Department Name";
 
         InwardHeader.Insert(true);
 

@@ -1,4 +1,4 @@
-page 50154 "E3 Indent Subform"
+page 50154 "E3 Indent Line Subform"
 {
     PageType = ListPart;
     SourceTable = "E3 Indent Line";
@@ -18,82 +18,48 @@ page 50154 "E3 Indent Subform"
                     ApplicationArea = All;
                     Visible = false;
                 }
-                field("Item No."; Rec."Item No.")
+
+                field(Type; Rec.Type)
                 {
                     ApplicationArea = All;
                 }
 
-                field(Quantity; Rec.Quantity)
+                field("No."; Rec."No.")
                 {
                     ApplicationArea = All;
                 }
 
-                field("Allocated Qty"; Rec."Allocated Qty")
+                field(Description; Rec.Description)
                 {
                     ApplicationArea = All;
                 }
 
-                field("Remaining Qty For Quote"; Rec."Remaining Qty For Quote")
+                field("Unit of Measure"; Rec."Unit of Measure")
                 {
                     ApplicationArea = All;
                 }
 
-                field("First Vendor No."; Rec."First Vendor No.")
+                field("Requested Qty"; Rec."Requested Qty")
                 {
                     ApplicationArea = All;
                 }
 
-                field("First Price"; Rec."First Price")
+                field("Approved Qty"; Rec."Approved Qty")
                 {
                     ApplicationArea = All;
                 }
 
-                field("First Amount"; Rec."First Amount")
+                field("Unit Cost"; Rec."Unit Cost")
                 {
                     ApplicationArea = All;
                 }
 
-                field("Second Vendor No."; Rec."Second Vendor No.")
+                field(Amount; Rec.Amount)
                 {
                     ApplicationArea = All;
                 }
 
-                field("Second Price"; Rec."Second Price")
-                {
-                    ApplicationArea = All;
-                }
-
-                field("Second Amount"; Rec."Second Amount")
-                {
-                    ApplicationArea = All;
-                }
-
-                field("Third Vendor No."; Rec."Third Vendor No.")
-                {
-                    ApplicationArea = All;
-                }
-
-                field("Third Price"; Rec."Third Price")
-                {
-                    ApplicationArea = All;
-                }
-
-                field("Third Amount"; Rec."Third Amount")
-                {
-                    ApplicationArea = All;
-                }
-
-                field("Quotation No."; Rec."Quotation No.")
-                {
-                    ApplicationArea = All;
-                }
-
-                field("Price Quoted"; Rec."Price Quoted")
-                {
-                    ApplicationArea = All;
-                }
-
-                field(Finalized; Rec.Finalized)
+                field("Requested Received Date"; Rec."Requested Received Date")
                 {
                     ApplicationArea = All;
                 }

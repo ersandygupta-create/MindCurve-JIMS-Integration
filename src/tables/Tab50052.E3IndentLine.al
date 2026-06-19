@@ -14,74 +14,106 @@ table 50052 "E3 Indent Line"
             Caption = 'Line No.';
             DataClassification = CustomerContent;
         }
-        field(3; "Item No."; Code[20])
+        field(3; Type; Enum Type)
         {
-            Caption = 'Item No.';
+            Caption = 'Type';
+            DataClassification = CustomerContent;
+        }
+        field(4; "No."; Code[20])
+        {
+            Caption = 'No.';
             DataClassification = CustomerContent;
             TableRelation = Item;
         }
-        field(4; Quantity; Decimal)
+        field(5; Description; Text[100])
         {
-            Caption = 'Quantity';
+            Caption = 'Description';
             DataClassification = CustomerContent;
         }
-        field(5; "Allocated Qty"; Decimal)
+        field(6; "Unit of Measure"; Code[10])
         {
-            Caption = 'Allocated Qty';
+            Caption = 'Unit of Measure';
+            DataClassification = CustomerContent;
         }
-        field(6; "Remaining Qty For Quote"; Decimal)
+        field(7; "Requested Qty"; Decimal)
         {
-            Caption = 'Qty to Procure';
+            Caption = 'Requested';
+            DataClassification = CustomerContent;
         }
-        field(7; "First Price"; Decimal)
+        field(8; "Unit Cost"; Decimal)
+        {
+            Caption = 'Unit Cost';
+            DataClassification = CustomerContent;
+        }
+        field(9; Amount; Decimal)
+        {
+            Caption = 'Amount';
+            DataClassification = CustomerContent;
+        }
+        field(10; "Approved Qty"; Decimal)
+        {
+            Caption = 'Approved Qty';
+            DataClassification = CustomerContent;
+        }
+        field(11; "Requested Received Date"; Date)
+        {
+            Caption = 'Requested Received Date';
+            DataClassification = CustomerContent;
+        }
+        field(12; "First Price"; Decimal)
         {
             DataClassification = CustomerContent;
         }
-        field(8; "Second Price"; Decimal)
+        field(13; "Second Price"; Decimal)
         {
             DataClassification = CustomerContent;
         }
-        field(9; "Third Price"; Decimal)
+        field(14; "Third Price"; Decimal)
         {
             DataClassification = CustomerContent;
         }
-        field(10; "First Amount"; Decimal)
+        field(15; "First Amount"; Decimal)
         {
             DataClassification = CustomerContent;
         }
-        field(11; "Second Amount"; Decimal)
+        field(16; "Second Amount"; Decimal)
         {
             DataClassification = CustomerContent;
         }
-        field(12; "Third Amount"; Decimal)
+        field(17; "Third Amount"; Decimal)
         {
             DataClassification = CustomerContent;
         }
-        field(13; "First Vendor No."; Code[20])
+        field(18; "First Vendor No."; Code[20])
         {
             TableRelation = Vendor;
             DataClassification = CustomerContent;
         }
-        field(14; "Second Vendor No."; Code[20])
+        field(19; "Second Vendor No."; Code[20])
         {
             TableRelation = Vendor;
             DataClassification = CustomerContent;
         }
-        field(15; "Third Vendor No."; Code[20])
+        field(20; "Third Vendor No."; Code[20])
         {
             TableRelation = Vendor;
             DataClassification = CustomerContent;
         }
-        field(16; "Quotation No."; Option)
+        field(21; "Quotation No."; Option)
         {
             OptionMembers = "Quote 1","Quote 2","Quote 3";
         }
-        field(17; "Price Quoted"; Decimal)
+        field(22; "Price Quoted"; Decimal)
         {
             DataClassification = CustomerContent;
         }
-        field(18; "Finalized"; Boolean)
+        field(23; "Finalized"; Boolean)
         {
+            DataClassification = CustomerContent;
+        }
+        field(24; "Entry No."; Integer)
+        {
+            Caption = 'Entry No.';
             DataClassification = CustomerContent;
         }
     }

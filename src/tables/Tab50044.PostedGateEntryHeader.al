@@ -46,9 +46,9 @@ table 50044 "E3 Posted Gate Entry Header"
             Caption = 'LR No.';
             DataClassification = CustomerContent;
         }
-        field(9; "Posting Date/Time"; DateTime)
+        field(9; "Posting Date"; Date)
         {
-            Caption = 'Posting Date/Time';
+            Caption = 'Posting Date';
             DataClassification = CustomerContent;
         }
         field(10; "Department Code"; Code[20])
@@ -92,9 +92,9 @@ table 50044 "E3 Posted Gate Entry Header"
             Caption = 'Vendor Name';
             DataClassification = CustomerContent;
         }
-        field(14; "Employee Code"; Code[20])
+        field(14; Person; Text[100])
         {
-            Caption = 'Employee Code';
+            Caption = 'Person';
             DataClassification = CustomerContent;
         }
         field(15; Status; Enum "E3 Gate Pass Status")
@@ -132,6 +132,40 @@ table 50044 "E3 Posted Gate Entry Header"
         {
             Caption = 'Location Name';
             Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(23; "To Department Name"; Text[100])
+        {
+            Caption = 'To Department Name';
+            DataClassification = CustomerContent;
+        }
+        field(24; "From Department Code"; Code[20])
+        {
+            Caption = 'From Department Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
+            ValidateTableRelation = false;
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                DimensionValue: Record "Dimension Value";
+            begin
+                if DimensionValue.Get("From Department Code") then
+                    "From Department Name" := DimensionValue.Name
+                else
+                    "From Department Name" := '';
+            end;
+        }
+        field(25; "From Department Name"; Text[100])
+        {
+            Caption = 'From Department Name';
+            DataClassification = CustomerContent;
+        }
+        field(26; "Shortcut Dimension 1 Code"; Code[20])
+        {
+            CaptionClass = '1,1,1';
+            Caption = 'Shortcut Dimension 1 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            ValidateTableRelation = false;
             DataClassification = CustomerContent;
         }
     }

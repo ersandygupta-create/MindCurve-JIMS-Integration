@@ -95,11 +95,22 @@ table 50014 "E3 Gate Entry Line"
         {
             Caption = 'Asset No.';
             DataClassification = CustomerContent;
+            TableRelation = "Fixed Asset"."No.";
+            trigger OnValidate()
+            var
+                FA: Record "Fixed Asset";
+            begin
+                if FA.Get("Asset No.") then
+                    "Fixed Asset Name" := FA.Description
+                else
+                    "Fixed Asset Name" := '';
+            end;
         }
         field(13; "Serial No."; Code[20])
         {
             Caption = 'Serial No.';
             DataClassification = CustomerContent;
+            TableRelation = "Fixed Asset"."Serial No.";
         }
         field(14; "Lot No."; Code[20])
         {
@@ -135,6 +146,11 @@ table 50014 "E3 Gate Entry Line"
             DataClassification = CustomerContent;
             Editable = false;
             FieldClass = Normal;
+        }
+        field(33; "Fixed Asset Name"; Text[100])
+        {
+            Caption = 'Fixed Asset Name';
+            DataClassification = CustomerContent;
         }
 
     }

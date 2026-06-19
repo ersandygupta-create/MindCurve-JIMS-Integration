@@ -6,7 +6,7 @@ codeunit 50006 "E3 Post Gate Entry"
     begin
         GateEntryHeader := Rec;
         WITH GateEntryHeader DO BEGIN
-            TESTFIELD("Posting Date/Time");
+            TESTFIELD("Posting Date");
             TESTFIELD("Document No.");
 
             GateEntryLine.Reset();

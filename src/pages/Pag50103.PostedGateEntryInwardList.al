@@ -41,14 +41,31 @@ page 50103 "E3 Posted Gate Ent Inward List"
                     ToolTip = 'Specifies the value of the Vehicle No. field';
                     ApplicationArea = All;
                 }
-                field("Posting Date/Time"; Rec."Posting Date/Time")
+                field("Posting Date"; Rec."Posting Date")
                 {
-                    ToolTip = 'Specifies the value of the Posting Date/Time field';
+                    ToolTip = 'Specifies the value of the Posting Date field';
+                    ApplicationArea = All;
+                }
+                field("From Department Code"; Rec."From Department Code")
+                {
+                    ToolTip = 'Specifies the value of the Department Code field';
+                    ApplicationArea = All;
+                    Caption = 'From Department Code';
+                }
+                field("From Department Name"; Rec."From Department Name")
+                {
+                    ToolTip = 'Specifies the value of the To Department Code field';
                     ApplicationArea = All;
                 }
                 field("Department Code"; Rec."Department Code")
                 {
                     ToolTip = 'Specifies the value of the Department Code field';
+                    ApplicationArea = All;
+                    Caption = 'To Department Code';
+                }
+                field("To Department Name"; Rec."To Department Name")
+                {
+                    ToolTip = 'Specifies the value of the To Department Code field';
                     ApplicationArea = All;
                 }
                 field("To Destination"; Rec."To Destination")
@@ -66,9 +83,9 @@ page 50103 "E3 Posted Gate Ent Inward List"
                     ToolTip = 'Specifies the value of the Vendor Name field';
                     ApplicationArea = All;
                 }
-                field("Employee Code"; Rec."Employee Code")
+                field(Person; Rec.Person)
                 {
-                    ToolTip = 'Specifies the value of the Employee Code field';
+                    ToolTip = 'Specifies the value of the Person field';
                     ApplicationArea = All;
                 }
                 field(Status; Rec.Status)
