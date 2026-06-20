@@ -40,7 +40,7 @@ tableextension 50015 "E3 HIS Item" extends Item
         {
             Caption = 'Medicine Group';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Sub Group Master"."Manual Code";
+            TableRelation = "E3 Sub Group Master".Name;
         }
         field(50008; "Medicine Manufacturer"; Text[50])
         {

@@ -56,7 +56,11 @@ page 50153 "E3 Indent Card"
                     ApplicationArea = All;
                     Caption = 'Business Unit';
                 }
-
+                field("Business Unit Name"; Rec."Business Unit Name")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = All;

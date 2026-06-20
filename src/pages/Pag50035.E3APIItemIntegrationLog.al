@@ -112,6 +112,7 @@ page 50035 "E3 API Item Update Log"
                 field("Rate Margin Fix"; Rec."Rate Margin Fix")
                 {
                     ToolTip = 'Specifies the value of the Rate Margin Fix field.';
+                    Visible = false;
                 }
                 field("Medicine Manufacturer"; Rec."Medicine Manufacturer")
                 {

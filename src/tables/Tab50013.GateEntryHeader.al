@@ -1,6 +1,7 @@
 table 50013 "E3 Gate Entry Header"
 {
     DataClassification = ToBeClassified;
+    DataCaptionFields = "Document No.", "Entry Type";
 
     fields
     {
@@ -61,14 +62,18 @@ table 50013 "E3 Gate Entry Header"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
             ValidateTableRelation = false;
             DataClassification = CustomerContent;
+
             trigger OnValidate()
             var
                 DimensionValue: Record "Dimension Value";
+                GLSetup: Record "General Ledger Setup";
             begin
-                if DimensionValue.Get("Department Code") then
-                    "To Department Name" := DimensionValue.Name
-                else
-                    "To Department Name" := '';
+                "To Department Name" := '';
+
+                GLSetup.Get();
+
+                if DimensionValue.Get(GLSetup."Global Dimension 2 Code", "Department Code") then
+                    "To Department Name" := DimensionValue.Name;
             end;
         }
         field(11; "To Destination"; Code[20])
@@ -155,6 +160,7 @@ table 50013 "E3 Gate Entry Header"
         {
             Caption = 'To Department Name';
             DataClassification = CustomerContent;
+            Editable = false;
         }
         field(24; "From Department Code"; Code[20])
         {
@@ -162,19 +168,22 @@ table 50013 "E3 Gate Entry Header"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
             ValidateTableRelation = false;
             DataClassification = CustomerContent;
+
             trigger OnValidate()
             var
                 DimensionValue: Record "Dimension Value";
+                GLSetup: Record "General Ledger Setup";
             begin
-                if DimensionValue.Get("From Department Code") then
-                    "From Department Name" := DimensionValue.Name
-                else
-                    "From Department Name" := '';
+                "From Department Name" := '';
+                GLSetup.Get();
+                if DimensionValue.Get(GLSetup."Global Dimension 2 Code", "From Department Code") then
+                    "From Department Name" := DimensionValue.Name;
             end;
         }
         field(25; "From Department Name"; Text[100])
         {
             Caption = 'From Department Name';
+            Editable = false;
             DataClassification = CustomerContent;
         }
         field(26; "Shortcut Dimension 1 Code"; Code[20])

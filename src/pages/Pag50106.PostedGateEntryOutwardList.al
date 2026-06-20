@@ -77,11 +77,13 @@ page 50106 "E3Posted Gate Ent Outward List"
                 {
                     ToolTip = 'Specifies the value of the Vendor No. field';
                     ApplicationArea = All;
+                    Caption = 'Party No.';
                 }
                 field("Vendor Name"; Rec."Vendor Name")
                 {
                     ToolTip = 'Specifies the value of the Vendor Name field';
                     ApplicationArea = All;
+                    Caption = 'Party Name';
                 }
                 field(Person; Rec.Person)
                 {

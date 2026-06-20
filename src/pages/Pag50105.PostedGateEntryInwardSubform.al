@@ -77,6 +77,12 @@ page 50105 "E3 Posted Gate Ent Inward Line"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Asset No. field.';
                 }
+                field("Fixed Asset Name"; Rec."Fixed Asset Name")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the value of the Asset Name field.';
+                }
                 field("Serial No."; Rec."Serial No.")
                 {
                     ApplicationArea = All;

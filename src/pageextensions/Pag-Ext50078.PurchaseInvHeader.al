@@ -1,14 +1,9 @@
-pageextension 50077 "E3 Location Extension" extends "Location Card"
+pageextension 50078 "E3 Posted Purch Inv Ext" extends "Posted Purchase Invoice"
 {
     layout
     {
-        addafter(Name)
+        addafter("Location Code")
         {
-            field("Name 2"; Rec."Name 2")
-            {
-                ApplicationArea = All;
-                Caption = 'Name 2';
-            }
             field("W/S DL No."; Rec."W/S DL No.")
             {
                 ApplicationArea = All;

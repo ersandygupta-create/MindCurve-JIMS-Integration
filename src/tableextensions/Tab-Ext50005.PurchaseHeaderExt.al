@@ -39,7 +39,15 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Caption = 'Purchase Narration';
             DataClassification = CustomerContent;
         }
-
-
+        field(50008; "W/S DL No."; Text[60])
+        {
+            Caption = 'W/S DL No.';
+            DataClassification = CustomerContent;
+        }
+        field(50009; "Retail DL No."; Text[60])
+        {
+            Caption = 'Retail DL No.';
+            DataClassification = CustomerContent;
+        }
     }
 }

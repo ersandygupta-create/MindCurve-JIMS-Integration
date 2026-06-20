@@ -19,11 +19,13 @@ page 50135 "E3 Gate Entry Outward Subform"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Document No. field.';
+                    Visible = false;
                 }
                 field("Line No."; Rec."Line No.")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Line No. field.';
+                    Visible = false;
                 }
                 field("Item No."; Rec."Item No.")
                 {
@@ -85,6 +87,12 @@ page 50135 "E3 Gate Entry Outward Subform"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Asset No. field.';
+                }
+                field("Fixed Asset Name"; Rec."Fixed Asset Name")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the value of the Asset Name field.';
                 }
                 field("Serial No."; Rec."Serial No.")
                 {

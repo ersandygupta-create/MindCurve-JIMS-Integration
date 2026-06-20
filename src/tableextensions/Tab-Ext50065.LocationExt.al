@@ -8,5 +8,16 @@ tableextension 50065 "E3 Location" extends Location
             TableRelation = "Bank Account";
             DataClassification = CustomerContent;
         }
+        field(50001; "W/S DL No."; Text[60])
+        {
+            Caption = 'W/S DL No.';
+            DataClassification = CustomerContent;
+        }
+
+        field(50002; "Retail DL No."; Text[60])
+        {
+            Caption = 'Retail DL No.';
+            DataClassification = CustomerContent;
+        }
     }
 }

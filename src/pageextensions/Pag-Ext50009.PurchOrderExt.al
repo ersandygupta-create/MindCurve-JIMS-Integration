@@ -30,6 +30,23 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Advance PO field';
             }
+            field("W/S DL No."; Rec."W/S DL No.")
+            {
+                ApplicationArea = All;
+            }
+
+            field("Retail DL No."; Rec."Retail DL No.")
+            {
+                ApplicationArea = All;
+            }
+        }
+        addafter("No.")
+        {
+            field("TransactionType"; Rec."Transaction Type")
+            {
+                ApplicationArea = All;
+                Caption = 'Transaction Type';
+            }
         }
     }
 

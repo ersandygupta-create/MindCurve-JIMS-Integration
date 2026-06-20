@@ -100,17 +100,19 @@ table 50014 "E3 Gate Entry Line"
             var
                 FA: Record "Fixed Asset";
             begin
-                if FA.Get("Asset No.") then
-                    "Fixed Asset Name" := FA.Description
-                else
+                if FA.Get("Asset No.") then begin
+                    "Fixed Asset Name" := FA.Description;
+                    "Serial No." := FA."Serial No.";
+                end else begin
                     "Fixed Asset Name" := '';
+                    "Serial No." := '';
+                end;
             end;
         }
-        field(13; "Serial No."; Code[20])
+        field(13; "Serial No."; Code[50])
         {
             Caption = 'Serial No.';
             DataClassification = CustomerContent;
-            TableRelation = "Fixed Asset"."Serial No.";
         }
         field(14; "Lot No."; Code[20])
         {

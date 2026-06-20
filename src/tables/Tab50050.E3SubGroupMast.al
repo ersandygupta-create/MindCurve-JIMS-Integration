@@ -43,7 +43,7 @@ table 50050 "E3 Sub Group Master"
     }
     keys
     {
-        key(PK; "Manual Code")
+        key(PK; "Manual Code", Name)
         {
             Clustered = true;
         }

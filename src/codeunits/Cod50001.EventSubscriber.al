@@ -140,6 +140,9 @@ codeunit 50001 "E3 HIS Event Subscriber"
     begin
         if PreviewMode then
             exit;
+        PurchInvHeader."W/S DL No." := PurchHeader."W/S DL No.";
+        PurchInvHeader."Retail DL No." := PurchHeader."Retail DL No.";
+        PurchInvHeader.Modify();
 
         PurchCommentLine.SetRange("Document Type", PurchHeader."Document Type");
         PurchCommentLine.SetRange("No.", PurchHeader."No.");
@@ -221,6 +224,23 @@ codeunit 50001 "E3 HIS Event Subscriber"
         RefInvoiceNo.SetRange("Document No.", PurchHeader."No.");
         if RefInvoiceNo.Find('-') then
             PurchCrMemoHdr."Reference Invoice No." := RefInvoiceNo."Alternate Ref. Invoice No.";
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnAfterValidateEvent', 'Location Code', false, false)]
+    local procedure OnAfterValidateLocationCode(var Rec: Record "Purchase Header"; var xRec: Record "Purchase Header")
+    var
+        LocationRec: Record Location;
+    begin
+        if Rec."Location Code" = '' then begin
+            Rec."W/S DL No." := '';
+            Rec."Retail DL No." := '';
+            exit;
+        end;
+
+        if LocationRec.Get(Rec."Location Code") then begin
+            Rec."W/S DL No." := LocationRec."W/S DL No.";
+            Rec."Retail DL No." := LocationRec."Retail DL No.";
+        end;
     end;
 
 }

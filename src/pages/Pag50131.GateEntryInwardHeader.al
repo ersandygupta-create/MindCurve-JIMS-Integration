@@ -75,6 +75,11 @@ page 50131 "E3 Gate Entry Inward Header"
                     ApplicationArea = All;
                     Caption = 'Location Code';
                 }
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Shortcut Dimension 1 Code field';
+                }
                 field("Location Name"; Rec."Location Name")
                 {
                     ToolTip = 'Specifies the value of the Location Name field';

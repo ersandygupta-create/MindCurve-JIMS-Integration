@@ -108,6 +108,8 @@ codeunit 50007 "E3 Gate Entry Transfer"
         InwardHeader."To Department Name" := OutwardHeader."To Department Name";
         InwardHeader."From Department Code" := OutwardHeader."From Department Code";
         InwardHeader."From Department Name" := OutwardHeader."From Department Name";
+        InwardHeader."Shortcut Dimension 1 Code" := OutwardHeader."Shortcut Dimension 1 Code";
+        InwardHeader."Location Name" := OutwardHeader."Location Name";
 
         InwardHeader.Insert(true);
 
@@ -136,6 +138,7 @@ codeunit 50007 "E3 Gate Entry Transfer"
                 InwardLine."Unit of Measurement" := OutwardLine."Unit of Measurement";
                 InwardLine."Estimated Value Receive" := OutwardLine."Qty to Receive" * OutwardLine."Cost/Qty";
                 InwardLine."Asset No." := OutwardLine."Asset No.";
+                InwardLine."Fixed Asset Name" := OutwardLine."Fixed Asset Name";
                 InwardLine."Serial No." := OutwardLine."Serial No.";
                 InwardLine."Lot No." := OutwardLine."Lot No.";
                 InwardLine.Remarks := OutwardLine.Remarks;

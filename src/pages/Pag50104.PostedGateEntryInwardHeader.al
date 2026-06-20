@@ -75,6 +75,11 @@ page 50104 "E3 Posted Gate Ent Inward Hdr"
                     ApplicationArea = All;
                     Caption = 'Location Code';
                 }
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Shortcut Dimension 1 Code field';
+                }
                 field("Location Name"; Rec."Location Name")
                 {
                     ToolTip = 'Specifies the value of the Location Name field';
@@ -85,11 +90,13 @@ page 50104 "E3 Posted Gate Ent Inward Hdr"
                 {
                     ToolTip = 'Specifies the value of the Vendor No. field';
                     ApplicationArea = All;
+                    Caption = 'Party No.';
                 }
                 field("Vendor Name"; Rec."Vendor Name")
                 {
                     ToolTip = 'Specifies the value of the Vendor Name field';
                     ApplicationArea = All;
+                    Caption = 'Party Name';
                 }
                 field(Person; Rec.Person)
                 {

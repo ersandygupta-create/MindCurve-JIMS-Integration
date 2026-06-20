@@ -31,6 +31,20 @@ table 50051 "E3 Indent Header"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
             ValidateTableRelation = false;
             DataClassification = ToBeClassified;
+            trigger OnValidate()
+            var
+                DimensionValue: Record "Dimension Value";
+                GLSetup: Record "General Ledger Setup";
+            begin
+                "Business Unit Name" := '';
+                GLSetup.Get();
+                DimensionValue.Reset();
+                DimensionValue.SetRange("Dimension Code", GLSetup."Global Dimension 1 Code");
+                DimensionValue.SetRange(Code, "Shortcut Dimension 1 Code");
+
+                if DimensionValue.FindFirst() then
+                    "Business Unit Name" := DimensionValue.Name;
+            end;
         }
         field(6; "Shortcut Dimension 2 Code"; Code[20])
         {
@@ -38,14 +52,20 @@ table 50051 "E3 Indent Header"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
             ValidateTableRelation = false;
             DataClassification = ToBeClassified;
+
             trigger OnValidate()
             var
                 DimensionValue: Record "Dimension Value";
+                GLSetup: Record "General Ledger Setup";
             begin
-                if DimensionValue.Get("Shortcut Dimension 2 Code") then
-                    "Department Name" := DimensionValue.Name
-                else
-                    "Department Name" := '';
+                "Department Name" := '';
+                GLSetup.Get();
+                DimensionValue.Reset();
+                DimensionValue.SetRange("Dimension Code", GLSetup."Global Dimension 2 Code");
+                DimensionValue.SetRange(Code, "Shortcut Dimension 2 Code");
+
+                if DimensionValue.FindFirst() then
+                    "Department Name" := DimensionValue.Name;
             end;
         }
         field(7; "Location Code"; Code[20])
@@ -57,6 +77,7 @@ table 50051 "E3 Indent Header"
             var
                 LocationRec: Record Location;
             begin
+                "Location Name" := '';
                 if LocationRec.Get("Location Code") then
                     "Location Name" := LocationRec.Name
                 else
@@ -97,6 +118,11 @@ table 50051 "E3 Indent Header"
         field(14; "Entry No."; Integer)
         {
             Caption = 'Entry No';
+            DataClassification = CustomerContent;
+        }
+        field(15; "Business Unit Name"; Text[100])
+        {
+            Caption = 'Business Unit Name';
             DataClassification = CustomerContent;
         }
 

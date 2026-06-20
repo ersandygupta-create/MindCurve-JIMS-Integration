@@ -1,6 +1,7 @@
 table 50044 "E3 Posted Gate Entry Header"
 {
     DataClassification = ToBeClassified;
+    DataCaptionFields = "Document No.", "Entry Type";
 
     fields
     {

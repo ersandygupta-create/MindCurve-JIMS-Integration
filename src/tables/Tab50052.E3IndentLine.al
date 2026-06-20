@@ -24,6 +24,16 @@ table 50052 "E3 Indent Line"
             Caption = 'No.';
             DataClassification = CustomerContent;
             TableRelation = Item;
+            trigger OnValidate()
+            var
+                Item: Record Item;
+            begin
+                Description := '';
+                "Unit of Measure" := '';
+                if Item.Get("No.") then
+                    Description := Item.Description;
+                "Unit of Measure" := Item."Base Unit of Measure";
+            end;
         }
         field(5; Description; Text[100])
         {

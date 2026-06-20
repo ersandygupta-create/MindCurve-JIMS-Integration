@@ -35,6 +35,7 @@ page 50130 "E3 Gate Entry Inward List"
                 {
                     ToolTip = 'Specifies the value of the Purpose Code field';
                     ApplicationArea = All;
+                    Visible = false;
                 }
                 field("Vehicle No."; Rec."Vehicle No.")
                 {
@@ -60,11 +61,13 @@ page 50130 "E3 Gate Entry Inward List"
                 {
                     ToolTip = 'Specifies the value of the Vendor No. field';
                     ApplicationArea = All;
+                    Caption = 'Party No.';
                 }
                 field("Vendor Name"; Rec."Vendor Name")
                 {
                     ToolTip = 'Specifies the value of the Vendor Name field';
                     ApplicationArea = All;
+                    Caption = 'Party Name';
                 }
                 field(Person; Rec.Person)
                 {

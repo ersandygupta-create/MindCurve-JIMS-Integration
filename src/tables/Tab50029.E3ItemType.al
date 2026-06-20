@@ -1,6 +1,7 @@
 table 50029 "E3 Item Type"
 {
     DataPerCompany = false;
+    Caption = 'Item Type';
 
     fields
     {

@@ -319,12 +319,12 @@ table 50046 "E3 API Item Update Log"
             Caption = 'Gen. Prod. Posting Group';
             ToolTip = 'Specifies the item''s product type to link transactions made for this item with the appropriate general ledger account according to the general posting setup.';
         }
-        field(98; "GST Group Code"; Code[20])
+        field(18000; "GST Group Code"; Code[20])
         {
             Caption = 'GST Group Code';
             ToolTip = 'Specifies the tax group that is used to calculate and post sales tax.';
         }
-        field(99; "HSN/SAC Code"; Code[10])
+        field(18001; "HSN/SAC Code"; Code[10])
         {
             Caption = 'HSN/SAC Code';
             ToolTip = 'Specifies the Harmonized System Nomenclature (HSN) code for a physical item or the Service Accounting Code (SAC) for a service item, to classify items for tax calculation purposes.';

@@ -33,6 +33,17 @@ tableextension 50007 "E3 HIS Purch. Inv. Header" extends "Purch. Inv. Header"
             DataClassification = CustomerContent;
             Caption = 'Store Name';
         }
+        field(50008; "W/S DL No."; Text[60])
+        {
+            Caption = 'W/S DL No.';
+            DataClassification = CustomerContent;
+        }
+
+        field(50009; "Retail DL No."; Text[60])
+        {
+            Caption = 'Retail DL No.';
+            DataClassification = CustomerContent;
+        }
 
     }
 }

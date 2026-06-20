@@ -27,6 +27,17 @@ tableextension 50006 "E3 HIS Purch. Rcpt. Header" extends "Purch. Rcpt. Header"
             DataClassification = CustomerContent;
             Caption = 'Store Name';
         }
+        field(50008; "W/S DL No."; Text[60])
+        {
+            Caption = 'W/S DL No.';
+            DataClassification = CustomerContent;
+        }
+
+        field(50009; "Retail DL No."; Text[60])
+        {
+            Caption = 'Retail DL No.';
+            DataClassification = CustomerContent;
+        }
 
     }
 }
