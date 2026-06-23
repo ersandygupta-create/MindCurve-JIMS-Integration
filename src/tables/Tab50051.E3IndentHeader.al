@@ -125,6 +125,48 @@ table 50051 "E3 Indent Header"
             Caption = 'Business Unit Name';
             DataClassification = CustomerContent;
         }
+        field(16; Indentor; Text[50])
+        {
+            Caption = 'Indentor';
+            DataClassification = CustomerContent;
+        }
+        field(17; Remarks; Text[100])
+        {
+            Caption = 'Remarks';
+            DataClassification = CustomerContent;
+        }
+        field(18; "To Department Code"; Code[20])
+        {
+            Caption = 'To Department Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
+            ValidateTableRelation = false;
+            DataClassification = ToBeClassified;
+
+            trigger OnValidate()
+            var
+                DimensionValue: Record "Dimension Value";
+                GLSetup: Record "General Ledger Setup";
+            begin
+                "To Department Name" := '';
+                GLSetup.Get();
+                DimensionValue.Reset();
+                DimensionValue.SetRange("Dimension Code", GLSetup."Global Dimension 2 Code");
+                DimensionValue.SetRange(Code, "To Department Code");
+
+                if DimensionValue.FindFirst() then
+                    "To Department Name" := DimensionValue.Name;
+            end;
+        }
+        field(19; "To Department Name"; Text[100])
+        {
+            Caption = 'To Department Name';
+            DataClassification = CustomerContent;
+        }
+        field(20; "Approval Date Time"; DateTime)
+        {
+            Caption = 'Approval Date Time';
+            DataClassification = CustomerContent;
+        }
 
     }
 

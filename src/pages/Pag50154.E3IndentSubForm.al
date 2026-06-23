@@ -58,8 +58,23 @@ page 50154 "E3 Indent Line Subform"
                 {
                     ApplicationArea = All;
                 }
-
+                field("Ordered Qty"; Rec."Ordered Qty")
+                {
+                    ApplicationArea = All;
+                }
+                field("Item Make Code"; Rec."Item Make Code")
+                {
+                    ApplicationArea = All;
+                }
                 field("Requested Received Date"; Rec."Requested Received Date")
+                {
+                    ApplicationArea = All;
+                }
+                field(Remarks; Rec.Remarks)
+                {
+                    ApplicationArea = All;
+                }
+                field("Entry No."; Rec."Entry No.")
                 {
                     ApplicationArea = All;
                 }

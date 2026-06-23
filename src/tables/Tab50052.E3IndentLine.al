@@ -23,16 +23,74 @@ table 50052 "E3 Indent Line"
         {
             Caption = 'No.';
             DataClassification = CustomerContent;
-            TableRelation = Item;
+            TableRelation = IF (Type = const(" ")) "Standard Text"
+            ELSE
+            IF (Type = CONST("G/L Account")) "G/L Account"
+            ELSE
+            IF (Type = CONST(Resource)) Resource
+            ELSE
+            IF (Type = CONST("Fixed Asset")) "Fixed Asset"
+            ELSE
+            IF (Type = CONST("Charge (Item)")) "Item Charge"
+            ELSE
+            IF (Type = CONST(Item)) "item" WHERE(Blocked = CONST(false));
+            ValidateTableRelation = false;
             trigger OnValidate()
             var
                 Item: Record Item;
             begin
                 Description := '';
                 "Unit of Measure" := '';
+                "Item Make Code" := '';
                 if Item.Get("No.") then
                     Description := Item.Description;
                 "Unit of Measure" := Item."Base Unit of Measure";
+                if Item.Get("No.") then begin
+                    "Item Make Code" := Item.Make;
+                end else
+                    "Item Make Code" := '';
+
+
+                CASE Type OF
+                    Type::" ":
+                        BEGIN
+                            StdTxt.GET("No.");
+                            Description := StdTxt.Description;
+                        END;
+                    Type::"G/L Account":
+                        BEGIN
+                            GLAcc.GET("No.");
+                            GLAcc.TESTFIELD("Direct Posting", TRUE);
+                            Description := GLAcc.Name;
+                        END;
+                    Type::Item:
+                        BEGIN
+                            Item.GET("No.");
+                            Item.TESTFIELD(Blocked, FALSE);
+                            Item.TESTFIELD("Gen. Prod. Posting Group");
+                            Description := Item.Description;
+                        END;
+                    Type::Resource:
+                        BEGIN
+                            Res.GET("No.");
+                            Res.TESTFIELD(Blocked, FALSE);
+                            Res.TESTFIELD("Gen. Prod. Posting Group");
+                            Description := Res.Name;
+                        END;
+                    Type::"Fixed Asset":
+                        BEGIN
+                            FA.GET("No.");
+                            FA.TESTFIELD(Inactive, FALSE);
+                            FA.TESTFIELD(Blocked, FALSE);
+                            Description := FA.Description;
+                        END;
+                    Type::"Charge (Item)":
+                        BEGIN
+                            ItemCharge.GET("No.");
+                            Description := ItemCharge.Description;
+                        END;
+                END;
+
             end;
         }
         field(5; Description; Text[100])
@@ -44,6 +102,7 @@ table 50052 "E3 Indent Line"
         {
             Caption = 'Unit of Measure';
             DataClassification = CustomerContent;
+            TableRelation = "Item Unit of Measure".Code WHERE("Item No." = FIELD("No."));
         }
         field(7; "Requested Qty"; Decimal)
         {
@@ -126,6 +185,21 @@ table 50052 "E3 Indent Line"
             Caption = 'Entry No.';
             DataClassification = CustomerContent;
         }
+        field(25; "Item Make Code"; Text[60])
+        {
+            Caption = 'Item Make Code';
+            DataClassification = CustomerContent;
+        }
+        field(26; "Ordered Qty"; Decimal)
+        {
+            Caption = 'Ordered Qty';
+            DataClassification = CustomerContent;
+        }
+        field(27; Remarks; Text[100])
+        {
+            Caption = 'Remarks';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
@@ -142,7 +216,12 @@ table 50052 "E3 Indent Line"
     }
 
     var
-        myInt: Integer;
+        GLAcc: Record "G/L Account";
+        Item: Record "Item";
+        Res: Record "Resource";
+        StdTxt: Record "Standard Text";
+        FA: Record "Fixed Asset";
+        ItemCharge: Record "Item Charge";
 
     trigger OnInsert()
     begin

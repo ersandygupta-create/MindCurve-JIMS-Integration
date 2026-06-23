@@ -47,6 +47,18 @@ page 50153 "E3 Indent Card"
                 {
                     ApplicationArea = All;
                 }
+                field(Indentor; Rec.Indentor)
+                {
+                    ApplicationArea = All;
+                }
+                field("Approval Date Time"; Rec."Approval Date Time")
+                {
+                    ApplicationArea = All;
+                }
+                field(Remarks; Rec.Remarks)
+                {
+                    ApplicationArea = All;
+                }
             }
 
             group("Dimensions")
@@ -72,6 +84,14 @@ page 50153 "E3 Indent Card"
                     ApplicationArea = All;
                     Editable = false;
                 }
+                field("To Department Code"; Rec."To Department Code")
+                {
+                    ApplicationArea = All;
+                }
+                field("To Department Name"; Rec."To Department Name")
+                {
+                    ApplicationArea = All;
+                }
             }
 
             group("Location Information")
@@ -90,11 +110,13 @@ page 50153 "E3 Indent Card"
                 field("Site Code"; Rec."Site Code")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                 }
 
                 field("Site Name"; Rec."Site Name")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                 }
             }
             part(IndentLines; "E3 Indent Line Subform")
