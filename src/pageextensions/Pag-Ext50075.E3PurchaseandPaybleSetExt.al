@@ -21,6 +21,16 @@ pageextension 50075 "E3 Purchase & Payable Ext" extends "Purchases & Payables Se
             {
                 ApplicationArea = All;
             }
+            field("Posted Gate Entry Inward No."; Rec."Posted Gate Entry Inward No.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Posted Inward Gate Entry number Sequence';
+            }
+            field("Posted Gate Entry Outward No."; rec."Posted Gate Entry Outward No.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Posted Outward Gate Entry number Sequence';
+            }
             field("Indent Nos."; Rec."Indent Nos.")
             {
                 ApplicationArea = All;

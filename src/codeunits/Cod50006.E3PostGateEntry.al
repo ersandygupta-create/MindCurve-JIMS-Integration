@@ -72,6 +72,7 @@ codeunit 50006 "E3 Post Gate Entry"
                     PostedGateEntryLine.Remarks := GateEntryLine.Remarks;
                     PostedGateEntryLine.PostedNo := PostedGateEntryHeader.PostedNo;
                     PostedGateEntryLine."Posted Entry No." := LastEntryno;
+                    PostedGateEntryLine."Estimated Value Receive" := GateEntryLine."Estimated Value Receive";
                     PostedGateEntryLine.INSERT;
                     LastEntryno += 1;
 
@@ -125,6 +126,7 @@ codeunit 50006 "E3 Post Gate Entry"
         LineCount: Integer;
         PostedGateEntryBuffer: Record "E3 Posted Gate Entry Line";
         LastEntryno: Integer;
+        PurchPaybleSetup: Record "Purchases & Payables Setup";
 
 
 }

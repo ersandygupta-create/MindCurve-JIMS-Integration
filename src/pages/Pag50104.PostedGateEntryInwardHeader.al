@@ -129,7 +129,7 @@ page 50104 "E3 Posted Gate Ent Inward Hdr"
             {
                 ApplicationArea = Basic, Suite;
                 UpdatePropagation = Both;
-                SubPageLink = "Document No." = FIELD("Document No.");
+                SubPageLink = PostedNo = FIELD(PostedNo);
                 Caption = 'Gate Entry Inward Line';
             }
         }

@@ -1,6 +1,6 @@
 codeunit 50007 "E3 Gate Entry Transfer"
 {
-    procedure PostOutwardGateEntry(var GateEntryHeader: Record "E3 Gate Entry Header")
+    procedure PostOutwardGateEntry(var GateEntryHeader: Record "E3 Gate Entry Header"; var Inward: Boolean)
     var
         GateEntryLine: Record "E3 Gate Entry Line";
         PostedHeader: Record "E3 Posted Gate Entry Header";
@@ -9,6 +9,8 @@ codeunit 50007 "E3 Gate Entry Transfer"
         ShipmentNo: Code[20];
         LastEntryno: Integer;
         PostedGateEntryBuffer: Record "E3 Posted Gate Entry Line";
+        PurchasesPayablesSetup: Record "Purchases & Payables Setup";
+        NoSeries: Codeunit "No. Series";
 
     begin
         // Validate Lines
@@ -23,8 +25,10 @@ codeunit 50007 "E3 Gate Entry Transfer"
         PostedHeader.Init();
         PostedHeader.TransferFields(GateEntryHeader);
 
-        PostedHeader."Reference Document No." := ShipmentNo;
+        // PostedHeader."Reference Document No." := ShipmentNo;
         PostedHeader."Posting Date" := Today;
+        PurchasesPayablesSetup.Get();
+        PostedHeader."Outward Document No." := NoSeries.GetNextNo(PurchasesPayablesSetup."Posted Gate Entry Outward No.", WorkDate(), true);
 
         PostedHeader.Insert(true);
 
@@ -43,6 +47,7 @@ codeunit 50007 "E3 Gate Entry Transfer"
                 PostedLine.TransferFields(GateEntryLine);
 
                 PostedLine."Document No." := PostedHeader."Document No.";
+                PostedLine."Outward Document No." := PostedHeader."Outward Document No.";
                 PostedLine."Posted Entry No." := LastEntryno;
                 PostedLine.Insert(true);
 
@@ -51,7 +56,8 @@ codeunit 50007 "E3 Gate Entry Transfer"
         //-----------------------------------------
         // Create Inward Entry
         //-----------------------------------------
-        CreateInwardEntry(GateEntryHeader, ShipmentNo);
+        if (Inward = true) then
+            CreateInwardEntry(GateEntryHeader, ShipmentNo);
 
         //-----------------------------------------
         // Update Original Document Status
