@@ -125,6 +125,7 @@ codeunit 50006 "E3 Post Gate Entry"
         LineCount: Integer;
         PostedGateEntryBuffer: Record "E3 Posted Gate Entry Line";
         LastEntryno: Integer;
+        PurchPaybleSetup: Record "Purchases & Payables Setup";
 
 
 }

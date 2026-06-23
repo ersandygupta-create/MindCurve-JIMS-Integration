@@ -151,10 +151,22 @@ page 50134 "E3 Gate Entry Outward Header"
                 trigger OnAction()
                 var
                     GateTransfer: Codeunit "E3 Gate Entry Transfer";
+                    Inward: Boolean;
+                    PurchPaybleSetup: Record "Purchases & Payables Setup";
                 begin
-                    if Rec."Gate Pass Type" = Rec."Gate Pass Type"::"Non-Returnable" then
-                        Error('Inward cannot be created for Gate Pass Type Non-Returnable.');
-                    GateTransfer.PostOutwardGateEntry(Rec);
+                    PurchPaybleSetup.Get();
+                    PurchPaybleSetup.TestField("Posted Gate Entry Inward No.");
+                    PurchPaybleSetup.TestField("Posted Gate Entry Outward No.");
+
+                    Inward := true;
+                    if Rec."Gate Pass Type" = Rec."Gate Pass Type"::"Non-Returnable" then begin
+                        Message('Inward cannot be created for Gate Pass Type Non-Returnable.');
+                        Inward := false;
+                        GateTransfer.PostOutwardGateEntry(Rec, Inward);
+                    end
+                    else
+                        GateTransfer.PostOutwardGateEntry(Rec, Inward);
+
                 end;
             }
         }

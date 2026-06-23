@@ -5,7 +5,7 @@ page 50107 "E3 Posted Gate Ent Outward Hdr"
     DelayedInsert = true;
     RefreshOnActivate = true;
     SourceTable = "E3 Posted Gate Entry Header";
-    SourceTableView = sorting("Entry No.") where("Entry Type" = Filter(Outward));
+    SourceTableView = sorting("Posted Entry No.") order(descending) where("Entry Type" = Filter(Outward));
     Editable = false;
 
 
@@ -129,33 +129,9 @@ page 50107 "E3 Posted Gate Ent Outward Hdr"
             {
                 ApplicationArea = Basic, Suite;
                 UpdatePropagation = Both;
-                SubPageLink = "Document No." = FIELD("Document No.");
+                SubPageLink = "Outward Document No." = FIELD("Outward Document No.");
                 Caption = 'Gate Entry Outward Line';
             }
         }
     }
-    // actions
-    // {
-    //     area(processing)
-    //     {
-    //         group("P&osting")
-    //         {
-    //             Caption = 'P&osting';
-    //             Image = Post;
-    //             action("Po&st")
-    //             {
-    //                 Caption = 'Po&st';
-    //                 Image = Post;
-    //                 Promoted = true;
-    //                 ApplicationArea = All;
-    //                 PromotedCategory = Process;
-    //                 PromotedIsBig = true;
-    //                 RunObject = Codeunit 50004;
-    //                 ShortCutKey = 'F9';
-    //             }
-    //         }
-    // }
-    // }
-
-
 }
