@@ -155,7 +155,7 @@ page 50134 "E3 Gate Entry Outward Header"
                     PurchPaybleSetup: Record "Purchases & Payables Setup";
                 begin
                     PurchPaybleSetup.Get();
-                    PurchPaybleSetup.TestField("Posted Gate Entry Inward No.");
+                    //  PurchPaybleSetup.TestField("Posted Gate Entry Inward No.");
                     PurchPaybleSetup.TestField("Posted Gate Entry Outward No.");
 
                     Inward := true;
@@ -176,13 +176,25 @@ page 50134 "E3 Gate Entry Outward Header"
     var
         PurchasesPayablesSetup: Record "Purchases & Payables Setup";
         NoSeries: Codeunit "No. Series";
+        UserSetup: Record "User Setup";
+        ResponsibiltyCenter: Record "Responsibility Center";
     begin
+        UserSetup.Reset();
+        UserSetup.SetRange("User ID", UserId());
+        If UserSetup.Find('-') then begin
+            ResponsibiltyCenter.Reset();
+            ResponsibiltyCenter.SetRange(Code, UserSetup."Purchase Resp. Ctr. Filter");
+            if ResponsibiltyCenter.Find('-') then;
+        end;
         Rec."Entry Type" := Rec."Entry Type"::Outward;
         PurchasesPayablesSetup.Get();
         PurchasesPayablesSetup.TestField("Gate Entry Nos.");
 
         Rec."No. Series" := PurchasesPayablesSetup."Gate Entry Nos.";
         Rec."Document No." := NoSeries.GetNextNo(Rec."No. Series", WorkDate(), true);
+        Rec."Location Name" := ResponsibiltyCenter."Location Code";
+        rec."Department Code" := ResponsibiltyCenter."Global Dimension 2 Code";
+        Rec."Shortcut Dimension 1 Code" := ResponsibiltyCenter."Global Dimension 1 Code";
     end;
 
 }
