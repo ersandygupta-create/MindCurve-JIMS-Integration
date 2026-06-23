@@ -86,6 +86,7 @@ page 50108 "E3Posted Gate Ent Outward Line"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Lot No. field.';
+                    Visible = false;
                 }
                 field(Remarks; Rec.Remarks)
                 {

@@ -36,6 +36,7 @@ page 50107 "E3 Posted Gate Ent Outward Hdr"
                 {
                     ToolTip = 'Specifies the value of the Purpose Code field';
                     ApplicationArea = All;
+                    Visible = false;
                 }
                 field("Vehicle No."; Rec."Vehicle No.")
                 {

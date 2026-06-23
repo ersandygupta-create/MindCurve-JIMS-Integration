@@ -217,6 +217,66 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Remarks';
             DataClassification = CustomerContent;
         }
+        field(50049; "Strength Code"; Text[50])
+        {
+            Caption = 'Strength Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Strength Master".Code;
+        }
+        field(50050; "Item Group Code"; Text[50])
+        {
+            Caption = 'Item Group Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Group".Code;
+        }
+        field(50051; "Item Make Code"; Text[50])
+        {
+            Caption = 'Item Make Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Make Master".Code;
+        }
+        field(50052; "Composition Code"; Text[50])
+        {
+            Caption = 'Composition Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Medicine Composition".Code;
+        }
+        field(50053; "Sub Category Code"; Text[50])
+        {
+            Caption = 'Sub Category Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Medicine Sub-Category Mast".Code;
+        }
+        field(50054; "Category Code"; Text[50])
+        {
+            Caption = 'Category Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Category Master".Code;
+        }
+        field(50055; "ManufacturerCode"; Text[50])
+        {
+            Caption = 'Manufacturer Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Make Master".Code;
+        }
+        field(50056; "Marketing Company Code"; Text[50])
+        {
+            Caption = 'Marketing Company Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Make Master".Code;
+        }
+        field(50057; "Material Type Code"; Text[50])
+        {
+            Caption = 'Material Type Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Material Type Master".Code;
+        }
+        field(50058; "Material Category Code"; Text[50])
+        {
+            Caption = 'Material Category Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Material Category Master".Code;
+        }
 
     }
     trigger OnBeforeRename()

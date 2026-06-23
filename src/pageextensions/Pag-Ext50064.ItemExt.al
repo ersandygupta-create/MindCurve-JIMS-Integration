@@ -124,6 +124,56 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of Manual Code field.';
                 }
+                field("Strength Code"; Rec."Strength Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Strength Code.';
+                }
+                field("Item Group Code"; Rec."Item Group Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Item Group Code.';
+                }
+                field("Item Make Code"; Rec."Item Make Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Item Make Code.';
+                }
+                field("Composition Code"; Rec."Composition Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Composition Code.';
+                }
+                field("Sub Category Code"; Rec."Sub Category Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Sub Category Code.';
+                }
+                field("Category Code"; Rec."Category Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Category Code.';
+                }
+                field("ManufacturerCode"; Rec."ManufacturerCode")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Manufacturer Code.';
+                }
+                field("Marketing Company Code"; Rec."Marketing Company Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Marketing Company Code.';
+                }
+                field("Material Type Code"; Rec."Material Type Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Material Type Code.';
+                }
+                field("Material Category Code"; Rec."Material Category Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Material Category Code.';
+                }
             }
         }
         addafter("JIMS Attributes")

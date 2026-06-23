@@ -92,6 +92,7 @@ page 50105 "E3 Posted Gate Ent Inward Line"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Lot No. field.';
+                    Visible = false;
                 }
                 field(Remarks; Rec.Remarks)
                 {

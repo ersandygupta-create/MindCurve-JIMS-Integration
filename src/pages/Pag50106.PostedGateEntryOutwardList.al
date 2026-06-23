@@ -35,6 +35,7 @@ page 50106 "E3Posted Gate Ent Outward List"
                 {
                     ToolTip = 'Specifies the value of the Purpose Code field';
                     ApplicationArea = All;
+                    Visible = false;
                 }
                 field("Vehicle No."; Rec."Vehicle No.")
                 {

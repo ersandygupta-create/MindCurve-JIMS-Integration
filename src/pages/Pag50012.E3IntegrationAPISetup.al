@@ -164,6 +164,14 @@ page 50012 "E3 Integration API Setup"
                 {
                     ToolTip = 'Specifies the value of the Item Master API Enabled field.';
                 }
+                field("State Master API"; Rec."State Master API")
+                {
+                    ToolTip = 'Specifies the value of the State Master API field.';
+                }
+                field("State Mater API Enabled"; Rec."State Master API Enabled")
+                {
+                    ToolTip = 'Specifies the value of the State Master API Enabled field.';
+                }
             }
         }
     }

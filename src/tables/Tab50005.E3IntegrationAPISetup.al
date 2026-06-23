@@ -204,11 +204,16 @@ table 50005 "E3 Integration API Setup"
         {
             Caption = 'Item Master API Enabled';
             DataClassification = CustomerContent;
-
-            // trigger OnValidate()
-            // begin
-            //     EnqueueJobEntry('FAILOVERITEM')
-            // end;
+        }
+        field(40; "State Master API"; Text[100])
+        {
+            Caption = 'State Master API';
+            DataClassification = CustomerContent;
+        }
+        field(41; "State Master API Enabled"; Boolean)
+        {
+            Caption = 'State Master API Enabled';
+            DataClassification = CustomerContent;
         }
 
 

@@ -213,6 +213,9 @@ permissionset 50000 "E3 HIS Permission"
     tabledata "E3 Indent Line" = RIMD,
     page "E3 Indent List" = X,
     page "E3 Indent Card" = X,
-    page "E3 Indent Line Subform" = X;
+    page "E3 Indent Line Subform" = X,
+    table "E3 State Master Log" = X,
+    tabledata "E3 State Master Log" = RIMD,
+    page "E3 State Master Log" = X;
 
 }

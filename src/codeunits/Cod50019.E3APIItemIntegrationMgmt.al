@@ -290,6 +290,17 @@ codeunit 50019 "E3 Item Integration Mgmt."
         JChildObj.Add('segment3', '');
         JChildObj.Add('segment4', '');
         JChildObj.Add('segment5', '');
+        JChildObj.Add('gstPercentage', Format(ItemUpdateLog."GST Group Code"));
+        JChildObj.Add('strengthCode', ItemUpdateLog."Strength Code");
+        JChildObj.Add('itemCategoryCodeCode', ItemUpdateLog."Category Code");
+        JChildObj.Add('subCategoryCodeCode', ItemUpdateLog."Sub Category Code");
+        JChildObj.Add('compositionCodeCode', ItemUpdateLog."Composition Code");
+        JChildObj.Add('materialCategoryCodeCode', ItemUpdateLog."Material Category Code");
+        JChildObj.Add('materialTypeCodeCode', ItemUpdateLog."Material Type Code");
+        JChildObj.Add('marketingCompanyCode', ItemUpdateLog."Marketing Company Code");
+        JChildObj.Add('itemGroupCode', ItemUpdateLog."Item Group Code");
+        JChildObj.Add('manufacturerCodeCode', ItemUpdateLog.ManufacturerCode);
+        JChildObj.Add('itemMakeCodeCode', ItemUpdateLog."Item Make Code");
         JChildObj.Add('ProcessIndicator', 'P');
         JChildObj.Add('processDatetime', format(DT2Time(ItemUpdateLog."Last Modified Date Time")));
         JChildObj.Add('ErrorMsg', '');

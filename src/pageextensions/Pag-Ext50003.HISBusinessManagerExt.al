@@ -337,6 +337,16 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         RunObject = page "E3 API Item Update Log";
                         ToolTip = 'Executes the Item Sync Logs action.';
                     }
+                    action("State Master")
+                    {
+                        AccessByPermission = TableData "E3 State Master Log" = R;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'State Master';
+                        Image = NewOrder;
+                        RunObject = Page "E3 State Master Log";
+                        RunPageMode = Create;
+                        ToolTip = 'Check Filter State Master Master';
+                    }
 
                 }
                 group("Item Component")

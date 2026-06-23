@@ -314,6 +314,66 @@ table 50046 "E3 API Item Update Log"
             Caption = 'Sale Unit Conversion Rate';
             DataClassification = CustomerContent;
         }
+        field(50051; "Strength Code"; Text[50])
+        {
+            Caption = 'Strength Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Strength Master".Code;
+        }
+        field(50052; "Item Group Code"; Text[50])
+        {
+            Caption = 'Item Group Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Group".Code;
+        }
+        field(50053; "Item Make Code"; Text[50])
+        {
+            Caption = 'Item Make Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Make Master".Code;
+        }
+        field(50054; "Composition Code"; Text[50])
+        {
+            Caption = 'Composition Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Medicine Composition".Code;
+        }
+        field(50055; "Sub Category Code"; Text[50])
+        {
+            Caption = 'Sub Category Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Medicine Sub-Category Mast".Code;
+        }
+        field(50056; "Category Code"; Text[50])
+        {
+            Caption = 'Category Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Category Master".Code;
+        }
+        field(50057; "ManufacturerCode"; Text[50])
+        {
+            Caption = 'Manufacturer Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Make Master".Code;
+        }
+        field(50058; "Marketing Company Code"; Text[50])
+        {
+            Caption = 'Marketing Company Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Make Master".Code;
+        }
+        field(50059; "Material Type Code"; Text[50])
+        {
+            Caption = 'Material Type Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Material Type Master".Code;
+        }
+        field(50060; "Material Category Code"; Text[50])
+        {
+            Caption = 'Material Category Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Material Category Master".Code;
+        }
         field(91; "Gen. Prod. Posting Group"; Code[20])
         {
             Caption = 'Gen. Prod. Posting Group';
