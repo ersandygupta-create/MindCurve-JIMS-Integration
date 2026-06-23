@@ -41,14 +41,16 @@ table 50052 "E3 Indent Line"
             begin
                 Description := '';
                 "Unit of Measure" := '';
-                "Item Make Code" := '';
+                "Item Make Code" := 0;
                 if Item.Get("No.") then
                     Description := Item.Description;
                 "Unit of Measure" := Item."Base Unit of Measure";
                 if Item.Get("No.") then begin
-                    "Item Make Code" := Item.Make;
+                    "Item Make Code" := Item."Item Make Code";
+                    "Item Make Name" := Item.Make;
                 end else
-                    "Item Make Code" := '';
+                    "Item Make Code" := 0;
+                "Item Make Name" := '';
 
 
                 CASE Type OF
@@ -185,7 +187,7 @@ table 50052 "E3 Indent Line"
             Caption = 'Entry No.';
             DataClassification = CustomerContent;
         }
-        field(25; "Item Make Code"; Text[60])
+        field(25; "Item Make Code"; Integer)
         {
             Caption = 'Item Make Code';
             DataClassification = CustomerContent;
@@ -198,6 +200,11 @@ table 50052 "E3 Indent Line"
         field(27; Remarks; Text[100])
         {
             Caption = 'Remarks';
+            DataClassification = CustomerContent;
+        }
+        field(28; "Item Make Name"; Text[60])
+        {
+            Caption = 'Item Make Name';
             DataClassification = CustomerContent;
         }
     }

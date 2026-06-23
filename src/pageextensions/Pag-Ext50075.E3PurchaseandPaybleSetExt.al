@@ -21,6 +21,10 @@ pageextension 50075 "E3 Purchase & Payable Ext" extends "Purchases & Payables Se
             {
                 ApplicationArea = All;
             }
+            field("Indent Nos."; Rec."Indent Nos.")
+            {
+                ApplicationArea = All;
+            }
 
         }
 

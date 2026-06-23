@@ -17,12 +17,37 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Category';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Category Master".Name;
+
+            trigger OnValidate()
+            var
+                CategoryRec: Record "E3 Item Category Master";
+            begin
+                Clear("Category Code");
+
+                CategoryRec.Reset();
+                CategoryRec.SetRange(Name, Category);
+
+                if CategoryRec.FindFirst() then
+                    "Category Code" := CategoryRec.Code;
+            end;
         }
         field(50003; "Material Category"; Text[60])
         {
             Caption = 'Material Category';
             DataClassification = CustomerContent;
             TableRelation = "E3 Material Category Master".Name;
+            trigger OnValidate()
+            var
+                MaterialCategoryRec: Record "E3 Material Category Master";
+            begin
+                Clear("Material Category Code");
+
+                MaterialCategoryRec.Reset();
+                MaterialCategoryRec.SetRange(Name, "Material Category");
+
+                if MaterialCategoryRec.FindFirst() then
+                    "Material Category Code" := MaterialCategoryRec.Code;
+            end;
         }
         field(50004; Model; Text[60])
         {
@@ -35,6 +60,18 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Strength';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Strength Master".Name;
+            trigger OnValidate()
+            var
+                StrengthMaster: Record "E3 Item Strength Master";
+            begin
+                Clear("Strength Code");
+
+                StrengthMaster.Reset();
+                StrengthMaster.SetRange(Name, Strength);
+
+                if StrengthMaster.FindFirst() then
+                    "Strength Code" := StrengthMaster.Code;
+            end;
         }
         field(50006; "Medicine Group"; Text[50])
         {
@@ -47,12 +84,38 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Medicine Manufacturer';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Make Master"."Company Name";
+
+            trigger OnValidate()
+            var
+                MakeMasterRec: Record "E3 Item Make Master";
+            begin
+                Clear("Manufacturer Code");
+
+                MakeMasterRec.Reset();
+                MakeMasterRec.SetRange("Company Name", "Medicine Manufacturer");
+
+                if MakeMasterRec.FindFirst() then
+                    ManufacturerCode := MakeMasterRec.Code;
+            end;
         }
         field(50009; "Medicine Company"; Text[50])
         {
             Caption = 'Medicine Company';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Make Master"."Company Name";
+
+            trigger OnValidate()
+            var
+                MakeMasterRec: Record "E3 Item Make Master";
+            begin
+                Clear("Marketing Company Code");
+
+                MakeMasterRec.Reset();
+                MakeMasterRec.SetRange("Company Name", "Medicine Company");
+
+                if MakeMasterRec.FindFirst() then
+                    "Marketing Company Code" := MakeMasterRec.Code;
+            end;
         }
         field(50010; Packing; Text[60])
         {
@@ -126,6 +189,19 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Medicine SubCategory';
             DataClassification = CustomerContent;
             TableRelation = "E3 Medicine Sub-Category Mast".Name;
+
+            trigger OnValidate()
+            var
+                SubCategoryRec: Record "E3 Medicine Sub-Category Mast";
+            begin
+                Clear("Sub Category Code");
+
+                SubCategoryRec.Reset();
+                SubCategoryRec.SetRange(Name, "Medicine SubCategory");
+
+                if SubCategoryRec.FindFirst() then
+                    "Sub Category Code" := SubCategoryRec.Code;
+            end;
         }
         field(50025; "Sub Group Nature"; Text[60])
         {
@@ -138,6 +214,19 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Make';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Make Master"."Company Name";
+
+            trigger OnValidate()
+            var
+                ItemMakeMaster: Record "E3 Item Make Master";
+            begin
+                Clear("Item Make Code");
+
+                ItemMakeMaster.Reset();
+                ItemMakeMaster.SetRange("Company Name", Make);
+
+                if ItemMakeMaster.FindFirst() then
+                    "Item Make Code" := ItemMakeMaster.Code;
+            end;
         }
         field(50027; "Medicine Component"; Text[60])
         {
@@ -156,12 +245,34 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Material Type';
             DataClassification = CustomerContent;
             TableRelation = "E3 Material Type Master".Name;
+            trigger OnValidate()
+            var
+                MaterialTypeRec: Record "E3 Material Type Master";
+            begin
+                Clear("Material Type Code");
+
+                MaterialTypeRec.Reset();
+                MaterialTypeRec.SetRange(Name, "Material Type");
+
+                if MaterialTypeRec.FindFirst() then
+                    "Material Type Code" := MaterialTypeRec.Code;
+            end;
         }
         field(50030; "Medicine Composition"; Text[60])
         {
             Caption = 'Medicine Composition';
             DataClassification = CustomerContent;
             TableRelation = "E3 Medicine Composition"."Composition Code";
+
+            trigger OnValidate()
+            var
+                CompositionRec: Record "E3 Medicine Composition";
+            begin
+                Clear("Composition Code");
+
+                if CompositionRec.Get("Medicine Composition") then
+                    "Composition Code" := CompositionRec.Code;
+            end;
         }
         field(50031; "Sub Group Site"; Text[60])
         {
@@ -179,6 +290,18 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Item Group';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Group".Name;
+            trigger OnValidate()
+            var
+                ItemGroupRec: Record "E3 Item Group";
+            begin
+                Clear("Item Group Code");
+
+                ItemGroupRec.Reset();
+                ItemGroupRec.SetRange(Name, "Item Group");
+
+                if ItemGroupRec.FindFirst() then
+                    "Item Group Code" := ItemGroupRec.Code;
+            end;
         }
         field(50041; "Filter Item Type"; Text[60])
         {
@@ -217,61 +340,61 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Remarks';
             DataClassification = CustomerContent;
         }
-        field(50049; "Strength Code"; Text[50])
+        field(50049; "Strength Code"; Integer)
         {
             Caption = 'Strength Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Strength Master".Code;
         }
-        field(50050; "Item Group Code"; Text[50])
+        field(50050; "Item Group Code"; Code[50])
         {
             Caption = 'Item Group Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Group".Code;
         }
-        field(50051; "Item Make Code"; Text[50])
+        field(50051; "Item Make Code"; Integer)
         {
             Caption = 'Item Make Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Make Master".Code;
         }
-        field(50052; "Composition Code"; Text[50])
+        field(50052; "Composition Code"; Code[50])
         {
             Caption = 'Composition Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Medicine Composition".Code;
         }
-        field(50053; "Sub Category Code"; Text[50])
+        field(50053; "Sub Category Code"; Integer)
         {
             Caption = 'Sub Category Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Medicine Sub-Category Mast".Code;
         }
-        field(50054; "Category Code"; Text[50])
+        field(50054; "Category Code"; Integer)
         {
             Caption = 'Category Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Category Master".Code;
         }
-        field(50055; "ManufacturerCode"; Text[50])
+        field(50055; "ManufacturerCode"; Integer)
         {
             Caption = 'Manufacturer Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Make Master".Code;
         }
-        field(50056; "Marketing Company Code"; Text[50])
+        field(50056; "Marketing Company Code"; Integer)
         {
             Caption = 'Marketing Company Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Make Master".Code;
         }
-        field(50057; "Material Type Code"; Text[50])
+        field(50057; "Material Type Code"; Integer)
         {
             Caption = 'Material Type Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Material Type Master".Code;
         }
-        field(50058; "Material Category Code"; Text[50])
+        field(50058; "Material Category Code"; Integer)
         {
             Caption = 'Material Category Code';
             DataClassification = CustomerContent;

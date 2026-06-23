@@ -14,8 +14,15 @@ page 50153 "E3 Indent Card"
             {
                 field("Document No."; Rec."Document No.")
                 {
-                    ApplicationArea = All;
                     Caption = 'Indent No.';
+                    ApplicationArea = All;
+                    AssistEdit = true;
+
+                    trigger OnAssistEdit()
+                    begin
+                        if Rec.AssistEdit(xRec) then
+                            CurrPage.Update();
+                    end;
                 }
 
                 field("Requested By"; Rec."Requested By")

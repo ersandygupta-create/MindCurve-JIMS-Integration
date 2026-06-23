@@ -167,6 +167,11 @@ table 50051 "E3 Indent Header"
             Caption = 'Approval Date Time';
             DataClassification = CustomerContent;
         }
+        field(21; "No. Series"; Code[10])
+        {
+            Caption = 'No. Series';
+            DataClassification = CustomerContent;
+        }
 
     }
 
@@ -187,8 +192,41 @@ table 50051 "E3 Indent Header"
         myInt: Integer;
 
     trigger OnInsert()
+    var
+        PurchSetup: Record "Purchases & Payables Setup";
+        NoSeries: Codeunit "No. Series";
     begin
+        if "Document No." = '' then begin
+            PurchSetup.Get();
+            PurchSetup.TestField("Indent Nos.");
 
+            "Document No." :=
+                NoSeries.GetNextNo(PurchSetup."Indent Nos.", WorkDate());
+        end;
+    end;
+
+    procedure AssistEdit(OldIndentHeader: Record "E3 Indent Header"): Boolean
+    var
+        PurchSetup: Record "Purchases & Payables Setup";
+        NoSeries: Codeunit "No. Series";
+        IndentHeader: Record "E3 Indent Header";
+    begin
+        IndentHeader := Rec;
+
+        PurchSetup.Get();
+        PurchSetup.TestField("Indent Nos.");
+
+        if NoSeries.LookupRelatedNoSeries(
+            PurchSetup."Indent Nos.",
+            OldIndentHeader."No. Series",
+            IndentHeader."No. Series")
+        then begin
+            IndentHeader."Document No." := NoSeries.GetNextNo(IndentHeader."No. Series");
+            Rec := IndentHeader;
+            exit(true);
+        end;
+
+        exit(false);
     end;
 
     trigger OnModify()

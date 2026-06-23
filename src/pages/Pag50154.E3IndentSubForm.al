@@ -62,6 +62,10 @@ page 50154 "E3 Indent Line Subform"
                 {
                     ApplicationArea = All;
                 }
+                field("Item Make Name"; Rec."Item Make Name")
+                {
+                    ApplicationArea = All;
+                }
                 field("Item Make Code"; Rec."Item Make Code")
                 {
                     ApplicationArea = All;
