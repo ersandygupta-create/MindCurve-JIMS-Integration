@@ -111,7 +111,7 @@ table 50045 "E3 Posted Gate Entry Line"
         }
         field(32; "Estimated Value Receive"; Decimal)
         {
-            Caption = 'Estimated Value';
+            Caption = 'Received Estimated Value';
             DataClassification = CustomerContent;
             Editable = false;
         }

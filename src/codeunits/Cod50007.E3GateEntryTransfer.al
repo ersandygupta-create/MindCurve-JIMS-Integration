@@ -25,7 +25,7 @@ codeunit 50007 "E3 Gate Entry Transfer"
         PostedHeader.Init();
         PostedHeader.TransferFields(GateEntryHeader);
 
-        PostedHeader."Reference Document No." := ShipmentNo;
+        // PostedHeader."Reference Document No." := ShipmentNo;
         PostedHeader."Posting Date" := Today;
         PurchasesPayablesSetup.Get();
         PostedHeader."Outward Document No." := NoSeries.GetNextNo(PurchasesPayablesSetup."Posted Gate Entry Outward No.", WorkDate(), true);

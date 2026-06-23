@@ -72,6 +72,7 @@ codeunit 50006 "E3 Post Gate Entry"
                     PostedGateEntryLine.Remarks := GateEntryLine.Remarks;
                     PostedGateEntryLine.PostedNo := PostedGateEntryHeader.PostedNo;
                     PostedGateEntryLine."Posted Entry No." := LastEntryno;
+                    PostedGateEntryLine."Estimated Value Receive" := GateEntryLine."Estimated Value Receive";
                     PostedGateEntryLine.INSERT;
                     LastEntryno += 1;
 
