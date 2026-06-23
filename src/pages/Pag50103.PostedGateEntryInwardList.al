@@ -26,6 +26,11 @@ page 50103 "E3 Posted Gate Ent Inward List"
                     ToolTip = 'Specifies the value of the Entry Type field';
                     ApplicationArea = All;
                 }
+                field("Posted Entry No."; Rec."Posted Entry No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Posted Entry No. field';
+                }
                 field("Document No."; Rec."Document No.")
                 {
                     ToolTip = 'Specifies the value of the Document No. field';

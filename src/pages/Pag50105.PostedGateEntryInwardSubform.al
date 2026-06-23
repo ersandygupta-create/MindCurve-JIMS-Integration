@@ -67,6 +67,11 @@ page 50105 "E3 Posted Gate Ent Inward Line"
                     Visible = false;
                     ToolTip = 'Specifies the value of the Pending Qty field.';
                 }
+                field("Estimated Value Receive"; Rec."Estimated Value Receive")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Estimated Value Receive field.';
+                }
                 field("Estimated Value"; Rec."Estimated Value")
                 {
                     ApplicationArea = All;
