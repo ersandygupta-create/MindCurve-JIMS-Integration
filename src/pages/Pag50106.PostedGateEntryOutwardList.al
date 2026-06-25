@@ -7,7 +7,7 @@ page 50106 "E3Posted Gate Ent Outward List"
     CardPageId = "E3 Posted Gate Ent Outward Hdr";
     InsertAllowed = false;
     SourceTable = "E3 Posted Gate Entry Header";
-    SourceTableView = sorting("Entry No.") where("Entry Type" = filter(Outward));
+    SourceTableView = sorting("Posted Entry No.") order(descending) where("Entry Type" = filter(Outward));
     UsageCategory = Lists;
 
     layout
@@ -115,21 +115,5 @@ page 50106 "E3Posted Gate Ent Outward List"
         }
     }
 
-    actions
-    {
-        area(Processing)
-        {
-            action(ActionName)
-            {
 
-                trigger OnAction()
-                begin
-
-                end;
-            }
-        }
-    }
-
-    var
-        myInt: Integer;
 }
