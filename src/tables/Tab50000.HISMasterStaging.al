@@ -570,6 +570,24 @@ table 50000 "E3 HIS Master Staging"
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Strength Master".Name;
         }
+        field(105; Specification; Text[60])
+        {
+            Caption = 'Specification';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Speciality Master".Name;
+        }
+        field(106; Model; text[60])
+        {
+            Caption = 'Model';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Model Master".Name;
+        }
+        field(107; "Material Type"; Text[60])
+        {
+            Caption = 'Material Type';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Material Type Master".Name;
+        }
 
     }
     keys

@@ -1,10 +1,12 @@
 table 50036 "E3 Item Make Master"
 {
     DataPerCompany = false;
+    DrillDownPageId = "E3 Item Make Master";
+    LookupPageId = "E3 Item Make Master";
 
     fields
     {
-        field(1; Code; Integer)
+        field(1; Code; Code[30])
         {
             Caption = 'Code';
             DataClassification = CustomerContent;
@@ -37,6 +39,11 @@ table 50036 "E3 Item Make Master"
         field(7; "Last Sent"; DateTime)
         {
             Caption = 'Last Sent';
+            DataClassification = CustomerContent;
+        }
+        field(8; "Make Type"; Enum "E3 Item Make Type")
+        {
+            Caption = 'Item Make Type';
             DataClassification = CustomerContent;
         }
 

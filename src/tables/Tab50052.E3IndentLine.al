@@ -39,18 +39,15 @@ table 50052 "E3 Indent Line"
             var
                 Item: Record Item;
             begin
-                Description := '';
-                "Unit of Measure" := '';
-                "Item Make Code" := 0;
+                Clear(Description);
+                Clear("Unit of Measure");
+                Clear("Item Make Code");
+                Clear("Item Make Name");
                 if Item.Get("No.") then
                     Description := Item.Description;
                 "Unit of Measure" := Item."Base Unit of Measure";
-                if Item.Get("No.") then begin
-                    "Item Make Code" := Item."Item Make Code";
-                    "Item Make Name" := Item.Make;
-                end else
-                    "Item Make Code" := 0;
-                "Item Make Name" := '';
+                "Item Make Code" := Item."Item Make Code";
+                "Item Make Name" := Item.Make;
 
 
                 CASE Type OF
@@ -110,11 +107,20 @@ table 50052 "E3 Indent Line"
         {
             Caption = 'Requested';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if ("Requested Qty" <> 0) then
+                    Amount := "Requested Qty" * "Unit Cost";
+            end;
         }
         field(8; "Unit Cost"; Decimal)
         {
             Caption = 'Unit Cost';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                Amount := "Requested Qty" * "Unit Cost";
+            end;
         }
         field(9; Amount; Decimal)
         {
@@ -182,15 +188,26 @@ table 50052 "E3 Indent Line"
         {
             DataClassification = CustomerContent;
         }
-        field(24; "Entry No."; Integer)
+        field(24; "Entry No."; Code[50])
         {
             Caption = 'Entry No.';
             DataClassification = CustomerContent;
         }
-        field(25; "Item Make Code"; Integer)
+        field(25; "Item Make Code"; Code[30])
         {
             Caption = 'Item Make Code';
+            Editable = false;
             DataClassification = CustomerContent;
+            TableRelation = "E3 Item Make Master".Code;
+            trigger OnValidate()
+            var
+                ItemMake: Record "E3 Item Make Master";
+            begin
+                Clear("Item Make Name");
+
+                if ItemMake.Get("Item Make Code") then
+                    "Item Make Name" := ItemMake."Company Name";
+            end;
         }
         field(26; "Ordered Qty"; Decimal)
         {
@@ -205,6 +222,12 @@ table 50052 "E3 Indent Line"
         field(28; "Item Make Name"; Text[60])
         {
             Caption = 'Item Make Name';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(29; "Critical Item"; Boolean)
+        {
+            Caption = 'Critical Item';
             DataClassification = CustomerContent;
         }
     }

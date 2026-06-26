@@ -1,0 +1,76 @@
+page 50026 "E3 HSN/SAC Update Log"
+{
+    PageType = List;
+    ApplicationArea = Basic, Suite;
+    UsageCategory = Lists;
+    SourceTable = "E3 HSN/SAC Log";
+    Caption = 'HSN/SAC Log';
+
+    layout
+    {
+        area(Content)
+        {
+            repeater(General)
+            {
+                field("GST Group Code"; Rec."GST Group Code")
+                {
+                    ApplicationArea = Basic, Suite;
+                    ToolTip = 'Specifies GST group code.';
+                }
+                field(Code; Rec.Code)
+                {
+                    ApplicationArea = Basic, Suite;
+                    ToolTip = 'Specifies HSN/SAC codes for various groups.';
+                }
+                field(Description; Rec.Description)
+                {
+                    ApplicationArea = Basic, Suite;
+                    ToolTip = 'Specifies details of HSN/SAC code.';
+                }
+                field(Type; Rec.Type)
+                {
+                    ApplicationArea = Basic, Suite;
+                    ToolTip = 'Specifies whether GST group is for HSN/SAC.';
+                }
+                field("Sync Status"; Rec."Sync Status")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field("Error Message"; Rec."Error Message")
+                {
+                    Editable = false;
+                    ApplicationArea = All;
+                }
+            }
+        }
+    }
+    actions
+    {
+        area(Processing)
+        {
+            action("Syn to DB")
+            {
+                ApplicationArea = Basic, Suite;
+                Caption = 'Syn to DB';
+                Image = Send;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+                ToolTip = 'Send the data in the  page to an DB';
+
+                trigger OnAction()
+                var
+                    HSNSACMgmt: Codeunit "E3 HSN/SAC Mgmt.";
+                begin
+                    if Rec."Sync Status" = Rec."Sync Status"::Synced then
+                        Error('This HSN/SAC record is already synced.');
+
+                    HSNSACMgmt.SendHSNSACDetails(Rec);
+                    Message('HSN/SAC Code sent successfully');
+                end;
+            }
+        }
+    }
+}

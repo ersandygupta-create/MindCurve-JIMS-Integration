@@ -1,6 +1,8 @@
 table 50049 "E3 Filter Item Type"
 {
     DataPerCompany = false;
+    DrillDownPageId = "E3 Filter Item Type";
+    LookupPageId = "E3 Filter Item Type";
 
     fields
     {

@@ -7,6 +7,7 @@ page 50022 "E3 Property List"
     Editable = true;
     Caption = 'Property List';
 
+
     layout
     {
         area(Content)

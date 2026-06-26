@@ -28,6 +28,14 @@ page 50136 "E3 Item Type"
                     ToolTip = 'Specifies the value of the Manual Code field';
                     ApplicationArea = All;
                 }
+                field("Item Tracking Code"; Rec."Item Tracking Code")
+                {
+                    ApplicationArea = All;
+                }
+                field("Lot Nos."; Rec."Lot Nos.")
+                {
+                    ApplicationArea = All;
+                }
                 field(IsSent; Rec.IsSent)
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';

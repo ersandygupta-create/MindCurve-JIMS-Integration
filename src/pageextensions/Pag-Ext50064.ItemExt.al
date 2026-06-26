@@ -15,13 +15,13 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Material Category"; Rec."Material Category")
                 {
                     ApplicationArea = All;
-                    //Editable = false;
+                    Editable = false;
                     ToolTip = 'Specifies the value of Meterial Category field.';
                 }
                 field(Strength; Rec.Strength)
                 {
                     ApplicationArea = All;
-                    //Editable = false;
+                    Editable = false;
                     ToolTip = 'Specifies the value of Strength field.';
                 }
                 field("Item Group"; Rec."Item Group")
@@ -32,16 +32,19 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Medicine Group"; Rec."Medicine Group")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the value of Medicine Group field.';
                 }
                 field("Medicine Company"; Rec."Medicine Company")
                 {
                     ApplicationArea = All;
+                    Caption = 'Marketing Company';
                     ToolTip = 'Specifies the value of Medicine Company field.';
                 }
                 field(Model; Rec.Model)
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the value of Model field.';
                 }
                 field(Category; Rec.Category)
@@ -67,11 +70,13 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Sub Group Nature"; Rec."Sub Group Nature")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the value of Sub Group Nature field.';
                 }
                 field(Make; Rec.Make)
                 {
                     ApplicationArea = All;
+                    Caption = 'Medicine Company';
                     ToolTip = 'Specifies the value of Make field.';
                 }
                 field("Medicine Component"; Rec."Medicine Component")
@@ -87,6 +92,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Material Type"; Rec."Material Type")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the value of Material Type field.';
                 }
                 field("Medicine Composition"; Rec."Medicine Composition")
@@ -137,6 +143,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Item Make Code"; Rec."Item Make Code")
                 {
                     ApplicationArea = All;
+                    Caption = 'Medicine Company Code';
                     ToolTip = 'Specifies the Item Make Code.';
                 }
                 field("Composition Code"; Rec."Composition Code")
@@ -167,11 +174,13 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Material Type Code"; Rec."Material Type Code")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the Material Type Code.';
                 }
                 field("Material Category Code"; Rec."Material Category Code")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the Material Category Code.';
                 }
             }
@@ -226,7 +235,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of Sale Returnable Item field.';
                 }
-                field("Quatation Required"; Rec."Quatation Required")
+                field("Quotation Required"; Rec."Quatation Required")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of Quatation Required field.';

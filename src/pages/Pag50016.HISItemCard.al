@@ -80,22 +80,6 @@ page 50016 "E3 HIS Item Card"
                     ToolTip = 'Specifies the value of the Purchase Allowed field';
                     ApplicationArea = All;
                 }
-                // field("Item Type"; Rec."Item Type")
-                // {
-                //     ApplicationArea = All;
-                // }
-                // field("Global Dimension 1 Code"; Rec."Global Dimension 1 Code")
-                // {
-                //     CaptionClass = '1,1,1';
-                //     ToolTip = 'Specifies the value of the Global Dimension 1 Code field';
-                //     ApplicationArea = All;
-                // }
-                // field("Global Dimension 2 Code"; Rec."Global Dimension 2 Code")
-                // {
-                //     CaptionClass = '1,1,2';
-                //     ToolTip = 'Specifies the value of the Global Dimension 2 Code field';
-                //     ApplicationArea = All;
-                // }
                 field("Error Description"; Rec."Error Description")
                 {
                     ToolTip = 'Specifies the value of the Error Description field';

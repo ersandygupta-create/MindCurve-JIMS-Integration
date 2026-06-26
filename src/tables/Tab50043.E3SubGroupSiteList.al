@@ -1,6 +1,8 @@
 table 50043 "E3 Sub Group Site List"
 {
     DataPerCompany = false;
+    DrillDownPageId = "E3 Sub Group Site List";
+    LookupPageId = "E3 Sub Group Site List";
 
     fields
     {

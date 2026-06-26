@@ -547,7 +547,13 @@ codeunit 50000 "E3 HIS Integration Mgmt."
         NoSeriesMgmt: Codeunit "No. Series";
         ItemRec: Record Item;
         NewItemDesc: text;
-        masterStaging: Record "E3 HIS Master Staging";
+        HisMasterStaging: Record "E3 HIS Master Staging";
+        HsStagingUpdate: Record "E3 HIS Master Staging";
+        TxtMsg: Text;
+        ItemNo: Text;
+        StrengthMaster: Record "E3 Item Strength Master";
+        MaterialCat: Record "E3 Material Category Master";
+        MaterialType: Record "E3 Material Type Master";
     begin
         IntegrationSetup.Get();
         IntegrationSetup.TestField("Integration Enabled", true);
@@ -557,11 +563,23 @@ codeunit 50000 "E3 HIS Integration Mgmt."
         HisMasterStaging.SetRange("Party Type", HisMasterStaging."Party Type"::"Item Master");
         HisMasterStaging.SetRange("Entry No.", EntryNo);
         HisMasterStaging.SetRange(IsCreated, false);
-        HisMasterStaging.SetFilter(Name, '<>%1', '');
+        // HisMasterStaging.SetFilter(Name, '<>%1', '');
 
         if HisMasterStaging.FindSet() then
             repeat
-                NewItemDesc := HisMasterStaging."Material Category" + '-' + HisMasterStaging.Name + '-' + HisMasterStaging.Strength;
+                if UpperCase(Format(HisMasterStaging."Item Type 1")) = 'PHARMACY' then
+                    NewItemDesc :=
+                        HisMasterStaging."Material Category" + '-' +
+                        HisMasterStaging.Name + '-' +
+                        HisMasterStaging.Strength + '-' +
+                        HisMasterStaging.Model
+                else
+                    NewItemDesc :=
+                        HisMasterStaging."Material Category" + '-' +
+                        HisMasterStaging."Material Type" + '-' +
+                        HisMasterStaging.Specification + '-' +
+                        HisMasterStaging.Model;
+
                 ItemRec.Reset();
                 ItemRec.SetRange(Description, NewItemDesc);
                 if not ItemRec.FindFirst() then begin
@@ -573,17 +591,42 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                     Item.VALIDATE(Description, NewItemDesc);
                     Item.Validate("Description 2", HisMasterStaging.Name);
                     Item.Validate("Material Category", HisMasterStaging."Material Category");
+                    MaterialCat.Reset();
+                    MaterialCat.SetRange(Name, HisMasterStaging."Material Category");
+                    if MaterialCat.FindFirst() then
+                        Item.Validate("Material Category Code", MaterialCat.Code);
                     Item.Validate(Strength, HisMasterStaging.Strength);
+                    StrengthMaster.Reset();
+                    StrengthMaster.SetRange(Name, HisMasterStaging.Strength);
+                    if StrengthMaster.FindFirst() then
+                        Item.Validate("Strength Code", StrengthMaster.Code);
                     Item.Validate("Item Type", HisMasterStaging."Item Type 1");
+                    Item."Material Type" := HisMasterStaging."Material Type";
+                    MaterialType.Reset();
+                    MaterialType.SetRange(Name, HisMasterStaging."Material Type");
+                    if MaterialType.FindFirst() then
+                        Item.Validate("Material Type Code", MaterialType.Code);
+                    Item.Model := HisMasterStaging.Model;
+                    Item."Item Type" := HisMasterStaging."Item Type 1";
+                    Item."Filter Item Type" := HisMasterStaging."Item Type 1";
+
                     Item.INSERT();
 
-                    masterStaging := HisMasterStaging;
-                    masterStaging.IsCreated := true;
-                    masterStaging.Modify(true)
+                    HisMasterStaging."HIS Code" := Item."No.";
+                    HisMasterStaging.IsCreated := true;
+                    HisMasterStaging.Modify(true)
 ;
                 end;
-
+                ItemNo := '';
+                HsStagingUpdate := HisMasterStaging;
+                HsStagingUpdate.IsCreated := true;
+                HsStagingUpdate."HIS Code" := Item."No.";
+                HsStagingUpdate.Modify(true);
+                ItemNo := Item."No.";
+                TxtMsg := StrSubstNo('Selected Item %1 Processed successfully.', ItemNo) + '\n' + TxtMsg;
             until HisMasterStaging.Next() = 0;
+
+        Message(TxtMsg);
 
     end;    //ak
 

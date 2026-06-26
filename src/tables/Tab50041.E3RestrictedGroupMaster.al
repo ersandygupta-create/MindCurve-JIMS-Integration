@@ -1,6 +1,8 @@
 table 50041 "E3 Restricted Group Master"
 {
     DataPerCompany = false;
+    DrillDownPageId = "E3 Restricted Group Master";
+    LookupPageId = "E3 Restricted Group Master";
 
     fields
     {

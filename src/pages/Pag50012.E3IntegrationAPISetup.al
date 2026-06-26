@@ -172,6 +172,32 @@ page 50012 "E3 Integration API Setup"
                 {
                     ToolTip = 'Specifies the value of the State Master API Enabled field.';
                 }
+                field("HSN/SAC API"; Rec."HSN/SAC API")
+                {
+                    ToolTip = 'Specifies the value of the HSN/SAC API field.';
+                }
+                field("HSN/SAC API Enabled"; Rec."HSN/SAC API Enabled")
+                {
+                    ToolTip = 'Specifies the value of the HSN/SAC API Enabled field.';
+                }
+                field("Department API"; Rec."Department API")
+                {
+                    ToolTip = 'Specifies the value of the Department API API Enabled field.';
+                }
+                field("Department API Enabled"; Rec."Department API Enabled")
+                {
+                    ToolTip = 'Specifies the value of the Department API API Enabled field.';
+                }
+                field("Unit API"; Rec."Unit API")
+                {
+                    ToolTip = 'Specifies the value of the Unit API field.';
+                    Visible = false;
+                }
+                field("Unit API Enabled"; Rec."Unit API Enabled")
+                {
+                    ToolTip = 'Specifies the value of the Unit API Enabled field.';
+                    Visible = false;
+                }
             }
         }
     }

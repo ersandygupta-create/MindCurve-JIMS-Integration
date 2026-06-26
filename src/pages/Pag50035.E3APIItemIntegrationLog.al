@@ -22,6 +22,7 @@ page 50035 "E3 API Item Update Log"
                 }
                 field("Error Message"; Rec."Error Message")
                 {
+                    Caption = 'Response';
                     ToolTip = 'Specifies the value of the Error Message field.';
                 }
                 field("No."; Rec."No.")
@@ -56,6 +57,7 @@ page 50035 "E3 API Item Update Log"
                 field(SkuName; Rec.SkuName)
                 {
                     ToolTip = 'Specifies the value of the Type field.';
+                    Visible = false;
                 }
                 field("Base Unit of Measure"; Rec."Base Unit of Measure")
                 {

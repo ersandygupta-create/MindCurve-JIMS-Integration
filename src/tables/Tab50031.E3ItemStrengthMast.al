@@ -1,10 +1,12 @@
 table 50031 "E3 Item Strength Master"
 {
     DataPerCompany = false;
+    DrillDownPageId = "E3 Item Strength Master";
+    LookupPageId = "E3 Item Strength Master";
 
     fields
     {
-        field(1; Code; Integer)
+        field(1; Code; Code[30])
         {
             Caption = 'Code';
             DataClassification = CustomerContent;

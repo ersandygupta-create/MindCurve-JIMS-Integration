@@ -1,6 +1,8 @@
 table 50050 "E3 Sub Group Master"
 {
     DataPerCompany = false;
+    LookupPageId = "E3 Sub Group Master";
+    DrillDownPageId = "E3 Sub Group Master";
 
     fields
     {

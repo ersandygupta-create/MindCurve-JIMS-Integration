@@ -7,6 +7,32 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Caption = 'Item Type';
             DataClassification = CustomerContent;
         }
+        field(50001; "Indent No."; Code[20])
+        {
+            Caption = 'Indent No.';
+            DataClassification = CustomerContent;
+        }
+        field(50002; "Indent Line No."; Integer)
+        {
+            Caption = 'Indent Line No.';
+            DataClassification = CustomerContent;
+        }
+        field(50003; "Item Make Code"; Code[20])
+        {
+            Caption = 'Item Make Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Make Master".Code;
+        }
+        field(50004; "Item Make Name"; Text[60])
+        {
+            Caption = 'Item Make Name';
+            DataClassification = CustomerContent;
+        }
+        field(50005; Critical; Boolean)
+        {
+            Caption = 'Critical';
+            DataClassification = CustomerContent;
+        }
         modify("No.")
         {
             trigger OnAfterValidate()
@@ -21,6 +47,17 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
                         if PurchHeader."E3 Item Type" = PurchHeader."E3 Item Type"::"Non Pharmacy" then
                             IF PurchHeader."E3 Item Type" <> Item."E3 Item Type" then
                                 Error('You can''t select other than Non Pharmacy Item %1 !', Item."No.");
+
+                    if Type <> Type::Item then
+                        exit;
+
+                    Clear("Item Make Code");
+                    Clear("Item Make Name");
+
+                    if Item.Get("No.") then begin
+                        "Item Make Code" := Item."Item Make Code";
+                        "Item Make Name" := Item.Make;
+                    end;
                 end;
             end;
         }

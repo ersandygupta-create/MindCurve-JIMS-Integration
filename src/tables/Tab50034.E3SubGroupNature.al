@@ -1,6 +1,8 @@
 table 50034 "E3 Sub-Group Nature"
 {
     DataPerCompany = false;
+    DrillDownPageId = "E3 Sub Group Nature";
+    LookupPageId = "E3 Sub Group Nature";
 
     fields
     {

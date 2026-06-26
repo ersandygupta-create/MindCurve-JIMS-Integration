@@ -1,10 +1,12 @@
 table 50035 "E3 Item Category Master"
 {
     DataPerCompany = false;
+    DrillDownPageId = "E3 Item Category Master";
+    LookupPageId = "E3 Item Category Master";
 
     fields
     {
-        field(1; Code; Integer)
+        field(1; Code; Code[20])
         {
             Caption = 'Code';
             DataClassification = CustomerContent;

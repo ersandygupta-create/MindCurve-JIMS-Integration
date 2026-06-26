@@ -28,6 +28,18 @@ page 50023 "E3 Item Group"
                     ToolTip = 'Specifies the value of the Filter Item Type field';
                     ApplicationArea = All;
                 }
+                field("Gen. Prod. Posting Group"; Rec."Gen. Prod. Posting Group")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Gen. Prod. Posting Group';
+                    ToolTip = 'Specifies the item''s product type to link transactions made for this item with the appropriate general ledger account according to the general posting setup.';
+                }
+                field("Inventory Posting Group"; Rec."Inventory Posting Group")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Inventory Posting Group';
+                    ToolTip = 'Specifies links between business transactions made for the item and an inventory account in the general ledger, to group amounts for that item type.';
+                }
                 field(IsSent; Rec.IsSent)
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';

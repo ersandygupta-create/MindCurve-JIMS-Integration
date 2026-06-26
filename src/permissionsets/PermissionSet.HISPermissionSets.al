@@ -216,6 +216,18 @@ permissionset 50000 "E3 HIS Permission"
     page "E3 Indent Line Subform" = X,
     table "E3 State Master Log" = X,
     tabledata "E3 State Master Log" = RIMD,
-    page "E3 State Master Log" = X;
+    page "E3 State Master Log" = X,
+    table "E3 HSN/SAC Log" = X,
+    tabledata "E3 HSN/SAC Log" = RIMD,
+    page "E3 HSN/SAC Update Log" = X,
+    table "E3 Voucher Type" = X,
+    tabledata "E3 Voucher Type" = RIMD,
+    page "E3 Voucher Types" = X,
+    table "E3 Dimension Value Log" = X,
+    tabledata "E3 Dimension Value Log" = RIMD,
+    page "E3 Dimension Value List" = X,
+    table "E3 Indenter Master" = X,
+    tabledata "E3 Indenter Master" = RIMD,
+    Page "E3 Indenter Master List" = X;
 
 }

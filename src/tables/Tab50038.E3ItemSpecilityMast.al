@@ -1,6 +1,8 @@
 table 50038 "E3 Item Speciality Master"
 {
     DataPerCompany = false;
+    DrillDownPageId = "E3 Item Speciality Master";
+    LookupPageId = "E3 Item Speciality Master";
 
     fields
     {

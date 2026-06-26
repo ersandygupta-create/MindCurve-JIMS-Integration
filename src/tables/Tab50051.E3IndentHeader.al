@@ -10,10 +10,38 @@ table 50051 "E3 Indent Header"
             Caption = 'Document No.';
             DataClassification = ToBeClassified;
         }
-        field(2; "Requested By"; Code[50])
+        field(2; "Requested By"; Text[60])
         {
             Caption = 'Requested By';
             DataClassification = CustomerContent;
+            TableRelation = "E3 Indenter Master"."Indenter Name";
+
+            trigger OnValidate()
+            var
+                IndenterMaster: Record "E3 Indenter Master";
+            begin
+                Clear("Shortcut Dimension 2 Code");
+                Clear("Department Name");
+                Clear("Shortcut Dimension 1 Code");
+                Clear("Business Unit Name");
+                Clear("Location Code");
+                Clear("Location Name");
+
+                IndenterMaster.Reset();
+                IndenterMaster.SetRange("Indenter Name", "Requested By");
+                IndenterMaster.SetRange("Indenter Type", IndenterMaster."Indenter Type"::"Requested By");
+
+                if IndenterMaster.FindFirst() then begin
+                    Validate("Shortcut Dimension 2 Code", IndenterMaster."Department Code");
+                    "Department Name" := IndenterMaster."Department Name";
+
+                    Validate("Shortcut Dimension 1 Code", IndenterMaster."Business Unit Code");
+                    "Business Unit Name" := IndenterMaster."Business Unit Name";
+
+                    Validate("Location Code", IndenterMaster."Default Location Code");
+                    "Location Name" := IndenterMaster."Default Location Name";
+                end;
+            end;
         }
         field(3; "Request Date"; Date)
         {
@@ -31,6 +59,7 @@ table 50051 "E3 Indent Header"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
             ValidateTableRelation = false;
             DataClassification = ToBeClassified;
+            Editable = false;
             trigger OnValidate()
             var
                 DimensionValue: Record "Dimension Value";
@@ -52,6 +81,7 @@ table 50051 "E3 Indent Header"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
             ValidateTableRelation = false;
             DataClassification = ToBeClassified;
+            Editable = false;
 
             trigger OnValidate()
             var
@@ -71,6 +101,7 @@ table 50051 "E3 Indent Header"
         field(7; "Location Code"; Code[20])
         {
             Caption = 'Location Code';
+            Editable = false;
             DataClassification = CustomerContent;
             TableRelation = Location.Code;
             trigger OnValidate()
@@ -93,42 +124,108 @@ table 50051 "E3 Indent Header"
         field(9; "Department Name"; Text[100])
         {
             Caption = 'Department Name';
+            Editable = false;
             DataClassification = CustomerContent;
         }
-        field(10; "Site Code"; Text[50])
+        field(10; "To Location Code"; Code[20])
         {
-            Caption = 'Site Code';
+            Caption = 'To Location Code';
+            Editable = false;
+            DataClassification = CustomerContent;
+            TableRelation = Location.Code;
+            trigger OnValidate()
+            var
+                LocationRec: Record Location;
+            begin
+                "To Location Name" := '';
+                if LocationRec.Get("To Location Code") then
+                    "To Location Name" := LocationRec.Name
+                else
+                    "To Location Name" := '';
+            end;
+        }
+        field(11; "To Location Name"; Text[100])
+        {
+            Caption = 'To Location Name';
+            Editable = false;
             DataClassification = CustomerContent;
         }
-        field(11; "Site Name"; Text[100])
+        field(12; "Expected Receive Date"; Date)
         {
-            Caption = 'Site Name';
+            Caption = 'Expected Receive Date';
             DataClassification = CustomerContent;
-        }
-        field(12; "Document Date"; Date)
-        {
-            Caption = 'Document Date';
-            DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                IndentLine: Record "E3 Indent Line";
+            begin
+                IndentLine.Reset();
+                IndentLine.SetRange("Document No.", "Document No.");
+
+                if IndentLine.FindSet() then
+                    repeat
+                        IndentLine."Requested Received Date" := "Expected Receive Date";
+                        IndentLine.Modify(true);
+                    until IndentLine.Next() = 0;
+            end;
         }
         field(13; "Approved By"; Text[100])
         {
             Caption = 'Approved By';
             DataClassification = CustomerContent;
         }
-        field(14; "Entry No."; Integer)
+        field(14; "Entry No."; Code[50])
         {
             Caption = 'Entry No';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                IndentLine: Record "E3 Indent Line";
+            begin
+                IndentLine.Reset();
+                IndentLine.SetRange("Document No.", "Document No.");
+
+                if IndentLine.FindSet() then
+                    repeat
+                        IndentLine."Entry No." := "Entry No.";
+                        IndentLine.Modify(true);
+                    until IndentLine.Next() = 0;
+            end;
         }
         field(15; "Business Unit Name"; Text[100])
         {
             Caption = 'Business Unit Name';
+            Editable = false;
             DataClassification = CustomerContent;
         }
-        field(16; Indentor; Text[50])
+        field(16; Indenter; Text[60])
         {
-            Caption = 'Indentor';
+            Caption = 'Indenter';
             DataClassification = CustomerContent;
+            TableRelation = "E3 Indenter Master"."Indenter Name";
+            trigger OnValidate()
+            var
+                IndenterMaster: Record "E3 Indenter Master";
+            begin
+                Clear("Indenter Name");
+                Clear("To Location Code");
+                Clear("To Location Name");
+                Clear("To Department Code");
+                Clear("To Department Name");
+
+                IndenterMaster.Reset();
+                IndenterMaster.SetRange("Indenter Name", Indenter);
+                IndenterMaster.SetRange("Indenter Type", IndenterMaster."Indenter Type"::Indenter);
+
+                if IndenterMaster.FindFirst() then begin
+                    "Indenter Name" := IndenterMaster."Indenter Name";
+
+                    "To Location Code" := IndenterMaster."Default Location Code";
+                    "To Location Name" := IndenterMaster."Default Location Name";
+
+                    "To Department Code" := IndenterMaster."Department Code";
+                    "To Department Name" := IndenterMaster."Department Name";
+                end;
+            end;
         }
         field(17; Remarks; Text[100])
         {
@@ -140,6 +237,7 @@ table 50051 "E3 Indent Header"
             Caption = 'To Department Code';
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
             ValidateTableRelation = false;
+            Editable = false;
             DataClassification = ToBeClassified;
 
             trigger OnValidate()
@@ -160,6 +258,7 @@ table 50051 "E3 Indent Header"
         field(19; "To Department Name"; Text[100])
         {
             Caption = 'To Department Name';
+            Editable = false;
             DataClassification = CustomerContent;
         }
         field(20; "Approval Date Time"; DateTime)
@@ -170,6 +269,33 @@ table 50051 "E3 Indent Header"
         field(21; "No. Series"; Code[10])
         {
             Caption = 'No. Series';
+            DataClassification = CustomerContent;
+        }
+        field(22; "Voucher Type Code"; Code[10])
+        {
+            Caption = 'Voucher Type Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Voucher Type".Code;
+            trigger OnValidate()
+            var
+                VoucherType: Record "E3 Voucher Type";
+            begin
+                if VoucherType.Get("Voucher Type Code") then
+                    "Voucher Type Name" := VoucherType.Description
+                else
+                    Clear("Voucher Type Name");
+            end;
+        }
+        field(23; "Voucher Type Name"; Text[80])
+        {
+            Caption = 'Voucher Type Name';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(24; "Indenter Name"; Text[100])
+        {
+            Caption = 'Indenter Name';
+            Editable = false;
             DataClassification = CustomerContent;
         }
 

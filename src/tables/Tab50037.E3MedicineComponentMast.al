@@ -1,6 +1,8 @@
 table 50037 "E3 Medicine Component Master"
 {
     DataPerCompany = false;
+    DrillDownPageId = "E3 Medicine Component Master";
+    LookupPageId = "E3 Medicine Component Master";
 
     fields
     {

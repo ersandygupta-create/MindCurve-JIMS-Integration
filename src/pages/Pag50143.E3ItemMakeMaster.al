@@ -13,6 +13,11 @@ page 50143 "E3 Item Make Master"
         {
             repeater(General)
             {
+                field("Make Type"; Rec."Make Type")
+                {
+                    ToolTip = 'Specifies the value of the Make Type field';
+                    ApplicationArea = All;
+                }
                 field(Code; Rec.Code)
                 {
                     ToolTip = 'Specifies the value of the Code field';

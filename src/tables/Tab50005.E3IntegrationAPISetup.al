@@ -215,6 +215,36 @@ table 50005 "E3 Integration API Setup"
             Caption = 'State Master API Enabled';
             DataClassification = CustomerContent;
         }
+        field(42; "HSN/SAC API"; Text[100])
+        {
+            Caption = 'HSN/SAC API';
+            DataClassification = CustomerContent;
+        }
+        field(44; "HSN/SAC API Enabled"; Boolean)
+        {
+            Caption = 'HSN/SAC API Enabled';
+            DataClassification = CustomerContent;
+        }
+        field(45; "Department API"; Text[100])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Department API';
+        }
+        field(46; "Department API Enabled"; Boolean)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Department API Enabled';
+        }
+        field(47; "Unit API"; Text[100])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Unit API';
+        }
+        field(48; "Unit API Enabled"; Boolean)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Unit API Enabled';
+        }
 
 
     }

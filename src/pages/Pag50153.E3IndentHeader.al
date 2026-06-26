@@ -34,13 +34,20 @@ page 50153 "E3 Indent Card"
                 {
                     ApplicationArea = All;
                 }
-
+                field("Voucher Type Code"; Rec."Voucher Type Code")
+                {
+                    ApplicationArea = All;
+                }
+                field("Voucher Type Name"; Rec."Voucher Type Name")
+                {
+                    ApplicationArea = All;
+                }
                 field(Status; Rec.Status)
                 {
                     ApplicationArea = All;
                 }
 
-                field("Document Date"; Rec."Document Date")
+                field("Expected Receive Date"; Rec."Expected Receive Date")
                 {
                     ApplicationArea = All;
                 }
@@ -54,7 +61,7 @@ page 50153 "E3 Indent Card"
                 {
                     ApplicationArea = All;
                 }
-                field(Indentor; Rec.Indentor)
+                field(Indentor; Rec.Indenter)
                 {
                     ApplicationArea = All;
                 }
@@ -85,7 +92,6 @@ page 50153 "E3 Indent Card"
                     ApplicationArea = All;
                     Caption = 'Department Code';
                 }
-
                 field("Department Name"; Rec."Department Name")
                 {
                     ApplicationArea = All;
@@ -99,10 +105,6 @@ page 50153 "E3 Indent Card"
                 {
                     ApplicationArea = All;
                 }
-            }
-
-            group("Location Information")
-            {
                 field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = All;
@@ -113,17 +115,15 @@ page 50153 "E3 Indent Card"
                     ApplicationArea = All;
                     Editable = false;
                 }
-
-                field("Site Code"; Rec."Site Code")
+                field("To Location Code"; Rec."To Location Code")
                 {
                     ApplicationArea = All;
-                    Visible = false;
                 }
 
-                field("Site Name"; Rec."Site Name")
+                field("To Location Name"; Rec."To Location Name")
                 {
                     ApplicationArea = All;
-                    Visible = false;
+                    Editable = false;
                 }
             }
             part(IndentLines; "E3 Indent Line Subform")

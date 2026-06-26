@@ -46,23 +46,6 @@ codeunit 50019 "E3 Item Integration Mgmt."
         ItemUOM: Record "Item Unit of Measure";
 
 
-    //[NonDebuggable]
-    // local procedure GetAuthorizationText(): Text
-    // var
-    //     Base64Converter: Codeunit "Base64 Convert";
-    //     Authorization: Text;
-    //     BasicCred: Text;
-    // begin
-    //     E3APISetup.get();
-    //     E3APISetup.TestField(Username);
-    //     E3APISetup.TestField(Password);
-
-    //     BasicCred := E3APISetup.Username + ':' + E3APISetup.Password;
-    //     Authorization := 'Basic ' + Base64Converter.ToBase64(BasicCred); //, TextEncoding::UTF8);
-
-    //     exit(Authorization);
-    // end;
-
     [EventSubscriber(ObjectType::Table, Database::Item, 'OnAfterModifyEvent', '', false, false)]
     local procedure E3ItemOnModify(var xRec: Record Item; var Rec: Record Item; RunTrigger: Boolean)
     var
@@ -102,6 +85,7 @@ codeunit 50019 "E3 Item Integration Mgmt."
         LastLog.Reset();
         LastLog.SetRange("No.", ItemRec."No.");
         LastLog.SetRange("Sync Status", LastLog."Sync Status"::" ");
+
 
         if LastLog.FindFirst() then begin
             ItemLog := LastLog;
@@ -254,8 +238,8 @@ codeunit 50019 "E3 Item Integration Mgmt."
         JChildObj.Add('purchaseUnitName', ItemUpdateLog."Purch. Unit of Measure");
         JChildObj.Add('saleUnitName', ItemUpdateLog."Sales Unit of Measure");
         JChildObj.Add('itemPacking', ItemUpdateLog.Packing);
-        JChildObj.Add('purchaseUnitConversionRate', 0);
-        JChildObj.Add('saleUnitConversionRate', 0);
+        JChildObj.Add('purchaseUnitConversionRate', Format(ItemUpdateLog."Purch. Qty. Per Rate"));
+        JChildObj.Add('saleUnitConversionRate', Format(ItemUpdateLog."Sale Qty. Per Rate"));
         JChildObj.Add('hsnCode', Format(ItemUpdateLog."HSN/SAC Code"));
         JChildObj.Add('modelName', ItemUpdateLog.Model);
         JChildObj.Add('strengthName', ItemUpdateLog.Strength);
@@ -269,8 +253,8 @@ codeunit 50019 "E3 Item Integration Mgmt."
         JChildObj.Add('itemGroupName', ItemUpdateLog."Item Group");
         JChildObj.Add('itemMakeCodeName', ItemUpdateLog.Make);
         JChildObj.Add('filterItemType', ItemUpdateLog."Filter Item Type");
-        JChildObj.Add('manufacturerCodeName', ItemUpdateLog.Make);
-        JChildObj.Add('isActive', ItemUpdateLog.Blocked);
+        JChildObj.Add('manufacturerCodeName', ItemUpdateLog."Medicine Manufacturer");
+        JChildObj.Add('isActive', ItemUpdateLog.Active);
         JChildObj.Add('isBarcodeActive', ItemUpdateLog."BarCode Active");
         JChildObj.Add('isConsignment', ItemUpdateLog."Consignment Item");
         JChildObj.Add('isNarcotics', ItemUpdateLog."Narcotics Control Substances");
@@ -281,7 +265,7 @@ codeunit 50019 "E3 Item Integration Mgmt."
         JChildObj.Add('isQuotationMandatory', ItemUpdateLog."Quatation Required");
         JChildObj.Add('allowMRPDiscPattern', Format(ItemUpdateLog."Allow MRP Discount"));
         JChildObj.Add('marginRateFix', Format(ItemUpdateLog."Margin Fix"));
-        JChildObj.Add('remark', '');
+        JChildObj.Add('remark', ItemUpdateLog.Remarks);
         JChildObj.Add('tl_ExcessPer', Format(ItemUpdateLog."Tolerance excess"));
         JChildObj.Add('tl_ShortagePer', Format(ItemUpdateLog."Tolerance Shortage"));
         JChildObj.Add('isStatus', '');
@@ -291,7 +275,7 @@ codeunit 50019 "E3 Item Integration Mgmt."
         JChildObj.Add('segment4', '');
         JChildObj.Add('segment5', '');
         JChildObj.Add('gstPercentage', Format(ItemUpdateLog."GST Group Code"));
-        JChildObj.Add('strengthCode', ItemUpdateLog."Strength Code");
+        JChildObj.Add('strengthCode', Format(ItemUpdateLog."Strength Code"));
         JChildObj.Add('itemCategoryCodeCode', ItemUpdateLog."Category Code");
         JChildObj.Add('subCategoryCodeCode', ItemUpdateLog."Sub Category Code");
         JChildObj.Add('compositionCodeCode', ItemUpdateLog."Composition Code");

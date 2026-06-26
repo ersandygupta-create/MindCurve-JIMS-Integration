@@ -341,11 +341,21 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                     {
                         AccessByPermission = TableData "E3 State Master Log" = R;
                         ApplicationArea = Basic, Suite;
-                        Caption = 'State Master';
+                        Caption = 'Sync State Master Log';
                         Image = NewOrder;
                         RunObject = Page "E3 State Master Log";
                         RunPageMode = Create;
                         ToolTip = 'Check Filter State Master Master';
+                    }
+                    action("Department Master")
+                    {
+                        AccessByPermission = TableData "E3 Dimension Value Log" = R;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Sync Department Master Log';
+                        Image = NewOrder;
+                        RunObject = Page "E3 Dimension Value List";
+                        RunPageMode = Create;
+                        ToolTip = 'Check Filter Department Master Master';
                     }
 
                 }
@@ -854,6 +864,16 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                     RunObject = Page "E3 Indent List";
                     RunPageMode = Create;
                     ToolTip = 'Executes the Create Indent Entries action.';
+                }
+                action("E3 Indenter Master")
+                {
+                    AccessByPermission = TableData "E3 Indenter Master" = IMD;
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Indenter Master';
+                    Image = Archive;
+                    RunObject = Page "E3 Indenter Master List";
+                    RunPageMode = Create;
+                    ToolTip = 'Executes the Create Indenter Entries action.';
                 }
             }
         }

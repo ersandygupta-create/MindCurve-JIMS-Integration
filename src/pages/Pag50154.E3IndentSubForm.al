@@ -38,7 +38,10 @@ page 50154 "E3 Indent Line Subform"
                 {
                     ApplicationArea = All;
                 }
-
+                field("Critical Item"; Rec."Critical Item")
+                {
+                    ApplicationArea = All;
+                }
                 field("Requested Qty"; Rec."Requested Qty")
                 {
                     ApplicationArea = All;

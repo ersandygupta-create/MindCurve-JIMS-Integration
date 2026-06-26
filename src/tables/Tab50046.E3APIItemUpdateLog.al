@@ -304,6 +304,11 @@ table 50046 "E3 API Item Update Log"
             Caption = 'Manual Code';
             DataClassification = CustomerContent;
         }
+        field(50048; Remarks; Text[100])
+        {
+            Caption = 'Remarks';
+            DataClassification = CustomerContent;
+        }
         field(50049; "Purch. Qty. Per Rate"; Decimal)
         {
             Caption = 'Purch. Unit Conversion Rate';
@@ -314,65 +319,70 @@ table 50046 "E3 API Item Update Log"
             Caption = 'Sale Unit Conversion Rate';
             DataClassification = CustomerContent;
         }
-        field(50051; "Strength Code"; Integer)
+        field(50051; "Strength Code"; Code[30])
         {
             Caption = 'Strength Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Strength Master".Code;
         }
-        field(50052; "Item Group Code"; Code[50])
+        field(50052; "Item Group Code"; Code[30])
         {
             Caption = 'Item Group Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Group".Code;
         }
-        field(50053; "Item Make Code"; Integer)
+        field(50053; "Item Make Code"; Code[30])
         {
             Caption = 'Item Make Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Make Master".Code;
         }
-        field(50054; "Composition Code"; Code[50])
+        field(50054; "Composition Code"; Code[30])
         {
             Caption = 'Composition Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Medicine Composition".Code;
         }
-        field(50055; "Sub Category Code"; Integer)
+        field(50055; "Sub Category Code"; Code[30])
         {
             Caption = 'Sub Category Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Medicine Sub-Category Mast".Code;
         }
-        field(50056; "Category Code"; Integer)
+        field(50056; "Category Code"; Code[20])
         {
             Caption = 'Category Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Category Master".Code;
         }
-        field(50057; "ManufacturerCode"; Integer)
+        field(50057; "ManufacturerCode"; Code[30])
         {
             Caption = 'Manufacturer Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Make Master".Code;
         }
-        field(50058; "Marketing Company Code"; Integer)
+        field(50058; "Marketing Company Code"; Code[30])
         {
             Caption = 'Marketing Company Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Make Master".Code;
         }
-        field(50059; "Material Type Code"; Integer)
+        field(50059; "Material Type Code"; Code[30])
         {
             Caption = 'Material Type Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Material Type Master".Code;
         }
-        field(50060; "Material Category Code"; Integer)
+        field(50060; "Material Category Code"; Code[30])
         {
             Caption = 'Material Category Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Material Category Master".Code;
+        }
+        field(50061; "Entry No."; Integer)
+        {
+            Caption = 'Entry No.';
+            AutoIncrement = true;
         }
         field(91; "Gen. Prod. Posting Group"; Code[20])
         {
@@ -393,9 +403,13 @@ table 50046 "E3 API Item Update Log"
 
     keys
     {
-        key(PK; "No.")
+        key(PK; "Entry No.")
         {
             Clustered = true;
+        }
+        key(PK1; "No.")
+        {
+
         }
     }
 }

@@ -1,6 +1,8 @@
 table 50047 "E3 Property List"
 {
     DataPerCompany = false;
+    LookupPageId = "E3 Property List";
+    DrillDownPageId = "E3 Property List";
 
     fields
     {

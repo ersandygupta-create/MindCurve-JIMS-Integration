@@ -1,6 +1,8 @@
 table 50048 "E3 Item Group"
 {
     DataPerCompany = false;
+    LookupPageId = "E3 Item Group";
+    DrillDownPageId = "E3 Item Group";
 
     fields
     {
@@ -33,6 +35,18 @@ table 50048 "E3 Item Group"
         {
             Caption = 'Last Sent';
             DataClassification = CustomerContent;
+        }
+        field(7; "Gen. Prod. Posting Group"; Code[20])
+        {
+            Caption = 'Gen. Prod. Posting Group';
+            ToolTip = 'Specifies the item''s product type to link transactions made for this item with the appropriate general ledger account according to the general posting setup.';
+            TableRelation = "Gen. Product Posting Group";
+        }
+        field(8; "Inventory Posting Group"; Code[20])
+        {
+            Caption = 'Inventory Posting Group';
+            ToolTip = 'Specifies links between business transactions made for the item and an inventory account in the general ledger, to group amounts for that item type.';
+            TableRelation = "Inventory Posting Group";
         }
 
     }

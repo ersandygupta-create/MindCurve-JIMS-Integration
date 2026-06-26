@@ -1,6 +1,8 @@
 table 50042 "E3 Medicine Composition"
 {
     DataPerCompany = false;
+    DrillDownPageId = "E3 Medicine Composition";
+    LookupPageId = "E3 Medicine Composition";
 
     fields
     {

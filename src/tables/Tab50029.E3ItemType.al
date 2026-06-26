@@ -2,6 +2,8 @@ table 50029 "E3 Item Type"
 {
     DataPerCompany = false;
     Caption = 'Item Type';
+    DrillDownPageId = "E3 Item Type";
+    LookupPageId = "E3 Item Type";
 
     fields
     {
@@ -34,6 +36,24 @@ table 50029 "E3 Item Type"
         {
             Caption = 'Last Sent';
             DataClassification = CustomerContent;
+        }
+        field(6500; "Item Tracking Code"; Code[10])
+        {
+            Caption = 'Item Tracking Code';
+            ToolTip = 'Specifies how serial, lot or package numbers assigned to the item are tracked in the supply chain.';
+            TableRelation = "Item Tracking Code";
+        }
+        field(6501; "Lot Nos."; Code[20])
+        {
+            Caption = 'Lot Nos.';
+            ToolTip = 'Specifies the number series code that will be used when assigning lot numbers.';
+            TableRelation = "No. Series";
+
+            trigger OnValidate()
+            begin
+                if "Lot Nos." <> '' then
+                    TestField("Item Tracking Code");
+            end;
         }
 
     }

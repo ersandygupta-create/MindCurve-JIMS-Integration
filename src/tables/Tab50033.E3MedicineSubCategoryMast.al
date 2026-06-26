@@ -1,10 +1,12 @@
 table 50033 "E3 Medicine Sub-Category Mast"
 {
     DataPerCompany = false;
+    DrillDownPageId = "E3 Medicine SubCategory";
+    LookupPageId = "E3 Medicine SubCategory";
 
     fields
     {
-        field(1; Code; Integer)
+        field(1; Code; Code[30])
         {
             Caption = 'Code';
             DataClassification = CustomerContent;
