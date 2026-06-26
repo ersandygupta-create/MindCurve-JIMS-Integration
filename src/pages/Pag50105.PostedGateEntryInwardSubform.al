@@ -7,7 +7,7 @@ page 50105 "E3 Posted Gate Ent Inward Line"
     MultipleNewLines = true;
     PageType = ListPart;
     SourceTable = "E3 Posted Gate Entry Line";
-    SourceTableView = sorting("Entry No.");
+    SourceTableView = sorting("Posted Entry No.");
     Editable = false;
 
     layout

@@ -7,7 +7,7 @@ page 50103 "E3 Posted Gate Ent Inward List"
     CardPageId = "E3 Posted Gate Ent Inward Hdr";
     InsertAllowed = false;
     SourceTable = "E3 Posted Gate Entry Header";
-    SourceTableView = sorting("Entry No.") where("Entry Type" = filter(Inward));
+    SourceTableView = sorting("Posted Entry No.") where("Entry Type" = filter(Inward));
     UsageCategory = Lists;
 
     layout
@@ -135,6 +135,5 @@ page 50103 "E3 Posted Gate Ent Inward List"
         }
     }
 
-    var
-        myInt: Integer;
+
 }

@@ -71,7 +71,7 @@ table 50045 "E3 Posted Gate Entry Line"
             Caption = 'Asset No.';
             DataClassification = CustomerContent;
         }
-        field(13; "Serial No."; Code[20])
+        field(13; "Serial No."; Code[50])
         {
             Caption = 'Serial No.';
             DataClassification = CustomerContent;

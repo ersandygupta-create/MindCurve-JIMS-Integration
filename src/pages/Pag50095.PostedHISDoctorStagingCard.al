@@ -159,10 +159,12 @@ page 50095 "E3 Posted HIS Doct. Stg. Card"
                 field(Address; Rec.Address)
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Address';
                 }
                 field("Address 2"; Rec."Address 2")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Address 2';
                 }
                 field(City; Rec.City)
                 {
@@ -174,6 +176,7 @@ page 50095 "E3 Posted HIS Doct. Stg. Card"
                 }
                 field("Post Code"; Rec."Post Code")
                 {
+                    ToolTip = 'Post Code';
                     ApplicationArea = all;
                 }
                 field("Mobile No."; Rec."Mobile No.")
@@ -356,7 +359,7 @@ page 50095 "E3 Posted HIS Doct. Stg. Card"
             action("Doctor Card")
             {
                 ApplicationArea = All;
-                Image = Doctor;
+                Image = Document;
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;

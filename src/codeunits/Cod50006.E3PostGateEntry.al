@@ -5,7 +5,7 @@ codeunit 50006 "E3 Post Gate Entry"
     trigger OnRun()
     begin
         GateEntryHeader := Rec;
-        WITH GateEntryHeader DO BEGIN
+        with GateEntryHeader DO BEGIN
             TESTFIELD("Posting Date");
             TESTFIELD("Document No.");
 
@@ -27,26 +27,26 @@ codeunit 50006 "E3 Post Gate Entry"
 
 
             IF ModifyHeader THEN BEGIN
-                MODIFY;
-                COMMIT;
+                MODIFY();
+                COMMIT();
             END;
 
-            GateEntryLine.LOCKTABLE;
+            GateEntryLine.LOCKTABLE();
             PurchPayble.Get();
-            PostedGateEntryHeader.INIT;
+            PostedGateEntryHeader.INIT();
             PostedGateEntryHeader.TRANSFERFIELDS(GateEntryHeader);
             PostedGateEntryHeader.PostedNo := NoSeries.GetNextNo(PurchPayble."Gate Entry Receipt Series", WorkDate(), true);
 
             IF GUIALLOWED THEN
                 Window.UPDATE(1, STRSUBSTNO(Text16503, "Document No.", PostedGateEntryHeader."Document No."));
-            PostedGateEntryHeader.INSERT;
+            PostedGateEntryHeader.INSERT();
             PostedGateEntryBuffer.Reset();
             PostedGateEntryBuffer.SetCurrentKey("Posted Entry No.");
             if PostedGateEntryBuffer.FindLast() then
                 LastEntryno := PostedGateEntryBuffer."Posted Entry No." + 1
             else
                 LastEntryno := 1;
-            GateEntryLine.RESET;
+            GateEntryLine.RESET();
             GateEntryLine.SETRANGE("Document No.", "Document No.");
             LineCount := 0;
             IF GateEntryLine.FINDSET THEN
@@ -55,7 +55,7 @@ codeunit 50006 "E3 Post Gate Entry"
                     LineCount += 1;
                     IF GUIALLOWED THEN
                         Window.UPDATE(2, LineCount);
-                    PostedGateEntryLine.INIT;
+                    PostedGateEntryLine.INIT();
                     PostedGateEntryLine."Item No." := GateEntryLine."Item No.";
                     PostedGateEntryLine."Item Name" := GateEntryLine."Item Name";
                     PostedGateEntryLine."Line No." := GateEntryLine."Line No.";
@@ -73,7 +73,7 @@ codeunit 50006 "E3 Post Gate Entry"
                     PostedGateEntryLine.PostedNo := PostedGateEntryHeader.PostedNo;
                     PostedGateEntryLine."Posted Entry No." := LastEntryno;
                     PostedGateEntryLine."Estimated Value Receive" := GateEntryLine."Estimated Value Receive";
-                    PostedGateEntryLine.INSERT;
+                    PostedGateEntryLine.INSERT();
                     LastEntryno += 1;
 
                     GateEntryLineUpd := GateEntryLine;
@@ -81,11 +81,11 @@ codeunit 50006 "E3 Post Gate Entry"
                     GateEntryLineUpd."Qty to Receive" := GateEntryLineUpd.Quantity - GateEntryLineUpd."Quantity Received";
                     GateEntryLineUpd."Estimated Value Receive" := GateEntryLineUpd."Qty to Receive" * GateEntryLineUpd."Cost/Qty";
                     GateEntryLineUpd.Modify(true);
-                UNTIL GateEntryLine.NEXT = 0;
+                UNTIL GateEntryLine.NEXT() = 0;
 
             if not CheckDocDeleteionStatus(GateEntryHeader) then begin
-                DELETE;
-                GateEntryLine.DELETEALL;
+                DELETE();
+                GateEntryLine.DELETEALL();
             end;
 
         END;

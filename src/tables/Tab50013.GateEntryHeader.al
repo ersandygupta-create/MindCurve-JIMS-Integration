@@ -55,6 +55,11 @@ table 50013 "E3 Gate Entry Header"
         {
             Caption = 'Posting Date';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if (Rec."Posting Date" < WorkDate()) then
+                    error('Posting Date can not be before the workdate.')
+            end;
         }
         field(10; "Department Code"; Code[20])
         {
