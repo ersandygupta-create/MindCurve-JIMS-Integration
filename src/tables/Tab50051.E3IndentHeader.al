@@ -59,7 +59,7 @@ table 50051 "E3 Indent Header"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
             ValidateTableRelation = false;
             DataClassification = ToBeClassified;
-            Editable = false;
+            Editable = true;
             trigger OnValidate()
             var
                 DimensionValue: Record "Dimension Value";
@@ -81,7 +81,7 @@ table 50051 "E3 Indent Header"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
             ValidateTableRelation = false;
             DataClassification = ToBeClassified;
-            Editable = false;
+            Editable = true;
 
             trigger OnValidate()
             var
@@ -101,7 +101,7 @@ table 50051 "E3 Indent Header"
         field(7; "Location Code"; Code[20])
         {
             Caption = 'Location Code';
-            Editable = false;
+            Editable = true;
             DataClassification = CustomerContent;
             TableRelation = Location.Code;
             trigger OnValidate()
@@ -118,19 +118,19 @@ table 50051 "E3 Indent Header"
         field(8; "Location Name"; Text[100])
         {
             Caption = 'Location Name';
-            Editable = false;
+            Editable = true;
             DataClassification = CustomerContent;
         }
         field(9; "Department Name"; Text[100])
         {
             Caption = 'Department Name';
-            Editable = false;
+            Editable = true;
             DataClassification = CustomerContent;
         }
         field(10; "To Location Code"; Code[20])
         {
             Caption = 'To Location Code';
-            Editable = false;
+            Editable = true;
             DataClassification = CustomerContent;
             TableRelation = Location.Code;
             trigger OnValidate()
@@ -147,7 +147,7 @@ table 50051 "E3 Indent Header"
         field(11; "To Location Name"; Text[100])
         {
             Caption = 'To Location Name';
-            Editable = false;
+            Editable = true;
             DataClassification = CustomerContent;
         }
         field(12; "Expected Receive Date"; Date)
@@ -194,7 +194,7 @@ table 50051 "E3 Indent Header"
         field(15; "Business Unit Name"; Text[100])
         {
             Caption = 'Business Unit Name';
-            Editable = false;
+            Editable = true;
             DataClassification = CustomerContent;
         }
         field(16; Indenter; Text[60])
@@ -237,7 +237,7 @@ table 50051 "E3 Indent Header"
             Caption = 'To Department Code';
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
             ValidateTableRelation = false;
-            Editable = false;
+            Editable = true;
             DataClassification = ToBeClassified;
 
             trigger OnValidate()
@@ -258,7 +258,7 @@ table 50051 "E3 Indent Header"
         field(19; "To Department Name"; Text[100])
         {
             Caption = 'To Department Name';
-            Editable = false;
+            Editable = true;
             DataClassification = CustomerContent;
         }
         field(20; "Approval Date Time"; DateTime)
@@ -289,13 +289,13 @@ table 50051 "E3 Indent Header"
         field(23; "Voucher Type Name"; Text[80])
         {
             Caption = 'Voucher Type Name';
-            Editable = false;
+            Editable = true;
             DataClassification = CustomerContent;
         }
         field(24; "Indenter Name"; Text[100])
         {
             Caption = 'Indenter Name';
-            Editable = false;
+            Editable = true;
             DataClassification = CustomerContent;
         }
 

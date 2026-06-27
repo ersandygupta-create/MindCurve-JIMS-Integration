@@ -34,7 +34,7 @@ tableextension 50015 "E3 HIS Item" extends Item
         field(50003; "Material Category"; Text[60])
         {
             Caption = 'Material Category';
-            Editable = false;
+            //Editable = false;
             DataClassification = CustomerContent;
             TableRelation = "E3 Material Category Master".Name;
             trigger OnValidate()
@@ -61,7 +61,7 @@ tableextension 50015 "E3 HIS Item" extends Item
         {
             Caption = 'Strength';
             DataClassification = CustomerContent;
-            Editable = false;
+            //Editable = false;
             TableRelation = "E3 Item Strength Master".Name;
             trigger OnValidate()
             var
@@ -268,7 +268,7 @@ tableextension 50015 "E3 HIS Item" extends Item
         {
             Caption = 'Material Type';
             DataClassification = CustomerContent;
-            Editable = false;
+            //Editable = false;
             TableRelation = "E3 Material Type Master".Name;
             trigger OnValidate()
             var

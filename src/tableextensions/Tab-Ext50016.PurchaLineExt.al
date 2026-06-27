@@ -7,28 +7,28 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Caption = 'Item Type';
             DataClassification = CustomerContent;
         }
-        field(50001; "Indent No."; Code[20])
+        field(50003; "Indent No."; Code[20])
         {
             Caption = 'Indent No.';
             DataClassification = CustomerContent;
         }
-        field(50002; "Indent Line No."; Integer)
+        field(50004; "Indent Line No."; Integer)
         {
             Caption = 'Indent Line No.';
             DataClassification = CustomerContent;
         }
-        field(50003; "Item Make Code"; Code[20])
+        field(50005; "Item Make Code"; Code[20])
         {
             Caption = 'Item Make Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Make Master".Code;
         }
-        field(50004; "Item Make Name"; Text[60])
+        field(50006; "Item Make Name"; Text[60])
         {
             Caption = 'Item Make Name';
             DataClassification = CustomerContent;
         }
-        field(50005; Critical; Boolean)
+        field(50007; Critical; Boolean)
         {
             Caption = 'Critical';
             DataClassification = CustomerContent;

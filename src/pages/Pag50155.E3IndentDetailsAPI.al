@@ -22,10 +22,6 @@ page 50155 "E3 Indent Header API"
                 field(documentNo; Rec."Document No.")
                 {
                     Caption = 'Document No.';
-                    trigger OnValidate()
-                    begin
-                        DuplicateCheck();
-                    end;
                 }
                 field(requestedBy; Rec."Requested By")
                 {
@@ -41,11 +37,19 @@ page 50155 "E3 Indent Header API"
                 }
                 field(shortcutDimension1Code; Rec."Shortcut Dimension 1 Code")
                 {
-                    Caption = 'Shortcut Dimension 1 Code';
+                    Caption = 'Business Unit Code';
+                }
+                field(businessUnitName; Rec."Business Unit Name")
+                {
+                    Caption = 'Business Unit Name';
                 }
                 field(shortcutDimension2Code; Rec."Shortcut Dimension 2 Code")
                 {
-                    Caption = 'Shortcut Dimension 2 Code';
+                    Caption = 'Department Code';
+                }
+                field(departmentName; Rec."Department Name")
+                {
+                    Caption = 'Department Name';
                 }
                 field(locationCode; Rec."Location Code")
                 {
@@ -55,11 +59,15 @@ page 50155 "E3 Indent Header API"
                 {
                     Caption = 'Location Name';
                 }
-                field(departmentName; Rec."Department Name")
+                field(toLocationCode; Rec."To Location Code")
                 {
-                    Caption = 'Department Name';
+                    Caption = 'To Location Code';
                 }
-                field(expectedReciveDate; Rec."Expected Receive Date")
+                field(toLocationName; Rec."To Location Name")
+                {
+                    Caption = 'To Location Name';
+                }
+                field(expectedReceiveDate; Rec."Expected Receive Date")
                 {
                     Caption = 'Expected Receive Date';
                 }
@@ -71,13 +79,13 @@ page 50155 "E3 Indent Header API"
                 {
                     Caption = 'Entry No.';
                 }
-                field(businessUnitName; Rec."Business Unit Name")
-                {
-                    Caption = 'Business Unit Name';
-                }
-                field(indentor; Rec.Indenter)
+                field(indenter; Rec.Indenter)
                 {
                     Caption = 'Indenter';
+                }
+                field(indenterName; Rec."Indenter Name")
+                {
+                    Caption = 'Indenter Name';
                 }
                 field(remarks; Rec.Remarks)
                 {
@@ -94,6 +102,14 @@ page 50155 "E3 Indent Header API"
                 field(approvalDateTime; Rec."Approval Date Time")
                 {
                     Caption = 'Approval Date Time';
+                }
+                field(voucherTypeCode; Rec."Voucher Type Code")
+                {
+                    Caption = 'Voucher Type Code';
+                }
+                field(voucherTypeName; Rec."Voucher Type Name")
+                {
+                    Caption = 'Voucher Type Name';
                 }
             }
             part(IndentLine; "E3 Indent Line API")

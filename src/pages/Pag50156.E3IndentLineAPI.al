@@ -67,54 +67,6 @@ page 50156 "E3 Indent Line API"
                 {
                     Caption = 'Requested Received Date';
                 }
-                field(firstPrice; Rec."First Price")
-                {
-                    Caption = 'First Price';
-                }
-                field(secondPrice; Rec."Second Price")
-                {
-                    Caption = 'Second Price';
-                }
-                field(thirdPrice; Rec."Third Price")
-                {
-                    Caption = 'Third Price';
-                }
-                field(firstAmount; Rec."First Amount")
-                {
-                    Caption = 'First Amount';
-                }
-                field(secondAmount; Rec."Second Amount")
-                {
-                    Caption = 'Second Amount';
-                }
-                field(thirdAmount; Rec."Third Amount")
-                {
-                    Caption = 'Third Amount';
-                }
-                field(firstVendorNo; Rec."First Vendor No.")
-                {
-                    Caption = 'First Vendor No.';
-                }
-                field(secondVendorNo; Rec."Second Vendor No.")
-                {
-                    Caption = 'Second Vendor No.';
-                }
-                field(thirdVendorNo; Rec."Third Vendor No.")
-                {
-                    Caption = 'Third Vendor No.';
-                }
-                field(quotationNo; Rec."Quotation No.")
-                {
-                    Caption = 'Quotation No.';
-                }
-                field(priceQuoted; Rec."Price Quoted")
-                {
-                    Caption = 'Price Quoted';
-                }
-                field(finalized; Rec.Finalized)
-                {
-                    Caption = 'Finalized';
-                }
                 field(entryNo; Rec."Entry No.")
                 {
                     Caption = 'Entry No.';

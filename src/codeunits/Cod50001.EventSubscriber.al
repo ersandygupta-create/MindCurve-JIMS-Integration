@@ -140,9 +140,6 @@ codeunit 50001 "E3 HIS Event Subscriber"
     begin
         if PreviewMode then
             exit;
-        PurchInvHeader."W/S DL No." := PurchHeader."W/S DL No.";
-        PurchInvHeader."Retail DL No." := PurchHeader."Retail DL No.";
-        PurchInvHeader.Modify();
 
         PurchCommentLine.SetRange("Document Type", PurchHeader."Document Type");
         PurchCommentLine.SetRange("No.", PurchHeader."No.");
