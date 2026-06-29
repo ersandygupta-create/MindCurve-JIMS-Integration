@@ -188,15 +188,13 @@ page 50012 "E3 Integration API Setup"
                 {
                     ToolTip = 'Specifies the value of the Department API API Enabled field.';
                 }
-                field("Unit API"; Rec."Unit API")
+                field("UOM API"; Rec."UOM API")
                 {
-                    ToolTip = 'Specifies the value of the Unit API field.';
-                    Visible = false;
+                    ToolTip = 'Specifies the value of the Unit Of Measure API field.';
                 }
-                field("Unit API Enabled"; Rec."Unit API Enabled")
+                field("UOM API Enabled"; Rec."UOM API Enabled")
                 {
-                    ToolTip = 'Specifies the value of the Unit API Enabled field.';
-                    Visible = false;
+                    ToolTip = 'Specifies the value of the UOM API Enabled field.';
                 }
             }
         }

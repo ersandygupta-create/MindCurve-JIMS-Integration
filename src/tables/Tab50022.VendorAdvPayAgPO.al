@@ -37,6 +37,20 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
         {
             Caption = 'Basic Amount';
             DataClassification = ToBeClassified;
+            trigger OnValidate()
+            var
+                PurchHeader: Record "Purchase Header";
+            begin
+                if PurchHeader.Get(PurchHeader."Document Type"::Order, "Purchase Order No.") then begin
+                    PurchHeader.CalcFields(Amount);
+
+                    if "Basic Amount" > PurchHeader.Amount then
+                        Error(
+                          'Basic Amount (%1) cannot be greater than Purchase Order Amount (%2).',
+                          "Basic Amount",
+                          PurchHeader.Amount);
+                end;
+            end;
         }
         field(7; "GST Amount"; Decimal)
         {
@@ -63,6 +77,11 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
         field(11; ValidationHISKey; Text[30])
         {
             Caption = 'ValidationHISKey';
+            DataClassification = CustomerContent;
+        }
+        field(12; Remarks; Text[100])
+        {
+            Caption = 'Remarks';
             DataClassification = CustomerContent;
         }
 

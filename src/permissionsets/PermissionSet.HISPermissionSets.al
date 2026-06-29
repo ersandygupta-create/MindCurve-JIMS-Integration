@@ -228,6 +228,11 @@ permissionset 50000 "E3 HIS Permission"
     page "E3 Dimension Value List" = X,
     table "E3 Indenter Master" = X,
     tabledata "E3 Indenter Master" = RIMD,
-    Page "E3 Indenter Master List" = X;
+    Page "E3 Indenter Master List" = X,
+    table "E3 Unit Of Measure Update Log" = X,
+    tabledata "E3 Unit Of Measure Update Log" = RIMD,
+    page "E3 Unit Of Measure Update Log" = X;
+
+
 
 }

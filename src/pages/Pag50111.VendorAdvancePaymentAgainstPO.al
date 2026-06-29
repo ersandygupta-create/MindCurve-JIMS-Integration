@@ -43,15 +43,15 @@ page 50111 "Vendor Advance Pay. Against PO"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Vendor Name field';
                 }
+                field(Remarks; Rec.Remarks)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Remarks field';
+                }
                 field("Basic Amount"; Rec."Basic Amount")
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Basic Amount field';
-                }
-                field("GST Amount"; Rec."GST Amount")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the GST Amount field';
                 }
                 field("Total PO Amount"; Rec."Total PO Amount")
                 {

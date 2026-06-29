@@ -235,15 +235,15 @@ table 50005 "E3 Integration API Setup"
             DataClassification = CustomerContent;
             Caption = 'Department API Enabled';
         }
-        field(47; "Unit API"; Text[100])
+        field(47; "UOM API"; Text[100])
         {
             DataClassification = CustomerContent;
-            Caption = 'Unit API';
+            Caption = 'UOM API';
         }
-        field(48; "Unit API Enabled"; Boolean)
+        field(48; "UOM API Enabled"; Boolean)
         {
             DataClassification = CustomerContent;
-            Caption = 'Unit API Enabled';
+            Caption = 'UOM API Enabled';
         }
 
 

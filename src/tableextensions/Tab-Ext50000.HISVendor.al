@@ -67,6 +67,18 @@ tableextension 50000 "E3 HIS Vendor Ext" extends Vendor
             Caption = 'Bank Integration Enabled';
             DataClassification = CustomerContent;
         }
+        field(50054; "Payment Advice E-mail"; Text[250])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Payment Advice Email';
+            ExtendedDatatype = EMail;
+
+            trigger OnValidate()
+            begin
+                ValidateEmail();
+            end;
+        }
+
 
         modify("Date Filter")
         {
@@ -84,4 +96,25 @@ tableextension 50000 "E3 HIS Vendor Ext" extends Vendor
         if (Rec."No." <> xRec."No.") and (xRec."No." <> '') then
             Error('You cannot modify the Vendor No.');
     end;
+
+    local procedure ValidateEmail()
+    var
+        MailManagement: Codeunit "Mail Management";
+        IsHandled: Boolean;
+    begin
+        IsHandled := false;
+        OnBeforeValidateEmail(Rec, IsHandled, xRec);
+        if IsHandled then
+            exit;
+
+        if "E-Mail" = '' then
+            exit;
+        MailManagement.CheckValidEmailAddresses("E-Mail");
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnBeforeValidateEmail(var Vendor: Record Vendor; var IsHandled: Boolean; xVendor: Record Vendor)
+    begin
+    end;
+
 }

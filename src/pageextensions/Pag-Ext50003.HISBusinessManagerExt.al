@@ -357,6 +357,16 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         RunPageMode = Create;
                         ToolTip = 'Check Filter Department Master Master';
                     }
+                    action("UOM")
+                    {
+                        AccessByPermission = TableData "E3 Unit Of Measure Update Log" = R;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Sync Unit Of Measure Log';
+                        Image = NewOrder;
+                        RunObject = Page "E3 Unit Of Measure Update Log";
+                        RunPageMode = Create;
+                        ToolTip = 'Check Filter Unit Of Measure Master Master';
+                    }
 
                 }
                 group("Item Component")
