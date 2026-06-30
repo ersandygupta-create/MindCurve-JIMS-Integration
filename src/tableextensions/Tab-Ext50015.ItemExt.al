@@ -287,7 +287,7 @@ tableextension 50015 "E3 HIS Item" extends Item
         {
             Caption = 'Medicine Composition';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Medicine Composition"."Composition Code";
+            TableRelation = "E3 Medicine Composition".Code;
 
             trigger OnValidate()
             var
@@ -295,7 +295,7 @@ tableextension 50015 "E3 HIS Item" extends Item
             begin
                 Clear("Composition Code");
                 CompositionRec.Reset();
-                CompositionRec.SetRange("Composition Code", "Medicine Composition");
+                CompositionRec.SetRange(Code, "Medicine Composition");
                 if CompositionRec.FindFirst() then
                     "Composition Code" := CompositionRec.Code;
             end;

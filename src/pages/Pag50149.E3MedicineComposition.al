@@ -13,29 +13,45 @@ page 50149 "E3 Medicine Composition"
         {
             repeater(General)
             {
+                field("Line No."; Rec."Line No.")
+                {
+                    ToolTip = 'Specifies the value of the Line No. field';
+                    ApplicationArea = All;
+                    Editable = false;
+                }
                 field(Code; Rec.Code)
                 {
                     ToolTip = 'Specifies the value of the Code field';
                     ApplicationArea = All;
                 }
-                field(SNo; Rec.SNo)
+                field("Item Name"; Rec."Item Name")
                 {
-                    ToolTip = 'Specifies the value of the SNo field';
+                    ToolTip = 'Specifies the value of the Item Name field';
                     ApplicationArea = All;
                 }
-                field("Composition Code"; Rec."Composition Code")
+                field("Medicine Component Code"; Rec."Medicine Component Code")
                 {
-                    ToolTip = 'Specifies the value of the Composition Code field';
+                    ToolTip = 'Specifies the value of the Medicine Component Code field';
                     ApplicationArea = All;
                 }
-                field(IsBase; Rec.IsBase)
+                field("Medicine Component Name"; Rec."Medicine Component Name")
                 {
-                    ToolTip = 'Specifies the value of the Is Base field';
+                    ToolTip = 'Specifies the value of the Medicine Component Name field';
                     ApplicationArea = All;
                 }
                 field(Power; Rec.Power)
                 {
                     ToolTip = 'Specifies the value of the Power field';
+                    ApplicationArea = All;
+                }
+                field("Unit Of Measure"; Rec."Unit Of Measure")
+                {
+                    ToolTip = 'Specifies the value of the Unit Of Measure field';
+                    ApplicationArea = All;
+                }
+                field(IsBase; Rec.IsBase)
+                {
+                    ToolTip = 'Specifies the value of the Is Base field';
                     ApplicationArea = All;
                 }
                 field(IsSent; Rec.IsSent)

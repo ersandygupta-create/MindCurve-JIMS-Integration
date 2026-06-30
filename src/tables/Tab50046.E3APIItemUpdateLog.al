@@ -215,7 +215,7 @@ table 50046 "E3 API Item Update Log"
         {
             Caption = 'Medicine Composition';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Medicine Composition"."Composition Code";
+            TableRelation = "E3 Medicine Composition".Code;
         }
         field(50031; "Sub Group Site"; Text[60])
         {

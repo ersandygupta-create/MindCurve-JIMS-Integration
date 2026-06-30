@@ -11,6 +11,22 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
         {
             Caption = 'Purchase Order No.';
             DataClassification = ToBeClassified;
+            trigger OnValidate()
+            var
+                PurchaseHeader: Record "Purchase Header";
+            begin
+
+                if not PurchaseHeader.Get(PurchaseHeader."Document Type"::Order, "Purchase Order No.") then
+                    exit;
+
+                "PO Date" := PurchaseHeader."Order Date";
+                "Vendor Code" := PurchaseHeader."Buy-from Vendor No.";
+                "Vendor Name" := PurchaseHeader."Buy-from Vendor Name";
+
+
+
+            end;
+
         }
         field(2; "Entry Type"; enum "E3 HIS Item Map. Entry Type")
         {

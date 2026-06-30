@@ -6,7 +6,7 @@ table 50037 "E3 Medicine Component Master"
 
     fields
     {
-        field(1; Code; Integer)
+        field(1; Code; Code[20])
         {
             Caption = 'Code';
             DataClassification = CustomerContent;
