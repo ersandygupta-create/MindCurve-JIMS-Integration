@@ -95,10 +95,10 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     Editable = false;
                     ToolTip = 'Specifies the value of Material Type field.';
                 }
-                field("Medicine Composition"; Rec."Medicine Composition")
+                field("Medicine Composition Code"; Rec."Medicine Composition Code")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of Medicine Composition field.';
+                    ToolTip = 'Specifies the value of Medicine Composition Code field.';
                 }
                 field("Sub Group Site"; Rec."Sub Group Site")
                 {

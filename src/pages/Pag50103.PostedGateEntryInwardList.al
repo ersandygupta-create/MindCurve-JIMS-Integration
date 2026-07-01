@@ -42,7 +42,12 @@ page 50103 "E3 Posted Gate Ent Inward List"
                     ApplicationArea = All;
                     Visible = false;
                 }
-                field("Vehicle No."; Rec."Vehicle No.")
+                field("Purpose Description"; Rec."Purpose Description")
+                {
+                    ToolTip = 'Specifies the value of the Purpose Description field';
+                    ApplicationArea = All;
+                }
+                field(Mode; Rec.Mode)
                 {
                     ToolTip = 'Specifies the value of the Vehicle No. field';
                     ApplicationArea = All;
@@ -63,20 +68,9 @@ page 50103 "E3 Posted Gate Ent Inward List"
                     ToolTip = 'Specifies the value of the To Department Code field';
                     ApplicationArea = All;
                 }
-                field("Department Code"; Rec."Department Code")
+                field("To Destination Code"; Rec."To Destination Code")
                 {
-                    ToolTip = 'Specifies the value of the Department Code field';
-                    ApplicationArea = All;
-                    Caption = 'To Department Code';
-                }
-                field("To Department Name"; Rec."To Department Name")
-                {
-                    ToolTip = 'Specifies the value of the To Department Code field';
-                    ApplicationArea = All;
-                }
-                field("To Destination"; Rec."To Destination")
-                {
-                    ToolTip = 'Specifies the value of the To Destination field';
+                    ToolTip = 'Specifies the value of the To Destination Code field';
                     ApplicationArea = All;
                 }
                 field("Vendor No."; Rec."Vendor No.")

@@ -36,11 +36,6 @@ page 50108 "E3Posted Gate Ent Outward Line"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Item Name field.';
                 }
-                field("Variant Code"; Rec."Variant Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Variant Code field.';
-                }
                 field("Unit of Measurement"; Rec."Unit of Measurement")
                 {
                     ApplicationArea = All;
@@ -88,10 +83,10 @@ page 50108 "E3Posted Gate Ent Outward Line"
                     ToolTip = 'Specifies the value of the Lot No. field.';
                     Visible = false;
                 }
-                field(Remarks; Rec.Remarks)
+                field(Specification; Rec.Specification)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Remarks field.';
+                    ToolTip = 'Specifies the value of the Specification field.';
                 }
             }
         }

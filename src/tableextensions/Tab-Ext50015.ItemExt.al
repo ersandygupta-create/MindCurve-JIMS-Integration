@@ -283,11 +283,11 @@ tableextension 50015 "E3 HIS Item" extends Item
                     "Material Type Code" := MaterialTypeRec.Code;
             end;
         }
-        field(50030; "Medicine Composition"; Text[60])
+        field(50030; "Medicine Composition Code"; Code[20])
         {
-            Caption = 'Medicine Composition';
+            Caption = 'Medicine Composition Code';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Medicine Composition".Code;
+            TableRelation = "E3 Medicine Composition".Code WHERE(Code = FIELD("No."));
 
             trigger OnValidate()
             var
@@ -295,7 +295,7 @@ tableextension 50015 "E3 HIS Item" extends Item
             begin
                 Clear("Composition Code");
                 CompositionRec.Reset();
-                CompositionRec.SetRange(Code, "Medicine Composition");
+                CompositionRec.SetRange(Code, "Medicine Composition Code");
                 if CompositionRec.FindFirst() then
                     "Composition Code" := CompositionRec.Code;
             end;

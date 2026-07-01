@@ -59,7 +59,6 @@ codeunit 50006 "E3 Post Gate Entry"
                     PostedGateEntryLine."Item No." := GateEntryLine."Item No.";
                     PostedGateEntryLine."Item Name" := GateEntryLine."Item Name";
                     PostedGateEntryLine."Line No." := GateEntryLine."Line No.";
-                    PostedGateEntryLine."Variant Code" := GateEntryLine."Variant Code";
                     PostedGateEntryLine."Unit of Measurement" := GateEntryLine."Unit of Measurement";
                     PostedGateEntryLine.Quantity := GateEntryLine.Quantity;
                     PostedGateEntryLine."Quantity Received" := GateEntryLine."Qty to Receive";
@@ -69,7 +68,7 @@ codeunit 50006 "E3 Post Gate Entry"
                     PostedGateEntryLine."Fixed Asset Name" := GateEntryLine."Fixed Asset Name";
                     PostedGateEntryLine."Serial No." := GateEntryLine."Serial No.";
                     PostedGateEntryLine."Lot No." := GateEntryLine."Lot No.";
-                    PostedGateEntryLine.Remarks := GateEntryLine.Remarks;
+                    PostedGateEntryLine.Specification := GateEntryLine.Specification;
                     PostedGateEntryLine.PostedNo := PostedGateEntryHeader.PostedNo;
                     PostedGateEntryLine."Posted Entry No." := LastEntryno;
                     PostedGateEntryLine."Estimated Value Receive" := GateEntryLine."Estimated Value Receive";

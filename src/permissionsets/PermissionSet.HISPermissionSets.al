@@ -231,7 +231,13 @@ permissionset 50000 "E3 HIS Permission"
     Page "E3 Indenter Master List" = X,
     table "E3 Unit Of Measure Update Log" = X,
     tabledata "E3 Unit Of Measure Update Log" = RIMD,
-    page "E3 Unit Of Measure Update Log" = X;
+    page "E3 Unit Of Measure Update Log" = X,
+    table "E3 Purpose Type" = X,
+    tabledata "E3 Purpose Type" = RIMD,
+    page "E3 Purpose Type" = X,
+    table "E3 To Destination Type" = X,
+    tabledata "E3 To Destination Type" = RIMD,
+    page "E3 To Destination Type" = X;
 
 
 

@@ -6,7 +6,7 @@ table 50041 "E3 Restricted Group Master"
 
     fields
     {
-        field(1; Code; Integer)
+        field(1; Code; Code[20])
         {
             Caption = 'Code';
             DataClassification = CustomerContent;

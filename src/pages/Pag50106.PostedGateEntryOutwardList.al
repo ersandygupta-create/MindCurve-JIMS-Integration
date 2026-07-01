@@ -37,9 +37,14 @@ page 50106 "E3Posted Gate Ent Outward List"
                     ApplicationArea = All;
                     Visible = false;
                 }
-                field("Vehicle No."; Rec."Vehicle No.")
+                field("Purpose Description"; Rec."Purpose Description")
                 {
-                    ToolTip = 'Specifies the value of the Vehicle No. field';
+                    ToolTip = 'Specifies the value of the Purpose Description field';
+                    ApplicationArea = All;
+                }
+                field(Mode; Rec.Mode)
+                {
+                    ToolTip = 'Specifies the value of the Mode field';
                     ApplicationArea = All;
                 }
                 field("Posting Date"; Rec."Posting Date")
@@ -58,18 +63,7 @@ page 50106 "E3Posted Gate Ent Outward List"
                     ToolTip = 'Specifies the value of the To Department Code field';
                     ApplicationArea = All;
                 }
-                field("Department Code"; Rec."Department Code")
-                {
-                    ToolTip = 'Specifies the value of the Department Code field';
-                    ApplicationArea = All;
-                    Caption = 'To Department Code';
-                }
-                field("To Department Name"; Rec."To Department Name")
-                {
-                    ToolTip = 'Specifies the value of the To Department Code field';
-                    ApplicationArea = All;
-                }
-                field("To Destination"; Rec."To Destination")
+                field("To Destination Code"; Rec."To Destination Code")
                 {
                     ToolTip = 'Specifies the value of the To Destination field';
                     ApplicationArea = All;

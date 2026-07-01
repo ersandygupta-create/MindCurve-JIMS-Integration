@@ -100,7 +100,7 @@ table 50042 "E3 Medicine Composition"
     }
     keys
     {
-        key(PK; Code, "Line No.")
+        key(PK; "Line No.")
         {
             Clustered = true;
         }

@@ -31,15 +31,25 @@ table 50044 "E3 Posted Gate Entry Header"
         {
             Caption = 'Purpose Code';
             DataClassification = CustomerContent;
+            TableRelation = "E3 Purpose Type".Code;
+            trigger OnValidate()
+            var
+                PurposeType: Record "E3 Purpose Type";
+            begin
+                if PurposeType.Get("Purpose Code") then
+                    "Purpose Description" := PurposeType.Description
+                else
+                    Clear("Purpose Description");
+            end;
         }
         field(6; "Person/Mode"; Code[20])
         {
             Caption = 'Person/Mode';
             DataClassification = CustomerContent;
         }
-        field(7; "Vehicle No."; Code[30])
+        field(7; "Mode"; Code[30])
         {
-            Caption = 'Vehicle No.';
+            Caption = 'Mode';
             DataClassification = CustomerContent;
         }
         field(8; "LR No."; Code[30])
@@ -52,26 +62,19 @@ table 50044 "E3 Posted Gate Entry Header"
             Caption = 'Posting Date';
             DataClassification = CustomerContent;
         }
-        field(10; "Department Code"; Code[20])
+        field(11; "To Destination Code"; Code[20])
         {
-            Caption = 'Department Code';
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
-            ValidateTableRelation = false;
+            Caption = 'To Destination Code';
             DataClassification = CustomerContent;
-        }
-        field(11; "To Destination"; Code[20])
-        {
-            Caption = 'To Destination';
-            DataClassification = CustomerContent;
-            TableRelation = Location.Code;
+            TableRelation = "E3 To Destination Type".Code;
             trigger OnValidate()
             var
-                LocationRec: Record Location;
+                ToDestinationRec: Record "E3 To Destination Type";
             begin
-                if LocationRec.Get("To Destination") then
-                    "Location Name" := LocationRec.Name
+                if ToDestinationRec.Get("To Destination Code") then
+                    "To Destination Name" := ToDestinationRec.Description
                 else
-                    "Location Name" := '';
+                    "To Destination Name" := '';
             end;
         }
         field(12; "Vendor No."; Code[20])
@@ -129,15 +132,16 @@ table 50044 "E3 Posted Gate Entry Header"
             AutoIncrement = true;
             DataClassification = CustomerContent;
         }
-        field(22; "Location Name"; Text[100])
+        field(22; "To Destination Name"; Text[100])
         {
-            Caption = 'Location Name';
+            Caption = 'To Destination Name';
             Editable = false;
             DataClassification = CustomerContent;
         }
-        field(23; "To Department Name"; Text[100])
+        field(23; "Purpose Description"; Text[100])
         {
-            Caption = 'To Department Name';
+            Caption = 'Purpose Description';
+            Editable = false;
             DataClassification = CustomerContent;
         }
         field(24; "From Department Code"; Code[20])

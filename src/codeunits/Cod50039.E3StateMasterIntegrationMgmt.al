@@ -92,7 +92,7 @@ codeunit 50039 "E3 State Master Mgmt."
             Format(StateMasterUpdateLog."Processed Date Time", 0,
             '<Year4>-<Month,2>-<Day,2>T<Hours24,2>:<Minutes,2>:<Seconds,2>'));
         ItemObj.Add('remarks', '');
-        ItemObj.Add('segment1', '');
+        ItemObj.Add('segment1', StateMasterUpdateLog.Code);
         ItemObj.Add('segment2', '');
         ItemObj.Add('segment3', '');
 

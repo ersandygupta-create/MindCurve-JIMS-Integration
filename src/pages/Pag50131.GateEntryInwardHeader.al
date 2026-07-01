@@ -35,11 +35,15 @@ page 50131 "E3 Gate Entry Inward Header"
                 {
                     ToolTip = 'Specifies the value of the Purpose Code field';
                     ApplicationArea = All;
-                    Visible = false;
                 }
-                field("Vehicle No."; Rec."Vehicle No.")
+                field("Purpose Description"; Rec."Purpose Description")
                 {
-                    ToolTip = 'Specifies the value of the Vehicle No. field';
+                    ToolTip = 'Specifies the value of the Purpose Description field';
+                    ApplicationArea = All;
+                }
+                field(Mode; Rec.Mode)
+                {
+                    ToolTip = 'Specifies the value of the Mode field';
                     ApplicationArea = All;
                 }
                 field("Posting Date"; Rec."Posting Date")
@@ -58,33 +62,22 @@ page 50131 "E3 Gate Entry Inward Header"
                     ToolTip = 'Specifies the value of the To Department Code field';
                     ApplicationArea = All;
                 }
-                field("Department Code"; Rec."Department Code")
-                {
-                    ToolTip = 'Specifies the value of the Department Code field';
-                    ApplicationArea = All;
-                    Caption = 'To Department Code';
-                }
-                field("To Department Name"; Rec."To Department Name")
-                {
-                    ToolTip = 'Specifies the value of the To Department Code field';
-                    ApplicationArea = All;
-                }
-                field("To Destination"; Rec."To Destination")
+                field("To Destination Code"; Rec."To Destination Code")
                 {
                     ToolTip = 'Specifies the value of the To Destination field';
                     ApplicationArea = All;
-                    Caption = 'Location Code';
+                    Caption = 'To Destination';
                 }
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Shortcut Dimension 1 Code field';
                 }
-                field("Location Name"; Rec."Location Name")
+                field("To Destination Name"; Rec."To Destination Name")
                 {
-                    ToolTip = 'Specifies the value of the Location Name field';
+                    ToolTip = 'Specifies the value of the To Destination Name field';
                     ApplicationArea = All;
-                    Caption = 'Location Name';
+                    Caption = 'To Destination Name';
                 }
                 field("Vendor No."; Rec."Vendor No.")
                 {

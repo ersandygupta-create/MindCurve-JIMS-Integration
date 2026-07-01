@@ -6,7 +6,7 @@ table 50038 "E3 Item Speciality Master"
 
     fields
     {
-        field(1; Code; Integer)
+        field(1; Code; Code[20])
         {
             Caption = 'Code';
             DataClassification = CustomerContent;

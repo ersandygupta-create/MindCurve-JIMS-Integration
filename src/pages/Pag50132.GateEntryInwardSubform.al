@@ -37,11 +37,6 @@ page 50132 "E3 Gate Entry Inward Subform"
                     Editable = false;
                     ToolTip = 'Specifies the value of the Item Name field.';
                 }
-                field("Variant Code"; Rec."Variant Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Variant Code field.';
-                }
                 field("Unit of Measurement"; Rec."Unit of Measurement")
                 {
                     ApplicationArea = All;
@@ -115,7 +110,7 @@ page 50132 "E3 Gate Entry Inward Subform"
                     ToolTip = 'Specifies the value of the Lot No. field.';
                     Visible = false;
                 }
-                field(Remarks; Rec.Remarks)
+                field(Specification; Rec.Specification)
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Remarks field.';

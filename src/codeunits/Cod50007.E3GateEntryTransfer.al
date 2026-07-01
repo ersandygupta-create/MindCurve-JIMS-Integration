@@ -20,7 +20,7 @@ codeunit 50007 "E3 Gate Entry Transfer"
         if not GateEntryLine.FindFirst() then
             Error('No lines exist for posting.');
 
-        ShipmentNo := NoSeriesMgt.GetNextNo('SHIPMENT', Today, true);
+        //ShipmentNo := NoSeriesMgt.GetNextNo('SHIPMENT', Today, true);
 
         PostedHeader.Init();
         PostedHeader.TransferFields(GateEntryHeader);
@@ -80,6 +80,8 @@ codeunit 50007 "E3 Gate Entry Transfer"
         NoSeriesMgt: Codeunit "No. Series";
         GateEntrLine: Record "E3 Gate Entry Line";
         LastEntryNo: Integer;
+        PurchasesPayablesSetup: Record "Purchases & Payables Setup";
+        NoSeries: Codeunit "No. Series";
     begin
         //-----------------------------------------
         // Validate Quantity
@@ -94,16 +96,24 @@ codeunit 50007 "E3 Gate Entry Transfer"
         //-----------------------------------------
         // Create Inward Header
         //-----------------------------------------
+        PurchasesPayablesSetup.Get();
+        PurchasesPayablesSetup.TestField("Posted Gate Entry Inward No.");
+
         InwardHeader.Init();
 
         InwardHeader."Entry Type" := InwardHeader."Entry Type"::Inward;
-        InwardHeader."Document No." := NoSeriesMgt.GetNextNo('INWARD', Today, true);
+
+        InwardHeader."Document No." :=
+            NoSeries.GetNextNo(
+                PurchasesPayablesSetup."Posted Gate Entry Inward No.",
+                WorkDate(),
+                true);
         InwardHeader."Gate Pass Type" := OutwardHeader."Gate Pass Type";
         InwardHeader."Purpose Code" := OutwardHeader."Purpose Code";
-        InwardHeader."Vehicle No." := OutwardHeader."Vehicle No.";
-        InwardHeader."Department Code" := OutwardHeader."Department Code";
-        InwardHeader."To Destination" := OutwardHeader."To Destination";
-        InwardHeader."Posting Date" := Today;
+        InwardHeader.Mode := OutwardHeader.Mode;
+        InwardHeader."Purpose Description" := OutwardHeader."Purpose Description";
+        InwardHeader."To Destination Code" := OutwardHeader."To Destination Code";
+        InwardHeader."Posting Date" := WorkDate();
         InwardHeader."Vendor No." := OutwardHeader."Vendor No.";
         InwardHeader."Vendor Name" := OutwardHeader."Vendor Name";
         InwardHeader.Person := OutwardHeader.Person;
@@ -111,11 +121,10 @@ codeunit 50007 "E3 Gate Entry Transfer"
         InwardHeader."Expected Return Date" := OutwardHeader."Expected Return Date";
         InwardHeader."Reference Document No." := OutwardHeader."Document No.";
         InwardHeader.Remarks := OutwardHeader.Remarks;
-        InwardHeader."To Department Name" := OutwardHeader."To Department Name";
         InwardHeader."From Department Code" := OutwardHeader."From Department Code";
         InwardHeader."From Department Name" := OutwardHeader."From Department Name";
         InwardHeader."Shortcut Dimension 1 Code" := OutwardHeader."Shortcut Dimension 1 Code";
-        InwardHeader."Location Name" := OutwardHeader."Location Name";
+        InwardHeader."To Destination Name" := OutwardHeader."To Destination Name";
 
         InwardHeader.Insert(true);
 
@@ -140,14 +149,13 @@ codeunit 50007 "E3 Gate Entry Transfer"
                 InwardLine.Quantity := OutwardLine.Quantity;
                 InwardLine."Cost/Qty" := OutwardLine."Cost/Qty";
                 InwardLine."Estimated Value" := OutwardLine."Estimated Value";
-                InwardLine."Variant Code" := OutwardLine."Variant Code";
                 InwardLine."Unit of Measurement" := OutwardLine."Unit of Measurement";
                 InwardLine."Estimated Value Receive" := OutwardLine."Qty to Receive" * OutwardLine."Cost/Qty";
                 InwardLine."Asset No." := OutwardLine."Asset No.";
                 InwardLine."Fixed Asset Name" := OutwardLine."Fixed Asset Name";
                 InwardLine."Serial No." := OutwardLine."Serial No.";
                 InwardLine."Lot No." := OutwardLine."Lot No.";
-                InwardLine.Remarks := OutwardLine.Remarks;
+                InwardLine.Specification := OutwardLine.Specification;
 
                 InwardLine.Insert();
 

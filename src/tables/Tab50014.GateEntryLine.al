@@ -43,11 +43,6 @@ table 50014 "E3 Gate Entry Line"
             Caption = 'Item Name';
             DataClassification = CustomerContent;
         }
-        field(6; "Variant Code"; Code[20])
-        {
-            Caption = 'Variant Code';
-            DataClassification = CustomerContent;
-        }
         field(7; "Unit of Measurement"; Text[10])
         {
             DataClassification = CustomerContent;
@@ -119,9 +114,9 @@ table 50014 "E3 Gate Entry Line"
             Caption = 'Lot No.';
             DataClassification = CustomerContent;
         }
-        field(15; Remarks; Text[150])
+        field(15; Specification; Text[250])
         {
-            Caption = 'Remarks';
+            Caption = 'Specification';
             DataClassification = CustomerContent;
         }
         field(16; "Ship Qty"; Decimal)
