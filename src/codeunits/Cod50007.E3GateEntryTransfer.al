@@ -119,7 +119,8 @@ codeunit 50007 "E3 Gate Entry Transfer"
         InwardHeader.Person := OutwardHeader.Person;
         InwardHeader.Status := InwardHeader.Status::Open;
         InwardHeader."Expected Return Date" := OutwardHeader."Expected Return Date";
-        InwardHeader."Reference Document No." := OutwardHeader."Document No.";
+        InwardHeader."Posted Gate Entry Outward No." := OutwardHeader."Document No.";
+        InwardHeader."Reference Document No." := OutwardHeader."Reference Document No.";
         InwardHeader.Remarks := OutwardHeader.Remarks;
         InwardHeader."From Department Code" := OutwardHeader."From Department Code";
         InwardHeader."From Department Name" := OutwardHeader."From Department Name";

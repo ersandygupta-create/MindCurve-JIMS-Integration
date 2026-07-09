@@ -35,7 +35,7 @@ table 50030 "E3 Item Model Master"
     }
     keys
     {
-        key(PK; Code, Name)
+        key(PK; Code)
         {
             Clustered = true;
         }

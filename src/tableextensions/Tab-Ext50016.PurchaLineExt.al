@@ -56,7 +56,7 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
 
                     if Item.Get("No.") then begin
                         "Item Make Code" := Item."Item Make Code";
-                        "Item Make Name" := Item.Make;
+                        "Item Make Name" := Item."Make Name";
                     end;
                 end;
             end;

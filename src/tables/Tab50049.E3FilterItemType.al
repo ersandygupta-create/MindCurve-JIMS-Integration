@@ -55,7 +55,7 @@ table 50049 "E3 Filter Item Type"
     }
     keys
     {
-        key(PK; Code, Name)
+        key(PK; Code)
         {
             Clustered = true;
         }

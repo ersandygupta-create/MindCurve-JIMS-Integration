@@ -6,6 +6,7 @@ page 50152 "E3 Indent List"
     UsageCategory = Lists;
     Caption = 'Indent List';
     CardPageId = "E3 Indent Card";
+    SourceTableView = WHERE(Status = FILTER(Open | "Pending Approval"));
 
     layout
     {
@@ -25,6 +26,7 @@ page 50152 "E3 Indent List"
                 {
                     ApplicationArea = All;
                 }
+
                 field(Status; Rec.Status)
                 {
                     ApplicationArea = All;

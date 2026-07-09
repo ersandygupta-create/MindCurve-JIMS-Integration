@@ -12,7 +12,7 @@ table 50029 "E3 Item Type"
             Caption = 'Code';
             DataClassification = CustomerContent;
         }
-        field(2; Name; Text[100])
+        field(2; Name; Text[60])
         {
             Caption = 'Name';
             DataClassification = CustomerContent;
@@ -59,7 +59,7 @@ table 50029 "E3 Item Type"
     }
     keys
     {
-        key(PK; Code, Name)
+        key(PK; Code)
         {
             Clustered = true;
         }

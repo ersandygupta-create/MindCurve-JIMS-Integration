@@ -3,6 +3,7 @@ page 50014 "E3 Item Master List"
     ApplicationArea = All;
     Caption = 'Item List';
     PageType = List;
+    DelayedInsert = true;
     Editable = true;
     SourceTable = "E3 HIS Master Staging";
     SourceTableView = SORTING("Entry No.")
@@ -16,7 +17,7 @@ page 50014 "E3 Item Master List"
         {
             repeater(General)
             {
-                field(ItemType; Rec."Item Type 1")
+                field(ItemType; Rec."Item Type 1 Code")
                 {
                     ApplicationArea = All;
                     Caption = 'Item Type';
@@ -24,11 +25,12 @@ page 50014 "E3 Item Master List"
 
                     trigger OnValidate()
                     begin
+                        CurrPage.SaveRecord();
                         SetFieldEditability();
                         CurrPage.Update(false);
                     end;
                 }
-                field("Material Category"; Rec."Material Category")
+                field("Material Category"; Rec."Material Category Code")
                 {
                     ApplicationArea = All;
                     Caption = 'Material Category';
@@ -36,7 +38,7 @@ page 50014 "E3 Item Master List"
                     ToolTip = 'Specifies the Material Category.';
                 }
 
-                field(Name; Rec.Name)
+                field("Display Name"; Rec."Display Name")
                 {
                     ApplicationArea = All;
                     Caption = 'Display Name';
@@ -44,7 +46,7 @@ page 50014 "E3 Item Master List"
                     ToolTip = 'Specifies the Display Name.';
                 }
 
-                field(Strength; Rec.Strength)
+                field(Strength; Rec."Strength Code")
                 {
                     ApplicationArea = All;
                     Caption = 'Strength';
@@ -52,21 +54,21 @@ page 50014 "E3 Item Master List"
                     ToolTip = 'Specifies the Strength.';
                 }
 
-                field("Material Type"; Rec."Material Type")
+                field("Material Type Code"; Rec."Material Type Code")
                 {
                     ApplicationArea = All;
                     Editable = MaterialTypeEditable;
                     ToolTip = 'Specifies the Material Type.';
                 }
 
-                field(Specification; Rec.Specification)
+                field(Specification; Rec."Specification Code")
                 {
                     ApplicationArea = All;
                     Editable = SpecificationEditable;
                     ToolTip = 'Specifies the Specification.';
                 }
 
-                field(Model; Rec.Model)
+                field(Model; Rec."Model Code")
                 {
                     ApplicationArea = All;
                     Editable = ModelEditable;
@@ -138,7 +140,7 @@ page 50014 "E3 Item Master List"
 
     local procedure SetFieldEditability()
     begin
-        if UpperCase(Format(Rec."Item Type 1")) = 'PHARMACY' then begin
+        if UpperCase(Format(Rec."Item Type 1 Name")) = 'PHARMACY' then begin
             // Pharmacy
             MaterialCategoryEditable := true;
             NameEditable := true;

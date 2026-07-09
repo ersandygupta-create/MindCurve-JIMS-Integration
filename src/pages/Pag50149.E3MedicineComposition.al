@@ -23,11 +23,13 @@ page 50149 "E3 Medicine Composition"
                 {
                     ToolTip = 'Specifies the value of the Code field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Item Name"; Rec."Item Name")
                 {
                     ToolTip = 'Specifies the value of the Item Name field';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Medicine Component Code"; Rec."Medicine Component Code")
                 {

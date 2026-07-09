@@ -29,7 +29,12 @@ page 50106 "E3Posted Gate Ent Outward List"
                 field("Document No."; Rec."Document No.")
                 {
                     ToolTip = 'Specifies the value of the Document No. field';
+                    Caption = 'Posted Outward No.';
                     ApplicationArea = All;
+                }
+                field("Posted Gate Entry Outward No."; Rec."Posted Gate Entry Outward No.")
+                {
+                    ToolTip = 'Posted Gate Entry Outward No.';
                 }
                 field("Purpose Code"; Rec."Purpose Code")
                 {

@@ -38,6 +38,11 @@ tableextension 50006 "E3 HIS Purch. Rcpt. Header" extends "Purch. Rcpt. Header"
             Caption = 'Retail DL No.';
             DataClassification = CustomerContent;
         }
+        field(50010; "E3 Indent No."; Code[20])
+        {
+            Caption = 'Indent No.';
+            DataClassification = CustomerContent;
+        }
 
     }
 }

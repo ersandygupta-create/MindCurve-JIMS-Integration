@@ -35,10 +35,14 @@ page 50035 "E3 API Item Update Log"
                     ToolTip = 'Specifies the value of the No. 2 field.';
                     Visible = false;
                 }
+                field(Name; Rec.Name)
+                {
+                    ToolTip = 'Specifies the value of the Name field.';
+                }
                 field(Description; Rec.Description)
                 {
                     ToolTip = 'Specifies the value of the Description field.';
-                    Caption = 'Name';
+                    Caption = 'Description';
                 }
                 field("Description 2"; Rec."Description 2")
                 {
@@ -124,33 +128,41 @@ page 50035 "E3 API Item Update Log"
                     ToolTip = 'Specifies the value of the Rate Margin Fix field.';
                     Visible = false;
                 }
-                field("Medicine Manufacturer"; Rec."Medicine Manufacturer")
+                field("Medicine Manufacturer Code"; Rec."Medicine Manufacturer Code")
                 {
-                    ToolTip = 'Specifies the value of the Medicine Manufacturer field.';
+                    ToolTip = 'Specifies the value of the Medicine Manufacturer Code field.';
                 }
-                field("Medicine Company"; Rec."Medicine Company")
+                field("Medicine Manufacturer Name"; Rec."Medicine Manufacturer Name")
+                {
+                    ToolTip = 'Specifies the value of the Medicine Manufacturer Name field.';
+                }
+                field("Medicine Company Code"; Rec."Medicine Company Code")
                 {
                     ToolTip = 'Specifies the value of the Medicine Company field.';
+                }
+                field("Medicine Company Name"; Rec."Medicine Company Name")
+                {
+                    ToolTip = 'Specifies the value of the Medicine Company Name field.';
                 }
                 field(Packing; Rec.Packing)
                 {
                     ToolTip = 'Specifies the value of the Packing field.';
                 }
-                field(Scheme; Rec.Scheme)
+                field("Res. Group Code"; Rec."Res. Group Code")
                 {
-                    ToolTip = 'Specifies the value of the Scheme field.';
+                    ToolTip = 'Specifies the value of the Res. Group Code field.';
                 }
-                field("Res. Group"; Rec."Res. Group")
+                field("Res. Group Name"; Rec."Res. Group Name")
                 {
-                    ToolTip = 'Specifies the value of the Res. Group field.';
+                    ToolTip = 'Specifies the value of the Res. Group Name field.';
                 }
                 field("Item Type"; Rec."Item Type")
                 {
                     ToolTip = 'Specifies the value of the Item Type field.';
                 }
-                field("Medicine SubCategory"; Rec."Medicine SubCategory")
+                field("Medicine SubCategory Code"; Rec."Medicine SubCategory Code")
                 {
-                    ToolTip = 'Specifies the value of the Medicine SubCategory field.';
+                    ToolTip = 'Specifies the value of the Medicine SubCategory Code field.';
                 }
                 field("Sub Group Nature"; Rec."Sub Group Nature")
                 {
@@ -164,9 +176,9 @@ page 50035 "E3 API Item Update Log"
                 {
                     ToolTip = 'Specifies the value of the Medicine Component field.';
                 }
-                field(Speciality; Rec.Speciality)
+                field(SpecialityName; Rec."Speciality Name")
                 {
-                    ToolTip = 'Specifies the value of the Speciality field.';
+                    ToolTip = 'Specifies the value of the Speciality Name field.';
                 }
                 field("Material Type"; Rec."Material Type")
                 {
@@ -208,10 +220,6 @@ page 50035 "E3 API Item Update Log"
                 {
                     ToolTip = 'Specifies the value of the Quatation Required field.';
                 }
-                field(Active; Rec.Active)
-                {
-                    ToolTip = 'Specifies the value of the Active field.';
-                }
                 field("BarCode Active"; Rec."BarCode Active")
                 {
                     ToolTip = 'Specifies the value of the BarCode Active field.';
@@ -224,9 +232,13 @@ page 50035 "E3 API Item Update Log"
                 {
                     ToolTip = 'Specifies the value of the Item Group field.';
                 }
-                field("Filter Item Type"; Rec."Filter Item Type")
+                field("Filter Item Type Code"; Rec."Filter Item Type Code")
                 {
                     ToolTip = 'Specifies the value of the Filter Item Type field.';
+                }
+                field("Filter Item Type Name"; Rec."Filter Item Type Name")
+                {
+                    ToolTip = 'Specifies the value of the Filter Item Type Name field.';
                 }
                 field("Tolerance excess"; Rec."Tolerance excess")
                 {
@@ -242,9 +254,13 @@ page 50035 "E3 API Item Update Log"
                 {
                     ToolTip = 'Specifies the value of the Margin Fix field.';
                 }
-                field("Property List"; Rec."Property List")
+                field("Property List Code"; Rec."Property List Code")
                 {
-                    ToolTip = 'Specifies the value of the Property List field.';
+                    ToolTip = 'Specifies the value of the Property List Code field.';
+                }
+                field("Property List Name"; Rec."Property List Name")
+                {
+                    ToolTip = 'Specifies the value of the Property List Name field.';
                 }
                 field("Strength Code"; Rec."Strength Code")
                 {
@@ -276,7 +292,7 @@ page 50035 "E3 API Item Update Log"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the Category Code.';
                 }
-                field("ManufacturerCode"; Rec."ManufacturerCode")
+                field("Manufacturer Code"; Rec."Manufacturer Code")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the Manufacturer Code.';
@@ -295,6 +311,197 @@ page 50035 "E3 API Item Update Log"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the Material Category Code.';
+                }
+                field("Sales Unit of Measure Name"; Rec."Sales Unit of Measure Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the sales unit of measure name.';
+                    Editable = false;
+                }
+
+                field("Purch. Unit of Measure Name"; Rec."Purch. Unit of Measure Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the purchase unit of measure name.';
+                    Editable = false;
+                }
+
+                field("Prepared By"; Rec."Prepared By")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the user who prepared the item.';
+                }
+
+                field("HSN/SAC Type"; Rec."HSN/SAC Type")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the HSN/SAC type.';
+                    Editable = false;
+                }
+                field(MRP; Rec.MRP)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Maximum Retail Price.';
+                }
+
+                field("Sale Rate"; Rec."Sale Rate")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the sale rate.';
+                }
+
+                field("Purchase Rate"; Rec."Purchase Rate")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the purchase rate.';
+                }
+
+                field("Purchase Discount %"; Rec."Purchase Discount %")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the purchase discount percentage.';
+                }
+
+                field("Sale Discount %"; Rec."Sale Discount %")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the sale discount percentage.';
+                }
+                field("Marketing Company Name"; Rec."Marketing Company Name")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Marketing Company Name';
+                    ToolTip = 'Specifies the marketing company name associated with the item.';
+                }
+
+                field("Model Name"; Rec."Model Name")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Model Name';
+                    ToolTip = 'Specifies the model name of the item.';
+                }
+
+                field("Medicine SubCategory Name"; Rec."Medicine SubCategory Name")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Medicine SubCategory Name';
+                    ToolTip = 'Specifies the medicine subcategory name for the item.';
+                }
+
+                field("Division Code"; Rec."Division Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Division Code';
+                    ToolTip = 'Specifies the division code assigned to the item.';
+                }
+
+                field("Division Name"; Rec."Division Name")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Division Name';
+                    ToolTip = 'Specifies the name of the division assigned to the item.';
+                }
+
+                field("Allow Negative Stock"; Rec."Allow Negative Stock")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Allow Negative Stock';
+                    ToolTip = 'Specifies whether negative inventory is allowed for this item.';
+                }
+
+                field("Is Indent Mandatory"; Rec."Is Indent Mandatory")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Indent Mandatory';
+                    ToolTip = 'Specifies whether an indent is mandatory before creating a purchase document.';
+                }
+
+                field("Is Common"; Rec."Is Common")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Common';
+                    ToolTip = 'Specifies whether this item is classified as a common item.';
+                }
+
+                field("Scheme On Qty"; Rec."Scheme On Qty")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Scheme On Qty';
+                    ToolTip = 'Specifies the quantity on which the scheme is applicable.';
+                }
+
+                field("Scheme Free Qty"; Rec."Scheme Free Qty")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Scheme Free Qty';
+                    ToolTip = 'Specifies the free quantity provided under the scheme.';
+                }
+
+                field("Is Life Saving"; Rec."Is Life Saving")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Is Life Saving';
+                    ToolTip = 'Specifies whether the item is classified as a life-saving item.';
+                }
+
+                field("Is High Value"; Rec."Is High Value")
+                {
+                    ApplicationArea = All;
+                    Caption = 'High Value';
+                    ToolTip = 'Specifies whether the item is classified as a high-value item.';
+                }
+
+                field("Is Flow Through"; Rec."Is Flow Through")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Flow Through';
+                    ToolTip = 'Specifies whether the item is a flow-through item.';
+                }
+
+                field("Is Billed Item"; Rec."Is Billed Item")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Billed Item';
+                    ToolTip = 'Specifies whether the item is billed.';
+                }
+
+                field(Remarks; Rec.Remarks)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Remarks';
+                    ToolTip = 'Specifies additional remarks for the item.';
+                }
+
+                field(Instruction; Rec.Instruction)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Instruction';
+                    ToolTip = 'Specifies special instructions for the item.';
+                }
+
+                field("Regional Instruction"; Rec."Regional Instruction")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Regional Instruction';
+                    ToolTip = 'Specifies regional instructions applicable to the item.';
+                }
+
+                field("Item Speciality Code"; Rec."Item Speciality Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Item Speciality Code';
+                    ToolTip = 'Specifies the speciality code assigned to the item.';
+                }
+
+                field("Speciality Name"; Rec."Speciality Name")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Speciality Name';
+                    ToolTip = 'Specifies the speciality name associated with the item.';
+                }
+                field("Common Item No."; Rec."Common Item No.")
+                {
+                    ToolTip = 'Specifies the Common Item No. associated with the item.';
                 }
                 field("Unique Log No."; Rec."Unique Log No.")
                 {

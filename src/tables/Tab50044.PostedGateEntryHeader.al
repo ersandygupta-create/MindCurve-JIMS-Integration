@@ -123,7 +123,7 @@ table 50044 "E3 Posted Gate Entry Header"
         }
         field(19; PostedNo; Code[20])
         {
-            Caption = 'No.';
+            Caption = 'Posted Inward Receipt No.';
             DataClassification = CustomerContent;
         }
         field(20; "Posted Entry No."; Integer)
@@ -171,6 +171,11 @@ table 50044 "E3 Posted Gate Entry Header"
             Caption = 'Shortcut Dimension 1 Code';
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
             ValidateTableRelation = false;
+            DataClassification = CustomerContent;
+        }
+        field(27; "Posted Gate Entry Outward No."; Code[20])
+        {
+            Caption = 'Posted Gate Entry Outward No.';
             DataClassification = CustomerContent;
         }
         field(201; "Inward Document No."; COde[20])

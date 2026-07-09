@@ -19,5 +19,16 @@ pageextension 50077 "E3 Location Extension" extends "Location Card"
                 ApplicationArea = All;
             }
         }
+        addlast(content)
+        {
+            group(NoSeries)
+            {
+                field("E3 Indent PO Series"; Rec."E3 Indent PO Series")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the E3 Indent PO Series field.';
+                }
+            }
+        }
     }
 }

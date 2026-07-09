@@ -35,7 +35,7 @@ table 50031 "E3 Item Strength Master"
     }
     keys
     {
-        key(PK; Code, Name)
+        key(PK; Code)
         {
             Clustered = true;
         }

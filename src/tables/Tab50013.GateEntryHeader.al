@@ -194,6 +194,11 @@ table 50013 "E3 Gate Entry Header"
             ValidateTableRelation = true;
             DataClassification = CustomerContent;
         }
+        field(27; "Posted Gate Entry Outward No."; Code[20])
+        {
+            Caption = 'Posted Gate Entry Outward No.';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

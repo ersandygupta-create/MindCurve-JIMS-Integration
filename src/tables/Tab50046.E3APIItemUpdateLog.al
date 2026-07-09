@@ -98,14 +98,14 @@ table 50046 "E3 API Item Update Log"
             Caption = 'Rate Margin Fix';
             DataClassification = CustomerContent;
         }
-        field(50008; "Medicine Manufacturer"; Text[50])
+        field(50008; "Medicine Manufacturer Name"; Text[60])
         {
-            Caption = 'Medicine Manufacturer';
+            Caption = 'Medicine Manufacturer Name';
             DataClassification = CustomerContent;
         }
-        field(50009; "Medicine Company"; Text[50])
+        field(50009; "Medicine Company Name"; Text[60])
         {
-            Caption = 'Medicine Company';
+            Caption = 'Medicine Company Name';
             DataClassification = CustomerContent;
         }
         field(50010; Packing; Text[60])
@@ -113,16 +113,11 @@ table 50046 "E3 API Item Update Log"
             Caption = 'Packing';
             DataClassification = CustomerContent;
         }
-        field(50011; Scheme; Text[60])
+        field(50012; "Res. Group Name"; Text[60])
         {
-            Caption = 'Scheme';
+            Caption = 'Res. Group Name';
             DataClassification = CustomerContent;
-        }
-        field(50012; "Res. Group"; Text[60])
-        {
-            Caption = 'Res. Group';
-            DataClassification = CustomerContent;
-            TableRelation = "E3 Restricted Group Master".Name;
+            Editable = false;
         }
         field(50013; "Incl Free Qty in Sale Rate"; Boolean)
         {
@@ -159,11 +154,6 @@ table 50046 "E3 API Item Update Log"
             Caption = 'Quatation Required';
             DataClassification = CustomerContent;
         }
-        field(50020; Active; Boolean)
-        {
-            Caption = 'Active';
-            DataClassification = CustomerContent;
-        }
         field(50021; "BarCode Active"; Boolean)
         {
             Caption = 'BarCode Active';
@@ -175,9 +165,9 @@ table 50046 "E3 API Item Update Log"
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Type".Name;
         }
-        field(50024; "Medicine SubCategory"; Text[60])
+        field(50024; "Medicine SubCategory Name"; Text[60])
         {
-            Caption = 'Medicine SubCategory';
+            Caption = 'Medicine SubCategory Name';
             DataClassification = CustomerContent;
             TableRelation = "E3 Medicine Sub-Category Mast".Name;
         }
@@ -199,11 +189,10 @@ table 50046 "E3 API Item Update Log"
             DataClassification = CustomerContent;
             TableRelation = "E3 Medicine Component Master".Name;
         }
-        field(50028; Speciality; Text[60])
+        field(50028; "Speciality Name"; Text[60])
         {
-            Caption = 'Speciality';
+            Caption = 'Speciality Name';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Item Speciality Master".Name;
         }
         field(50029; "Material Type"; Text[60])
         {
@@ -266,12 +255,11 @@ table 50046 "E3 API Item Update Log"
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Group".Name;
         }
-        field(50041; "Filter Item Type"; Text[60])
+        field(50041; "Filter Item Type Name"; Text[60])
         {
-            Caption = 'Filter Item Type';
+            Caption = 'Filter Item Type Name';
+            Editable = false;
             DataClassification = CustomerContent;
-            TableRelation = "E3 Filter Item Type".Name;
-
         }
         field(50042; "Tolerance excess"; Decimal)
         {
@@ -288,11 +276,10 @@ table 50046 "E3 API Item Update Log"
             Caption = 'Margin Fix';
             DataClassification = CustomerContent;
         }
-        field(50045; "Property List"; Text[60])
+        field(50045; "Property List Name"; Text[60])
         {
-            Caption = 'Property List';
+            Caption = 'Property List Name';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Property List".Name;
         }
         field(50046; SkuName; Text[100])
         {
@@ -355,7 +342,7 @@ table 50046 "E3 API Item Update Log"
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Category Master".Code;
         }
-        field(50057; "ManufacturerCode"; Code[30])
+        field(50057; "Manufacturer Code"; Code[30])
         {
             Caption = 'Manufacturer Code';
             DataClassification = CustomerContent;
@@ -384,10 +371,315 @@ table 50046 "E3 API Item Update Log"
             Caption = 'Entry No.';
             AutoIncrement = true;
         }
+        field(50062; "Allow Negative Stock"; Boolean)
+        {
+            Caption = 'Allow Negative Stock';
+            DataClassification = CustomerContent;
+        }
+
+        field(50063; "Is Indent Mandatory"; Boolean)
+        {
+            Caption = 'Is Indent Mandatory';
+            DataClassification = CustomerContent;
+        }
+
+        field(50064; "Is Common"; Boolean)
+        {
+            Caption = 'Is Common';
+            DataClassification = CustomerContent;
+        }
+
+        field(50065; "Scheme On Qty"; Decimal)
+        {
+            Caption = 'Scheme On Qty';
+            DataClassification = CustomerContent;
+        }
+
+        field(50066; "Scheme Free Qty"; Decimal)
+        {
+            Caption = 'Scheme Free Qty';
+            DataClassification = CustomerContent;
+        }
+
+        field(50067; "Is Life Saving"; Boolean)
+        {
+            Caption = 'Is Life Saving';
+            DataClassification = CustomerContent;
+        }
+
+        field(50068; "Is High Value"; Boolean)
+        {
+            Caption = 'Is High Value';
+            DataClassification = CustomerContent;
+        }
+
+        field(50069; "Is Flow Through"; Boolean)
+        {
+            Caption = 'Is Flow Through';
+            DataClassification = CustomerContent;
+        }
+
+        field(50070; "Is Billed Item"; Boolean)
+        {
+            Caption = 'Is Billed Item';
+            DataClassification = CustomerContent;
+        }
+
+        field(50071; "Item Speciality Code"; Code[20])
+        {
+            Caption = 'Item Speciality Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Speciality Master".Code;
+
+            trigger OnValidate()
+            var
+                ItemSpeciality: Record "E3 Item Speciality Master";
+            begin
+                if "Item Speciality Code" = '' then begin
+                    "Speciality Name" := '';
+                    exit;
+                end;
+
+                if ItemSpeciality.Get("Item Speciality Code") then
+                    "Speciality Name" := ItemSpeciality.Name
+                else
+                    "Speciality Name" := '';
+            end;
+        }
+        field(50072; "Division Code"; Code[20])
+        {
+            Caption = 'Division Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Division Master".Code;
+
+            trigger OnValidate()
+            var
+                Division: Record "E3 Division Master";
+            begin
+                if "Division Code" = '' then begin
+                    "Division Name" := '';
+                    exit;
+                end;
+
+                if Division.Get("Division Code") then
+                    "Division Name" := Division.Name
+                else
+                    "Division Name" := '';
+            end;
+        }
+
+        field(50073; "Division Name"; Text[60])
+        {
+            Caption = 'Division Name';
+            DataClassification = CustomerContent;
+        }
+
+        field(50074; "Instruction"; Text[250])
+        {
+            Caption = 'Instruction';
+            DataClassification = CustomerContent;
+        }
+
+        field(50075; "Regional Instruction"; Text[250])
+        {
+            Caption = 'Regional Instruction';
+            DataClassification = CustomerContent;
+        }
+
+        field(50076; "Model Name"; Text[60])
+        {
+            Caption = 'Model Name';
+            DataClassification = CustomerContent;
+        }
+
+        field(50077; Name; Text[250])
+        {
+            Caption = 'Name';
+            DataClassification = CustomerContent;
+        }
+
+        field(50078; "Medicine Company Code"; Code[20])
+        {
+            Caption = 'Medicine Company Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Make Master".Code;
+
+            trigger OnValidate()
+            var
+                MakeMasterRec: Record "E3 Item Make Master";
+            begin
+                Clear("Marketing Company Code");
+
+                MakeMasterRec.Reset();
+                MakeMasterRec.SetRange(Code, "Medicine Company Code");
+
+                if MakeMasterRec.FindFirst() then
+                    "Medicine Company Name" := MakeMasterRec."Company Name";
+            end;
+        }
+
+        field(50079; "Medicine SubCategory Code"; Code[20])
+        {
+            Caption = 'Medicine Sub Category Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Medicine Sub-Category Mast".Code;
+
+            trigger OnValidate()
+            var
+                SubCategoryRec: Record "E3 Medicine Sub-Category Mast";
+            begin
+                Clear("Sub Category Code");
+
+                SubCategoryRec.Reset();
+                SubCategoryRec.SetRange(Code, "Medicine SubCategory Code");
+
+                if SubCategoryRec.FindFirst() then
+                    "Medicine SubCategory Name" := SubCategoryRec.Name;
+            end;
+        }
+
+        field(50080; "Medicine Manufacturer Code"; Code[20])
+        {
+            Caption = 'Medicine Manufacturer Code';
+            DataClassification = CustomerContent;
+
+            trigger OnValidate()
+            var
+                MakeMasterRec: Record "E3 Item Make Master";
+            begin
+                Clear("Manufacturer Code");
+
+                MakeMasterRec.Reset();
+                MakeMasterRec.SetRange(Code, "Medicine Manufacturer Code");
+
+                if MakeMasterRec.FindFirst() then
+                    "Medicine Manufacturer Name" := MakeMasterRec."Company Name";
+            end;
+        }
+
+        field(50081; "Res. Group Code"; Code[20])
+        {
+            Caption = 'Res. Group Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Restricted Group Master".Code;
+
+            trigger OnValidate()
+            var
+                ResourceGroup: Record "Resource Group";
+            begin
+                if "Res. Group Code" = '' then begin
+                    "Res. Group Name" := '';
+                    exit;
+                end;
+
+                if ResourceGroup.Get("Res. Group Code") then
+                    "Res. Group Name" := ResourceGroup.Name
+                else
+                    "Res. Group Name" := '';
+            end;
+        }
+
+        field(50082; "Property List Code"; Code[20])
+        {
+            Caption = 'Property List Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Property List".Code;
+
+            trigger OnValidate()
+            var
+                PropertyList: Record "E3 Property List";
+            begin
+                if "Property List Code" = '' then begin
+                    "Property List Name" := '';
+                    exit;
+                end;
+
+                if PropertyList.Get("Property List Code") then
+                    "Property List Name" := PropertyList.Name
+                else
+                    "Property List Name" := '';
+            end;
+        }
+        field(50083; "Item Type Name"; Text[60])
+        {
+            Caption = 'Item Type Name';
+            DataClassification = CustomerContent;
+        }
+        field(50084; "Sales Unit of Measure Name"; Text[50])
+        {
+            Caption = 'Sales Unit of Measure Name';
+            DataClassification = CustomerContent;
+        }
+        field(50085; "Purch. Unit of Measure Name"; Text[50])
+        {
+            Caption = 'Purch. Unit of Measure Name';
+            DataClassification = CustomerContent;
+        }
+        field(50086; "Prepared By"; Text[50])
+        {
+            Caption = 'Prepared By';
+            DataClassification = CustomerContent;
+        }
+        field(50087; "HSN/SAC Type"; enum "GST Goods And Services Type")
+        {
+            Caption = 'HSN/SAC Type';
+            DataClassification = CustomerContent;
+        }
+        field(50088; MRP; Decimal)
+        {
+            Caption = 'MRP';
+            DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 2;
+        }
+
+        field(50089; "Sale Rate"; Decimal)
+        {
+            Caption = 'Sale Rate';
+            DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 2;
+        }
+
+        field(50090; "Purchase Rate"; Decimal)
+        {
+            Caption = 'Purchase Rate';
+            DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 2;
+        }
+
+        field(50091; "Purchase Discount %"; Decimal)
+        {
+            Caption = 'Purchase Discount %';
+            DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 2;
+        }
+
+        field(50092; "Sale Discount %"; Decimal)
+        {
+            Caption = 'Sale Discount %';
+            DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 2;
+        }
+        field(50093; "Marketing Company Name"; Text[60])
+        {
+            Caption = 'Marketing Company Name';
+            DataClassification = CustomerContent;
+        }
+        field(50094; "Filter Item Type Code"; Code[20])
+        {
+            Caption = 'Filter Item Type Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Filter Item Type".Code;
+        }
         field(91; "Gen. Prod. Posting Group"; Code[20])
         {
             Caption = 'Gen. Prod. Posting Group';
             ToolTip = 'Specifies the item''s product type to link transactions made for this item with the appropriate general ledger account according to the general posting setup.';
+        }
+        field(99008500; "Common Item No."; Code[20])
+        {
+            Caption = 'Common Item No.';
+            ToolTip = 'Specifies the unique common item number that the intercompany partners agree upon.';
+            OptimizeForTextSearch = true;
         }
         field(18000; "GST Group Code"; Code[20])
         {

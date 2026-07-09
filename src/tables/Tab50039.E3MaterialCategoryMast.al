@@ -45,7 +45,7 @@ table 50039 "E3 Material Category Master"
     }
     keys
     {
-        key(PK; Code, Name)
+        key(PK; Code)
         {
             Clustered = true;
         }

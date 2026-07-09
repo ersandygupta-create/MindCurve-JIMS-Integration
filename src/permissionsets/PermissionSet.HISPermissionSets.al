@@ -237,7 +237,10 @@ permissionset 50000 "E3 HIS Permission"
     page "E3 Purpose Type" = X,
     table "E3 To Destination Type" = X,
     tabledata "E3 To Destination Type" = RIMD,
-    page "E3 To Destination Type" = X;
+    page "E3 To Destination Type" = X,
+    table "E3 Division Master" = X,
+    tabledata "E3 Division Master" = RIMD,
+    page "E3 Division Master" = X;
 
 
 

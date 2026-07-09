@@ -2,6 +2,14 @@ pageextension 50064 "Item Ext" extends "Item Card"
 {
     layout
     {
+        addafter(Description)
+        {
+            field(Name; Rec.Name)
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of Name field.';
+            }
+        }
         addlast(content)
         {
             group("JIMS Attributes")
@@ -12,21 +20,45 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     //Editable = false;
                     ToolTip = 'Specifies the value of Item Type field.';
                 }
-                field("Material Category"; Rec."Material Category")
+                field("Item Type Name"; Rec."Item Type Name")
+                {
+                    ToolTip = 'Specifies the value of Item Type Name field.';
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+
+                field("Material Category Code"; Rec."Material Category Code")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the Material Category Code.';
+                }
+                field("Material Category Name"; Rec."Material Category Name")
                 {
                     ApplicationArea = All;
                     Editable = false;
                     ToolTip = 'Specifies the value of Meterial Category field.';
                 }
-                field(Strength; Rec.Strength)
+                field("Strength Code"; Rec."Strength Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Strength Code.';
+                }
+                field("Strength Name"; Rec."Strength Name")
                 {
                     ApplicationArea = All;
                     Editable = false;
                     ToolTip = 'Specifies the value of Strength field.';
                 }
-                field("Item Group"; Rec."Item Group")
+                field("Item Group Code"; Rec."Item Group Code")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the Item Group Code.';
+                }
+                field("Item Group Name"; Rec."Item Group Name")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the value of Item Group field.';
                 }
                 field("Medicine Group"; Rec."Medicine Group")
@@ -35,37 +67,70 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     Visible = false;
                     ToolTip = 'Specifies the value of Medicine Group field.';
                 }
-                field("Medicine Company"; Rec."Medicine Company")
+                field("Marketing Company Code"; Rec."Marketing Company Code")
                 {
                     ApplicationArea = All;
-                    Caption = 'Marketing Company';
-                    ToolTip = 'Specifies the value of Medicine Company field.';
+                    ToolTip = 'Specifies the Marketing Company Code.';
                 }
-                field(Model; Rec.Model)
+                field("Marketing Company Name"; Rec."Marketing Company Name")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    Caption = 'Marketing Company Name';
+                    ToolTip = 'Specifies the value of Marketing Company field.';
+                }
+                field("Model Code"; Rec."Model Code")
                 {
                     ApplicationArea = All;
                     Editable = false;
                     ToolTip = 'Specifies the value of Model field.';
                 }
-                field(Category; Rec.Category)
+                field("Model Name"; Rec."Model Name")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the value of Model Name field.';
+                }
+                field("Category Code"; Rec."Category Code")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of Category field.';
                 }
-                field("Medicine SubCategory"; Rec."Medicine SubCategory")
+                field("Category Name"; Rec."Category Name")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of Medicine SubCategory field.';
+                    ToolTip = 'Specifies the value of Category field.';
                 }
-                field("Medicine Manufacturer"; Rec."Medicine Manufacturer")
+                field("Medicine SubCategory Code"; Rec."Medicine SubCategory Code")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of Medicine Manufacturer field.';
+                    ToolTip = 'Specifies the value of Medicine SubCategory Code field.';
                 }
-                field("Res. Group"; Rec."Res. Group")
+                field("Medicine SubCategory Name"; Rec."Medicine SubCategory Name")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of Res. Group field.';
+                    Editable = false;
+                    ToolTip = 'Specifies the value of Medicine SubCategory Name field.';
+                }
+                field("Medicine Manufacturer Code"; Rec."Medicine Manufacturer Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of Medicine Manufacturer Code field.';
+                }
+                field("Medicine Manufacturer Name"; Rec."Medicine Manufacturer Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of Medicine Manufacturer Name field.';
+                }
+                field("Res. Group Code"; Rec."Res. Group Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of Res. Group Code field.';
+                }
+                field("Res. Group Name"; Rec."Res. Group Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of Res. Group Name field.';
                 }
                 field("Sub Group Nature"; Rec."Sub Group Nature")
                 {
@@ -73,39 +138,57 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     Visible = false;
                     ToolTip = 'Specifies the value of Sub Group Nature field.';
                 }
-                field(Make; Rec.Make)
+
+                field("Item Make Code"; Rec."Item Make Code")
                 {
                     ApplicationArea = All;
-                    Caption = 'Medicine Company';
+                    Caption = 'Medicine Company Code';
+                    ToolTip = 'Specifies the Item Make Code.';
+                }
+                field("Make Name"; Rec."Make Name")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Medicine Company Name';
+                    Editable = false;
                     ToolTip = 'Specifies the value of Make field.';
                 }
                 field("Medicine Component"; Rec."Medicine Component")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the value of Medicine Component field.';
                 }
-                field(Speciality; Rec.Speciality)
+
+                field("Material Type Code"; Rec."Material Type Code")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the value of Speciality field.';
+                    //Editable = false;
+                    ToolTip = 'Specifies the Material Type Code.';
                 }
-                field("Material Type"; Rec."Material Type")
+                field("Material Type Name"; Rec."Material Type Name")
                 {
                     ApplicationArea = All;
                     Editable = false;
-                    ToolTip = 'Specifies the value of Material Type field.';
+                    ToolTip = 'Specifies the value of Material Type Name field.';
                 }
                 field("Medicine Composition Code"; Rec."Medicine Composition Code")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the value of Medicine Composition Code field.';
                 }
                 field("Sub Group Site"; Rec."Sub Group Site")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the value of Sub Group Site field.';
                 }
-                field("Property List"; Rec."Property List")
+                field("Property List Code"; Rec."Property List Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of Property List Code field.';
+                }
+                field("Property List Name"; Rec."Property List Name")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of Property List field.';
@@ -113,11 +196,13 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Tolerance excess"; Rec."Tolerance excess")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the value of Tolerance Excess field.';
                 }
                 field("Tolerance Shortage"; Rec."Tolerance Shortage")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the value of Tolerance Shortage field.';
                 }
                 field("Margin Fix"; Rec."Margin Fix")
@@ -130,58 +215,49 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of Manual Code field.';
                 }
-                field("Strength Code"; Rec."Strength Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the Strength Code.';
-                }
-                field("Item Group Code"; Rec."Item Group Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the Item Group Code.';
-                }
-                field("Item Make Code"; Rec."Item Make Code")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Medicine Company Code';
-                    ToolTip = 'Specifies the Item Make Code.';
-                }
                 field("Composition Code"; Rec."Composition Code")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the Composition Code.';
                 }
                 field("Sub Category Code"; Rec."Sub Category Code")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the Sub Category Code.';
-                }
-                field("Category Code"; Rec."Category Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the Category Code.';
                 }
                 field("ManufacturerCode"; Rec."ManufacturerCode")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the Manufacturer Code.';
                 }
-                field("Marketing Company Code"; Rec."Marketing Company Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the Marketing Company Code.';
-                }
-                field("Material Type Code"; Rec."Material Type Code")
+
+                field("Item Speciality Code"; Rec."Item Speciality Code")
                 {
                     ApplicationArea = All;
                     Editable = false;
-                    ToolTip = 'Specifies the Material Type Code.';
+                    ToolTip = 'Specifies the value of Speciality Code field.';
                 }
-                field("Material Category Code"; Rec."Material Category Code")
+                field("Speciality Name"; Rec."Speciality Name")
                 {
                     ApplicationArea = All;
                     Editable = false;
-                    ToolTip = 'Specifies the Material Category Code.';
+                    ToolTip = 'Specifies the speciality Name assigned to the item.';
+                }
+
+                field("Division Code"; Rec."Division Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the division code for the item.';
+                }
+
+                field("Division Name"; Rec."Division Name")
+                {
+                    Editable = false;
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the name of the division associated with the item.';
                 }
             }
         }
@@ -189,16 +265,68 @@ pageextension 50064 "Item Ext" extends "Item Card"
         {
             group("JIMS Other Attributes")
             {
+                field("Allow Negative Stock"; Rec."Allow Negative Stock")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether negative inventory is allowed for this item.';
+                }
 
+                field("Is Indent Mandatory"; Rec."Is Indent Mandatory")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Indent Mandatory';
+                    ToolTip = 'Specifies whether an indent is mandatory before processing this item.';
+                }
+
+                field("Is Common"; Rec."Is Common")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Common';
+                    ToolTip = 'Specifies whether this is a common item.';
+                }
+
+                field("Scheme On Qty"; Rec."Scheme On Qty")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the quantity on which the scheme is applicable.';
+                }
+
+                field("Scheme Free Qty"; Rec."Scheme Free Qty")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the free quantity provided under the scheme.';
+                }
+
+                field("Is Life Saving"; Rec."Is Life Saving")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Life Saving';
+                    ToolTip = 'Specifies whether this item is classified as a life-saving item.';
+                }
+                field("Is High Value"; Rec."Is High Value")
+                {
+                    ApplicationArea = All;
+                    Caption = 'High Value';
+                    ToolTip = 'Specifies whether this item is classified as a high-value item.';
+                }
+
+                field("Is Flow Through"; Rec."Is Flow Through")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Flow Through';
+                    ToolTip = 'Specifies whether this item is a flow-through item.';
+                }
+
+                field("Is Billed Item"; Rec."Is Billed Item")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Billed Item';
+                    ToolTip = 'Specifies whether this item is billed to the customer.';
+                }
                 field(Packing; Rec.Packing)
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of Packing field.';
-                }
-                field(Scheme; Rec.Scheme)
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of Scheme field.';
                 }
                 field("Narcotics Control Substances"; Rec."Narcotics Control Substances")
                 {
@@ -240,17 +368,18 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of Quatation Required field.';
                 }
-                field(Active; Rec.Active)
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of Active field.';
-                }
                 field("BarCode Active"; Rec."BarCode Active")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of BarCode Active field.';
                 }
-                field("Filter Item Type"; Rec."Filter Item Type")
+                field("Filter Item Type Code"; Rec."Filter Item Type Code")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the value of Filter Item Type Code field.';
+                }
+                field("Filter Item Type Name"; Rec."Filter Item Type Name")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of Filter Item Type field.';
@@ -259,6 +388,34 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of Remarks field.';
+                }
+
+                field("Instruction"; Rec."Instruction")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the instructions for the item.';
+                }
+                field("Regional Instruction"; Rec."Regional Instruction")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the regional instructions for the item.';
+                }
+                field("Sales Unit of Measure Name"; Rec."Sales Unit of Measure Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the sales unit of measure name.';
+                }
+
+                field("Purch. Unit of Measure Name"; Rec."Purch. Unit of Measure Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the purchase unit of measure name.';
+                }
+
+                field("Prepared By"; Rec."Prepared By")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the name of the person who prepared the record.';
                 }
             }
         }
@@ -307,6 +464,24 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 RunObject = page "E3 API Item Update Log";
                 RunPageLink = "No." = field("No.");
                 RunPageMode = View;
+            }
+            action(CompositionPage)
+            {
+                ApplicationArea = All;
+                Caption = 'Composition Page';
+                ToolTip = 'View Composition Page';
+                Image = ListPage;
+                Promoted = true;
+                PromotedCategory = Process;
+
+                trigger OnAction()
+                var
+                    MedComp: Record "E3 Medicine Composition";
+                begin
+                    MedComp.SetRange(Code, Rec."No.");
+                    Page.Run(Page::"E3 Medicine Composition", MedComp);
+                end;
+
             }
         }
     }

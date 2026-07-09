@@ -29,12 +29,22 @@ page 50103 "E3 Posted Gate Ent Inward List"
                 field("Posted Entry No."; Rec."Posted Entry No.")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the value of the Posted Entry No. field';
+                }
+                field("Posted Inward Receipt No."; Rec.PostedNo)
+                {
+                    ToolTip = 'Specifies the value of the PostedNo field';
                 }
                 field("Document No."; Rec."Document No.")
                 {
                     ToolTip = 'Specifies the value of the Document No. field';
+                    Caption = 'Posted Inward Document No.';
                     ApplicationArea = All;
+                }
+                field("Posted Gate Entry Outward No."; Rec."Posted Gate Entry Outward No.")
+                {
+                    ToolTip = 'Specifies the value of the Posted Outward Document No. field';
                 }
                 field("Purpose Code"; Rec."Purpose Code")
                 {

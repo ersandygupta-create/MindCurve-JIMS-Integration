@@ -552,41 +552,172 @@ table 50000 "E3 HIS Master Staging"
             Caption = 'Item Status';
             DataClassification = CustomerContent;
         }
-        field(102; "Item Type 1"; Text[60])
+        field(102; "Item Type 1 Code"; Code[20])
         {
-            Caption = 'Item Type 1';
+            Caption = 'Item Type 1 Code';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Item Type".Name;
+            TableRelation = "E3 Item Type";
+            trigger OnValidate()
+            var
+                ItemTypeRec: Record "E3 Item Type";
+            begin
+                if "Item Type 1 Code" = '' then begin
+                    "Item Type 1 Name" := '';
+                    exit;
+                end;
+
+                if ItemTypeRec.Get("Item Type 1 Code") then
+                    "Item Type 1 Name" := ItemTypeRec.Name
+
+                else
+                    "Item Type 1 Name" := '';
+            end;
+
         }
-        field(103; "Material Category"; Text[60])
+        field(103; "Material Category Code"; Code[20])
         {
-            Caption = 'Material Category';
+            Caption = 'Material Category Code';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Material Category Master".Name;
+            TableRelation = "E3 Material Category Master";
+            trigger OnValidate()
+            var
+                MaterialCategoryRec: Record "E3 Material Category Master";
+            begin
+                if "Material Category Code" = '' then begin
+                    "Material Category Name" := '';
+                    exit;
+                end;
+
+                if MaterialCategoryRec.Get("Material Category Code") then
+                    "Material Category Name" := MaterialCategoryRec.Name
+                else
+                    "Material Category Name" := '';
+            end;
+
         }
-        field(104; Strength; Text[60])
+        field(104; "Strength Code"; Code[20])
         {
-            Caption = 'Strength';
+            Caption = 'Strength Code';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Item Strength Master".Name;
+            TableRelation = "E3 Item Strength Master";
+            trigger OnValidate()
+            var
+                StrengthRec: Record "E3 Item Strength Master";
+            begin
+                if "Strength Code" = '' then begin
+                    "Strength Name" := '';
+                    exit;
+                end;
+
+                if StrengthRec.Get("Strength Code") then
+                    "Strength Name" := StrengthRec.Name
+                else
+                    "Strength Name" := '';
+            end;
         }
-        field(105; Specification; Text[60])
+        field(105; "Specification Code"; Code[20])
         {
             Caption = 'Specification';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Item Speciality Master".Name;
+            TableRelation = "E3 Item Speciality Master";
+            trigger OnValidate()
+            var
+                SpecificationRec: Record "E3 Item Speciality Master";
+            begin
+                if "Specification Code" = '' then begin
+                    "Specification Name" := '';
+                    exit;
+                end;
+
+                if SpecificationRec.Get("Specification Code") then
+                    "Specification Name" := SpecificationRec.Name
+                else
+                    "Specification Name" := '';
+            end;
+
+
         }
-        field(106; Model; text[60])
+        field(106; "Model Code"; Code[20])
         {
-            Caption = 'Model';
+            Caption = 'Model Code';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Item Model Master".Name;
+            TableRelation = "E3 Item Model Master";
+            trigger OnValidate()
+            var
+                ModelRec: Record "E3 Item Model Master";
+            begin
+                if "Model Code" = '' then begin
+                    "Model Name" := '';
+                    exit;
+                end;
+
+                if ModelRec.Get("Model Code") then
+                    "Model Name" := ModelRec.Name
+                else
+                    "Model Name" := '';
+            end;
+
         }
-        field(107; "Material Type"; Text[60])
+        field(107; "Material Type Name"; Text[60])
         {
             Caption = 'Material Type';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Material Type Master".Name;
+            ;
+        }
+        field(108; "Item Type 1 Name"; Text[60])
+        {
+            Caption = 'Item Type 1 Name';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(109; "Material Category Name"; Text[60])
+        {
+            Caption = 'Material Category Name';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(110; "Strength Name"; Text[60])
+        {
+            Caption = 'Strength Name';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(111; "Specification Name"; Text[60])
+        {
+            Caption = 'Specification Name';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(112; "Model Name"; Text[60])
+        {
+            Caption = 'Model Name';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(113; "Material Type Code"; Code[20])
+        {
+            Caption = 'Material Type Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Material Type Master".Code;
+            trigger OnValidate()
+            var
+                MaterialTypeRec: Record "E3 Material Type Master";
+            begin
+                if "Material Type Code" = '' then begin
+                    "Material Type Name" := '';
+                    exit;
+                end;
+
+                if MaterialTypeRec.Get("Material Type Code") then
+                    "Material Type Name" := MaterialTypeRec.Name
+                else
+                    "Material Type Name" := '';
+            end;
+        }
+        field(114; "Display Name"; Text[250])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Display Name';
         }
 
     }

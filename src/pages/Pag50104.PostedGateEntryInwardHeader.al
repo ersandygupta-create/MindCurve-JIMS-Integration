@@ -30,6 +30,7 @@ page 50104 "E3 Posted Gate Ent Inward Hdr"
                 field("Document No."; Rec."Document No.")
                 {
                     ToolTip = 'Specifies the value of the Document No. field';
+                    Caption = 'Posted Inward Document No.';
                     ApplicationArea = All;
                 }
                 field("Purpose Code"; Rec."Purpose Code")
@@ -107,6 +108,12 @@ page 50104 "E3 Posted Gate Ent Inward Hdr"
                 {
                     ToolTip = 'Specifies the value of the Expected Return Date field';
                     ApplicationArea = All;
+                }
+                field("Posted Gate Entry Outward No."; Rec."Posted Gate Entry Outward No.")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the value of the Posted Gate Entry Outward No. field';
                 }
                 field("Reference Document No."; Rec."Reference Document No.")
                 {

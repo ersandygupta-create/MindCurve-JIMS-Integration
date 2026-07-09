@@ -11,7 +11,7 @@ table 50048 "E3 Item Group"
             Caption = 'Code';
             DataClassification = CustomerContent;
         }
-        field(2; Name; Text[100])
+        field(2; Name; Text[60])
         {
             Caption = 'Name';
             DataClassification = CustomerContent;
@@ -52,7 +52,7 @@ table 50048 "E3 Item Group"
     }
     keys
     {
-        key(PK; Code, Name)
+        key(PK; Code)
         {
             Clustered = true;
         }

@@ -567,18 +567,18 @@ codeunit 50000 "E3 HIS Integration Mgmt."
 
         if HisMasterStaging.FindSet() then
             repeat
-                if UpperCase(Format(HisMasterStaging."Item Type 1")) = 'PHARMACY' then
+                if UpperCase(Format(HisMasterStaging."Item Type 1 Name")) = 'PHARMACY' then
                     NewItemDesc :=
-                        HisMasterStaging."Material Category" + '-' +
-                        HisMasterStaging.Name + '-' +
-                        HisMasterStaging.Strength + '-' +
-                        HisMasterStaging.Model
+                        HisMasterStaging."Material Category Name" + '-' +
+                        HisMasterStaging."Display Name" + '-' +
+                        HisMasterStaging."Strength Name" + '-' +
+                        HisMasterStaging."Model Name"
                 else
                     NewItemDesc :=
-                        HisMasterStaging."Material Category" + '-' +
-                        HisMasterStaging."Material Type" + '-' +
-                        HisMasterStaging.Specification + '-' +
-                        HisMasterStaging.Model;
+                        HisMasterStaging."Material Category Name" + '-' +
+                        HisMasterStaging."Material Type Name" + '-' +
+                        HisMasterStaging."Specification Name" + '-' +
+                        HisMasterStaging."Model Name";
 
                 ItemRec.Reset();
                 ItemRec.SetRange(Description, NewItemDesc);
@@ -589,26 +589,22 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                     InventorySetup.TESTFIELD("Item Nos.");
                     Item."No." := NoSeriesMgmt.GetNextNo(InventorySetup."Item Nos.", Today, true);
                     Item.VALIDATE(Description, NewItemDesc);
-                    Item.Validate("Description 2", HisMasterStaging.Name);
-                    Item.Validate("Material Category", HisMasterStaging."Material Category");
-                    MaterialCat.Reset();
-                    MaterialCat.SetRange(Name, HisMasterStaging."Material Category");
-                    if MaterialCat.FindFirst() then
-                        Item.Validate("Material Category Code", MaterialCat.Code);
-                    Item.Validate(Strength, HisMasterStaging.Strength);
-                    StrengthMaster.Reset();
-                    StrengthMaster.SetRange(Name, HisMasterStaging.Strength);
-                    if StrengthMaster.FindFirst() then
-                        Item.Validate("Strength Code", StrengthMaster.Code);
-                    Item.Validate("Item Type", HisMasterStaging."Item Type 1");
-                    Item."Material Type" := HisMasterStaging."Material Type";
-                    MaterialType.Reset();
-                    MaterialType.SetRange(Name, HisMasterStaging."Material Type");
-                    if MaterialType.FindFirst() then
-                        Item.Validate("Material Type Code", MaterialType.Code);
-                    Item.Model := HisMasterStaging.Model;
-                    Item."Item Type" := HisMasterStaging."Item Type 1";
-                    Item."Filter Item Type" := HisMasterStaging."Item Type 1";
+                    Item.Validate(Name, HisMasterStaging."Display Name");
+                    Item.Validate("Material Category Code", HisMasterStaging."Material Category Code");
+                    Item.Validate("Material Category Name", HisMasterStaging."Material Category Name");
+                    Item.Validate("Strength Code", HisMasterStaging."Strength Code");
+                    Item.Validate("Strength Name", HisMasterStaging."Strength Name");
+                    Item.Validate("Item Type", HisMasterStaging."Item Type 1 Code");
+                    Item."Item Type Name" := HisMasterStaging."Item Type 1 Name";
+                    Item.Validate("Material Type Code", HisMasterStaging."Material Type Code");
+                    Item."Material Type Name" := HisMasterStaging."Material Type Name";
+                    Item."Model Code" := HisMasterStaging."Model code";
+                    Item."Filter Item Type Code" := HisMasterStaging."Item Type 1 Code";
+                    Item."Filter Item Type Name" := HisMasterStaging."Item Type 1 Name";
+                    Item.Validate("Model Code", HisMasterStaging."Model Code");
+                    Item."Model Name" := HisMasterStaging."Model Name";
+                    Item.Validate("Item Speciality Code", HisMasterStaging."Specification Code");
+                    Item."Speciality Name" := HisMasterStaging."Specification Name";
 
                     Item.INSERT();
 

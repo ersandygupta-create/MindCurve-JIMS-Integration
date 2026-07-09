@@ -31,6 +31,7 @@ page 50107 "E3 Posted Gate Ent Outward Hdr"
                 {
                     ToolTip = 'Specifies the value of the Document No. field';
                     ApplicationArea = All;
+                    Caption = 'Posted Outward No.';
                 }
                 field("Purpose Code"; Rec."Purpose Code")
                 {

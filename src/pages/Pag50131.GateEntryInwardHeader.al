@@ -106,6 +106,12 @@ page 50131 "E3 Gate Entry Inward Header"
                     ToolTip = 'Specifies the value of the Expected Return Date field';
                     ApplicationArea = All;
                 }
+                field("Posted Gate Entry Outward No."; Rec."Posted Gate Entry Outward No.")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the value of the Posted Gate Entry Outward No. field';
+                }
                 field("Reference Document No."; Rec."Reference Document No.")
                 {
                     ToolTip = 'Specifies the value of the Reference Document No. field';
