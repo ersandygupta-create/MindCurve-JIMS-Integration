@@ -6,7 +6,7 @@ page 50152 "E3 Indent List"
     UsageCategory = Lists;
     Caption = 'Indent List';
     CardPageId = "E3 Indent Card";
-    SourceTableView = WHERE(Status = FILTER(Open | "Pending Approval"));
+    SourceTableView = sorting("Document No.") order(descending) WHERE(Status = FILTER(Open | "Pending Approval"));
 
     layout
     {

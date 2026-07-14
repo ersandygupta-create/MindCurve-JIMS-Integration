@@ -265,6 +265,16 @@ pageextension 50064 "Item Ext" extends "Item Card"
         {
             group("JIMS Other Attributes")
             {
+                field(IsActive; Rec.IsActive)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether this is a IsActive item.';
+                }
+                field(SkuName; Rec.SkuName)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether this is a SkuName item.';
+                }
                 field("Allow Negative Stock"; Rec."Allow Negative Stock")
                 {
                     ApplicationArea = All;
@@ -431,6 +441,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 Image = SendTo;
 
                 action(SendToJIMS)
+
                 {
                     ApplicationArea = all;
                     Caption = 'Send to JIMS';

@@ -100,6 +100,7 @@ page 50131 "E3 Gate Entry Inward Header"
                 {
                     ToolTip = 'Specifies the value of the GRN ID field';
                     ApplicationArea = All;
+                    Visible = false;
                 }
                 field("Expected Return Date"; Rec."Expected Return Date")
                 {

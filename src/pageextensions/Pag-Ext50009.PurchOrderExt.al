@@ -33,11 +33,25 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
             field("W/S DL No."; Rec."W/S DL No.")
             {
                 ApplicationArea = All;
+                ToolTip = 'Specifies the Wholesale Drug License Number for the vendor.';
             }
 
             field("Retail DL No."; Rec."Retail DL No.")
             {
                 ApplicationArea = All;
+                ToolTip = 'Specifies the Retail Drug License Number for the vendor.';
+            }
+
+            field("Payment Terms"; Rec."Payment Terms")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the payment terms agreed with the vendor.';
+            }
+
+            field("Delivery Terms"; Rec."Delivery Terms")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the delivery terms agreed with the vendor.';
             }
         }
         addafter("No.")

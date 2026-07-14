@@ -18,10 +18,10 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 ToolTip = 'Specifies the name of the item make.';
             }
 
-            field(Critical; Rec.Critical)
+            field(Cretical; Rec.Cretical)
             {
                 ApplicationArea = All;
-                Caption = 'Critical';
+                Caption = 'Cretical Item';
                 ToolTip = 'Specifies whether the item make is marked as critical.';
             }
             field("Indent No."; Rec."Indent No.")

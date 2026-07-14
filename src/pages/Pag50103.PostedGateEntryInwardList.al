@@ -104,6 +104,7 @@ page 50103 "E3 Posted Gate Ent Inward List"
                 {
                     ToolTip = 'Specifies the value of the GRN ID field';
                     ApplicationArea = All;
+                    Visible = false;
                 }
                 field("Expected Return Date"; Rec."Expected Return Date")
                 {

@@ -28,9 +28,9 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Caption = 'Item Make Name';
             DataClassification = CustomerContent;
         }
-        field(50007; Critical; Boolean)
+        field(50007; Cretical; Boolean)
         {
-            Caption = 'Critical';
+            Caption = 'Cretical';
             DataClassification = CustomerContent;
         }
         modify("No.")

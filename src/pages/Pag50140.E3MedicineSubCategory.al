@@ -17,6 +17,13 @@ page 50140 "E3 Medicine SubCategory"
                 {
                     ToolTip = 'Specifies the value of the Code field';
                     ApplicationArea = All;
+                    AssistEdit = true;
+
+                    trigger OnAssistEdit()
+                    begin
+                        if Rec.AssistEdit(xRec) then
+                            CurrPage.Update();
+                    end;
                 }
                 field(Name; Rec.Name)
                 {
@@ -62,7 +69,7 @@ page 50140 "E3 Medicine SubCategory"
                     E3MedicineSubCatMgmt: Codeunit "E3 Medicine Sub-Category Mgmt.";
                     MedicineSubCat: Record "E3 Medicine Sub-Category Mast";
                 begin
-                    MedicineSubCat.Get(Rec.Code, Rec.Name);
+                    MedicineSubCat.Get(Rec.Code);
                     if E3MedicineSubCatMgmt.SendItemMedicineSubCatDetails(MedicineSubCat) then
                         Message('Data sent successfully.')
                     else

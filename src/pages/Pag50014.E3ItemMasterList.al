@@ -41,7 +41,7 @@ page 50014 "E3 Item Master List"
                 field("Display Name"; Rec."Display Name")
                 {
                     ApplicationArea = All;
-                    Caption = 'Display Name';
+                    Caption = 'Name';
                     Editable = NameEditable;
                     ToolTip = 'Specifies the Display Name.';
                 }
@@ -95,15 +95,39 @@ page 50014 "E3 Item Master List"
                 var
                     HISIntegration: Codeunit "E3 HIS Integration Mgmt.";
                     HisMasterStaging: Record "E3 HIS Master Staging";
+                    Item: Record Item;
+                    NewItemDesc: Text;
                 begin
                     CurrPage.SetSelectionFilter(HisMasterStaging);
 
                     if HisMasterStaging.FindSet() then
                         repeat
+                            // Build Item Description
+                            if UpperCase(Format(HisMasterStaging."Item Type 1 Name")) = 'PHARMACY' then
+                                NewItemDesc :=
+                                    HisMasterStaging."Material Category Name" + '-' +
+                                    HisMasterStaging."Display Name" + '-' +
+                                    HisMasterStaging."Strength Name" + '-' +
+                                    HisMasterStaging."Model Name"
+                            else
+                                NewItemDesc :=
+                                    HisMasterStaging."Material Category Name" + '-' +
+                                    HisMasterStaging."Material Type Name" + '-' +
+                                    HisMasterStaging."Specification Name" + '-' +
+                                    HisMasterStaging."Model Name";
+
+                            // Validate duplicate description
+                            Item.Reset();
+                            Item.SetRange(Description, NewItemDesc);
+                            if Item.FindFirst() then
+                                Error(
+                                    'Item Description "%1" already exists in Item No. %2.',
+                                    NewItemDesc,
+                                    Item."No.");
+
+                            // Create Item
                             HISIntegration.InitItemMaster1(HisMasterStaging."Entry No.");
-
                         until HisMasterStaging.Next() = 0;
-
                 end;
             }
         }

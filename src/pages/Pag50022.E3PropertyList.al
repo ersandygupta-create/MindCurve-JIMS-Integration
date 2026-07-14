@@ -73,7 +73,7 @@ page 50022 "E3 Property List"
                     ItemPropertyListMgmt: Codeunit "E3 Item Property List Mgmt.";
                     E3ItemPropertyList: Record "E3 Property List";
                 begin
-                    E3ItemPropertyList.Get(Rec.Code, Rec.Name);
+                    E3ItemPropertyList.Get(Rec.Code);
                     if ItemPropertyListMgmt.SendItemPropertyListDetails(E3ItemPropertyList) then
                         Message('Data sent successfully.')
                     else

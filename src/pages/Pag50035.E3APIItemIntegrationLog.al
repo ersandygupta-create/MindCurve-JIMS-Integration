@@ -48,6 +48,7 @@ page 50035 "E3 API Item Update Log"
                 {
                     ToolTip = 'Specifies the value of the Description 2 field.';
                     Caption = 'Display Name';
+                    Visible = false;
                 }
                 field("Manual Code"; Rec."Manual Code")
                 {
@@ -57,11 +58,16 @@ page 50035 "E3 API Item Update Log"
                 {
                     ToolTip = 'Specifies the value of the Type field.';
                     Caption = 'Item Type';
+                    Visible = false;
                 }
                 field(SkuName; Rec.SkuName)
                 {
                     ToolTip = 'Specifies the value of the Type field.';
-                    Visible = false;
+                    Visible = true;
+                }
+                field("Last Date Modified"; Rec."Last Date Modified")
+                {
+                    ToolTip = 'Specifies the value of the Last Date Modified field.';
                 }
                 field("Base Unit of Measure"; Rec."Base Unit of Measure")
                 {
@@ -70,6 +76,11 @@ page 50035 "E3 API Item Update Log"
                 field("Price Unit Conversion"; Rec."Price Unit Conversion")
                 {
                     ToolTip = 'Specifies the value of the Price Unit Conversion field.';
+                    Visible = false;
+                }
+                field(Blocked; Rec.Blocked)
+                {
+                    ToolTip = 'Specifies the value of the Blocked field.';
                 }
                 field("HSN/SAC Code"; Rec."HSN/SAC Code")
                 {
@@ -102,6 +113,7 @@ page 50035 "E3 API Item Update Log"
                 field("E3 Item Type"; Rec."E3 Item Type")
                 {
                     ToolTip = 'Specifies the value of the E3 Item Type field.';
+                    Visible = false;
                 }
                 field(Category; Rec.Category)
                 {
@@ -122,6 +134,7 @@ page 50035 "E3 API Item Update Log"
                 field("Medicine Group"; Rec."Medicine Group")
                 {
                     ToolTip = 'Specifies the value of the Medicine Group field.';
+                    Visible = false;
                 }
                 field("Rate Margin Fix"; Rec."Rate Margin Fix")
                 {
@@ -139,10 +152,12 @@ page 50035 "E3 API Item Update Log"
                 field("Medicine Company Code"; Rec."Medicine Company Code")
                 {
                     ToolTip = 'Specifies the value of the Medicine Company field.';
+                    Visible = false;
                 }
                 field("Medicine Company Name"; Rec."Medicine Company Name")
                 {
                     ToolTip = 'Specifies the value of the Medicine Company Name field.';
+                    Visible = false;
                 }
                 field(Packing; Rec.Packing)
                 {
@@ -160,6 +175,10 @@ page 50035 "E3 API Item Update Log"
                 {
                     ToolTip = 'Specifies the value of the Item Type field.';
                 }
+                field("Item Type Name"; Rec."Item Type Name")
+                {
+                    ToolTip = 'Specifies the value of the Item Type Name field.';
+                }
                 field("Medicine SubCategory Code"; Rec."Medicine SubCategory Code")
                 {
                     ToolTip = 'Specifies the value of the Medicine SubCategory Code field.';
@@ -167,6 +186,7 @@ page 50035 "E3 API Item Update Log"
                 field("Sub Group Nature"; Rec."Sub Group Nature")
                 {
                     ToolTip = 'Specifies the value of the Sub Group Nature field.';
+                    Visible = false;
                 }
                 field(Make; Rec.Make)
                 {
@@ -175,6 +195,7 @@ page 50035 "E3 API Item Update Log"
                 field("Medicine Component"; Rec."Medicine Component")
                 {
                     ToolTip = 'Specifies the value of the Medicine Component field.';
+                    Visible = false;
                 }
                 field(SpecialityName; Rec."Speciality Name")
                 {
@@ -187,10 +208,12 @@ page 50035 "E3 API Item Update Log"
                 field("Medicine Composition"; Rec."Medicine Composition")
                 {
                     ToolTip = 'Specifies the value of the Medicine Composition field.';
+                    Visible = false;
                 }
                 field("Sub Group Site"; Rec."Sub Group Site")
                 {
                     ToolTip = 'Specifies the value of the Sub Group Site field.';
+                    Visible = false;
                 }
                 field("Incl Free Qty in Sale Rate"; Rec."Incl Free Qty in Sale Rate")
                 {
@@ -244,11 +267,13 @@ page 50035 "E3 API Item Update Log"
                 {
                     ToolTip = 'Specifies the value of the Tolerance excess field.';
                     Caption = 'tl_ExcessPer';
+                    Visible = false;
                 }
                 field("Tolerance Shortage"; Rec."Tolerance Shortage")
                 {
                     ToolTip = 'Specifies the value of the Tolerance Shortage field.';
                     Caption = 'tl_ShortagePer';
+                    Visible = false;
                 }
                 field("Margin Fix"; Rec."Margin Fix")
                 {
@@ -281,11 +306,13 @@ page 50035 "E3 API Item Update Log"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the Composition Code.';
+                    Visible = false;
                 }
                 field("Sub Category Code"; Rec."Sub Category Code")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the Sub Category Code.';
+                    Visible = false;
                 }
                 field("Category Code"; Rec."Category Code")
                 {
@@ -296,6 +323,7 @@ page 50035 "E3 API Item Update Log"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the Manufacturer Code.';
+                    Visible = false;
                 }
                 field("Marketing Company Code"; Rec."Marketing Company Code")
                 {
@@ -306,6 +334,7 @@ page 50035 "E3 API Item Update Log"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the Material Type Code.';
+                    Visible = true;
                 }
                 field("Material Category Code"; Rec."Material Category Code")
                 {
@@ -498,6 +527,7 @@ page 50035 "E3 API Item Update Log"
                     ApplicationArea = All;
                     Caption = 'Speciality Name';
                     ToolTip = 'Specifies the speciality name associated with the item.';
+                    Visible = false;
                 }
                 field("Common Item No."; Rec."Common Item No.")
                 {
@@ -529,6 +559,10 @@ page 50035 "E3 API Item Update Log"
 
                     if ItemRec.FindSet() then
                         repeat
+                            if ItemRec."Sync Status" = ItemRec."Sync Status"::Synced then
+                                Error(
+                                  'Item %1 has already been synced to D365. Re-sync is not allowed.',
+                                  ItemRec."No.");
                             Clear(E3AkhilMgmt);
                             E3AkhilMgmt.SendItemDetails(ItemRec);
                         until ItemRec.Next() = 0;

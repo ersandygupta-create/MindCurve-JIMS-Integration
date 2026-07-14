@@ -15,8 +15,14 @@ page 50148 "E3 Restricted Group Master"
             {
                 field(Code; Rec.Code)
                 {
-                    ToolTip = 'Specifies the value of the Code field';
                     ApplicationArea = All;
+                    AssistEdit = true;
+
+                    trigger OnAssistEdit()
+                    begin
+                        if Rec.AssistEdit(xRec) then
+                            CurrPage.Update();
+                    end;
                 }
                 field(Name; Rec.Name)
                 {
@@ -62,7 +68,7 @@ page 50148 "E3 Restricted Group Master"
                     RestrictedGrpMgmt: Codeunit "E3 Restricted Group Mgmt.";
                     RestrictedGrpMast: Record "E3 Restricted Group Master";
                 begin
-                    RestrictedGrpMast.Get(Rec.Code, Rec.Name);
+                    RestrictedGrpMast.Get(Rec.Code);
                     if RestrictedGrpMgmt.SendRestrictedGroupDetails(RestrictedGrpMast) then
                         Message('Data sent successfully.')
                     else

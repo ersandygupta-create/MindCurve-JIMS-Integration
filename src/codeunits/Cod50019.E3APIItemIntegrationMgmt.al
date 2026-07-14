@@ -24,6 +24,7 @@ codeunit 50019 "E3 Item Integration Mgmt."
     procedure ManualSendToJIMS(var E3Item: Record Item)
     var
         E3ItemLog: Record "E3 API Item Update Log";
+        CheckItemLog: Record "E3 API Item Update Log";
     begin
         // Step 1: Create Log
         CreateItemLog(E3Item);
@@ -34,6 +35,16 @@ codeunit 50019 "E3 Item Integration Mgmt."
         E3ItemLog.SetRange("Sync Status", E3ItemLog."Sync Status"::" ");
 
         if E3ItemLog.FindLast() then begin
+            CheckItemLog.Reset();
+            CheckItemLog.SetRange("No.", E3Item."No.");
+            CheckItemLog.SetRange("Sync Status", CheckItemLog."Sync Status"::Synced);
+
+            if CheckItemLog.FindFirst() then
+                E3ItemLog.D365_Status := 'Update'
+            else
+                E3ItemLog.D365_Status := 'New';
+
+            E3ItemLog.Modify(true);
             // Step 3: Send via Job Queue
             EnqueueItemJobEntry(E3ItemLog);
             Message('Item Log created and queued to send to JIMS.');
@@ -41,9 +52,37 @@ codeunit 50019 "E3 Item Integration Mgmt."
             Message('No pending log found.');
     end;
 
+    procedure MultipleSendToJIMS(var E3Item: Record Item)
+    var
+        E3ItemLog: Record "E3 API Item Update Log";
+        CheckItemLog: Record "E3 API Item Update Log";
+    begin
+        // Create Log
+        CreateItemLog(E3Item);
+
+        E3ItemLog.Reset();
+        E3ItemLog.SetRange("No.", E3Item."No.");
+        E3ItemLog.SetRange("Sync Status", E3ItemLog."Sync Status"::" ");
+
+        if E3ItemLog.FindLast() then begin
+            CheckItemLog.Reset();
+            CheckItemLog.SetRange("No.", E3Item."No.");
+            CheckItemLog.SetRange("Sync Status", CheckItemLog."Sync Status"::Synced);
+
+            if CheckItemLog.FindFirst() then
+                E3ItemLog.D365_Status := 'Update'
+            else
+                E3ItemLog.D365_Status := 'New';
+
+            E3ItemLog.Modify(true);
+
+        end;
+    end;
+
     var
         E3APISetup: Record "E3 Integration API Setup";
         ItemUOM: Record "Item Unit of Measure";
+        JValue: JsonValue;
 
 
     [EventSubscriber(ObjectType::Table, Database::Item, 'OnAfterModifyEvent', '', false, false)]
@@ -227,66 +266,107 @@ codeunit 50019 "E3 Item Integration Mgmt."
         Clear(JObject);
         Clear(JChildObj);
         Clear(JArray);
-
-        JChildObj.Add('code', ItemUpdateLog."No.");
-        JChildObj.Add('name', ItemUpdateLog.Description);
-        JChildObj.Add('displayName', ItemUpdateLog."Description 2");
-        JChildObj.Add('manualCode', ItemUpdateLog."Manual Code");
-        JChildObj.Add('itemDesc', ItemUpdateLog."Description 2");
-        JChildObj.Add('itemType', Format(ItemUpdateLog.Type));
-        JChildObj.Add('skuName', ItemUpdateLog.SkuName);
-        JChildObj.Add('purchaseUnitName', ItemUpdateLog."Purch. Unit of Measure");
-        JChildObj.Add('saleUnitName', ItemUpdateLog."Sales Unit of Measure");
-        JChildObj.Add('itemPacking', ItemUpdateLog.Packing);
+        JChildObj.Add('code', Format(ItemUpdateLog."No."));
+        JChildObj.Add('name', Format(ItemUpdateLog.Name));
+        JChildObj.Add('displayName', Format(ItemUpdateLog."Description"));
+        JChildObj.Add('manualCode', Format(ItemUpdateLog."Manual Code"));
+        JChildObj.Add('itemGroup', Format(ItemUpdateLog."Item Group Code"));
+        JChildObj.Add('itemGroupName', Format(ItemUpdateLog."Item Group"));
+        JChildObj.Add('itemMakeCode', Format(ItemUpdateLog."Item Make Code"));
+        JChildObj.Add('itemMakeName', Format(ItemUpdateLog.Make));
+        JChildObj.Add('itemCategoryCode', Format(ItemUpdateLog."Category Code"));
+        JChildObj.Add('itemCategoryName', Format(ItemUpdateLog.Category));
+        JChildObj.Add('allowNegativeStock', ItemUpdateLog."Allow Negative Stock");
+        JChildObj.Add('purchaseUnit', Format(ItemUpdateLog."Purch. Unit of Measure"));
+        JChildObj.Add('purchaseUnitName', Format(ItemUpdateLog."Purch. Unit of Measure Name"));
+        JChildObj.Add('saleUnit', Format(ItemUpdateLog."Sales Unit of Measure"));
+        JChildObj.Add('saleUnitName', Format(ItemUpdateLog."Sales Unit of Measure Name"));
         JChildObj.Add('purchaseUnitConversionRate', Format(ItemUpdateLog."Purch. Qty. Per Rate"));
         JChildObj.Add('saleUnitConversionRate', Format(ItemUpdateLog."Sale Qty. Per Rate"));
+        JChildObj.Add('itemGSTNature', Format(ItemUpdateLog."HSN/SAC Type"));
+        JChildObj.Add('propertyList', Format(ItemUpdateLog."Property List Code"));
+        JChildObj.Add('propertyListName', Format(ItemUpdateLog."Property List Name"));
         JChildObj.Add('hsnCode', Format(ItemUpdateLog."HSN/SAC Code"));
-        JChildObj.Add('modelName', ItemUpdateLog.Model);
-        JChildObj.Add('strengthName', ItemUpdateLog.Strength);
-        JChildObj.Add('propertyList', ItemUpdateLog."Property List Name");
-        JChildObj.Add('itemCategoryCodeName', ItemUpdateLog.Category);
-        JChildObj.Add('subCategoryCodeName', ItemUpdateLog."Medicine SubCategory Name");
-        JChildObj.Add('compositionCodeName', ItemUpdateLog."Medicine Composition");
-        JChildObj.Add('materialCategoryCodeName', ItemUpdateLog."Material Category");
-        JChildObj.Add('materialTypeCodeName', ItemUpdateLog."Material Type");
-        JChildObj.Add('marketingCompanyName', ItemUpdateLog."Medicine Company Name");
-        JChildObj.Add('itemGroupName', ItemUpdateLog."Item Group");
-        JChildObj.Add('itemMakeCodeName', ItemUpdateLog.Make);
-        JChildObj.Add('filterItemType', ItemUpdateLog."Filter Item Type Name");
-        JChildObj.Add('manufacturerCodeName', ItemUpdateLog."Medicine Manufacturer Name");
-        JChildObj.Add('isActive', ItemUpdateLog.Blocked);
+        JChildObj.Add('subCode', '');
+        JChildObj.Add('purchaseAc', '');
+        JChildObj.Add('purchaseReturnAc', '');
+        JChildObj.Add('salesAc', '');
+        JChildObj.Add('salesReturnAc', '');
+        JChildObj.Add('grIrAc', '');
+        JChildObj.Add('consumptionAc', '');
+        JChildObj.Add('cogsAc', '');
+        JChildObj.Add('inTransitAc', '');
+        JChildObj.Add('filterItemType', Format(ItemUpdateLog."Filter Item Type Code"));
+        JChildObj.Add('filterItemTypeName', Format(ItemUpdateLog."Filter Item Type Name"));
+        JChildObj.Add('itemType', Format(ItemUpdateLog."Item Type"));
+        JChildObj.Add('itemTypeName', Format(ItemUpdateLog."Item Type Name"));
+        JChildObj.Add('sku', Format(ItemUpdateLog."Base Unit of Measure"));
+        JChildObj.Add('skuName', Format(ItemUpdateLog.SkuName));
+        JChildObj.Add('itemPacking', Format(ItemUpdateLog.Packing));
+        JChildObj.Add('isIndentMandatory', ItemUpdateLog."Is Indent Mandatory");
+        JChildObj.Add('isCommon', ItemUpdateLog."Is Common");
+        JChildObj.Add('isActive', ItemUpdateLog.IsActive);
+        JChildObj.Add('preparedBy', Format(ItemUpdateLog."Prepared By"));
+        JChildObj.Add('mrp', Format(ItemUpdateLog.MRP));
+        JChildObj.Add('saleRate', Format(ItemUpdateLog."Sale Rate"));
+        JChildObj.Add('purchaseRate', Format(ItemUpdateLog."Purchase Rate"));
+        JChildObj.Add('schemeOnQty', Format(ItemUpdateLog."Scheme On Qty"));
+        JChildObj.Add('schemeFreeQty', Format(ItemUpdateLog."Scheme Free Qty"));
+        JChildObj.Add('purchaseDiscountPer', Format(ItemUpdateLog."Purchase Discount %"));
+        JChildObj.Add('saleDiscountPer', Format(ItemUpdateLog."Sale Discount %"));
+        JChildObj.Add('restrictGroup', Format(ItemUpdateLog."Res. Group Code"));
+        JChildObj.Add('restrictGroupName', Format(ItemUpdateLog."Res. Group Name"));
         JChildObj.Add('isBarcodeActive', ItemUpdateLog."BarCode Active");
-        JChildObj.Add('isConsignment', ItemUpdateLog."Consignment Item");
+        JChildObj.Add('isLifeSaving', ItemUpdateLog."Is Life Saving");
+        JChildObj.Add('isHighValue', ItemUpdateLog."Is High Value");
+        JChildObj.Add('isFlowThrough', ItemUpdateLog."Is Flow Through");
         JChildObj.Add('isNarcotics', ItemUpdateLog."Narcotics Control Substances");
+        JChildObj.Add('isConsignment', ItemUpdateLog."Consignment Item");
         JChildObj.Add('isReturnableItem', ItemUpdateLog."Sale Returnable Item");
+        JChildObj.Add('isBilledItem', ItemUpdateLog."Is Billed Item");
         JChildObj.Add('isSaleRateEditable', ItemUpdateLog."Sale Rate Editable");
         JChildObj.Add('isIncludeFreeQtyInSaleRate', ItemUpdateLog."Incl Free Qty in Sale Rate");
         JChildObj.Add('isDiscountAllow', ItemUpdateLog."Sale Discount Allow");
         JChildObj.Add('isQuotationMandatory', ItemUpdateLog."Quatation Required");
-        JChildObj.Add('allowMRPDiscPattern', Format(ItemUpdateLog."Allow MRP Discount"));
+        JChildObj.Add('itemSpecialityCode', Format(ItemUpdateLog."Item Speciality Code"));
+        JChildObj.Add('itemSpecialityName', Format(ItemUpdateLog."Speciality Name"));
+        JChildObj.Add('divisionCode', Format(ItemUpdateLog."Division Code"));
+        JChildObj.Add('divisionName', Format(ItemUpdateLog."Division Name"));
+        JChildObj.Add('manufacturerCode', Format(ItemUpdateLog."Medicine Manufacturer Code"));
+        JChildObj.Add('manufacturerName', Format(ItemUpdateLog."Medicine Manufacturer Name"));
+        JChildObj.Add('instruction', Format(ItemUpdateLog.Instruction));
+        JChildObj.Add('regionalInstruction', Format(ItemUpdateLog."Regional Instruction"));
+        JChildObj.Add('materialCategoryCode', Format(ItemUpdateLog."Material Category Code"));
+        JChildObj.Add('materialCategoryName', Format(ItemUpdateLog."Material Category"));
+        JChildObj.Add('marketingCompany', Format(ItemUpdateLog."Marketing Company Code"));
+        JChildObj.Add('marketingCompanyName', Format(ItemUpdateLog."Marketing Company Name"));
+        //JChildObj.Add('statusChangedDate', Format(CurrentDateTime(), 0, 9));
+        JChildObj.Add('materialTypeCode', Format(ItemUpdateLog."Material Type Code"));
+        JChildObj.Add('materialTypeName', Format(ItemUpdateLog."Material Type"));
+        JChildObj.Add('model', Format(ItemUpdateLog.Model));
+        JChildObj.Add('modelName', Format(ItemUpdateLog."Model Name"));
+        JChildObj.Add('strength', Format(ItemUpdateLog."Strength Code"));
+        JChildObj.Add('strengthName', Format(ItemUpdateLog.Strength));
+        JChildObj.Add('remark', Format(ItemUpdateLog.Remarks));
+        JChildObj.Add('taxPerc', Format(ItemUpdateLog."GST Group Code"));
+        JChildObj.Add('subCategoryCode', Format(ItemUpdateLog."Medicine SubCategory Code"));
+        JChildObj.Add('subCategoryCodeName', Format(ItemUpdateLog."Medicine SubCategory Name"));
+        JChildObj.Add('allowMRPDiscPattern', ItemUpdateLog."Allow MRP Discount");
         JChildObj.Add('marginRateFix', Format(ItemUpdateLog."Margin Fix"));
-        JChildObj.Add('remark', ItemUpdateLog.Remarks);
-        JChildObj.Add('tl_ExcessPer', Format(ItemUpdateLog."Tolerance excess"));
-        JChildObj.Add('tl_ShortagePer', Format(ItemUpdateLog."Tolerance Shortage"));
-        JChildObj.Add('isStatus', '');
         JChildObj.Add('segment1', '');
         JChildObj.Add('segment2', '');
         JChildObj.Add('segment3', '');
         JChildObj.Add('segment4', '');
         JChildObj.Add('segment5', '');
-        JChildObj.Add('gstPercentage', Format(ItemUpdateLog."GST Group Code"));
-        JChildObj.Add('strengthCode', Format(ItemUpdateLog."Strength Code"));
-        JChildObj.Add('itemCategoryCodeCode', ItemUpdateLog."Category Code");
-        JChildObj.Add('subCategoryCodeCode', ItemUpdateLog."Sub Category Code");
-        JChildObj.Add('compositionCodeCode', ItemUpdateLog."Composition Code");
-        JChildObj.Add('materialCategoryCodeCode', ItemUpdateLog."Material Category Code");
-        JChildObj.Add('materialTypeCodeCode', ItemUpdateLog."Material Type Code");
-        JChildObj.Add('marketingCompanyCode', ItemUpdateLog."Marketing Company Code");
-        JChildObj.Add('itemGroupCode', ItemUpdateLog."Item Group Code");
-        JChildObj.Add('manufacturerCodeCode', ItemUpdateLog."Manufacturer Code");
-        JChildObj.Add('itemMakeCodeCode', ItemUpdateLog."Item Make Code");
+        JChildObj.Add('d365_Status', ItemUpdateLog.D365_Status);
+        //JChildObj.Add('d365_Timestamp', Format(CurrentDateTime, 0, 9));
+        JChildObj.Add('hisCode', '');
+        JValue.SetValueToNull();
+        JChildObj.Add('hisTimestamp', JValue);
+        JChildObj.Add('jpCode', '');
+        JChildObj.Add('jpTimestamp', JValue);
         JChildObj.Add('ProcessIndicator', 'P');
-        JChildObj.Add('processDatetime', format(DT2Time(ItemUpdateLog."Last Modified Date Time")));
+        JChildObj.Add('processDatetime', Format(DT2Time(ItemUpdateLog."Last Modified Date Time")));
         JChildObj.Add('ErrorMsg', '');
         JArray.Add(JChildObj);
         JObject.Add('d365_itemCat', JArray);

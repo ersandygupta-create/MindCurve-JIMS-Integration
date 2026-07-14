@@ -69,19 +69,23 @@ page 50161 "E3 Quotation Card"
                     ToolTip = 'Specifies the approved by of the Approved By.';
                 }
             }
-            part("Quotation 1"; "E3 Quotation L1")
+            part("Quotation"; "E3 Vendor Quotation")
             {
                 SubPageLink = "Document No." = FIELD("Document No.");
                 Visible = true;
             }
-            part("Quotation 2"; "E3 Quotation L2")
+        }
+        area(factboxes)
+        {
+            part("Attached Documents List"; "Doc. Attachment List Factbox")
             {
-                SubPageLink = "Document No." = FIELD("Document No.");
-                Visible = true;
+                ApplicationArea = All;
+                Caption = 'Documents';
+                UpdatePropagation = Both;
+                SubPageLink = "Table ID" = const(Database::"E3 Indent Header"), "No." = field("Document No.");
             }
-            part("Quotation 3"; "E3 Quotation L3")
+            systempart(Control1000000031; Notes)
             {
-                SubPageLink = "Document No." = FIELD("Document No.");
                 Visible = true;
             }
         }
@@ -117,6 +121,15 @@ page 50161 "E3 Quotation Card"
                     CreatePurchaseOrders.SetNoSeries(Location."E3 Indent PO Series");
                     CreatePurchaseOrders.SetTableView(IndentLine);
                     CreatePurchaseOrders.RunModal();
+
+                    if IndentHeader.Get(Rec."Document No.") then begin
+                        IndentHeader."Release Indent" := true;
+                        IndentHeader.Modify(true);
+                    end;
+
+                    CurrPage.Update(true);
+                    Message('Purchase Order created successfully.');
+
                 end;
 
             }

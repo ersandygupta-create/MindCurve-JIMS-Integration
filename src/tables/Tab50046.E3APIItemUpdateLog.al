@@ -49,6 +49,12 @@ table 50046 "E3 API Item Update Log"
             Caption = 'Blocked';
             ToolTip = 'Specifies that transactions with the item cannot be posted, for example, because the item is in quarantine.';
         }
+        field(62; "Last Date Modified"; Date)
+        {
+            Caption = 'Last Date Modified';
+            ToolTip = 'Specifies when the item card was last modified.';
+            Editable = false;
+        }
         field(5425; "Sales Unit of Measure"; Code[10])
         {
             Caption = 'Sales Unit of Measure';
@@ -669,6 +675,21 @@ table 50046 "E3 API Item Update Log"
             Caption = 'Filter Item Type Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Filter Item Type".Code;
+        }
+        field(50095; "Base Unit of Measure Name"; Text[50])
+        {
+            Caption = 'Base Unit of Measure Name';
+            DataClassification = CustomerContent;
+        }
+        field(50096; IsActive; Boolean)
+        {
+            Caption = 'IsActive';
+            DataClassification = CustomerContent;
+        }
+        field(50097; "D365_Status"; Text[20])
+        {
+            Caption = 'D365_Status';
+            DataClassification = CustomerContent;
         }
         field(91; "Gen. Prod. Posting Group"; Code[20])
         {

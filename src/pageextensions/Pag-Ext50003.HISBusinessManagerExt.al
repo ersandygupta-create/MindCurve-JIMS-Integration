@@ -532,16 +532,16 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         RunPageMode = Create;
                         ToolTip = 'Check Item Group';
                     }
-                    action("Filter Item Type")
-                    {
-                        AccessByPermission = TableData "E3 Filter Item Type" = R;
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Filter Item Type';
-                        Image = NewOrder;
-                        RunObject = Page "E3 Filter Item Type";
-                        RunPageMode = Create;
-                        ToolTip = 'Check Filter Item Type';
-                    }
+                    // action("Filter Item Type")
+                    // {
+                    //     AccessByPermission = TableData "E3 Filter Item Type" = R;
+                    //     ApplicationArea = Basic, Suite;
+                    //     Caption = 'Filter Item Type';
+                    //     Image = NewOrder;
+                    //     RunObject = Page "E3 Filter Item Type";
+                    //     RunPageMode = Create;
+                    //     ToolTip = 'Check Filter Item Type';
+                    // }
                     action("Sub Group Master")
                     {
                         AccessByPermission = TableData "E3 Sub Group Master" = R;
@@ -881,6 +881,13 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                     ApplicationArea = All;
                     RunObject = Page "E3 Quotation List";
                     ToolTip = 'Executes the Vendor Quotation action.';
+                }
+                action(ReleasedQoutation)
+                {
+                    Caption = 'Released Quotation';
+                    ApplicationArea = All;
+                    RunObject = Page "E3 Released Qoutation List";
+                    ToolTip = 'Executes the Released Quotation List action.';
                 }
                 action("E3 Indenter Master")
                 {

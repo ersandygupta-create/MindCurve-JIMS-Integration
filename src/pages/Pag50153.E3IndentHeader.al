@@ -158,6 +158,19 @@ page 50153 "E3 Indent Card"
                 SubPageLink = "Document No." = FIELD("Document No.");
             }
         }
+        area(factboxes)
+        {
+            part("Attached Documents List"; "Doc. Attachment List Factbox")
+            {
+                ApplicationArea = All;
+                Caption = 'Documents';
+                UpdatePropagation = Both;
+                SubPageLink = "Table ID" = const(Database::"E3 Indent Header"), "No." = field("Document No.");
+            }
+            systempart(Control1000000050; Notes)
+            {
+            }
+        }
     }
     actions
     {
@@ -255,5 +268,6 @@ page 50153 "E3 Indent Card"
     begin
         IsPageEditable := Rec.Status <> Rec.Status::"Pending Approval";
     end;
+
 
 }

@@ -38,7 +38,7 @@ page 50154 "E3 Indent Line Subform"
                     ApplicationArea = All;
                     Editable = IsLineEditable;
                 }
-                field("Critical Item"; Rec."Critical Item")
+                field("Cretical Item"; Rec."Cretical Item")
                 {
                     ApplicationArea = All;
                     Editable = IsLineEditable;

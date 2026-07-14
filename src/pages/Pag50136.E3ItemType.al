@@ -75,7 +75,7 @@ page 50136 "E3 Item Type"
                     E3APIIntegrationMgmt: Codeunit "E3 Item Type Mgmt.";
                     E3ItemType: Record "E3 Item Type";
                 begin
-                    E3ItemType.Get(Rec.Code, Rec.Name);
+                    E3ItemType.Get(Rec.Code);
                     if E3APIIntegrationMgmt.SendItemTypeDetails(E3ItemType) then
                         Message('Data sent successfully.')
                     else

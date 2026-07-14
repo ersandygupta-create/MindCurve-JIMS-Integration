@@ -54,9 +54,9 @@ codeunit 50032 "E3 Medicine Comp Master Mgmt."
         // =========================
         Clear(ItemObj);
 
-        ItemObj.Add('code', Format(MedicineCompMastUpdateLog.Code));
+        ItemObj.Add('code', MedicineCompMastUpdateLog.Code);
         ItemObj.Add('name', Format(MedicineCompMastUpdateLog.Name));
-        ItemObj.Add('restrictGroupCode', Format(MedicineCompMastUpdateLog."Restrict Group Code"));
+        ItemObj.Add('restrictGroupCode', 1);
         ItemObj.Add('isActive', 1);
         ItemObj.Add('segment1', '');
         ItemObj.Add('segment2', '');

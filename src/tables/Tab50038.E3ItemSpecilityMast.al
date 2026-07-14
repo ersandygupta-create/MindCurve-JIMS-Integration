@@ -31,6 +31,12 @@ table 50038 "E3 Item Speciality Master"
             Caption = 'Last Sent';
             DataClassification = CustomerContent;
         }
+        field(6; "No. Series"; Code[20])
+        {
+            Caption = 'No. Series';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
 
     }
     keys
@@ -40,6 +46,38 @@ table 50038 "E3 Item Speciality Master"
             Clustered = true;
         }
     }
+    trigger OnInsert()
+    var
+        InventorySetup: Record "Inventory Setup";
+        NoSeries: Codeunit "No. Series";
+    begin
+        if Code = '' then begin
+            InventorySetup.Get();
+            InventorySetup.TestField("Item Speciality Nos.");
 
+            "No. Series" := InventorySetup."Item Speciality Nos.";
+            Code := NoSeries.GetNextNo("No. Series", Today, true);
+        end;
+    end;
+
+    procedure AssistEdit(OldItemSpeciality: Record "E3 Item Speciality Master"): Boolean
+    var
+        InventorySetup: Record "Inventory Setup";
+        NoSeries: Codeunit "No. Series";
+    begin
+        InventorySetup.Get();
+        InventorySetup.TestField("Item Speciality Nos.");
+
+        if NoSeries.LookupRelatedNoSeries(
+            InventorySetup."Item Speciality Nos.",
+            OldItemSpeciality."No. Series",
+            "No. Series")
+        then begin
+            Code := NoSeries.GetNextNo("No. Series", Today, true);
+            exit(true);
+        end;
+
+        exit(false);
+    end;
 }
 

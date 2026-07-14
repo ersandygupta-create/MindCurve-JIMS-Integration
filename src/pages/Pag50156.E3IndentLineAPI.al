@@ -75,13 +75,9 @@ page 50156 "E3 Indent Line API"
                 {
                     Caption = 'Item Make Code';
                 }
-                field(firstOrderedQty; Rec."First Ordered Qty")
+                field(remarks; Rec.Remarks)
                 {
-                    Caption = 'First Ordered Qty';
-                }
-                field(firstRemarks; Rec."First Remarks")
-                {
-                    Caption = 'First Remarks';
+                    Caption = 'Remarks';
                 }
                 field(itemMakeName; Rec."Item Make Name")
                 {

@@ -17,6 +17,13 @@ page 50146 "E3 material Category Master"
                 {
                     ToolTip = 'Specifies the value of the Code field';
                     ApplicationArea = All;
+                    AssistEdit = true;
+
+                    trigger OnAssistEdit()
+                    begin
+                        if Rec.AssistEdit(xRec) then
+                            CurrPage.Update();
+                    end;
                 }
                 field(Name; Rec.Name)
                 {
@@ -72,7 +79,7 @@ page 50146 "E3 material Category Master"
                     MaterialCatMgmt: Codeunit "E3 Material Category Mgmt.";
                     MaterialCatMast: Record "E3 Material Category Master";
                 begin
-                    MaterialCatMast.Get(Rec.Code, Rec.Name);
+                    MaterialCatMast.Get(Rec.Code);
                     if MaterialCatMgmt.SendMaterialCategoryDetails(MaterialCatMast) then
                         Message('Data sent successfully.')
                     else

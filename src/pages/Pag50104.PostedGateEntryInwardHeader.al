@@ -103,6 +103,7 @@ page 50104 "E3 Posted Gate Ent Inward Hdr"
                 {
                     ToolTip = 'Specifies the value of the GRN ID field';
                     ApplicationArea = All;
+                    Visible = false;
                 }
                 field("Expected Return Date"; Rec."Expected Return Date")
                 {

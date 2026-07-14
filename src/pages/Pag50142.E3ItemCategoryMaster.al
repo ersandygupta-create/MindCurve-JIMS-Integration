@@ -17,6 +17,13 @@ page 50142 "E3 Item Category Master"
                 {
                     ToolTip = 'Specifies the value of the Code field';
                     ApplicationArea = All;
+                    AssistEdit = true;
+
+                    trigger OnAssistEdit()
+                    begin
+                        if Rec.AssistEdit(xRec) then
+                            CurrPage.Update();
+                    end;
                 }
                 field(Name; Rec.Name)
                 {
@@ -72,7 +79,7 @@ page 50142 "E3 Item Category Master"
                     ItemCategory: Record "E3 Item Category Master";
                     ItemCategoryMgmt: Codeunit "E3 Item Category Mgmt.";
                 begin
-                    ItemCategory.Get(Rec.Code, Rec.Name);
+                    ItemCategory.Get(Rec.Code);
                     if ItemCategoryMgmt.SendItemCategoryDetails(ItemCategory) then
                         Message('Data sent successfully.')
                     else

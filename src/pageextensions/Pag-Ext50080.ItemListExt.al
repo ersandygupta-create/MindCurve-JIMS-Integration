@@ -20,9 +20,39 @@ pageextension 50080 "E3 Item List Ext" extends "Item List"
 
     actions
     {
-        // Add changes to page actions here
-    }
+        addlast(Processing)
+        {
+            action(SendAllToJIMS)
+            {
+                ApplicationArea = All;
+                Caption = 'Send All to JIMS';
+                Image = SendTo;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
 
-    var
-        myInt: Integer;
+                trigger OnAction()
+                var
+                    ItemRec: Record Item;
+                    E3IntegrationMgmt: Codeunit "E3 Item Integration Mgmt.";
+                    CountItem: Integer;
+                begin
+                    //CurrPage.SetSelectionFilter(ItemRec);
+                    if not Confirm('Do you want to send all items to JIMS?', false) then
+                        exit;
+
+                    //CountItem := 0;
+                    ItemRec.Reset();
+
+                    if ItemRec.FindSet() then
+                        repeat
+                            E3IntegrationMgmt.MultipleSendToJIMS(ItemRec);
+                            CountItem += 1;
+                        until ItemRec.Next() = 0;
+
+                    //Message('%1 items have been added to the Item Log.', CountItem);
+                end;
+            }
+        }
+    }
 }

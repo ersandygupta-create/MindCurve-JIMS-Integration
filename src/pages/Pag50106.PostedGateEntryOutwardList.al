@@ -94,6 +94,7 @@ page 50106 "E3Posted Gate Ent Outward List"
                 {
                     ToolTip = 'Specifies the value of the GRN ID field';
                     ApplicationArea = All;
+                    Visible = false;
                 }
                 field("Expected Return Date"; Rec."Expected Return Date")
                 {

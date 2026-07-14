@@ -31,6 +31,11 @@ table 50031 "E3 Item Strength Master"
             Caption = 'Last Sent';
             DataClassification = CustomerContent;
         }
+        field(6; "No. Series"; Code[20])
+        {
+            Caption = 'No. Series';
+            DataClassification = CustomerContent;
+        }
 
     }
     keys
@@ -40,6 +45,38 @@ table 50031 "E3 Item Strength Master"
             Clustered = true;
         }
     }
+    trigger OnInsert()
+    var
+        InventorySetup: Record "Inventory Setup";
+        NoSeries: Codeunit "No. Series";
+    begin
+        if Code = '' then begin
+            InventorySetup.Get();
+            InventorySetup.TestField("Item Strength Nos.");
 
+            "No. Series" := InventorySetup."Item Strength Nos.";
+            Code := NoSeries.GetNextNo("No. Series");
+        end;
+    end;
+
+    procedure AssistEdit(OldItemStrength: Record "E3 Item Strength Master"): Boolean
+    var
+        InventorySetup: Record "Inventory Setup";
+        NoSeries: Codeunit "No. Series";
+    begin
+        InventorySetup.Get();
+        InventorySetup.TestField("Item Strength Nos.");
+
+        if NoSeries.LookupRelatedNoSeries(
+            InventorySetup."Item Strength Nos.",
+            OldItemStrength."No. Series",
+            "No. Series")
+        then begin
+            Code := NoSeries.GetNextNo("No. Series", Today, true);
+            exit(true);
+        end;
+
+        exit(false);
+    end;
 }
 

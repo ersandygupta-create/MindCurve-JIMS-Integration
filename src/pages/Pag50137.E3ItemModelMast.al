@@ -17,6 +17,12 @@ page 50137 "E3 Item Model Master"
                 {
                     ToolTip = 'Specifies the value of the Code field';
                     ApplicationArea = All;
+                    AssistEdit = true;
+                    trigger OnAssistEdit()
+                    begin
+                        if Rec.AssistEdit(xRec) then
+                            CurrPage.Update();
+                    end;
                 }
                 field(Name; Rec.Name)
                 {
@@ -62,7 +68,7 @@ page 50137 "E3 Item Model Master"
                     E3ItemModelMgmt: Codeunit "E3 Item Model Mgmt.";
                     ItemModelMst: Record "E3 Item Model Master";
                 begin
-                    ItemModelMst.Get(Rec.Code, Rec.Name);
+                    ItemModelMst.Get(Rec.Code);
                     if E3ItemModelMgmt.SendItemModelDetails(ItemModelMst) then
                         Message('Data sent successfully.')
                     else

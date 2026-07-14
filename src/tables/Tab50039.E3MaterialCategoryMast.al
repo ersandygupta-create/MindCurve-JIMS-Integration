@@ -41,6 +41,12 @@ table 50039 "E3 Material Category Master"
             Caption = 'IsCommon';
             DataClassification = CustomerContent;
         }
+        field(8; "No. Series"; Code[20])
+        {
+            Caption = 'No. Series';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
 
     }
     keys
@@ -50,6 +56,38 @@ table 50039 "E3 Material Category Master"
             Clustered = true;
         }
     }
+    trigger OnInsert()
+    var
+        InventorySetup: Record "Inventory Setup";
+        NoSeries: Codeunit "No. Series";
+    begin
+        if Code = '' then begin
+            InventorySetup.Get();
+            InventorySetup.TestField("Material Category Nos.");
 
+            "No. Series" := InventorySetup."Material Category Nos.";
+            Code := NoSeries.GetNextNo("No. Series", Today, true);
+        end;
+    end;
+
+    procedure AssistEdit(OldMaterialCategory: Record "E3 Material Category Master"): Boolean
+    var
+        InventorySetup: Record "Inventory Setup";
+        NoSeries: Codeunit "No. Series";
+    begin
+        InventorySetup.Get();
+        InventorySetup.TestField("Material Category Nos.");
+
+        if NoSeries.LookupRelatedNoSeries(
+            InventorySetup."Material Category Nos.",
+            OldMaterialCategory."No. Series",
+            "No. Series")
+        then begin
+            Code := NoSeries.GetNextNo("No. Series", Today, true);
+            exit(true);
+        end;
+
+        exit(false);
+    end;
 }
 

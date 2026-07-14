@@ -2,16 +2,31 @@ tableextension 50015 "E3 HIS Item" extends Item
 {
     fields
     {
-        modify("Purch. Unit of Measure")
+        modify("Base Unit of Measure")
         {
             trigger OnAfterValidate()
             var
                 UnitOfMeasure: Record "Unit of Measure";
             begin
-                if UnitOfMeasure.Get(Rec."Purch. Unit of Measure") then
-                    Rec."Purch. Unit of Measure Name" := UnitOfMeasure.Description
-                else
-                    Rec."Purch. Unit of Measure Name" := '';
+                if "Base Unit of Measure" = '' then begin
+                    "Base Unit of Measure Name" := '';
+                    "Sales Unit of Measure Name" := '';
+                    "Purch. Unit of Measure Name" := '';
+                    SkuName := '';
+                    exit;
+                end;
+
+                if UnitOfMeasure.Get("Base Unit of Measure") then begin
+                    "Base Unit of Measure Name" := UnitOfMeasure.Description;
+                    "Sales Unit of Measure Name" := UnitOfMeasure.Description;
+                    "Purch. Unit of Measure Name" := UnitOfMeasure.Description;
+                    SkuName := UnitOfMeasure.Description;
+                end else begin
+                    "Base Unit of Measure Name" := '';
+                    "Sales Unit of Measure Name" := '';
+                    "Purch. Unit of Measure Name" := '';
+                    SkuName := '';
+                end;
             end;
         }
         modify("Sales Unit of Measure")
@@ -20,10 +35,19 @@ tableextension 50015 "E3 HIS Item" extends Item
             var
                 UnitOfMeasure: Record "Unit of Measure";
             begin
-                if UnitOfMeasure.Get(Rec."Sales Unit of Measure") then
-                    Rec."Sales Unit of Measure Name" := UnitOfMeasure.Description
-                else
-                    Rec."Sales Unit of Measure Name" := '';
+                if UnitOfMeasure.Get("Sales Unit of Measure") then
+                    "Sales Unit of Measure Name" := UnitOfMeasure.Description;
+            end;
+        }
+        modify("Purch. Unit of Measure")
+        {
+            trigger OnAfterValidate()
+            var
+                UnitOfMeasure: Record "Unit of Measure";
+            begin
+                if UnitOfMeasure.Get("Purch. Unit of Measure") then
+                    "Purch. Unit of Measure Name" := UnitOfMeasure.Description;
+
             end;
         }
         modify("HSN/SAC Code")
@@ -109,6 +133,7 @@ tableextension 50015 "E3 HIS Item" extends Item
         {
             Caption = 'Packing';
             DataClassification = CustomerContent;
+            TableRelation = "Unit of Measure".Code;
         }
         field(50012; "Res. Group Name"; Text[60])
         {
@@ -282,6 +307,11 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Property List Name';
             DataClassification = CustomerContent;
             Editable = false;
+        }
+        field(50046; SkuName; Text[100])
+        {
+            Caption = 'SkuName';
+            DataClassification = CustomerContent;
         }
         field(50047; "Manual Code"; Text[20])
         {
@@ -727,6 +757,16 @@ tableextension 50015 "E3 HIS Item" extends Item
                 else
                     "Filter Item Type Name" := '';
             end;
+        }
+        field(50095; "Base Unit of Measure Name"; Text[50])
+        {
+            Caption = 'Base Unit of Measure Name';
+            DataClassification = CustomerContent;
+        }
+        field(50096; IsActive; Boolean)
+        {
+            Caption = 'IsActive';
+            DataClassification = CustomerContent;
         }
     }
     trigger OnBeforeRename()

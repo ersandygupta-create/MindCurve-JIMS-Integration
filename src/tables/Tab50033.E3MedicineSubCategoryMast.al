@@ -31,6 +31,12 @@ table 50033 "E3 Medicine Sub-Category Mast"
             Caption = 'Last Sent';
             DataClassification = CustomerContent;
         }
+        field(6; "No. Series"; Code[20])
+        {
+            Caption = 'No. Series';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
 
     }
     keys
@@ -40,6 +46,38 @@ table 50033 "E3 Medicine Sub-Category Mast"
             Clustered = true;
         }
     }
+    trigger OnInsert()
+    var
+        InventorySetup: Record "Inventory Setup";
+        NoSeries: Codeunit "No. Series";
+    begin
+        if Code = '' then begin
+            InventorySetup.Get();
+            InventorySetup.TestField("Medicine SubCategory Nos.");
 
+            "No. Series" := InventorySetup."Medicine SubCategory Nos.";
+            Code := NoSeries.GetNextNo("No. Series", Today, true);
+        end;
+    end;
+
+    procedure AssistEdit(OldMedicineSubCategory: Record "E3 Medicine Sub-Category Mast"): Boolean
+    var
+        InventorySetup: Record "Inventory Setup";
+        NoSeries: Codeunit "No. Series";
+    begin
+        InventorySetup.Get();
+        InventorySetup.TestField("Medicine SubCategory Nos.");
+
+        if NoSeries.LookupRelatedNoSeries(
+            InventorySetup."Medicine SubCategory Nos.",
+            OldMedicineSubCategory."No. Series",
+            "No. Series")
+        then begin
+            Code := NoSeries.GetNextNo("No. Series", Today, true);
+            exit(true);
+        end;
+
+        exit(false);
+    end;
 }
 

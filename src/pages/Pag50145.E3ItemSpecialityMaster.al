@@ -17,6 +17,13 @@ page 50145 "E3 Item Speciality Master"
                 {
                     ToolTip = 'Specifies the value of the Code field';
                     ApplicationArea = All;
+                    AssistEdit = true;
+
+                    trigger OnAssistEdit()
+                    begin
+                        if Rec.AssistEdit(xRec) then
+                            CurrPage.Update();
+                    end;
                 }
                 field(Name; Rec.Name)
                 {
@@ -62,7 +69,7 @@ page 50145 "E3 Item Speciality Master"
                     ItemSpecialityMgmt: Codeunit "E3 Item Speciality Mgmt.";
                     ItemSpecialityMast: Record "E3 Item Speciality Master";
                 begin
-                    ItemSpecialityMast.Get(Rec.Code, Rec.Name);
+                    ItemSpecialityMast.Get(Rec.Code);
                     if ItemSpecialityMgmt.SendItemSpecialityDetails(ItemSpecialityMast) then
                         Message('Data sent successfully.')
                     else

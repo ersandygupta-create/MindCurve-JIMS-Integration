@@ -17,6 +17,13 @@ page 50144 "E3 Medicine Component Master"
                 {
                     ToolTip = 'Specifies the value of the Code field';
                     ApplicationArea = All;
+                    AssistEdit = true;
+
+                    trigger OnAssistEdit()
+                    begin
+                        if Rec.AssistEdit(xRec) then
+                            CurrPage.Update();
+                    end;
                 }
                 field(Name; Rec.Name)
                 {
@@ -72,7 +79,7 @@ page 50144 "E3 Medicine Component Master"
                     MedicineCompMastMgmt: Codeunit "E3 Medicine Comp Master Mgmt.";
                     MedicineCompMast: Record "E3 Medicine Component Master";
                 begin
-                    MedicineCompMast.Get(Rec.Code, Rec.Name);
+                    MedicineCompMast.Get(Rec.Code);
                     if MedicineCompMastMgmt.SendMedicineCompMastDetails(MedicineCompMast) then
                         Message('Data sent successfully.')
                     else

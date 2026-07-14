@@ -17,6 +17,13 @@ page 50138 "E3 Item Strength Master"
                 {
                     ToolTip = 'Specifies the value of the Code field';
                     ApplicationArea = All;
+                    AssistEdit = true;
+
+                    trigger OnAssistEdit()
+                    begin
+                        if Rec.AssistEdit(xRec) then
+                            CurrPage.Update();
+                    end;
                 }
                 field(Name; Rec.Name)
                 {
@@ -62,7 +69,7 @@ page 50138 "E3 Item Strength Master"
                     E3StrengthMgmt: Codeunit "E3 Item Strength Mgmt.";
                     Strength: Record "E3 Item Strength Master";
                 begin
-                    Strength.Get(Rec.Code, Rec.Name);
+                    Strength.Get(Rec.Code);
                     if E3StrengthMgmt.SendItemStrengthDetails(Strength) then
                         Message('Data sent successfully.')
                     else

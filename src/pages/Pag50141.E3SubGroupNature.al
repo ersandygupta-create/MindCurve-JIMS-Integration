@@ -62,7 +62,7 @@ page 50141 "E3 Sub Group Nature"
                     ItemSubGroupNatureMgmt: Codeunit "E3 Sub Group Nature Mgmt.";
                     ItemSubGroupNature: Record "E3 Sub-Group Nature";
                 begin
-                    ItemSubGroupNature.Get(Rec.Code, Rec.Name);
+                    ItemSubGroupNature.Get(Rec.Code);
                     if ItemSubGroupNatureMgmt.SendSubGroupNatureDetails(ItemSubGroupNature) then
                         Message('Data sent successfully.')
                     else

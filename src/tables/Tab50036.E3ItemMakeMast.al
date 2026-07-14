@@ -46,6 +46,12 @@ table 50036 "E3 Item Make Master"
             Caption = 'Item Make Type';
             DataClassification = CustomerContent;
         }
+        field(9; "No. Series"; Code[20])
+        {
+            Caption = 'No. Series';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
 
     }
     keys
@@ -55,6 +61,39 @@ table 50036 "E3 Item Make Master"
             Clustered = true;
         }
     }
+    trigger OnInsert()
+    var
+        InventorySetup: Record "Inventory Setup";
+        NoSeries: Codeunit "No. Series";
+    begin
+        if Code = '' then begin
+            InventorySetup.Get();
+            InventorySetup.TestField("Item Make Nos.");
+
+            "No. Series" := InventorySetup."Item Make Nos.";
+            Code := NoSeries.GetNextNo("No. Series", Today, true);
+        end;
+    end;
+
+    procedure AssistEdit(OldItemMake: Record "E3 Item Make Master"): Boolean
+    var
+        InventorySetup: Record "Inventory Setup";
+        NoSeries: Codeunit "No. Series";
+    begin
+        InventorySetup.Get();
+        InventorySetup.TestField("Item Make Nos.");
+
+        if NoSeries.LookupRelatedNoSeries(
+            InventorySetup."Item Make Nos.",
+            OldItemMake."No. Series",
+            "No. Series")
+        then begin
+            Code := NoSeries.GetNextNo("No. Series", Today, true);
+            exit(true);
+        end;
+
+        exit(false);
+    end;
 
 }
 

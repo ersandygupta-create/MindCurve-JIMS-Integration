@@ -91,8 +91,15 @@ page 50149 "E3 Medicine Composition"
                 PromotedCategory = Process;
                 Image = SendTo;
                 trigger OnAction()
-
+                var
+                    ItemComp: Record "E3 Medicine Composition";
+                    ItemCompMgmt: Codeunit "E3 Medicine Composition Mgmt.";
                 begin
+                    ItemComp.Get(Rec."Line No.", Rec.Code);
+                    if ItemCompMgmt.SendMedicineCompositionMastDetails(ItemComp) then
+                        Message('Data sent successfully.')
+                    else
+                        Message('Failed to send data.');
                 end;
             }
         }
