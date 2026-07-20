@@ -273,6 +273,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field(SkuName; Rec.SkuName)
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies whether this is a SkuName item.';
                 }
                 field("Allow Negative Stock"; Rec."Allow Negative Stock")
@@ -413,12 +414,14 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Sales Unit of Measure Name"; Rec."Sales Unit of Measure Name")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the sales unit of measure name.';
                 }
 
                 field("Purch. Unit of Measure Name"; Rec."Purch. Unit of Measure Name")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the purchase unit of measure name.';
                 }
 

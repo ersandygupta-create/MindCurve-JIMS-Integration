@@ -10,6 +10,11 @@ table 50048 "E3 Item Group"
         {
             Caption = 'Code';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if (xRec.Code <> '') and (Rec.Code <> xRec.Code) then
+                    Error('Code cannot be modified once it has been assigned.');
+            end;
         }
         field(2; Name; Text[60])
         {
@@ -48,6 +53,11 @@ table 50048 "E3 Item Group"
             ToolTip = 'Specifies links between business transactions made for the item and an inventory account in the general ledger, to group amounts for that item type.';
             TableRelation = "Inventory Posting Group";
         }
+        field(9; "First Sent"; Boolean)
+        {
+            Caption = 'First Sent';
+            DataClassification = CustomerContent;
+        }
 
     }
     keys
@@ -57,6 +67,10 @@ table 50048 "E3 Item Group"
             Clustered = true;
         }
     }
+    trigger OnInsert()
+    begin
+        TestField(Name);
+    end;
 
 }
 

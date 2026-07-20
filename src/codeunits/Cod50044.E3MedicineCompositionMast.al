@@ -56,16 +56,16 @@ codeunit 50044 "E3 Medicine Composition Mgmt."
         // =========================
         Clear(ItemObj);
 
-        ItemObj.Add('code', Format(MedicineCompositionMastUpdateLog.Code));
+        ItemObj.Add('code', MedicineCompositionMastUpdateLog.Code);
         ItemObj.Add('lineNo', MedicineCompositionMastUpdateLog."Line No.");
         ItemObj.Add('medicineComponentCode', Format(MedicineCompositionMastUpdateLog."Medicine Component Code"));
         ItemObj.Add('isBase', MedicineCompositionMastUpdateLog.IsBase);
         ItemObj.Add('power', MedicineCompositionMastUpdateLog.Power);
-        ItemObj.Add('isSent', MedicineCompositionMastUpdateLog.IsSent);
+        ItemObj.Add('isSent', MedicineCompositionMastUpdateLog.IsBase);
         ItemObj.Add('unitOfMeasure', MedicineCompositionMastUpdateLog."Unit Of Measure");
         ItemObj.Add('itemName', MedicineCompositionMastUpdateLog."Item Name");
         ItemObj.Add('medicineComponentName', MedicineCompositionMastUpdateLog."Medicine Component Name");
-        if not MedicineCompositionMastUpdateLog.IsSent then
+        if not MedicineCompositionMastUpdateLog."First Sent" then
             ItemObj.Add('d365_Status', 'New')
         else
             ItemObj.Add('d365_Status', 'Update');

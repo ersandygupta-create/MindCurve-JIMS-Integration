@@ -21,10 +21,10 @@ page 50160 "E3 Quotation List"
                     Caption = 'Indent No.';
                     ToolTip = 'Specifies the indent number of the Indent No.';
                 }
-                field("Requested By"; Rec."Requested By")
+                field("Prepared By"; Rec."Prepared By")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the requested by of the Requested By.';
+                    ToolTip = 'Specifies the requested by of the Prepared By.';
                 }
                 field("Request Date"; Rec."Request Date")
                 {
@@ -48,10 +48,10 @@ page 50160 "E3 Quotation List"
                     ToolTip = 'Specifies the status of the Status.';
                 }
 
-                field("Expected Receive Date"; Rec."Expected Receive Date")
+                field("Prepared Date"; Rec."Prepared Date")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the expected receive date of the Expected Receive Date.';
+                    ToolTip = 'Specifies the expected receive date of the Prepared Date.';
                 }
 
                 field("Approved By"; Rec."Approved By")

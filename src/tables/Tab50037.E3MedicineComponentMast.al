@@ -10,6 +10,11 @@ table 50037 "E3 Medicine Component Master"
         {
             Caption = 'Code';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if (xRec.Code <> '') and (Rec.Code <> xRec.Code) then
+                    Error('Code cannot be modified once it has been assigned.');
+            end;
         }
         field(2; Name; Text[60])
         {
@@ -48,6 +53,11 @@ table 50037 "E3 Medicine Component Master"
             Editable = false;
             DataClassification = CustomerContent;
         }
+        field(9; "First Sent"; Boolean)
+        {
+            Caption = 'First Sent';
+            DataClassification = CustomerContent;
+        }
 
     }
     keys
@@ -62,6 +72,7 @@ table 50037 "E3 Medicine Component Master"
         InventorySetup: Record "Inventory Setup";
         NoSeries: Codeunit "No. Series";
     begin
+        TestField(Name);
         if Code = '' then begin
             InventorySetup.Get();
             InventorySetup.TestField("Medicine Component Nos.");

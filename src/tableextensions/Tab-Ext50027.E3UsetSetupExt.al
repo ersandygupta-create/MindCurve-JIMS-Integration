@@ -47,6 +47,16 @@ tableextension 50027 "E3 Uset Setup Ext" extends "User Setup"
             Caption = 'Vendor Ledger View';
             DataClassification = CustomerContent;
         }
+        field(50009; "Short Close Indent"; Boolean)
+        {
+            Caption = 'Short Close Indent';
+            DataClassification = CustomerContent;
+        }
+        field(50010; "HSN Master"; Boolean)
+        {
+            Caption = 'HSN Master';
+            DataClassification = CustomerContent;
+        }
 
     }
 }

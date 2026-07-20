@@ -96,9 +96,14 @@ page 50149 "E3 Medicine Composition"
                     ItemCompMgmt: Codeunit "E3 Medicine Composition Mgmt.";
                 begin
                     ItemComp.Get(Rec."Line No.", Rec.Code);
-                    if ItemCompMgmt.SendMedicineCompositionMastDetails(ItemComp) then
+                    if ItemComp.IsSent then
+                        Error('This record has already been sent.');
+                    if ItemCompMgmt.SendMedicineCompositionMastDetails(ItemComp) then begin
+                        ItemComp.Get(Rec."Line No.", Rec.Code);
+                        ItemComp."First Sent" := true;
+                        ItemComp.Modify(true);
                         Message('Data sent successfully.')
-                    else
+                    end else
                         Message('Failed to send data.');
                 end;
             }

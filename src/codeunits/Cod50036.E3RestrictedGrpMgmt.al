@@ -59,6 +59,10 @@ codeunit 50036 "E3 Restricted Group Mgmt."
         ItemObj.Add('segment1', '');
         ItemObj.Add('segment2', '');
         ItemObj.Add('segment3', '');
+        if not RestrictedGroupUpdateLog."First Sent" then
+            ItemObj.Add('d365_Status', 'New')
+        else
+            ItemObj.Add('d365_Status', 'Update');
 
         ItemArray.Add(ItemObj);
 

@@ -6,6 +6,7 @@ page 50140 "E3 Medicine SubCategory"
     SourceTable = "E3 Medicine Sub-Category Mast";
     Editable = true;
     Caption = 'Medicine SubCategory';
+    DeleteAllowed = false;
 
     layout
     {
@@ -34,7 +35,7 @@ page 50140 "E3 Medicine SubCategory"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                 }
                 field(Response; Rec.Response)
                 {
@@ -70,9 +71,15 @@ page 50140 "E3 Medicine SubCategory"
                     MedicineSubCat: Record "E3 Medicine Sub-Category Mast";
                 begin
                     MedicineSubCat.Get(Rec.Code);
-                    if E3MedicineSubCatMgmt.SendItemMedicineSubCatDetails(MedicineSubCat) then
+                    if MedicineSubCat.IsSent then
+                        Error('This record has already been sent.');
+
+                    if E3MedicineSubCatMgmt.SendItemMedicineSubCatDetails(MedicineSubCat) then begin
+                        MedicineSubCat.Get(Rec.Code);
+                        MedicineSubCat."First Sent" := true;
+                        MedicineSubCat.Modify();
                         Message('Data sent successfully.')
-                    else
+                    end else
                         Message('Failed to send data.');
                 end;
             }

@@ -320,6 +320,21 @@ table 50052 "E3 Indent Line"
             Caption = 'Split Line';
             DataClassification = CustomerContent;
         }
+        field(38; SplitedLines; Boolean)
+        {
+            Caption = 'SplitedLines';
+            DataClassification = CustomerContent;
+        }
+        field(39; "Short Close"; Boolean)
+        {
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(40; "Created PO Qty"; Decimal)
+        {
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
         field(80285; "Currency Code"; Code[10])
         {
             DataClassification = CustomerContent;
@@ -374,7 +389,7 @@ table 50052 "E3 Indent Line"
 
         if IndentHeader.Get("Document No.") then begin
             "Entry No." := IndentHeader."Entry No.";
-            "Requested Received Date" := IndentHeader."Expected Receive Date";
+            "Requested Received Date" := IndentHeader."Prepared Date";
             "Location Code" := IndentHeader."Location Code";
             "Shortcut Dimension 1 Code" := IndentHeader."Shortcut Dimension 1 Code";
             "Shortcut Dimension 2 Code" := IndentHeader."Shortcut Dimension 2 Code";

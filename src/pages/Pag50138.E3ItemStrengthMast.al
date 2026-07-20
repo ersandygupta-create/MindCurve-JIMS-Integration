@@ -6,6 +6,7 @@ page 50138 "E3 Item Strength Master"
     SourceTable = "E3 Item Strength Master";
     Editable = true;
     Caption = 'Item Strength';
+    DeleteAllowed = false;
 
     layout
     {
@@ -34,7 +35,7 @@ page 50138 "E3 Item Strength Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                 }
                 field(Response; Rec.Response)
                 {
@@ -70,9 +71,14 @@ page 50138 "E3 Item Strength Master"
                     Strength: Record "E3 Item Strength Master";
                 begin
                     Strength.Get(Rec.Code);
-                    if E3StrengthMgmt.SendItemStrengthDetails(Strength) then
+                    if Strength.IsSent then
+                        Error('This record has already been sent.');
+                    if E3StrengthMgmt.SendItemStrengthDetails(Strength) then begin
+                        Strength.Get(Rec.Code);
+                        Strength."First Sent" := true;
+                        Strength.Modify();
                         Message('Data sent successfully.')
-                    else
+                    end else
                         Message('Failed to send data.');
                 end;
             }

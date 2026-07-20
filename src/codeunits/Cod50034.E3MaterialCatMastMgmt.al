@@ -14,9 +14,9 @@ codeunit 50034 "E3 Material Category Mgmt."
 
     var
         E3APISetup: Record "E3 Integration API Setup";
-        ItemMaterialCatMast: Record "E3 Material Category Master";
+        MeterialCate: Record "E3 Material Category Master";
 
-    procedure SendMaterialCategoryDetails(var MaterialCategoryUpdateLog: Record "E3 Material Category Master"): Boolean
+    procedure SendMeterialCateDetails(var MeterialCateUpdateLog: Record "E3 Material Category Master"): Boolean
     var
         HttpWebClient: HttpClient;
         HttpWebContent: HttpContent;
@@ -54,13 +54,17 @@ codeunit 50034 "E3 Material Category Mgmt."
         // =========================
         Clear(ItemObj);
 
-        ItemObj.Add('code', Format(MaterialCategoryUpdateLog.Code));
-        ItemObj.Add('name', Format(MaterialCategoryUpdateLog.Name));
-        ItemObj.Add('filterItemType', MaterialCategoryUpdateLog."Filter Item Type");
-        ItemObj.Add('isCommon', MaterialCategoryUpdateLog.IsCommon);
+        ItemObj.Add('code', Format(MeterialCateUpdateLog.Code));
+        ItemObj.Add('name', Format(MeterialCateUpdateLog.Name));
+        ItemObj.Add('filterItemType', MeterialCateUpdateLog."Filter Item Type");
+        ItemObj.Add('isCommon', MeterialCateUpdateLog.IsCommon);
         ItemObj.Add('segment1', '');
         ItemObj.Add('segment2', '');
         ItemObj.Add('segment3', '');
+        if not MeterialCateUpdateLog."First Sent" then
+            ItemObj.Add('d365_Status', 'New')
+        else
+            ItemObj.Add('d365_Status', 'Update');
 
         ItemArray.Add(ItemObj);
 
@@ -89,8 +93,8 @@ codeunit 50034 "E3 Material Category Mgmt."
             Message('Response:\%1', JsonResponse);
 
         // Save complete response initially
-        MaterialCategoryUpdateLog.Response :=
-            CopyStr(JsonResponse, 1, MaxStrLen(MaterialCategoryUpdateLog.Response));
+        MeterialCateUpdateLog.Response :=
+            CopyStr(JsonResponse, 1, MaxStrLen(MeterialCateUpdateLog.Response));
 
         // =========================
         // RESPONSE PARSING
@@ -117,29 +121,29 @@ codeunit 50034 "E3 Material Category Mgmt."
                         ResponseMsg := CJToken.AsValue().AsText();
 
                     if ResponseMsg = 'Created Successfully' then begin
-                        MaterialCategoryUpdateLog.IsSent := true;
-                        MaterialCategoryUpdateLog.Response :=
-                            CopyStr(ResponseMsg, 1, MaxStrLen(MaterialCategoryUpdateLog.Response));
-                        MaterialCategoryUpdateLog."Last Sent" := CurrentDateTime;
-                        MaterialCategoryUpdateLog.Modify(true);
+                        MeterialCateUpdateLog.IsSent := true;
+                        MeterialCateUpdateLog.Response :=
+                            CopyStr(ResponseMsg, 1, MaxStrLen(MeterialCateUpdateLog.Response));
+                        MeterialCateUpdateLog."Last Sent" := CurrentDateTime;
+                        MeterialCateUpdateLog.Modify(true);
                         exit(true);
                     end;
                 end;
             end;
 
-            MaterialCategoryUpdateLog.IsSent := false;
-            MaterialCategoryUpdateLog.Response :=
-                CopyStr(JsonResponse, 1, MaxStrLen(MaterialCategoryUpdateLog.Response));
-            MaterialCategoryUpdateLog."Last Sent" := CurrentDateTime;
-            MaterialCategoryUpdateLog.Modify(true);
+            MeterialCateUpdateLog.IsSent := false;
+            MeterialCateUpdateLog.Response :=
+                CopyStr(JsonResponse, 1, MaxStrLen(MeterialCateUpdateLog.Response));
+            MeterialCateUpdateLog."Last Sent" := CurrentDateTime;
+            MeterialCateUpdateLog.Modify(true);
             exit(false);
 
         end else begin
-            MaterialCategoryUpdateLog.IsSent := false;
-            MaterialCategoryUpdateLog.Response :=
-                CopyStr(JsonResponse, 1, MaxStrLen(MaterialCategoryUpdateLog.Response));
-            MaterialCategoryUpdateLog."Last Sent" := CurrentDateTime;
-            MaterialCategoryUpdateLog.Modify(true);
+            MeterialCateUpdateLog.IsSent := false;
+            MeterialCateUpdateLog.Response :=
+                CopyStr(JsonResponse, 1, MaxStrLen(MeterialCateUpdateLog.Response));
+            MeterialCateUpdateLog."Last Sent" := CurrentDateTime;
+            MeterialCateUpdateLog.Modify(true);
             exit(false);
         end;
     end;

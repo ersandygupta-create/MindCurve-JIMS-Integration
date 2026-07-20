@@ -10,6 +10,11 @@ table 50047 "E3 Property List"
         {
             Caption = 'Code';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if (xRec.Code <> '') and (Rec.Code <> xRec.Code) then
+                    Error('Code cannot be modified once it has been assigned.');
+            end;
         }
         field(2; Name; Text[60])
         {
@@ -41,6 +46,11 @@ table 50047 "E3 Property List"
             Caption = 'IsActive';
             DataClassification = CustomerContent;
         }
+        field(8; "First Sent"; Boolean)
+        {
+            Caption = 'First Sent';
+            DataClassification = CustomerContent;
+        }
 
     }
     keys
@@ -50,6 +60,10 @@ table 50047 "E3 Property List"
             Clustered = true;
         }
     }
+    trigger OnInsert()
+    begin
+        TestField(Name);
+    end;
 
 }
 

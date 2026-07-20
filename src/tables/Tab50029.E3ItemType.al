@@ -11,6 +11,11 @@ table 50029 "E3 Item Type"
         {
             Caption = 'Code';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if (xRec.Code <> '') and (Rec.Code <> xRec.Code) then
+                    Error('Code cannot be modified once it has been assigned.');
+            end;
         }
         field(2; Name; Text[60])
         {
@@ -35,6 +40,11 @@ table 50029 "E3 Item Type"
         field(6; "Last Sent"; DateTime)
         {
             Caption = 'Last Sent';
+            DataClassification = CustomerContent;
+        }
+        field(7; "First Sent"; Boolean)
+        {
+            Caption = 'First Sent';
             DataClassification = CustomerContent;
         }
         field(6500; "Item Tracking Code"; Code[10])
@@ -64,6 +74,10 @@ table 50029 "E3 Item Type"
             Clustered = true;
         }
     }
+    trigger OnInsert()
+    begin
+        TestField(Name);
+    end;
 
 }
 

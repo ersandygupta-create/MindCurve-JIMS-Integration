@@ -41,6 +41,7 @@ codeunit 50040 "E3 HSN/SAC Mgmt."
                     HSNLogRec.Init();
                     HSNLogRec."GST Group Code" := HSNRec."GST Group Code";
                     HSNLogRec.Code := HSNRec.Code;
+                    HSNLogRec.Type := HSNRec.Type;
                     HSNLogRec.Description := HSNRec.Description;
                     HSNLogRec."Sync Status" := HSNLogRec."Sync Status"::" ";
                     HSNLogRec."Error Message" := '';
@@ -81,9 +82,14 @@ codeunit 50040 "E3 HSN/SAC Mgmt."
         ItemObj.Add('code', HSNSACUpdateLog."GST Group Code");
         ItemObj.Add('name', HSNSACUpdateLog.Description);
         ItemObj.Add('hsn', HSNSACUpdateLog.Code);
-        ItemObj.Add('segment1', '');
+        ItemObj.Add('segment1', Format(HSNSACUpdateLog.Type));
         ItemObj.Add('segment2', '');
         ItemObj.Add('segment3', '');
+        if HSNSACUpdateLog."Sync Status" = HSNSACUpdateLog."Sync Status"::Synced then
+            ItemObj.Add('d365_Status', 'Update')
+        else
+            ItemObj.Add('d365_Status', 'New');
+
 
         Clear(ItemArray);
         ItemArray.Add(ItemObj);

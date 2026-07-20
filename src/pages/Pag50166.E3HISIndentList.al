@@ -1,4 +1,4 @@
-page 50152 "E3 Indent List"
+page 50166 "E3 HIS Indent List"
 {
     PageType = List;
     SourceTable = "E3 Indent Header";
@@ -6,7 +6,7 @@ page 50152 "E3 Indent List"
     UsageCategory = Lists;
     Caption = 'Indent List';
     CardPageId = "E3 Indent Card";
-    SourceTableView = sorting("Document No.") order(descending) WHERE(Status = FILTER(Open | "Pending Approval"), "Source Type" = filter(D365));
+    SourceTableView = sorting("Document No.") order(descending) WHERE(Status = FILTER(Open | "Pending Approval"), "Source Type" = filter(HIS));
 
     layout
     {

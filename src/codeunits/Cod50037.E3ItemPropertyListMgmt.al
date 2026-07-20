@@ -60,6 +60,10 @@ codeunit 50037 "E3 Item Property List Mgmt."
         ItemObj.Add('segment1', '');
         ItemObj.Add('segment2', '');
         ItemObj.Add('segment3', '');
+        if not ItemPropertyListUpdateLog."First Sent" then
+            ItemObj.Add('d365_Status', 'New')
+        else
+            ItemObj.Add('d365_Status', 'Update');
 
         ItemArray.Add(ItemObj);
 

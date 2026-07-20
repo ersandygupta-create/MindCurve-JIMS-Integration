@@ -51,14 +51,6 @@ page 50156 "E3 Indent Line API"
                 {
                     Caption = 'Requested Qty';
                 }
-                field(unitCost; Rec."Unit Cost")
-                {
-                    Caption = 'Unit Cost';
-                }
-                field(amount; Rec.Amount)
-                {
-                    Caption = 'Amount';
-                }
                 field(approvedQty; Rec."Approved Qty")
                 {
                     Caption = 'Approved Qty';
@@ -82,6 +74,10 @@ page 50156 "E3 Indent Line API"
                 field(itemMakeName; Rec."Item Make Name")
                 {
                     Caption = 'Item Make Name';
+                }
+                field(shortcutDimension1Code; Rec."Shortcut Dimension 1 Code")
+                {
+                    Caption = 'Shortcut Dimension 1 Code';
                 }
             }
         }

@@ -6,6 +6,7 @@ page 50145 "E3 Item Speciality Master"
     SourceTable = "E3 Item Speciality Master";
     Editable = true;
     Caption = 'Item Speciality Master';
+    DeleteAllowed = false;
 
     layout
     {
@@ -34,7 +35,7 @@ page 50145 "E3 Item Speciality Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                 }
                 field(Response; Rec.Response)
                 {
@@ -70,9 +71,15 @@ page 50145 "E3 Item Speciality Master"
                     ItemSpecialityMast: Record "E3 Item Speciality Master";
                 begin
                     ItemSpecialityMast.Get(Rec.Code);
-                    if ItemSpecialityMgmt.SendItemSpecialityDetails(ItemSpecialityMast) then
+                    if ItemSpecialityMast.IsSent then
+                        Error('This record has already been sent.');
+
+                    if ItemSpecialityMgmt.SendItemSpecialityDetails(ItemSpecialityMast) then begin
+                        ItemSpecialityMast.Get(Rec.Code);
+                        ItemSpecialityMast."First Sent" := true;
+                        ItemSpecialityMast.Modify();
                         Message('Data sent successfully.')
-                    else
+                    end else
                         Message('Failed to send data.');
                 end;
             }

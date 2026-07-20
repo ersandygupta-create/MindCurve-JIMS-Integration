@@ -59,6 +59,11 @@ codeunit 50024 "E3 Medicine Sub-Category Mgmt."
         ItemObj.Add('segment1', '');
         ItemObj.Add('segment2', '');
         ItemObj.Add('segment3', '');
+        if not MedicineSubCatUpdateLog."First Sent" then
+            ItemObj.Add('d365_Status', 'New')
+        else
+            ItemObj.Add('d365_Status', 'Update');
+
 
         ItemArray.Add(ItemObj);
 

@@ -6,6 +6,7 @@ page 50147 "E3 material Type Master"
     SourceTable = "E3 Material Type Master";
     Editable = true;
     Caption = 'Material Type Master';
+    DeleteAllowed = false;
 
     layout
     {
@@ -34,7 +35,7 @@ page 50147 "E3 material Type Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                 }
                 field(Response; Rec.Response)
                 {
@@ -70,9 +71,15 @@ page 50147 "E3 material Type Master"
                     MaterialTypeMast: Record "E3 Material Type Master";
                 begin
                     MaterialTypeMast.Get(Rec.Code);
-                    if MaterialTypeMgmt.SendMaterialTypeDetails(MaterialTypeMast) then
+                    if MaterialTypeMast.IsSent then
+                        Error('This record has already been sent.');
+
+                    if MaterialTypeMgmt.SendMaterialTypeDetails(MaterialTypeMast) then begin
+                        MaterialTypeMast.Get(Rec.Code);
+                        MaterialTypeMast."First Sent" := true;
+                        MaterialTypeMast.Modify();
                         Message('Data sent successfully.')
-                    else
+                    end else
                         Message('Failed to send data.');
                 end;
             }

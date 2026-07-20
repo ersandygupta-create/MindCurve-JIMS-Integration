@@ -6,6 +6,7 @@ page 50022 "E3 Property List"
     SourceTable = "E3 Property List";
     Editable = true;
     Caption = 'Property List';
+    DeleteAllowed = false;
 
 
     layout
@@ -32,7 +33,7 @@ page 50022 "E3 Property List"
                 field(IsSent; Rec.IsSent)
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
-                    Editable = false;
+                    Editable = true;
                     ApplicationArea = All;
                 }
                 field(Response; Rec.Response)
@@ -74,9 +75,15 @@ page 50022 "E3 Property List"
                     E3ItemPropertyList: Record "E3 Property List";
                 begin
                     E3ItemPropertyList.Get(Rec.Code);
-                    if ItemPropertyListMgmt.SendItemPropertyListDetails(E3ItemPropertyList) then
+                    if E3ItemPropertyList.IsSent then
+                        Error('This record has already been sent.');
+
+                    if ItemPropertyListMgmt.SendItemPropertyListDetails(E3ItemPropertyList) then begin
+                        E3ItemPropertyList.Get(Rec.Code);
+                        E3ItemPropertyList."First Sent" := true;
+                        E3ItemPropertyList.Modify();
                         Message('Data sent successfully.')
-                    else
+                    end else
                         Message('Failed to send data.');
                 end;
             }

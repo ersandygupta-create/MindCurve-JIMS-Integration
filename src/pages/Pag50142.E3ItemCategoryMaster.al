@@ -6,6 +6,7 @@ page 50142 "E3 Item Category Master"
     SourceTable = "E3 Item Category Master";
     Editable = true;
     Caption = 'Item Category Master';
+    DeleteAllowed = false;
 
     layout
     {
@@ -44,7 +45,7 @@ page 50142 "E3 Item Category Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                 }
                 field(Response; Rec.Response)
                 {
@@ -80,9 +81,15 @@ page 50142 "E3 Item Category Master"
                     ItemCategoryMgmt: Codeunit "E3 Item Category Mgmt.";
                 begin
                     ItemCategory.Get(Rec.Code);
-                    if ItemCategoryMgmt.SendItemCategoryDetails(ItemCategory) then
+                    if ItemCategory.IsSent then
+                        Error('This record has already been sent.');
+
+                    if ItemCategoryMgmt.SendItemCategoryDetails(ItemCategory) then begin
+                        ItemCategory.Get(Rec.Code);
+                        ItemCategory."First Sent" := true;
+                        ItemCategory.Modify();
                         Message('Data sent successfully.')
-                    else
+                    end else
                         Message('Failed to send data.');
                 end;
 

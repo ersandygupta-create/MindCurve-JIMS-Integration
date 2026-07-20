@@ -60,6 +60,11 @@ codeunit 50021 "E3 Item Type Mgmt."
         ItemObj.Add('segment1', '');
         ItemObj.Add('segment2', '');
         ItemObj.Add('segment3', '');
+        if not ItemTypeUpdateLog."First Sent" then
+            ItemObj.Add('d365_Status', 'New')
+        else
+            ItemObj.Add('d365_Status', 'Update');
+
 
         ItemArray.Add(ItemObj);
 

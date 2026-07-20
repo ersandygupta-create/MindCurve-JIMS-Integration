@@ -5,6 +5,9 @@ page 50026 "E3 HSN/SAC Update Log"
     UsageCategory = Lists;
     SourceTable = "E3 HSN/SAC Log";
     Caption = 'HSN/SAC Log';
+    InsertAllowed = false;
+    ModifyAllowed = false;
+    DeleteAllowed = false;
 
     layout
     {

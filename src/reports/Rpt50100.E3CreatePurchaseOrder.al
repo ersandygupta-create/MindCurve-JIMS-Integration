@@ -12,20 +12,67 @@ report 50100 "E3 Create Purchase Order"
             RequestFilterFields = "Document No.";
 
             trigger OnAfterGetRecord()
+            var
+                RemainingQty: Decimal;
             begin
-                if "E3 Indent Line"."Requested Qty" = 0 then "E3 Indent Line".FieldError("Requested Qty");
+                if "E3 Indent Line"."Requested Qty" = 0 then
+                    "E3 Indent Line".FieldError("Requested Qty");
+
                 if ("E3 Indent Line"."Vendor No." <> '') and ("E3 Indent Line"."Vendor PO Creation" = true) then begin
-                    if LastSupplier <> "E3 Indent Line"."Vendor No." then CreatePurchaseHeader("E3 Indent Line", 1);
+
+                    // Calculate Remaining Qty
+                    RemainingQty := GetRemainingQty("E3 Indent Line");
+
+                    // Ordered Qty cannot exceed Remaining Qty
+                    if "E3 Indent Line"."Ordered Qty" > RemainingQty then
+                        Error(
+                            'Ordered Qty (%1) cannot be greater than Remaining Approved Qty (%2).',
+                            "E3 Indent Line"."Ordered Qty",
+                            RemainingQty);
+
+                    if LastSupplier <> "E3 Indent Line"."Vendor No." then
+                        CreatePurchaseHeader("E3 Indent Line", 1);
+
                     CreatePurchaseLines("E3 Indent Line", 1);
+
+                    // Update Remaining Qty
+                    "E3 Indent Line"."Created PO Qty" += PurchaseLine.Quantity;
                     "E3 Indent Line"."Purchase Order No." := PurchaseLine."Document No.";
                     "E3 Indent Line".Modify();
                 end;
+
                 ProcessingCompleted("E3 Indent Line");
             end;
 
             trigger OnPostDataItem()
+            var
+                IndentLineRec: Record "E3 Indent Line";
+                IndentHeaderRec: Record "E3 Indent Header";
             begin
                 DialogWindow.Close();
+
+                // Update Release Indent based on remaining quantity
+                IndentHeaderRec.Reset();
+                IndentHeaderRec.SetRange("Document No.", "E3 Indent Line"."Document No.");
+
+                if IndentHeaderRec.FindFirst() then begin
+                    IndentHeaderRec."Release Indent" := true;
+
+                    IndentLineRec.Reset();
+                    IndentLineRec.SetRange("Document No.", IndentHeaderRec."Document No.");
+
+                    if IndentLineRec.FindSet() then
+                        repeat
+                            if GetRemainingQty(IndentLineRec) > 0 then begin
+                                // Partial PO created
+                                IndentHeaderRec."Release Indent" := false;
+                                break;
+                            end;
+                        until IndentLineRec.Next() = 0;
+
+                    IndentHeaderRec.Modify(true);
+                end;
+
                 Message('Purchase Order created for the selected records.');
             end;
 
@@ -45,7 +92,10 @@ report 50100 "E3 Create Purchase Order"
     begin
         if (IndentLine."Vendor No." <> '') and (IndentLine."Vendor PO Creation" = true) then begin
             DialogWindow.Update(2, IndentLine."No.");
-            IndentLine.SetPurchased(PurchaseHeader."No.");
+
+            // Only mark as purchased when fully ordered
+            if GetRemainingQty(IndentLine) = 0 then
+                IndentLine.SetPurchased(PurchaseHeader."No.");
         end;
     end;
 
@@ -54,7 +104,6 @@ report 50100 "E3 Create Purchase Order"
         RequistionHeader: Record "E3 Indent Header";
         NoSeriesManagement: Codeunit "No. Series";
         RecordLinkManagement: Codeunit "Record Link Management";
-        Attachement: Codeunit "Document Attachment Mgmt";
     begin
         PurchaseHeader.Init();
         PurchaseHeader."Document Type" := PurchaseHeader."Document Type"::Order;
@@ -65,20 +114,17 @@ report 50100 "E3 Create Purchase Order"
             1:
                 PurchaseHeader.Validate("Buy-from Vendor No.", IndentLine."Vendor No.");
         End;
-        PurchaseHeader."Location Code" := IndentLine."Location Code";
-        PurchaseHeader."Delivery Terms" := IndentLine."Delivery Terms";
-        PurchaseHeader."Payment Terms" := IndentLine."Payment Terms";
+        PurchaseHeader."Location Code" := IndentLine."Shortcut Dimension 1 Code";
         Case PurchHeaderType of
             1:
                 PurchaseHeader.Validate(PurchaseHeader."Currency Code", IndentLine."Currency Code");
         end;
-        PurchaseHeader.Validate("Responsibility Center", IndentLine."Shortcut Dimension 1 Code");
+        //PurchaseHeader."Responsibility Center" := IndentLine."Shortcut Dimension 1 Code";
         PurchaseHeader.Validate(PurchaseHeader."Shortcut Dimension 1 Code", IndentHeader."Shortcut Dimension 1 Code");
         PurchaseHeader.Validate(PurchaseHeader."Shortcut Dimension 2 Code", IndentHeader."Shortcut Dimension 2 Code");
         PurchaseHeader."E3 Capex Type" := IndentHeader."Procurement Type";
-
         RequistionHeader.Get(IndentLine."Document No.");
-        //RecordLinkManagement.CopyLinks(RequistionHeader, PurchaseHeader);
+        RecordLinkManagement.CopyLinks(RequistionHeader, PurchaseHeader);
         PurchaseHeader.Modify();
         Case PurchHeaderType of
             1:
@@ -116,7 +162,7 @@ report 50100 "E3 Create Purchase Order"
         end;
         PurchaseLine.Validate(Quantity, IndentLine."Ordered Qty");
         PurchaseLine.Validate("Unit of Measure Code", IndentLine."Unit of Measure");
-        PurchaseLine."Location Code" := IndentLine."Location Code";
+        PurchaseLine.Validate("Location Code", IndentLine."Location Code");
         Case PurchLineType of
             1:
                 PurchaseLine.Validate("Direct Unit Cost", IndentLine."Quotation Price");
@@ -126,7 +172,6 @@ report 50100 "E3 Create Purchase Order"
         PurchaseLine.Validate(PurchaseLine."Shortcut Dimension 1 Code", IndentLine."Shortcut Dimension 1 Code");
         PurchaseLine.Validate(PurchaseLine."Shortcut Dimension 2 Code");
         PurchaseLine.Validate("Requested Receipt Date", IndentLine."Requested Received Date");
-        PurchaseLine.Cretical := IndentLine."Cretical Item";
         Case PurchLineType of
             1:
                 PurchaseLine.Validate("Line Discount %", IndentLine."Discount %");
@@ -135,9 +180,46 @@ report 50100 "E3 Create Purchase Order"
 
         PurchaseLine."Vendor Item No." := IndentLine."No.";
         PurchaseLine.Insert(true);
-        "E3 Indent Line"."Purchase Order No." := PurchaseLine."Document No.";
-        "E3 Indent Line".Released := true;
-        "E3 Indent Line".Modify(true);
+    end;
+
+    local procedure GetRemainingQty(IndentLine: Record "E3 Indent Line"): Decimal
+    var
+        PurchLine: Record "Purchase Line";
+        TotalOrderedQty: Decimal;
+    begin
+        TotalOrderedQty := 0;
+
+        PurchLine.Reset();
+        PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+        PurchLine.SetRange("Indent No.", IndentLine."Document No.");
+        PurchLine.SetRange("Indent Line No.", IndentLine."Line No.");
+
+        if PurchLine.FindSet() then
+            repeat
+                TotalOrderedQty += PurchLine.Quantity;
+            until PurchLine.Next() = 0;
+
+        exit(IndentLine."Approved Qty" - TotalOrderedQty);
+    end;
+
+    local procedure GetOrderedQty(IndentLine: Record "E3 Indent Line"): Decimal
+    var
+        PurchLine: Record "Purchase Line";
+        TotalOrderedQty: Decimal;
+    begin
+        TotalOrderedQty := 0;
+
+        PurchLine.Reset();
+        PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+        PurchLine.SetRange("Indent No.", IndentLine."Document No.");
+        PurchLine.SetRange("Indent Line No.", IndentLine."Line No.");
+
+        if PurchLine.FindSet() then
+            repeat
+                TotalOrderedQty += PurchLine.Quantity;
+            until PurchLine.Next() = 0;
+
+        exit(TotalOrderedQty);
     end;
 
     var

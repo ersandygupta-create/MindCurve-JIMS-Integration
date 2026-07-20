@@ -1,4 +1,4 @@
-page 50154 "E3 Indent Line Subform"
+page 50168 "E3 HIS Indent Line Subform"
 {
     PageType = ListPart;
     SourceTable = "E3 Indent Line";
@@ -41,6 +41,7 @@ page 50154 "E3 Indent Line Subform"
                 field("Cretical Item"; Rec."Cretical Item")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     Editable = IsLineEditable;
                 }
                 field("Requested Qty"; Rec."Requested Qty")
@@ -55,9 +56,16 @@ page 50154 "E3 Indent Line Subform"
                 field("Unit Cost"; Rec."Unit Cost")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     Editable = IsLineEditable;
                 }
                 field(Amount; Rec.Amount)
+                {
+                    ApplicationArea = All;
+                    Visible = false;
+                    Editable = IsLineEditable;
+                }
+                field("Item Make Code"; Rec."Item Make Code")
                 {
                     ApplicationArea = All;
                     Editable = IsLineEditable;
@@ -66,11 +74,6 @@ page 50154 "E3 Indent Line Subform"
                 {
                     ApplicationArea = All;
                     Editable = false;
-                }
-                field("Item Make Code"; Rec."Item Make Code")
-                {
-                    ApplicationArea = All;
-                    Editable = IsLineEditable;
                 }
                 field("Requested Received Date"; Rec."Requested Received Date")
                 {

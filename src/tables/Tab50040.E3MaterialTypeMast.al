@@ -10,6 +10,11 @@ table 50040 "E3 Material Type Master"
         {
             Caption = 'Code';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if (xRec.Code <> '') and (Rec.Code <> xRec.Code) then
+                    Error('Code cannot be modified once it has been assigned.');
+            end;
         }
         field(2; Name; Text[60])
         {
@@ -35,6 +40,11 @@ table 50040 "E3 Material Type Master"
         {
             Caption = 'No. Series';
             Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(7; "First Sent"; Boolean)
+        {
+            Caption = 'First Sent';
             DataClassification = CustomerContent;
         }
 
@@ -65,6 +75,7 @@ table 50040 "E3 Material Type Master"
         InventorySetup: Record "Inventory Setup";
         NoSeries: Codeunit "No. Series";
     begin
+        TestField(Name);
         InventorySetup.Get();
         InventorySetup.TestField("Material Type Nos.");
 

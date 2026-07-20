@@ -61,6 +61,10 @@ codeunit 50031 "E3 Item Make Master Mgmt."
         ItemObj.Add('segment1', Format(ItemMakeMastUpdateLog."Make Type"));
         ItemObj.Add('segment2', '');
         ItemObj.Add('segment3', '');
+        if not ItemMakeMastUpdateLog."First Sent" then
+            ItemObj.Add('d365_Status', 'New')
+        else
+            ItemObj.Add('d365_Status', 'Update');
 
         ItemArray.Add(ItemObj);
 

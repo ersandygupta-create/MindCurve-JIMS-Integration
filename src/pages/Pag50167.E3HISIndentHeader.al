@@ -1,4 +1,4 @@
-page 50153 "E3 Indent Card"
+page 50167 "E3 HIS Indent Card"
 {
     PageType = Card;
     ApplicationArea = All;
@@ -30,6 +30,7 @@ page 50153 "E3 Indent Card"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the Source Type of the field.';
+                    Visible = false;
                 }
                 field("Indentor Code"; Rec."Indenter Code")
                 {
@@ -162,7 +163,7 @@ page 50153 "E3 Indent Card"
                     Editable = false;
                 }
             }
-            part(IndentLines; "E3 Indent Line Subform")
+            part(IndentLines; "E3 HIS Indent Line Subform")
             {
                 ApplicationArea = All;
                 Caption = 'Indent Line Subform';
@@ -256,18 +257,6 @@ page 50153 "E3 Indent Card"
                           order(Ascending)
                           where("Table ID" = const(50051));
             }
-            action(ShortCloseIndent)
-            {
-                Caption = 'Short Closed Indent';
-                Image = Close;
-                ToolTip = 'Executes the Short Closed Indent action.';
-
-                trigger OnAction()
-                begin
-                    Rec.ShortCloseIndent(Rec);
-                end;
-            }
-
         }
     }
     var
@@ -277,13 +266,14 @@ page 50153 "E3 Indent Card"
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
         Rec."Request Date" := WorkDate();
-        Rec."Source Type" := "E3 Indent Source Type"::D365
+        Rec."Source Type" := Rec."Source Type"::HIS
     end;
 
     trigger OnOpenPage()
+    var
+        IsEditable: Boolean;
     begin
-
-        Rec."Source Type" := Rec."Source Type"::D365;
+        Rec."Source Type" := "E3 Indent Source Type"::HIS;
         IsEditable := Rec.Status <> Rec.Status::Approved;
         SetPageEditable();
     end;

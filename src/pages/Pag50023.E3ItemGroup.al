@@ -6,6 +6,7 @@ page 50023 "E3 Item Group"
     SourceTable = "E3 Item Group";
     Editable = true;
     Caption = 'Item Group';
+    DeleteAllowed = false;
 
     layout
     {
@@ -44,7 +45,7 @@ page 50023 "E3 Item Group"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                 }
                 field(Response; Rec.Response)
                 {
@@ -80,7 +81,16 @@ page 50023 "E3 Item Group"
                     E3ItemType: Record "E3 Item Type";
                 begin
                     if E3ItemType.Get(Rec.Code) then
-                        E3APIIntegrationMgmt.SendItemTypeDetails(E3ItemType);
+                        if E3ItemType.IsSent then
+                            Error('This record has already been sent.');
+
+                    if E3APIIntegrationMgmt.SendItemTypeDetails(E3ItemType) then begin
+                        E3ItemType.Get(Rec.Code);
+                        E3ItemType."First Sent" := true;
+                        E3ItemType.Modify();
+                        Message('Data sent successfully.');
+                    end else
+                        Message('Failed to send data.');
                 end;
             }
         }

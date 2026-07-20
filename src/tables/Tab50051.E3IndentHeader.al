@@ -11,39 +11,39 @@ table 50051 "E3 Indent Header"
             DataClassification = ToBeClassified;
 
         }
-        field(2; "Requested By"; Text[60])
+        field(2; "Prepared By"; Text[60])
         {
-            Caption = 'Requested By';
+            Caption = 'Prepared By';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Indenter Master"."Indenter Name" where("Indenter Type" = filter("Requested By"));
+            //TableRelation = "E3 Indenter Master"."Indenter Name" where("Indenter Type" = filter("Requested By"));
 
-            trigger OnValidate()
-            var
-                IndenterMaster: Record "E3 Indenter Master";
-                IndentLine: Record "E3 Indent Line";
-            begin
-                Clear("Shortcut Dimension 2 Code");
-                Clear("Department Name");
-                Clear("Shortcut Dimension 1 Code");
-                Clear("Business Unit Name");
-                Clear("Location Code");
-                Clear("Location Name");
+            // trigger OnValidate()
+            // var
+            //     IndenterMaster: Record "E3 Indenter Master";
+            //     IndentLine: Record "E3 Indent Line";
+            // begin
+            //     Clear("Shortcut Dimension 2 Code");
+            //     Clear("Department Name");
+            //     Clear("Shortcut Dimension 1 Code");
+            //     Clear("Business Unit Name");
+            //     Clear("Location Code");
+            //     Clear("Location Name");
 
-                IndenterMaster.Reset();
-                IndenterMaster.SetRange("Indenter Name", "Requested By");
-                IndenterMaster.SetRange("Indenter Type", IndenterMaster."Indenter Type"::"Requested By");
+            //     IndenterMaster.Reset();
+            //     IndenterMaster.SetRange("Indenter Name", "Prepared By");
+            //     IndenterMaster.SetRange("Indenter Type", IndenterMaster."Indenter Type"::"Requested By");
 
-                if IndenterMaster.FindFirst() then begin
-                    Validate("Shortcut Dimension 2 Code", IndenterMaster."Department Code");
-                    "Department Name" := IndenterMaster."Department Name";
+            //     if IndenterMaster.FindFirst() then begin
+            //         Validate("Shortcut Dimension 2 Code", IndenterMaster."Department Code");
+            //         "Department Name" := IndenterMaster."Department Name";
 
-                    Validate("Shortcut Dimension 1 Code", IndenterMaster."Business Unit Code");
-                    "Business Unit Name" := IndenterMaster."Business Unit Name";
+            //         Validate("Shortcut Dimension 1 Code", IndenterMaster."Business Unit Code");
+            //         "Business Unit Name" := IndenterMaster."Business Unit Name";
 
-                    Validate("Location Code", IndenterMaster."Default Location Code");
-                    "Location Name" := IndenterMaster."Default Location Name";
-                end;
-            end;
+            //         Validate("Location Code", IndenterMaster."Default Location Code");
+            //         "Location Name" := IndenterMaster."Default Location Name";
+            //     end;
+            // end;
         }
         field(3; "Request Date"; Date)
         {
@@ -52,7 +52,7 @@ table 50051 "E3 Indent Header"
         }
         field(4; Status; Option)
         {
-            OptionMembers = Open,"Pending Approval",Approved,Rejected;
+            OptionMembers = Open,"Pending Approval",Approved,Rejected,Closed;
             Caption = 'Status';
         }
         field(5; "Shortcut Dimension 1 Code"; Code[10])
@@ -79,11 +79,11 @@ table 50051 "E3 Indent Header"
 
             end;
         }
-        field(6; "Shortcut Dimension 2 Code"; Code[10])
+        field(6; "Shortcut Dimension 2 Code"; Code[20])
         {
             Caption = 'Department Code';
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
-            ValidateTableRelation = false;
+            ValidateTableRelation = true;
             DataClassification = ToBeClassified;
             Editable = true;
 
@@ -154,9 +154,9 @@ table 50051 "E3 Indent Header"
             Editable = true;
             DataClassification = CustomerContent;
         }
-        field(12; "Expected Receive Date"; Date)
+        field(12; "Prepared Date"; Date)
         {
-            Caption = 'Expected Receive Date';
+            Caption = 'Prepared Date';
             DataClassification = CustomerContent;
             trigger OnValidate()
             var
@@ -167,7 +167,7 @@ table 50051 "E3 Indent Header"
 
                 if IndentLine.FindSet() then
                     repeat
-                        IndentLine."Requested Received Date" := "Expected Receive Date";
+                        IndentLine."Requested Received Date" := "Prepared Date";
                         IndentLine.Modify(true);
                     until IndentLine.Next() = 0;
             end;
@@ -201,35 +201,35 @@ table 50051 "E3 Indent Header"
             Editable = true;
             DataClassification = CustomerContent;
         }
-        field(16; Indenter; Text[60])
+        field(16; "Indenter Code"; Text[60])
         {
-            Caption = 'Indenter';
+            Caption = 'Indenter Code';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Indenter Master"."Indenter Name" where("Indenter Type" = filter(Indenter));
-            trigger OnValidate()
-            var
-                IndenterMaster: Record "E3 Indenter Master";
-            begin
-                Clear("Indenter Name");
-                Clear("To Location Code");
-                Clear("To Location Name");
-                Clear("To Department Code");
-                Clear("To Department Name");
+            //TableRelation = "E3 Indenter Master"."Indenter Name" where("Indenter Type" = filter(Indenter));
+            // trigger OnValidate()
+            // var
+            //     IndenterMaster: Record "E3 Indenter Master";
+            // begin
+            //     Clear("Indenter Name");
+            //     Clear("To Location Code");
+            //     Clear("To Location Name");
+            //     Clear("To Department Code");
+            //     Clear("To Department Name");
 
-                IndenterMaster.Reset();
-                IndenterMaster.SetRange("Indenter Name", Indenter);
-                IndenterMaster.SetRange("Indenter Type", IndenterMaster."Indenter Type"::Indenter);
+            //     IndenterMaster.Reset();
+            //     IndenterMaster.SetRange("Indenter Name", "Indenter Code");
+            //     IndenterMaster.SetRange("Indenter Type", IndenterMaster."Indenter Type"::Indenter);
 
-                if IndenterMaster.FindFirst() then begin
-                    "Indenter Name" := IndenterMaster."Indenter Name";
+            //     if IndenterMaster.FindFirst() then begin
+            //         "Indenter Name" := IndenterMaster."Indenter Name";
 
-                    "To Location Code" := IndenterMaster."Default Location Code";
-                    "To Location Name" := IndenterMaster."Default Location Name";
+            //         "To Location Code" := IndenterMaster."Default Location Code";
+            //         "To Location Name" := IndenterMaster."Default Location Name";
 
-                    "To Department Code" := IndenterMaster."Department Code";
-                    "To Department Name" := IndenterMaster."Department Name";
-                end;
-            end;
+            //         "To Department Code" := IndenterMaster."Department Code";
+            //         "To Department Name" := IndenterMaster."Department Name";
+            //     end;
+            // end;
         }
         field(17; Remarks; Text[100])
         {
@@ -343,6 +343,17 @@ table 50051 "E3 Indent Header"
             Caption = 'Release Indent';
             DataClassification = CustomerContent;
         }
+        field(32; "Source Type"; Enum "E3 Indent Source Type")
+        {
+            Caption = 'Source Type';
+            DataClassification = CustomerContent;
+        }
+        field(33; "Short Close Indent"; Boolean)
+        {
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
+
     }
 
     keys
@@ -422,12 +433,12 @@ table 50051 "E3 Indent Header"
 
     trigger OnDelete()
     var
-        RecordRequisitionLine: Record "E3 Indent Line";
+        RecordIndentLine: Record "E3 Indent Line";
     begin
         Testfield(Status, Status::Open);
-        RecordRequisitionLine.Reset();
-        RecordRequisitionLine.SetRange("Document No.", "Document No.");
-        RecordRequisitionLine.DeleteAll(true);
+        RecordIndentLine.Reset();
+        RecordIndentLine.SetRange("Document No.", "Document No.");
+        RecordIndentLine.DeleteAll(true);
     end;
 
     trigger OnRename()
@@ -444,5 +455,53 @@ table 50051 "E3 Indent Header"
         exit(DocumentAttachment.IsEmpty());
     end;
 
+    procedure ShortCloseIndent(var IndentHeader: Record "E3 Indent Header")
+    var
+        IndentLine: Record "E3 Indent Line";
+        UserSetup: Record "User Setup";
+        ShortCloseLbl: Label 'Do you want to short close this indent?';
+        AlreadyClosedLbl: Label 'Indent is already short closed.';
+        SuccessLbl: Label 'Indent No. %1 has been short closed.';
+        UnauthorizedLbl: Label 'User %1 is not authorized to Short Close Indent.';
+    begin
+        // Check authorization
+        UserSetup.Get(UserId);
+        if not UserSetup."Short Close Indent" then
+            Error(UnauthorizedLbl, UserId);
+
+        // Check if already short closed
+        if IndentHeader."Short Close Indent" then
+            Error(AlreadyClosedLbl);
+
+        // Check lines exist
+        IndentLine.Reset();
+        IndentLine.SetRange("Document No.", IndentHeader."Document No.");
+        if not IndentLine.FindFirst() then
+            Error('No indent lines exist.');
+
+        // Confirmation
+        if not Confirm(ShortCloseLbl, false) then
+            exit;
+
+        // Update Header
+        IndentHeader."Short Close Indent" := true;
+        IndentHeader.Status := IndentHeader.Status::Closed;
+        IndentHeader.Modify(true);
+
+        // Update Lines
+        IndentLine.Reset();
+        IndentLine.SetRange("Document No.", IndentHeader."Document No.");
+
+        if IndentLine.FindSet() then
+            repeat
+                IndentLine."Short Close" := true;
+
+                // Optional: Close remaining quantity
+                IndentLine."Approved Qty" := 0;
+                IndentLine.Modify(true);
+            until IndentLine.Next() = 0;
+
+        Message(SuccessLbl, IndentHeader."Document No.");
+    end;
 
 }

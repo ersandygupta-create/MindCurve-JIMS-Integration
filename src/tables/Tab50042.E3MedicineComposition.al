@@ -15,6 +15,8 @@ table 50042 "E3 Medicine Composition"
             var
                 ItemRec: Record Item;
             begin
+                if (xRec.Code <> '') and (Rec.Code <> xRec.Code) then
+                    Error('Code cannot be modified once it has been assigned.');
                 if Code = '' then begin
                     "Item Name" := '';
                     "Unit of Measure" := '';
@@ -96,6 +98,12 @@ table 50042 "E3 Medicine Composition"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(12; "First Sent"; Boolean)
+        {
+            Caption = 'First Sent';
+            DataClassification = CustomerContent;
+        }
+
 
     }
     keys
@@ -107,6 +115,7 @@ table 50042 "E3 Medicine Composition"
     }
     trigger OnInsert()
     begin
+        TestField("Item Name");
         if "Line No." = 0 then
             "Line No." := GetNextLineNo();
     end;

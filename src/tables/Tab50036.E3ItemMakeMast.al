@@ -10,6 +10,11 @@ table 50036 "E3 Item Make Master"
         {
             Caption = 'Code';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if (xRec.Code <> '') and (Rec.Code <> xRec.Code) then
+                    Error('Code cannot be modified once it has been assigned.');
+            end;
         }
         field(2; "Company Name"; Text[60])
         {
@@ -52,6 +57,11 @@ table 50036 "E3 Item Make Master"
             Editable = false;
             DataClassification = CustomerContent;
         }
+        field(10; "First Sent"; Boolean)
+        {
+            Caption = 'First Sent';
+            DataClassification = CustomerContent;
+        }
 
     }
     keys
@@ -66,6 +76,7 @@ table 50036 "E3 Item Make Master"
         InventorySetup: Record "Inventory Setup";
         NoSeries: Codeunit "No. Series";
     begin
+        TestField("Company Name");
         if Code = '' then begin
             InventorySetup.Get();
             InventorySetup.TestField("Item Make Nos.");

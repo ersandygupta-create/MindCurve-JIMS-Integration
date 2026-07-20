@@ -45,6 +45,16 @@ pageextension 50023 "E3 User Setup Ext" extends "User Setup"
                 Visible = true;
                 ToolTip = 'Specifies the value of the Vendor Ledger View field.';
             }
+            field("Short Close Indent"; Rec."Short Close Indent")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Short Closed Indent field.';
+            }
+            field("HSN Master"; Rec."HSN Master")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the HSN Master field.';
+            }
 
         }
     }

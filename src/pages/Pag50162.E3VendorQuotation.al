@@ -32,6 +32,12 @@ page 50162 "E3 Vendor Quotation"
                     Visible = false;
                     ToolTip = 'Specifies the line number of the quotation.';
                 }
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                    Editable = true;
+                    ToolTip = 'Specifies the line Shortcut Dimension 1 Code of the quotation.';
+                }
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;
@@ -71,6 +77,10 @@ page 50162 "E3 Vendor Quotation"
                     Editable = false;
                     Caption = 'Amount';
                     ToolTip = 'Specifies the required Amount.';
+                }
+                field("Created PO Qty"; Rec."Created PO Qty")
+                {
+                    ToolTip = 'Specifies the required Created PO Qty.';
                 }
                 field("Approved Qty"; Rec."Approved Qty")
                 {
@@ -214,44 +224,55 @@ page 50162 "E3 Vendor Quotation"
             }
         }
     }
-    local procedure CreateSplitLines(var SelectedLine: Record "E3 Indent Line"; SplitQty: Integer)
+    local procedure CreateSplitLines(var SelectedLine: Record "E3 Indent Line"; SplitQty: Decimal)
     var
         NewLine: Record "E3 Indent Line";
         LastLine: Record "E3 Indent Line";
         NextLineNo: Integer;
-        i: Integer;
     begin
-        // Get Last Line No.
+        // Validation
+        if SplitQty <= 0 then
+            Error('Split Qty must be greater than zero.');
+
+        if SplitQty > SelectedLine."Approved Qty" then
+            Error(
+                'Split Qty (%1) cannot be greater than Approved Qty (%2).',
+                SplitQty,
+                SelectedLine."Approved Qty");
+
+        // Get Next Line No.
         LastLine.Reset();
         LastLine.SetRange("Document No.", SelectedLine."Document No.");
-
         if LastLine.FindLast() then
-            NextLineNo := LastLine."Line No."
+            NextLineNo := LastLine."Line No." + 10000
         else
-            NextLineNo := 0;
+            NextLineNo := 10000;
 
-        // Create Split Lines
-        for i := 1 to SplitQty do begin
-            NextLineNo += 10000;
+        // Create New Split Line
+        NewLine.Init();
+        NewLine.TransferFields(SelectedLine);
 
-            NewLine.Init();
-            NewLine.TransferFields(SelectedLine);
+        NewLine."Line No." := NextLineNo;
+        NewLine.Validate("Requested Qty", SplitQty);
+        NewLine.Validate("Approved Qty", SplitQty);
+        //NewLine.Validate("Ordered Qty", SplitQty);
 
-            NewLine."Line No." := NextLineNo;
+        NewLine."Split Line" := false;
+        NewLine."SplitedLines" := true;
 
-            // Qty per split line
-            NewLine."Requested Qty" := 1;
-            NewLine."Approved Qty" := 1;
-            NewLine."Ordered Qty" := 1;
+        NewLine.Insert(true);
 
-            // Mark as split line
-            if SelectedLine."Split Line" then
-                NewLine."Split Line" := false
-            else
-                NewLine."Split Line" := true;
+        // Update Original Line
+        SelectedLine.Validate("Requested Qty", SelectedLine."Requested Qty" - SplitQty);
+        SelectedLine.Validate("Approved Qty", SelectedLine."Approved Qty" - SplitQty);
+        SelectedLine.Validate("Ordered Qty", SelectedLine."Approved Qty" - SplitQty);
 
-            NewLine.Insert(true);
-        end;
+        SelectedLine."Split Line" := true;
+        SelectedLine."SplitedLines" := false;
+
+        SelectedLine.Modify(true);
+
+        Message('Split line created successfully.');
     end;
 
     trigger OnAfterGetCurrRecord()

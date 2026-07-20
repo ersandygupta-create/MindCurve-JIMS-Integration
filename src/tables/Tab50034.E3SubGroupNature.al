@@ -10,6 +10,11 @@ table 50034 "E3 Sub-Group Nature"
         {
             Caption = 'Code';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if (xRec.Code <> 0) and (Rec.Code <> xRec.Code) then
+                    Error('Code cannot be modified once it has been assigned.');
+            end;
         }
         field(2; Name; Text[60])
         {
@@ -36,6 +41,11 @@ table 50034 "E3 Sub-Group Nature"
             Caption = 'Last Sent';
             DataClassification = CustomerContent;
         }
+        field(7; "First Sent"; Boolean)
+        {
+            Caption = 'First Sent';
+            DataClassification = CustomerContent;
+        }
 
     }
     keys
@@ -45,6 +55,10 @@ table 50034 "E3 Sub-Group Nature"
             Clustered = true;
         }
     }
+    trigger OnInsert()
+    begin
+        TestField(Name);
+    end;
 
 }
 

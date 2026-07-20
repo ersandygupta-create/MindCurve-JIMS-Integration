@@ -3,6 +3,7 @@ page 50137 "E3 Item Model Master"
     PageType = List;
     ApplicationArea = All;
     UsageCategory = Lists;
+    DeleteAllowed = false;
     SourceTable = "E3 Item Model Master";
     Editable = true;
     Caption = 'Item Model';
@@ -18,6 +19,7 @@ page 50137 "E3 Item Model Master"
                     ToolTip = 'Specifies the value of the Code field';
                     ApplicationArea = All;
                     AssistEdit = true;
+
                     trigger OnAssistEdit()
                     begin
                         if Rec.AssistEdit(xRec) then
@@ -28,12 +30,13 @@ page 50137 "E3 Item Model Master"
                 {
                     ToolTip = 'Specifies the value of the Name field';
                     ApplicationArea = All;
+                    ShowMandatory = true;
                 }
                 field(IsSent; Rec.IsSent)
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                 }
                 field(Response; Rec.Response)
                 {
@@ -69,9 +72,15 @@ page 50137 "E3 Item Model Master"
                     ItemModelMst: Record "E3 Item Model Master";
                 begin
                     ItemModelMst.Get(Rec.Code);
-                    if E3ItemModelMgmt.SendItemModelDetails(ItemModelMst) then
-                        Message('Data sent successfully.')
-                    else
+                    if ItemModelMst.IsSent then
+                        Error('This record has already been sent.');
+
+                    if E3ItemModelMgmt.SendItemModelDetails(ItemModelMst) then begin
+                        ItemModelMst.Get(Rec.Code);
+                        ItemModelMst."First Sent" := true;
+                        ItemModelMst.Modify();
+                        Message('Data sent successfully.');
+                    end else
                         Message('Failed to send data.');
                 end;
             }

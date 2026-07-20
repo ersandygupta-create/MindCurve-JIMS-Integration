@@ -6,6 +6,7 @@ page 50144 "E3 Medicine Component Master"
     SourceTable = "E3 Medicine Component Master";
     Editable = true;
     Caption = 'Medicine Component Master';
+    DeleteAllowed = false;
 
     layout
     {
@@ -44,7 +45,7 @@ page 50144 "E3 Medicine Component Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                 }
                 field(Response; Rec.Response)
                 {
@@ -80,9 +81,15 @@ page 50144 "E3 Medicine Component Master"
                     MedicineCompMast: Record "E3 Medicine Component Master";
                 begin
                     MedicineCompMast.Get(Rec.Code);
-                    if MedicineCompMastMgmt.SendMedicineCompMastDetails(MedicineCompMast) then
+                    if MedicineCompMast.IsSent then
+                        Error('This record has already been sent.');
+
+                    if MedicineCompMastMgmt.SendMedicineCompMastDetails(MedicineCompMast) then begin
+                        MedicineCompMast.Get(Rec.Code);
+                        MedicineCompMast."First Sent" := true;
+                        MedicineCompMast.Modify(false);
                         Message('Data sent successfully.')
-                    else
+                    end else
                         Message('Failed to send data.');
                 end;
             }

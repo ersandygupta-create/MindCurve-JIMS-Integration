@@ -28,6 +28,7 @@ pageextension 50080 "E3 Item List Ext" extends "Item List"
                 Caption = 'Send All to JIMS';
                 Image = SendTo;
                 Promoted = true;
+                Visible = false;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
 
@@ -37,11 +38,11 @@ pageextension 50080 "E3 Item List Ext" extends "Item List"
                     E3IntegrationMgmt: Codeunit "E3 Item Integration Mgmt.";
                     CountItem: Integer;
                 begin
-                    //CurrPage.SetSelectionFilter(ItemRec);
+                    CurrPage.SetSelectionFilter(ItemRec);
                     if not Confirm('Do you want to send all items to JIMS?', false) then
                         exit;
 
-                    //CountItem := 0;
+                    CountItem := 0;
                     ItemRec.Reset();
 
                     if ItemRec.FindSet() then
@@ -51,6 +52,24 @@ pageextension 50080 "E3 Item List Ext" extends "Item List"
                         until ItemRec.Next() = 0;
 
                     //Message('%1 items have been added to the Item Log.', CountItem);
+                end;
+            }
+            action(ImportItems)
+            {
+                Caption = 'Import Items';
+                ApplicationArea = All;
+                Image = Import;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Import Items from an Excel file.';
+
+                trigger OnAction()
+                var
+                    ItemImportMgmt: Codeunit "E3 Item Import Mgmt";
+                begin
+                    ItemImportMgmt.ImportItems();
+
+                    CurrPage.Update(false);
                 end;
             }
         }

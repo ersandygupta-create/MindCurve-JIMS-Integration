@@ -6,6 +6,7 @@ page 50141 "E3 Sub Group Nature"
     SourceTable = "E3 Sub-Group Nature";
     Editable = true;
     Caption = 'Sub Group Nature';
+    DeleteAllowed = false;
 
     layout
     {
@@ -27,7 +28,7 @@ page 50141 "E3 Sub Group Nature"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                 }
                 field(Response; Rec.Response)
                 {
@@ -63,9 +64,15 @@ page 50141 "E3 Sub Group Nature"
                     ItemSubGroupNature: Record "E3 Sub-Group Nature";
                 begin
                     ItemSubGroupNature.Get(Rec.Code);
-                    if ItemSubGroupNatureMgmt.SendSubGroupNatureDetails(ItemSubGroupNature) then
+                    if ItemSubGroupNature.IsSent then
+                        Error('This record has already been sent.');
+
+                    if ItemSubGroupNatureMgmt.SendSubGroupNatureDetails(ItemSubGroupNature) then begin
+                        ItemSubGroupNature.Get(Rec.Code);
+                        ItemSubGroupNature."First Sent" := true;
+                        ItemSubGroupNature.Modify();
                         Message('Data sent successfully.')
-                    else
+                    end else
                         Message('Failed to send data.');
                 end;
             }

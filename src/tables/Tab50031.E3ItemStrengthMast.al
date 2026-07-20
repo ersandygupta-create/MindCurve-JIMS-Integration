@@ -10,6 +10,11 @@ table 50031 "E3 Item Strength Master"
         {
             Caption = 'Code';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if (xRec.Code <> '') and (Rec.Code <> xRec.Code) then
+                    Error('Code cannot be modified once it has been assigned.');
+            end;
         }
         field(2; Name; Text[60])
         {
@@ -36,6 +41,11 @@ table 50031 "E3 Item Strength Master"
             Caption = 'No. Series';
             DataClassification = CustomerContent;
         }
+        field(7; "First Sent"; Boolean)
+        {
+            Caption = 'First Sent';
+            DataClassification = CustomerContent;
+        }
 
     }
     keys
@@ -50,6 +60,7 @@ table 50031 "E3 Item Strength Master"
         InventorySetup: Record "Inventory Setup";
         NoSeries: Codeunit "No. Series";
     begin
+        TestField(Name);
         if Code = '' then begin
             InventorySetup.Get();
             InventorySetup.TestField("Item Strength Nos.");

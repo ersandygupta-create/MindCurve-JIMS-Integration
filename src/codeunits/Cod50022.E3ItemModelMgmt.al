@@ -59,6 +59,10 @@ codeunit 50022 "E3 Item Model Mgmt."
         ItemObj.Add('segment1', '');
         ItemObj.Add('segment2', '');
         ItemObj.Add('segment3', '');
+        if not ItemModelUpdateLog."First Sent" then
+            ItemObj.Add('d365_Status', 'New')
+        else
+            ItemObj.Add('d365_Status', 'Update');
 
         ItemArray.Add(ItemObj);
 

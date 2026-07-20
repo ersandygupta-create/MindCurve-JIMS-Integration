@@ -24,11 +24,11 @@ page 50161 "E3 Quotation Card"
                     Editable = HeaderEditable;
                     ToolTip = 'Specifies the indent number of the Indent No.';
                 }
-                field("Requested By"; Rec."Requested By")
+                field("Prepared By"; Rec."Prepared By")
                 {
                     ApplicationArea = All;
                     Editable = HeaderEditable;
-                    ToolTip = 'Specifies the requested by of the Requested By.';
+                    ToolTip = 'Specifies the Prepared by of the field.';
                 }
                 field("Request Date"; Rec."Request Date")
                 {
@@ -55,11 +55,11 @@ page 50161 "E3 Quotation Card"
                     ToolTip = 'Specifies the status of the Status.';
                 }
 
-                field("Expected Receive Date"; Rec."Expected Receive Date")
+                field("Prepared Date"; Rec."Prepared Date")
                 {
                     ApplicationArea = All;
                     Editable = HeaderEditable;
-                    ToolTip = 'Specifies the expected receive date of the Expected Receive Date.';
+                    ToolTip = 'Specifies the Prepared date of the Prepared Date.';
                 }
 
                 field("Approved By"; Rec."Approved By")
@@ -122,16 +122,8 @@ page 50161 "E3 Quotation Card"
                     CreatePurchaseOrders.SetTableView(IndentLine);
                     CreatePurchaseOrders.RunModal();
 
-                    if IndentHeader.Get(Rec."Document No.") then begin
-                        IndentHeader."Release Indent" := true;
-                        IndentHeader.Modify(true);
-                    end;
-
-                    CurrPage.Update(true);
                     Message('Purchase Order created successfully.');
-
                 end;
-
             }
         }
     }

@@ -19,98 +19,126 @@ page 50155 "E3 Indent Header API"
         {
             repeater(General)
             {
+                field(sourceType; Rec."Source Type")
+                {
+                    Caption = 'Source Type';
+                }
+
                 field(documentNo; Rec."Document No.")
                 {
                     Caption = 'Document No.';
                 }
-                field(requestedBy; Rec."Requested By")
-                {
-                    Caption = 'Requested By';
-                }
-                field(requestDate; Rec."Request Date")
-                {
-                    Caption = 'Request Date';
-                }
-                field(status; Rec.Status)
-                {
-                    Caption = 'Status';
-                }
-                field(shortcutDimension1Code; Rec."Shortcut Dimension 1 Code")
-                {
-                    Caption = 'Business Unit Code';
-                }
-                field(businessUnitName; Rec."Business Unit Name")
-                {
-                    Caption = 'Business Unit Name';
-                }
-                field(shortcutDimension2Code; Rec."Shortcut Dimension 2 Code")
-                {
-                    Caption = 'Department Code';
-                }
-                field(departmentName; Rec."Department Name")
-                {
-                    Caption = 'Department Name';
-                }
-                field(locationCode; Rec."Location Code")
-                {
-                    Caption = 'Location Code';
-                }
-                field(locationName; Rec."Location Name")
-                {
-                    Caption = 'Location Name';
-                }
-                field(toLocationCode; Rec."To Location Code")
-                {
-                    Caption = 'To Location Code';
-                }
-                field(toLocationName; Rec."To Location Name")
-                {
-                    Caption = 'To Location Name';
-                }
-                field(expectedReceiveDate; Rec."Expected Receive Date")
-                {
-                    Caption = 'Expected Receive Date';
-                }
-                field(approvedBy; Rec."Approved By")
-                {
-                    Caption = 'Approved By';
-                }
+
                 field(entryNo; Rec."Entry No.")
                 {
                     Caption = 'Entry No.';
                 }
-                field(indenter; Rec.Indenter)
+
+                field(indenterCode; Rec."Indenter Code")
                 {
-                    Caption = 'Indenter';
+                    Caption = 'Indenter Code';
                 }
+
                 field(indenterName; Rec."Indenter Name")
                 {
                     Caption = 'Indenter Name';
                 }
-                field(remarks; Rec.Remarks)
+
+                field(requestDate; Rec."Request Date")
                 {
-                    Caption = 'Remarks';
+                    Caption = 'Request Date';
                 }
-                field(toDepartmentCode; Rec."To Department Code")
+
+                field(preparedBy; Rec."Prepared By")
                 {
-                    Caption = 'To Department Code';
+                    Caption = 'Prepared By';
                 }
-                field(toDepartmentName; Rec."To Department Name")
+
+                field(preparedDate; Rec."Prepared Date")
                 {
-                    Caption = 'To Department Name';
+                    Caption = 'Prepared Date';
                 }
-                field(approvalDateTime; Rec."Approval Date Time")
-                {
-                    Caption = 'Approval Date Time';
-                }
+
                 field(voucherTypeCode; Rec."Voucher Type Code")
                 {
                     Caption = 'Voucher Type Code';
                 }
+
                 field(voucherTypeName; Rec."Voucher Type Name")
                 {
                     Caption = 'Voucher Type Name';
                 }
+
+                field(remarks; Rec.Remarks)
+                {
+                    Caption = 'Remarks';
+                }
+
+                field(status; Rec.Status)
+                {
+                    Caption = 'Status';
+                }
+
+                field(approvedBy; Rec."Approved By")
+                {
+                    Caption = 'Approved By';
+                }
+
+                field(approvalDateTime; Rec."Approval Date Time")
+                {
+                    Caption = 'Approval Date Time';
+                }
+
+                field(shortcutDimension1Code; Rec."Shortcut Dimension 1 Code")
+                {
+                    Caption = 'Business Unit Code';
+                }
+
+                field(businessUnitName; Rec."Business Unit Name")
+                {
+                    Caption = 'Business Unit Name';
+                }
+
+                field(shortcutDimension2Code; Rec."Shortcut Dimension 2 Code")
+                {
+                    Caption = 'Department Code';
+                }
+
+                field(departmentName; Rec."Department Name")
+                {
+                    Caption = 'Department Name';
+                }
+
+                field(locationCode; Rec."Location Code")
+                {
+                    Caption = 'Location Code';
+                }
+
+                field(locationName; Rec."Location Name")
+                {
+                    Caption = 'Location Name';
+                }
+
+                field(toDepartmentCode; Rec."To Department Code")
+                {
+                    Caption = 'To Department Code';
+                }
+
+                field(toDepartmentName; Rec."To Department Name")
+                {
+                    Caption = 'To Department Name';
+                }
+
+                field(toLocationCode; Rec."To Location Code")
+                {
+                    Caption = 'To Location Code';
+                }
+
+                field(toLocationName; Rec."To Location Name")
+                {
+                    Caption = 'To Location Name';
+                }
+
             }
             part(IndentLine; "E3 Indent Line API")
             {

@@ -76,12 +76,17 @@ codeunit 50042 "E3 Unit Of Measure Mgmt."
 
         // Build JSON Request
         Clear(ItemObj);
-        ItemObj.Add('code', 0);
-        ItemObj.Add('unit', UOMUpdateLog.Code);
+        ItemObj.Add('code', UOMUpdateLog.Code);
+        ItemObj.Add('unit', UOMUpdateLog.Description);
         ItemObj.Add('decimalPlaces', 0);
-        ItemObj.Add('segment1', UOMUpdateLog.Description);
+        ItemObj.Add('segment1', '');
         ItemObj.Add('segment2', '');
         ItemObj.Add('segment3', '');
+        if UOMUpdateLog."Sync Status" = UOMUpdateLog."Sync Status"::Synced then
+            ItemObj.Add('d365_Status', 'Update')
+        else
+            ItemObj.Add('d365_Status', 'New');
+
 
         Clear(ItemArray);
         ItemArray.Add(ItemObj);

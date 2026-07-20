@@ -6,6 +6,7 @@ page 50143 "E3 Item Make Master"
     SourceTable = "E3 Item Make Master";
     Editable = true;
     Caption = 'Item Make Master';
+    DeleteAllowed = false;
 
     layout
     {
@@ -49,7 +50,7 @@ page 50143 "E3 Item Make Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                 }
                 field(Response; Rec.Response)
                 {
@@ -85,9 +86,15 @@ page 50143 "E3 Item Make Master"
                     ItemMakeMast: Record "E3 Item Make Master";
                 begin
                     ItemMakeMast.Get(Rec.Code, Rec."Company Name");
-                    if ItemMakeMastMgmt.SendItemMakeMastDetails(ItemMakeMast) then
+                    if ItemMakeMast.IsSent then
+                        Error('This record has already been sent.');
+
+                    if ItemMakeMastMgmt.SendItemMakeMastDetails(ItemMakeMast) then begin
+                        ItemMakeMast.Get(Rec.Code);
+                        ItemMakeMast."First Sent" := true;
+                        ItemMakeMast.Modify();
                         Message('Data sent successfully.')
-                    else
+                    end else
                         Message('Failed to send data.');
                 end;
             }

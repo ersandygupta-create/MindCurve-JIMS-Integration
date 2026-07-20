@@ -6,6 +6,7 @@ page 50146 "E3 material Category Master"
     SourceTable = "E3 Material Category Master";
     Editable = true;
     Caption = 'Material Category Master';
+    DeleteAllowed = false;
 
     layout
     {
@@ -44,7 +45,7 @@ page 50146 "E3 material Category Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                 }
                 field(Response; Rec.Response)
                 {
@@ -80,9 +81,15 @@ page 50146 "E3 material Category Master"
                     MaterialCatMast: Record "E3 Material Category Master";
                 begin
                     MaterialCatMast.Get(Rec.Code);
-                    if MaterialCatMgmt.SendMaterialCategoryDetails(MaterialCatMast) then
+                    if MaterialCatMast.IsSent then
+                        Error('This record has already been sent.');
+
+                    if MaterialCatMgmt.SendMeterialCateDetails(MaterialCatMast) then begin
+                        MaterialCatMast.Get(Rec.Code);
+                        MaterialCatMast."First Sent" := true;
+                        MaterialCatMast.Modify();
                         Message('Data sent successfully.')
-                    else
+                    end else
                         Message('Failed to send data.');
                 end;
             }

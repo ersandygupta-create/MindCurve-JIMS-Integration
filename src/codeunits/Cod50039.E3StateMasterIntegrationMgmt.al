@@ -95,6 +95,12 @@ codeunit 50039 "E3 State Master Mgmt."
         ItemObj.Add('segment1', StateMasterUpdateLog.Code);
         ItemObj.Add('segment2', '');
         ItemObj.Add('segment3', '');
+        if StateMasterUpdateLog."Sync Status" = StateMasterUpdateLog."Sync Status"::Synced then
+            ItemObj.Add('d365_Status', 'Update')
+        else
+            ItemObj.Add('d365_Status', 'New');
+
+        ItemArray.Add(ItemObj);
 
         Clear(ItemArray);
         ItemArray.Add(ItemObj);

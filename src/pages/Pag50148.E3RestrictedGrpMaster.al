@@ -6,6 +6,7 @@ page 50148 "E3 Restricted Group Master"
     SourceTable = "E3 Restricted Group Master";
     Editable = true;
     Caption = 'Restricted Group Master';
+    DeleteAllowed = false;
 
     layout
     {
@@ -33,7 +34,7 @@ page 50148 "E3 Restricted Group Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                 }
                 field(Response; Rec.Response)
                 {
@@ -69,9 +70,14 @@ page 50148 "E3 Restricted Group Master"
                     RestrictedGrpMast: Record "E3 Restricted Group Master";
                 begin
                     RestrictedGrpMast.Get(Rec.Code);
-                    if RestrictedGrpMgmt.SendRestrictedGroupDetails(RestrictedGrpMast) then
+                    if RestrictedGrpMast.IsSent then
+                        Error('This record has already been sent.');
+                    if RestrictedGrpMgmt.SendRestrictedGroupDetails(RestrictedGrpMast) then begin
+                        RestrictedGrpMast.Get(Rec.Code);
+                        RestrictedGrpMast."First Sent" := true;
+                        RestrictedGrpMast.Modify();
                         Message('Data sent successfully.')
-                    else
+                    end else
                         Message('Failed to send data.');
                 end;
             }
