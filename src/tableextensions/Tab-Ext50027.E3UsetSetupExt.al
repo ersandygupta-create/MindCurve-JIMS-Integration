@@ -57,6 +57,11 @@ tableextension 50027 "E3 Uset Setup Ext" extends "User Setup"
             Caption = 'HSN Master';
             DataClassification = CustomerContent;
         }
+        field(50011; "Dimension Value Editable"; Boolean)
+        {
+            Caption = 'Dimension Value Editable';
+            DataClassification = CustomerContent;
+        }
 
     }
 }

@@ -83,7 +83,10 @@ codeunit 50041 "E3 Dimension Value Mgmt."
         ItemObj.Add('segment2', '');
         ItemObj.Add('segment3', '');
         ItemObj.Add('hiS_Code', '');
-        ItemObj.Add('d365_Status', '');
+        if not DimensionUpdateLog."First Sent" then
+            ItemObj.Add('d365_Status', 'New')
+        else
+            ItemObj.Add('d365_Status', 'Update');
         ItemObj.Add('d365_Timestamp', Format(CurrentDateTime(), 0, 9));
         ItemObj.Add('ProcessIndicator', 'P');
         ItemObj.Add('processDate', format(DT2Date(DimensionUpdateLog."Created Date Time"), 0, '<Day,2>-<Month,2>-<Year4>'));

@@ -37,6 +37,11 @@ table 50056 "E3 Dimension Value Log"
             Caption = 'Created Date Time';
             DataClassification = CustomerContent;
         }
+        field(7; "First Sent"; Boolean)
+        {
+            Caption = 'First Sent';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

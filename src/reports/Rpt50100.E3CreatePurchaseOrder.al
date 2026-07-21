@@ -162,7 +162,7 @@ report 50100 "E3 Create Purchase Order"
         end;
         PurchaseLine.Validate(Quantity, IndentLine."Ordered Qty");
         PurchaseLine.Validate("Unit of Measure Code", IndentLine."Unit of Measure");
-        PurchaseLine.Validate("Location Code", IndentLine."Location Code");
+        PurchaseLine.Validate("Location Code", PurchaseHeader."Location Code");
         Case PurchLineType of
             1:
                 PurchaseLine.Validate("Direct Unit Cost", IndentLine."Quotation Price");

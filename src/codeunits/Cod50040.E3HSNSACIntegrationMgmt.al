@@ -83,7 +83,7 @@ codeunit 50040 "E3 HSN/SAC Mgmt."
         ItemObj.Add('name', HSNSACUpdateLog.Description);
         ItemObj.Add('hsn', HSNSACUpdateLog.Code);
         ItemObj.Add('segment1', Format(HSNSACUpdateLog.Type));
-        ItemObj.Add('segment2', '');
+        ItemObj.Add('segment2', HSNSACUpdateLog."GST Group Code");
         ItemObj.Add('segment3', '');
         if HSNSACUpdateLog."Sync Status" = HSNSACUpdateLog."Sync Status"::Synced then
             ItemObj.Add('d365_Status', 'Update')
