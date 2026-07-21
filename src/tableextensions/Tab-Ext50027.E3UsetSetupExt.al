@@ -62,6 +62,11 @@ tableextension 50027 "E3 Uset Setup Ext" extends "User Setup"
             Caption = 'Dimension Value Editable';
             DataClassification = CustomerContent;
         }
+        field(50012; "UOM Editable"; Boolean)
+        {
+            Caption = 'UOM Editable';
+            DataClassification = CustomerContent;
+        }
 
     }
 }

@@ -60,6 +60,11 @@ pageextension 50023 "E3 User Setup Ext" extends "User Setup"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Dept field.';
             }
+            field("UOM Editable"; Rec."UOM Editable")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the UOM Editable field.';
+            }
 
         }
     }

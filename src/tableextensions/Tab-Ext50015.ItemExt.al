@@ -742,21 +742,21 @@ tableextension 50015 "E3 HIS Item" extends Item
         {
             Caption = 'Filter Item Type Code';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Filter Item Type".Code;
-            trigger OnValidate()
-            var
-                FilterItemType: Record "E3 Filter Item Type";
-            begin
-                if "Filter Item Type Code" = '' then begin
-                    "Filter Item Type Name" := '';
-                    exit;
-                end;
+            // TableRelation = "E3 Filter Item Type".Code;
+            // trigger OnValidate()
+            // var
+            //     FilterItemType: Record "E3 Filter Item Type";
+            // begin
+            //     if "Filter Item Type Code" = '' then begin
+            //         "Filter Item Type Name" := '';
+            //         exit;
+            //     end;
 
-                if FilterItemType.Get("Filter Item Type Code") then
-                    "Filter Item Type Name" := FilterItemType.Name
-                else
-                    "Filter Item Type Name" := '';
-            end;
+            //     if FilterItemType.Get("Filter Item Type Code") then
+            //         "Filter Item Type Name" := FilterItemType.Name
+            //     else
+            //         "Filter Item Type Name" := '';
+            // end;
         }
         field(50095; "Base Unit of Measure Name"; Text[50])
         {

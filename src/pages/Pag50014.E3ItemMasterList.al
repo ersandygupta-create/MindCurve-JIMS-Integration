@@ -103,18 +103,19 @@ page 50014 "E3 Item Master List"
                     if HisMasterStaging.FindSet() then
                         repeat
                             // Build Item Description
-                            if UpperCase(Format(HisMasterStaging."Item Type 1 Name")) = 'PHARMACY' then
-                                NewItemDesc :=
-                                    HisMasterStaging."Material Category Name" + '-' +
-                                    HisMasterStaging."Display Name" + '-' +
-                                    HisMasterStaging."Strength Name" + '-' +
-                                    HisMasterStaging."Model Name"
-                            else
-                                NewItemDesc :=
-                                    HisMasterStaging."Material Category Name" + '-' +
-                                    HisMasterStaging."Material Type Name" + '-' +
-                                    HisMasterStaging."Specification Name" + '-' +
-                                    HisMasterStaging."Model Name";
+                            Clear(NewItemDesc);
+
+                            if UpperCase(Format(HisMasterStaging."Item Type 1 Name")) = 'PHARMACY' then begin
+                                AddValue(NewItemDesc, HisMasterStaging."Material Category Name");
+                                AddValue(NewItemDesc, HisMasterStaging."Display Name");
+                                AddValue(NewItemDesc, HisMasterStaging."Strength Name");
+                                AddValue(NewItemDesc, HisMasterStaging."Model Name");
+                            end else begin
+                                AddValue(NewItemDesc, HisMasterStaging."Material Category Name");
+                                AddValue(NewItemDesc, HisMasterStaging."Material Type Name");
+                                AddValue(NewItemDesc, HisMasterStaging."Specification Name");
+                                AddValue(NewItemDesc, HisMasterStaging."Model Name");
+                            end;
 
                             // Validate duplicate description
                             Item.Reset();
@@ -185,5 +186,16 @@ page 50014 "E3 Item Master List"
 
             ModelEditable := true;
         end;
+    end;
+
+    local procedure AddValue(var TextValue: Text; Value: Text)
+    begin
+        if Value = '' then
+            exit;
+
+        if TextValue <> '' then
+            TextValue += '-';
+
+        TextValue += Value;
     end;
 }

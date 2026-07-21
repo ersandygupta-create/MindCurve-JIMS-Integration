@@ -539,6 +539,16 @@ codeunit 50000 "E3 HIS Integration Mgmt."
     END;
 
     //ak
+    local procedure AddValue(var TextValue: Text; Value: Text)
+    begin
+        if Value = '' then
+            exit;
+
+        if TextValue <> '' then
+            TextValue += '-';
+
+        TextValue += Value;
+    end;
 
     procedure InitItemMaster1(EntryNo: Integer)
     var
@@ -567,18 +577,19 @@ codeunit 50000 "E3 HIS Integration Mgmt."
 
         if HisMasterStaging.FindSet() then
             repeat
-                if UpperCase(Format(HisMasterStaging."Item Type 1 Name")) = 'PHARMACY' then
-                    NewItemDesc :=
-                        HisMasterStaging."Material Category Name" + ' ' +
-                        HisMasterStaging."Display Name" + ' ' +
-                        HisMasterStaging."Strength Name" + ' ' +
-                        HisMasterStaging."Model Name"
-                else
-                    NewItemDesc :=
-                        HisMasterStaging."Material Category Name" + ' ' +
-                        HisMasterStaging."Material Type Name" + ' ' +
-                        HisMasterStaging."Specification Name" + ' ' +
-                        HisMasterStaging."Model Name";
+                Clear(NewItemDesc);
+
+                if UpperCase(Format(HisMasterStaging."Item Type 1 Name")) = 'PHARMACY' then begin
+                    AddValue(NewItemDesc, HisMasterStaging."Material Category Name");
+                    AddValue(NewItemDesc, HisMasterStaging."Display Name");
+                    AddValue(NewItemDesc, HisMasterStaging."Strength Name");
+                    AddValue(NewItemDesc, HisMasterStaging."Model Name");
+                end else begin
+                    AddValue(NewItemDesc, HisMasterStaging."Material Category Name");
+                    AddValue(NewItemDesc, HisMasterStaging."Material Type Name");
+                    AddValue(NewItemDesc, HisMasterStaging."Specification Name");
+                    AddValue(NewItemDesc, HisMasterStaging."Model Name");
+                end;
 
                 ItemRec.Reset();
                 ItemRec.SetRange(Description, NewItemDesc);
@@ -589,7 +600,10 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                     InventorySetup.TESTFIELD("Item Nos.");
                     Item."No." := NoSeriesMgmt.GetNextNo(InventorySetup."Item Nos.", Today, true);
                     Item.VALIDATE(Description, NewItemDesc);
-                    Item.Validate(Name, HisMasterStaging."Display Name");
+                    if HisMasterStaging."Display Name" <> '' then
+                        Item.Validate(Name, HisMasterStaging."Display Name")
+                    else
+                        Item.Validate(Name, NewItemDesc);
                     Item.Validate("Material Category Code", HisMasterStaging."Material Category Code");
                     Item.Validate("Material Category Name", HisMasterStaging."Material Category Name");
                     Item.Validate("Strength Code", HisMasterStaging."Strength Code");
@@ -605,6 +619,8 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                     Item."Model Name" := HisMasterStaging."Model Name";
                     Item.Validate("Item Speciality Code", HisMasterStaging."Specification Code");
                     Item."Speciality Name" := HisMasterStaging."Specification Name";
+                    Item."Filter Item Type Code" := '5';
+                    Item."Filter Item Type Name" := 'Store Mtrl.';
 
                     Item.INSERT();
 
@@ -619,7 +635,7 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                 HsStagingUpdate."HIS Code" := Item."No.";
                 HsStagingUpdate.Modify(true);
                 ItemNo := Item."No.";
-                TxtMsg := StrSubstNo('Selected Item %1 Processed successfully.', ItemNo) + '\n' + TxtMsg;
+                TxtMsg := StrSubstNo('Selected Item %1 Processed successfully.', ItemNo) + '\' + TxtMsg;
             until HisMasterStaging.Next() = 0;
 
         Message(TxtMsg);
