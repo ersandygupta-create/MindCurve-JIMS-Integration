@@ -569,15 +569,15 @@ codeunit 50000 "E3 HIS Integration Mgmt."
             repeat
                 if UpperCase(Format(HisMasterStaging."Item Type 1 Name")) = 'PHARMACY' then
                     NewItemDesc :=
-                        HisMasterStaging."Material Category Name" + '-' +
-                        HisMasterStaging."Display Name" + '-' +
-                        HisMasterStaging."Strength Name" + '-' +
+                        HisMasterStaging."Material Category Name" + ' ' +
+                        HisMasterStaging."Display Name" + ' ' +
+                        HisMasterStaging."Strength Name" + ' ' +
                         HisMasterStaging."Model Name"
                 else
                     NewItemDesc :=
-                        HisMasterStaging."Material Category Name" + '-' +
-                        HisMasterStaging."Material Type Name" + '-' +
-                        HisMasterStaging."Specification Name" + '-' +
+                        HisMasterStaging."Material Category Name" + ' ' +
+                        HisMasterStaging."Material Type Name" + ' ' +
+                        HisMasterStaging."Specification Name" + ' ' +
                         HisMasterStaging."Model Name";
 
                 ItemRec.Reset();
