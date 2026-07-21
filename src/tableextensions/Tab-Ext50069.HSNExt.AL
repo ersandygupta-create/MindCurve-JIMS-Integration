@@ -2,32 +2,31 @@ tableextension 50069 HSNExt extends 18009
 {
     trigger OnBeforeInsert()
     begin
-        UserSetup.Get(UserId());
-        if Not UserSetup."HSN Master" then
-            Error('You donot have permission to create a new HSN.');
+        CheckPermission();
     end;
 
     trigger OnBeforeModify()
     begin
-        UserSetup.Get(UserId());
-        if Not UserSetup."HSN Master" then
-            Error('You donot have permission to Modify a HSN.');
+        CheckPermission();
     end;
 
     trigger OnBeforeDelete()
     begin
-        UserSetup.Get(UserId());
-        if Not UserSetup."HSN Master" then
-            Error('You donot have permission to Delete a HSN.');
+        CheckPermission();
     end;
 
     trigger OnBeforeRename()
     begin
-        UserSetup.Get(UserId());
-        if Not UserSetup."HSN Master" then
-            Error('You donot have permission to Rename a HSN.');
+        CheckPermission();
     end;
 
     var
         UserSetup: Record "User Setup";
+
+    local procedure CheckPermission()
+    begin
+        UserSetup.Get(UserId());
+        if Not UserSetup."HSN Master" then
+            Error('You donot have permission Perform operation on HSN.');
+    end;
 }
