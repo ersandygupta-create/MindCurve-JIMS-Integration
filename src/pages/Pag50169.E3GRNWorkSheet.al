@@ -37,11 +37,6 @@ page 50169 "E3 GRN Work Sheet"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the purchase order quantity.';
                 }
-                field("Free Qty"; Rec."Free Qty")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the free quantity.';
-                }
                 field("Outstanding Qty"; Rec."Outstanding Qty")
                 {
                     ApplicationArea = All;
@@ -67,12 +62,12 @@ page 50169 "E3 GRN Work Sheet"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the lot number.';
                 }
-                field("Mfg Date"; Rec."Mfg Date")
+                field("Mfg Date"; Rec."Manufacturing Date")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the manufacturing date.';
                 }
-                field("Exp. Date"; Rec."Exp. Date")
+                field("Exp. Date"; Rec."Expiry Date")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the expiry date.';
@@ -92,61 +87,49 @@ page 50169 "E3 GRN Work Sheet"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the maximum retail price.';
                 }
-                field(skuMrp; Rec.skuMrp)
+                field(skuMrp; Rec."SKU MRP")
                 {
                     ApplicationArea = All;
                     Caption = 'SKU MRP';
                     ToolTip = 'Specifies the SKU MRP.';
                 }
-                field(saleRate; Rec.saleRate)
+                field(saleRate; Rec."Sale Rate")
                 {
                     ApplicationArea = All;
                     Caption = 'Sale Rate';
                     ToolTip = 'Specifies the sale rate.';
                 }
-                field(skuSaleRate; Rec.skuSaleRate)
+                field(skuSaleRate; Rec."SKU Sale Rate")
                 {
                     ApplicationArea = All;
                     Caption = 'SKU Sale Rate';
                     ToolTip = 'Specifies the SKU sale rate.';
                 }
-                field(staffSaleRate; Rec.staffSaleRate)
+                field(staffSaleRate; Rec."Staff Sale Rate")
                 {
                     ApplicationArea = All;
                     Caption = 'Staff Sale Rate';
                     ToolTip = 'Specifies the staff sale rate.';
                 }
-                field(skuStaffSaleRate; Rec.skuStaffSaleRate)
+                field(skuStaffSaleRate; Rec."SKU Staff Sale Rate")
                 {
                     ApplicationArea = All;
                     Caption = 'SKU Staff Sale Rate';
                     ToolTip = 'Specifies the SKU staff sale rate.';
                 }
-                field(batchNo; Rec.batchNo)
+                field(batchNo; Rec."Batch No.")
                 {
                     ApplicationArea = All;
                     Caption = 'Batch No.';
                     ToolTip = 'Specifies the batch number.';
                 }
-                field(manufacturingDate; Rec.manufacturingDate)
-                {
-                    ApplicationArea = All;
-                    Caption = 'Manufacturing Date';
-                    ToolTip = 'Specifies the manufacturing date.';
-                }
-                field(expiryDate; Rec.expiryDate)
-                {
-                    ApplicationArea = All;
-                    Caption = 'Expiry Date';
-                    ToolTip = 'Specifies the expiry date.';
-                }
-                field(itemMakeCode; Rec.itemMakeCode)
+                field(itemMakeCode; Rec."Item Make Code")
                 {
                     ApplicationArea = All;
                     Caption = 'Item Make Code';
                     ToolTip = 'Specifies the item make code.';
                 }
-                field(gstTypeCode; Rec.gstTypeCode)
+                field(gstTypeCode; Rec."GST Type Code")
                 {
                     ApplicationArea = All;
                     Caption = 'GST Type Code';

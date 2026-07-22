@@ -78,6 +78,11 @@ tableextension 50068 "E3 Inventory Setup Ext" extends "Inventory Setup"
             DataClassification = CustomerContent;
             TableRelation = "No. Series";
         }
+        field(50011; "GRN Lot Nos."; Code[20])
+        {
+            Caption = 'GRN Lot Nos.';
+            TableRelation = "No. Series";
+        }
     }
 
     keys

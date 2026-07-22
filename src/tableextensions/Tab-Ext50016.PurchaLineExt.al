@@ -33,6 +33,11 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Caption = 'Cretical';
             DataClassification = CustomerContent;
         }
+        field(50008; "Free Qty"; Decimal)
+        {
+            Caption = 'Free Qty';
+            DataClassification = CustomerContent;
+        }
         modify("No.")
         {
             trigger OnAfterValidate()

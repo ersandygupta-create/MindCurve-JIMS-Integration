@@ -1,175 +1,247 @@
 table 50062 "E3 GRN Work Sheet"
 {
-    DataClassification = ToBeClassified;
+    Caption = 'GRN Work Sheet';
+    DataClassification = CustomerContent;
 
     fields
     {
         field(1; "PO No."; Code[20])
         {
             Caption = 'PO No.';
-            //TableRelation = "Purchase Header"."No." WHERE("Document Type" = CONST(Order));
             DataClassification = CustomerContent;
         }
+
         field(2; "Line No."; Integer)
         {
             Caption = 'Line No.';
             DataClassification = CustomerContent;
         }
+
         field(3; "Item No."; Code[20])
         {
             Caption = 'Item';
-            TableRelation = Item;
             DataClassification = CustomerContent;
         }
+
         field(4; "Item Name"; Text[100])
         {
             Caption = 'Item Name';
             DataClassification = CustomerContent;
         }
+
         field(5; "PO Qty"; Decimal)
         {
+            Caption = 'PO Qty';
             DataClassification = CustomerContent;
         }
-        field(6; "Outstanding Qty"; Decimal)
+
+        field(6; "Free Qty"; Decimal)
         {
+            Caption = 'Free Qty';
             DataClassification = CustomerContent;
         }
-        field(7; "Invoice Qty"; Decimal)
+
+        field(7; "Outstanding Qty"; Decimal)
         {
+            Caption = 'Outstanding Qty';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if (Rec."Quantity Received" + Rec."Outstanding Qty" > rec."PO Qty") then
+                    Error('Quantity received and quantity to receive shoul not more than Quantity');
+
+            end;
         }
-        field(8; "Receipt Qty"; Decimal)
+
+        field(8; "Invoice Qty"; Decimal)
         {
+            Caption = 'Invoice Qty';
             DataClassification = CustomerContent;
         }
-        field(9; "Rejected Qty"; Decimal)
+
+        field(9; "Receipt Qty"; Decimal)
         {
+            Caption = 'Receipt Qty';
             DataClassification = CustomerContent;
         }
-        field(10; "Lot No."; Code[50])
+
+        field(10; "Rejected Qty"; Decimal)
         {
+            Caption = 'Rejected Qty';
             DataClassification = CustomerContent;
         }
-        field(11; "Mfg Date"; Date)
+
+        field(11; "Lot No."; Code[50])
+        {
+            Caption = 'Lot No.';
+            DataClassification = CustomerContent;
+        }
+
+        field(12; "Manufacturing Date"; Date)
         {
             Caption = 'Manufacturing Date';
             DataClassification = CustomerContent;
         }
-        field(12; "Exp. Date"; Date)
+
+        field(13; "Expiry Date"; Date)
         {
             Caption = 'Expiry Date';
             DataClassification = CustomerContent;
         }
-        field(13; "Supplier Batch No."; Code[50])
+
+        field(14; "Supplier Batch No."; Code[50])
         {
+            Caption = 'Supplier Batch No.';
             DataClassification = CustomerContent;
         }
-        field(14; "Line Gross"; Decimal)
+
+        field(15; "Line Gross"; Decimal)
         {
+            Caption = 'Line Gross';
             DataClassification = CustomerContent;
         }
-        field(15; MRP; Decimal)
+
+        field(16; "MRP"; Decimal)
         {
+            Caption = 'MRP';
             DataClassification = CustomerContent;
         }
-        field(16; skuMrp; Decimal)
+
+        field(17; "SKU MRP"; Decimal)
         {
             Caption = 'SKU MRP';
             DataClassification = CustomerContent;
         }
-        field(17; saleRate; Decimal)
+
+        field(18; "Sale Rate"; Decimal)
         {
             Caption = 'Sale Rate';
             DataClassification = CustomerContent;
         }
-        field(18; skuSaleRate; Decimal)
+
+        field(19; "SKU Sale Rate"; Decimal)
         {
             Caption = 'SKU Sale Rate';
             DataClassification = CustomerContent;
         }
-        field(19; staffSaleRate; Decimal)
+
+        field(20; "Staff Sale Rate"; Decimal)
         {
             Caption = 'Staff Sale Rate';
             DataClassification = CustomerContent;
         }
-        field(20; skuStaffSaleRate; Decimal)
+
+        field(21; "SKU Staff Sale Rate"; Decimal)
         {
             Caption = 'SKU Staff Sale Rate';
             DataClassification = CustomerContent;
         }
-        field(21; batchNo; Code[50])
+
+        field(22; "Batch No."; Code[50])
         {
             Caption = 'Batch No.';
             DataClassification = CustomerContent;
         }
-        field(22; manufacturingDate; Date)
-        {
-            Caption = 'Manufacturing Date';
-            DataClassification = CustomerContent;
-        }
-        field(23; expiryDate; Date)
-        {
-            Caption = 'Expiry Date';
-            DataClassification = CustomerContent;
-        }
-        field(24; itemMakeCode; Code[20])
+
+        field(23; "Item Make Code"; Code[20])
         {
             Caption = 'Item Make Code';
             DataClassification = CustomerContent;
         }
-        field(25; gstTypeCode; Code[20])
+
+        field(24; "GST Type Code"; Code[20])
         {
             Caption = 'GST Type Code';
             DataClassification = CustomerContent;
         }
-        field(26; "Line Discount Amount"; Decimal)
+
+        field(25; "Line Discount Amount"; Decimal)
         {
+            Caption = 'Line Discount Amount';
             DataClassification = CustomerContent;
         }
-        field(27; "Line Discount Percentage"; Decimal)
+
+        field(26; "Line Discount Percentage"; Decimal)
         {
+            Caption = 'Line Discount Percentage';
             DataClassification = CustomerContent;
         }
-        field(28; "Taxable Amount"; Decimal)
+
+        field(27; "Taxable Amount"; Decimal)
         {
+            Caption = 'Taxable Amount';
             DataClassification = CustomerContent;
         }
-        field(29; "CGST %"; Decimal)
+
+        field(28; "CGST %"; Decimal)
         {
+            Caption = 'CGST %';
             DataClassification = CustomerContent;
         }
-        field(30; "CGST Amount"; Decimal)
+
+        field(29; "CGST Amount"; Decimal)
         {
+            Caption = 'CGST Amount';
             DataClassification = CustomerContent;
         }
-        field(31; "SGST %"; Decimal)
+
+        field(30; "SGST %"; Decimal)
         {
+            Caption = 'SGST %';
             DataClassification = CustomerContent;
         }
-        field(32; "SGST Amount"; Decimal)
+
+        field(31; "SGST Amount"; Decimal)
         {
+            Caption = 'SGST Amount';
             DataClassification = CustomerContent;
         }
-        field(33; "IGST %"; Decimal)
+
+        field(32; "IGST %"; Decimal)
         {
+            Caption = 'IGST %';
             DataClassification = CustomerContent;
         }
-        field(34; "IGST Amount"; Decimal)
+
+        field(33; "IGST Amount"; Decimal)
         {
+            Caption = 'IGST Amount';
             DataClassification = CustomerContent;
         }
-        field(35; "Final Discount %"; Decimal)
+
+        field(34; "Final Discount %"; Decimal)
         {
+            Caption = 'Final Discount %';
             DataClassification = CustomerContent;
         }
-        field(36; "Final Discount Amount"; Decimal)
+
+        field(35; "Final Discount Amount"; Decimal)
         {
+            Caption = 'Final Discount Amount';
             DataClassification = CustomerContent;
         }
-        field(37; "Free Qty"; Decimal)
+        field(36; "Base Unit of Measure"; Code[10])
         {
-            Caption = 'Free Qty';
-            DataClassification = CustomerContent;
+            Caption = 'Base Unit of Measure';
+            ToolTip = 'Specifies the base unit used to measure the item, such as piece, box, or pallet. The base unit of measure also serves as the conversion basis for alternate units of measure.';
+            TableRelation = "Unit of Measure";
+            ValidateTableRelation = false;
+        }
+        field(37; "Quantity Received"; Decimal)
+        {
+            AutoFormatType = 0;
+            Caption = 'Quantity Received';
+            DecimalPlaces = 0 : 5;
+            Editable = false;
+            ToolTip = 'Specifies how many units of the item on the line have been posted as received.';
+
+        }
+        field(38; "Item Tracking Code"; Code[10])
+        {
+            Caption = 'Item Tracking Code';
+            ToolTip = 'Specifies how serial, lot or package numbers assigned to the item are tracked in the supply chain.';
+            TableRelation = "Item Tracking Code";
+            OptimizeForTextSearch = true;
         }
     }
 
@@ -180,33 +252,4 @@ table 50062 "E3 GRN Work Sheet"
             Clustered = true;
         }
     }
-
-    fieldgroups
-    {
-        // Add changes to field groups here
-    }
-
-    var
-        myInt: Integer;
-
-    trigger OnInsert()
-    begin
-
-    end;
-
-    trigger OnModify()
-    begin
-
-    end;
-
-    trigger OnDelete()
-    begin
-
-    end;
-
-    trigger OnRename()
-    begin
-
-    end;
-
 }

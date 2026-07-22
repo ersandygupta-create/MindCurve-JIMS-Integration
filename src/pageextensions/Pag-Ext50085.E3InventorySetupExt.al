@@ -72,6 +72,11 @@ pageextension 50085 "E3 Inventory Setup Ext" extends "Inventory Setup"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the number series for Restricted Group.';
                 }
+                field("GRN Lot Nos."; Rec."GRN Lot Nos.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the number series for GRN Lot Nos..';
+                }
             }
         }
     }
