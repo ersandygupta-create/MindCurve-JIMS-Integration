@@ -619,8 +619,13 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                     Item."Model Name" := HisMasterStaging."Model Name";
                     Item.Validate("Item Speciality Code", HisMasterStaging."Specification Code");
                     Item."Speciality Name" := HisMasterStaging."Specification Name";
-                    Item."Filter Item Type Code" := '5';
-                    Item."Filter Item Type Name" := 'Store Mtrl.';
+                    if UpperCase(Format(HisMasterStaging."Item Type 1 Code")) = '11' then begin
+                        Item."Filter Item Type Code" := '11';
+                        Item."Filter Item Type Name" := 'Pharmacy';
+                    end else begin
+                        Item."Filter Item Type Code" := '5';
+                        Item."Filter Item Type Name" := 'Store Mtrl.';
+                    end;
 
                     Item.INSERT();
 
