@@ -38,7 +38,7 @@ page 50154 "E3 Indent Line Subform"
                     ApplicationArea = All;
                     Editable = IsLineEditable;
                 }
-                field("Cretical Item"; Rec."Cretical Item")
+                field("Critical Item"; Rec."Critical Item")
                 {
                     ApplicationArea = All;
                     Editable = IsLineEditable;
@@ -62,15 +62,15 @@ page 50154 "E3 Indent Line Subform"
                     ApplicationArea = All;
                     Editable = IsLineEditable;
                 }
-                field("Item Make Name"; Rec."Item Make Name")
-                {
-                    ApplicationArea = All;
-                    Editable = false;
-                }
                 field("Item Make Code"; Rec."Item Make Code")
                 {
                     ApplicationArea = All;
                     Editable = IsLineEditable;
+                }
+                field("Item Make Name"; Rec."Item Make Name")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Requested Received Date"; Rec."Requested Received Date")
                 {

@@ -46,9 +46,13 @@ table 50052 "E3 Indent Line"
                 UpdateHeaderValues();
                 Clear(Description);
                 Clear("Unit of Measure");
+                Clear("Item Make Code");
+                Clear("Item Make Name");
                 if Item.Get("No.") then
                     Description := Item.Description;
                 "Unit of Measure" := Item."Base Unit of Measure";
+                "Item Make Code" := Item."Marketing Company Code";
+                "Item Make Name" := Item."Marketing Company Name";
 
                 if Type = Type::" " then
                     Error('Please select Type before selecting No.');
@@ -232,9 +236,9 @@ table 50052 "E3 Indent Line"
             //Editable = false;
             DataClassification = CustomerContent;
         }
-        field(22; "Cretical Item"; Boolean)
+        field(22; "Critical Item"; Boolean)
         {
-            Caption = 'Cretical Item';
+            Caption = 'Critical Item';
             DataClassification = CustomerContent;
         }
         field(23; "Quotation Type"; Option)
@@ -250,7 +254,7 @@ table 50052 "E3 Indent Line"
         }
         field(25; "Shortcut Dimension 1 Code"; Code[10])
         {
-            Caption = 'Shortcut Dimension 1 Code';
+            Caption = 'Business Unit';
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
             ValidateTableRelation = false;
         }

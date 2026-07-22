@@ -907,6 +907,13 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         RunObject = Page "E3 Approved HIS Indent List";
                         ToolTip = 'Executes the Vendor Quotation action.';
                     }
+                    action(ShortClose)
+                    {
+                        Caption = 'Short Closed List';
+                        ApplicationArea = All;
+                        RunObject = page "E3 Short Closed Indent List";
+                        ToolTip = 'Specify a value Short Closed Indent';
+                    }
                 }
                 group(Quotation)
                 {

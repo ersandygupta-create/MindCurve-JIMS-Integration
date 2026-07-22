@@ -48,7 +48,7 @@ page 50165 "E3 Released Qoutation List"
                     Caption = 'Description';
                     ToolTip = 'Specifies the description of the item.';
                 }
-                field("Critical Item"; Rec."Cretical Item")
+                field("Critical Item"; Rec."Critical Item")
                 {
                     Caption = 'Critical Item';
                     ToolTip = 'Specifies the Critical Item of the item.';

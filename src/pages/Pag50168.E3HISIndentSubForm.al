@@ -38,7 +38,7 @@ page 50168 "E3 HIS Indent Line Subform"
                     ApplicationArea = All;
                     Editable = IsLineEditable;
                 }
-                field("Cretical Item"; Rec."Cretical Item")
+                field("Critical Item"; Rec."Critical Item")
                 {
                     ApplicationArea = All;
                     Visible = false;

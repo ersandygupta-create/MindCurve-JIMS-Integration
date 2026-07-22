@@ -295,7 +295,10 @@ page 50153 "E3 Indent Card"
 
     local procedure SetPageEditable()
     begin
-        IsPageEditable := Rec.Status <> Rec.Status::"Pending Approval";
+        IsPageEditable := (Rec.Status <> Rec.Status::"Pending Approval") and
+        (not Rec."Short Close Indent");
+
+        IsEditable := IsPageEditable;
     end;
 
 

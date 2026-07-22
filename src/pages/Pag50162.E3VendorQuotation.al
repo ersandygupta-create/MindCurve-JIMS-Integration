@@ -59,7 +59,7 @@ page 50162 "E3 Vendor Quotation"
                     ApplicationArea = All;
                     Editable = false;
                 }
-                field("Critical Item"; Rec."Cretical Item")
+                field("Critical Item"; Rec."Critical Item")
                 {
                     Caption = 'Critical Item';
                     ToolTip = 'Specifies the Critical Item of the item.';
