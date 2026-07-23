@@ -117,7 +117,7 @@ report 50100 "E3 Create Purchase Order"
                 PurchaseHeader.Validate("Buy-from Vendor No.", IndentLine."Vendor No.");
         End;
         PurchaseHeader."Location Code" := IndentLine."Location Code";
-        PurchaseHeader."Payment Terms" := IndentLine."Payment Terms";
+        PurchaseHeader."Payment Terms Code" := IndentLine."Payment Terms";
         PurchaseHeader."E3 Delivery Terms" := IndentLine."Delivery Terms";
         Case PurchHeaderType of
             1:

@@ -51,8 +51,8 @@ table 50052 "E3 Indent Line"
                 if Item.Get("No.") then
                     Description := Item.Description;
                 "Unit of Measure" := Item."Base Unit of Measure";
-                "Item Make Code" := Item."Medicine Company Code";
-                "Item Make Name" := Item."Medicine Company Name";
+                "Item Make Code" := Item."Item Make Code";
+                "Item Make Name" := Item."Make Name";
 
                 if Type = Type::" " then
                     Error('Please select Type before selecting No.');
@@ -202,23 +202,6 @@ table 50052 "E3 Indent Line"
             //Editable = false;
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Make Master".Code;
-            trigger OnValidate()
-            var
-                ItemMake: Record "E3 Item Make Master";
-            begin
-                if "Item Make Code" = '' then begin
-                    "Item Make Name" := '';
-                    exit;
-                end;
-
-                ItemMake.Reset();
-                ItemMake.SetRange(Code, "Item Make Code");
-
-                if ItemMake.FindFirst() then
-                    "Item Make Name" := ItemMake."Company Name"
-                else
-                    "Item Make Name" := '';
-            end;
         }
         field(19; "Ordered Qty"; Decimal)
         {
@@ -286,10 +269,11 @@ table 50052 "E3 Indent Line"
             DataClassification = CustomerContent;
             TableRelation = Location.Code;
         }
-        field(31; "Payment Terms"; Text[100])
+        field(31; "Payment Terms"; Code[10])
         {
             Caption = 'Payment Terms';
             DataClassification = CustomerContent;
+            TableRelation = "Payment Terms";
         }
         field(32; "Delivery Terms"; Text[100])
         {

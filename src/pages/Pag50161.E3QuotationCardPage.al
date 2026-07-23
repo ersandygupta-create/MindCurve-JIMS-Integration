@@ -116,6 +116,19 @@ page 50161 "E3 Quotation Card"
 
                     IndentLine.Reset();
                     IndentLine.SetRange("Document No.", Rec."Document No.");
+                    IndentLine.SetRange("Vendor PO Creation", true);
+
+                    if IndentLine.FindSet() then
+                        repeat
+                            if IndentLine."Ordered Qty" <= 0 then
+                                Error(
+                                    'Ordered Qty must be greater than zero for Line No. %1 (Item No. %2).',
+                                    IndentLine."Line No.",
+                                    IndentLine."No.");
+                        until IndentLine.Next() = 0;
+
+                    IndentLine.Reset();
+                    IndentLine.SetRange("Document No.", Rec."Document No.");
 
                     Clear(CreatePurchaseOrders);
                     CreatePurchaseOrders.SetNoSeries(Location."E3 Indent PO Series");

@@ -41,12 +41,6 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the Retail Drug License Number for the vendor.';
             }
-
-            field("Payment Terms"; Rec."Payment Terms")
-            {
-                ApplicationArea = All;
-                ToolTip = 'Specifies the payment terms agreed with the vendor.';
-            }
         }
         addafter("No.")
         {

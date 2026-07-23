@@ -49,11 +49,6 @@ tableextension 50007 "E3 HIS Purch. Inv. Header" extends "Purch. Inv. Header"
             Caption = 'Indent No.';
             DataClassification = CustomerContent;
         }
-        field(50011; "Payment Terms"; Text[100])
-        {
-            Caption = 'Payment Terms';
-            DataClassification = CustomerContent;
-        }
 
     }
 }

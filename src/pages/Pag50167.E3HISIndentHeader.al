@@ -201,6 +201,7 @@ page 50167 "E3 HIS Indent Card"
                     Image = SendApprovalRequest;
                     Promoted = true;
                     PromotedCategory = Process;
+                    Visible = ShowApprovalActions;
 
                     trigger OnAction()
                     var
@@ -235,6 +236,7 @@ page 50167 "E3 HIS Indent Card"
                     Image = CancelApprovalRequest;
                     Promoted = true;
                     PromotedCategory = Process;
+                    Visible = ShowApprovalActions;
 
                     trigger OnAction()
                     var
@@ -245,7 +247,31 @@ page 50167 "E3 HIS Indent Card"
                     end;
                 }
             }
+            action(ReopenIndent)
+            {
+                Caption = 'Reopen Indent';
+                ApplicationArea = All;
+                Image = ReOpen;
+                Promoted = true;
+                PromotedCategory = Process;
+                Visible = Rec.Status = Rec.Status::Approved;
+                ToolTip = 'Reopens the approved indent for modification.';
 
+                trigger OnAction()
+                begin
+                    if not Confirm('Do you want to reopen this approved indent?', false) then
+                        exit;
+
+                    Rec.Status := Rec.Status::Open; // Change to your initial status if different
+                    Rec."Approved By" := '';
+                    Rec."Approval Date Time" := 0DT;
+                    Rec.Modify(true);
+
+                    CurrPage.Update(true);
+
+                    Message('Indent %1 has been reopened successfully.', Rec."Document No.");
+                end;
+            }
             action(ApprovalEntries)
             {
                 Caption = 'Approval Entries';
@@ -262,6 +288,7 @@ page 50167 "E3 HIS Indent Card"
     var
         IsPageEditable: Boolean;
         IsEditable: Boolean;
+        ShowApprovalActions: Boolean;
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
@@ -271,7 +298,6 @@ page 50167 "E3 HIS Indent Card"
 
     trigger OnOpenPage()
     var
-        IsEditable: Boolean;
     begin
         Rec."Source Type" := "E3 Indent Source Type"::HIS;
         IsEditable := Rec.Status <> Rec.Status::Approved;
@@ -285,7 +311,14 @@ page 50167 "E3 HIS Indent Card"
 
     local procedure SetPageEditable()
     begin
-        IsPageEditable := Rec.Status <> Rec.Status::"Pending Approval";
+        IsPageEditable :=
+        (Rec.Status <> Rec.Status::"Pending Approval") and
+        (Rec.Status <> Rec.Status::Approved) and
+        (not Rec."Short Close Indent");
+
+        IsEditable := IsPageEditable;
+
+        ShowApprovalActions := Rec.Status <> Rec.Status::Approved;
     end;
 
 

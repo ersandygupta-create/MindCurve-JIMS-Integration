@@ -200,6 +200,7 @@ page 50153 "E3 Indent Card"
                     Image = SendApprovalRequest;
                     Promoted = true;
                     PromotedCategory = Process;
+                    Visible = ShowApprovalActions;
 
                     trigger OnAction()
                     var
@@ -234,6 +235,7 @@ page 50153 "E3 Indent Card"
                     Image = CancelApprovalRequest;
                     Promoted = true;
                     PromotedCategory = Process;
+                    Visible = ShowApprovalActions;
 
                     trigger OnAction()
                     var
@@ -243,6 +245,31 @@ page 50153 "E3 Indent Card"
                         CurrPage.Update(true);
                     end;
                 }
+            }
+            action(ReopenIndent)
+            {
+                Caption = 'Reopen Indent';
+                ApplicationArea = All;
+                Image = ReOpen;
+                Promoted = true;
+                PromotedCategory = Process;
+                Visible = Rec.Status = Rec.Status::Approved;
+                ToolTip = 'Reopens the approved indent for modification.';
+
+                trigger OnAction()
+                begin
+                    if not Confirm('Do you want to reopen this approved indent?', false) then
+                        exit;
+
+                    Rec.Status := Rec.Status::Open; // Change to your initial status if different
+                    Rec."Approved By" := '';
+                    Rec."Approval Date Time" := 0DT;
+                    Rec.Modify(true);
+
+                    CurrPage.Update(true);
+
+                    Message('Indent %1 has been reopened successfully.', Rec."Document No.");
+                end;
             }
 
             action(ApprovalEntries)
@@ -273,6 +300,7 @@ page 50153 "E3 Indent Card"
     var
         IsPageEditable: Boolean;
         IsEditable: Boolean;
+        ShowApprovalActions: Boolean;
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
@@ -295,10 +323,14 @@ page 50153 "E3 Indent Card"
 
     local procedure SetPageEditable()
     begin
-        IsPageEditable := (Rec.Status <> Rec.Status::"Pending Approval") and
+        IsPageEditable :=
+        (Rec.Status <> Rec.Status::"Pending Approval") and
+        (Rec.Status <> Rec.Status::Approved) and
         (not Rec."Short Close Indent");
 
         IsEditable := IsPageEditable;
+
+        ShowApprovalActions := Rec.Status <> Rec.Status::Approved;
     end;
 
 

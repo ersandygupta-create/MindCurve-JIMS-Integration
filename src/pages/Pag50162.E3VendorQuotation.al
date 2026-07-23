@@ -229,6 +229,7 @@ page 50162 "E3 Vendor Quotation"
         NewLine: Record "E3 Indent Line";
         LastLine: Record "E3 Indent Line";
         NextLineNo: Integer;
+        UnitAmount: Decimal;
     begin
         // Validation
         if SplitQty <= 0 then
@@ -239,6 +240,8 @@ page 50162 "E3 Vendor Quotation"
                 'Split Qty (%1) cannot be greater than Approved Qty (%2).',
                 SplitQty,
                 SelectedLine."Approved Qty");
+        if SelectedLine."Requested Qty" <> 0 then
+            UnitAmount := SelectedLine.Amount / SelectedLine."Requested Qty";
 
         // Get Next Line No.
         LastLine.Reset();

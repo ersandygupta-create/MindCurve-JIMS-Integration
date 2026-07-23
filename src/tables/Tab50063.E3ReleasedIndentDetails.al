@@ -1,4 +1,4 @@
-table 50111 "E3 Released Indent Details"
+table 50063 "E3 Released Indent Details"
 {
     Caption = 'Indent Line Details';
     DataClassification = CustomerContent;
