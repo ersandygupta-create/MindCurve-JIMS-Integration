@@ -1,4 +1,4 @@
-page 50165 "E3 Released Qoutation List"
+page 50165 "E3 Released Quotation List"
 {
     DeleteAllowed = false;
     Editable = false;

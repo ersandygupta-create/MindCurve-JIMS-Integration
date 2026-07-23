@@ -43,6 +43,11 @@ tableextension 50006 "E3 HIS Purch. Rcpt. Header" extends "Purch. Rcpt. Header"
             Caption = 'Indent No.';
             DataClassification = CustomerContent;
         }
+        field(50011; "Payment Terms"; Text[100])
+        {
+            Caption = 'Payment Terms';
+            DataClassification = CustomerContent;
+        }
 
     }
 }

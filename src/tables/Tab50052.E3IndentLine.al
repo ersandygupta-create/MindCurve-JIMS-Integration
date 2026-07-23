@@ -51,8 +51,8 @@ table 50052 "E3 Indent Line"
                 if Item.Get("No.") then
                     Description := Item.Description;
                 "Unit of Measure" := Item."Base Unit of Measure";
-                "Item Make Code" := Item."Marketing Company Code";
-                "Item Make Name" := Item."Marketing Company Name";
+                "Item Make Code" := Item."Medicine Company Code";
+                "Item Make Name" := Item."Medicine Company Name";
 
                 if Type = Type::" " then
                     Error('Please select Type before selecting No.');

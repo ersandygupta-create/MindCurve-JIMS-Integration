@@ -84,12 +84,7 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Caption = 'Indent No.';
             DataClassification = CustomerContent;
         }
-        field(50011; "Delivery Terms"; Text[100])
-        {
-            Caption = 'Delivery Terms';
-            DataClassification = CustomerContent;
-        }
-        field(50012; "Payment Terms"; Text[100])
+        field(50011; "Payment Terms"; Text[100])
         {
             Caption = 'Payment Terms';
             DataClassification = CustomerContent;

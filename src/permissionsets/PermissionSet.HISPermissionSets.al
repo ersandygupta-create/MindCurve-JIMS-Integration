@@ -243,7 +243,9 @@ permissionset 50000 "E3 HIS Permission"
     page "E3 Division Master" = X,
     table "E3 GRN Work Sheet" = X,
     tabledata "E3 GRN Work Sheet" = RIMD,
-    page "E3 GRN Work Sheet" = X;
+    page "E3 GRN Work Sheet" = X,
+    table "E3 Released Indent Details" = X,
+    tabledata "E3 Released Indent Details" = RIMD;
 
 
 }

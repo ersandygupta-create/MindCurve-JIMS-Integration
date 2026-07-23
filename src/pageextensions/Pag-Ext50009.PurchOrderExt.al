@@ -47,12 +47,6 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the payment terms agreed with the vendor.';
             }
-
-            field("Delivery Terms"; Rec."Delivery Terms")
-            {
-                ApplicationArea = All;
-                ToolTip = 'Specifies the delivery terms agreed with the vendor.';
-            }
         }
         addafter("No.")
         {
