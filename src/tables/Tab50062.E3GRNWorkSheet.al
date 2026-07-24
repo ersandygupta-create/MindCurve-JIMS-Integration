@@ -252,4 +252,44 @@ table 50062 "E3 GRN Work Sheet"
             Clustered = true;
         }
     }
+
+    procedure InitFromPurchaseLine(PONo: Code[20])
+    var
+        PurchLine: Record "Purchase Line";
+        Item: Record Item;
+    begin
+        PurchLine.Reset();
+        PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+        PurchLine.SetRange("Document No.", PONo);
+
+        if PurchLine.FindSet() then
+            repeat
+                // Skip if worksheet line already exists
+                if Get(PurchLine."Document No.", PurchLine."Line No.") then
+                    continue;
+
+                Init();
+
+                "PO No." := PurchLine."Document No.";
+                "Line No." := PurchLine."Line No.";
+                "Item No." := PurchLine."No.";
+                "Item Name" := PurchLine.Description;
+                "PO Qty" := PurchLine.Quantity;
+                "Outstanding Qty" := PurchLine."Outstanding Quantity";
+                "Receipt Qty" := PurchLine."Qty. to Receive";
+                "Quantity Received" := PurchLine."Quantity Received";
+                "Invoice Qty" := PurchLine."Qty. to Invoice";
+                "Rejected Qty" := PurchLine."Qty. to Reject (C.E.)";
+                "Base Unit of Measure" := PurchLine."Unit of Measure Code";
+
+                if Item.Get(PurchLine."No.") then begin
+                    "Lot No." := Item."Lot Nos.";
+                    "Item Make Code" := Item."Medicine Company Code";
+                    "GST Type Code" := Item."GST Group Code";
+                    "Item Tracking Code" := Item."Item Tracking Code";
+                end;
+
+                Insert(true);
+            until PurchLine.Next() = 0;
+    end;
 }

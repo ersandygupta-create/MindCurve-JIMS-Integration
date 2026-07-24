@@ -53,7 +53,13 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 var
                     GRNWorkSheet: Record "E3 GRN Work Sheet";
                 begin
-                    GRNWorkSheet.SetRange("PO No.");
+                    // Create worksheet for all PO lines
+                    GRNWorkSheet.InitFromPurchaseLine(Rec."Document No.");
+
+                    // Open worksheet
+                    GRNWorkSheet.Reset();
+                    GRNWorkSheet.SetRange("PO No.", Rec."Document No.");
+
                     Page.Run(Page::"E3 GRN Work Sheet", GRNWorkSheet);
                 end;
             }
