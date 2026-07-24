@@ -240,6 +240,15 @@ page 50162 "E3 Vendor Quotation"
                 'Split Qty (%1) cannot be greater than Approved Qty (%2).',
                 SplitQty,
                 SelectedLine."Approved Qty");
+
+        if SelectedLine."Ordered Qty" <= 0 then
+            Error('Ordered Qty must be greater than 0 before splitting.');
+
+        if SplitQty > SelectedLine."Ordered Qty" then
+            Error(
+                'Split Qty (%1) cannot be greater than Ordered Qty (%2).',
+                SplitQty,
+                SelectedLine."Ordered Qty");
         if SelectedLine."Requested Qty" <> 0 then
             UnitAmount := SelectedLine.Amount / SelectedLine."Requested Qty";
 
