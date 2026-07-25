@@ -281,6 +281,8 @@ table 50062 "E3 GRN Work Sheet"
                 "Invoice Qty" := PurchLine."Qty. to Invoice";
                 "Rejected Qty" := PurchLine."Qty. to Reject (C.E.)";
                 "Base Unit of Measure" := PurchLine."Unit of Measure Code";
+                "Line Discount Amount" := PurchLine."Line Discount Amount";
+                "Line Discount Percentage" := PurchLine."Line Discount %";
 
                 if Item.Get(PurchLine."No.") then begin
                     "Lot No." := Item."Lot Nos.";

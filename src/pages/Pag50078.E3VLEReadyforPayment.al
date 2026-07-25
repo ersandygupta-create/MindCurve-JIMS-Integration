@@ -470,14 +470,18 @@ page 50078 "E3 VLE Ready for Payment"
 
                     //ExportPaymentFile.Run();
                     VendorLedgerEntry.SetRange("Ready for Payment", true);
-                    CurrPage.SetSelectionFilter(VendorLedgerEntry);//ak
+                    //CurrPage.SetSelectionFilter(VendorLedgerEntry);//ak
                     if CreatePayment.RunModal() = ACTION::OK then begin
                         CreatePayment.MakeGenJnlLines(VendorLedgerEntry);
                         GetBatchRecords(GenJournalBatch, CreatePayment);
                         GenJnlManagement.TemplateSelectionFromBatch(GenJournalBatch);
                         if VendorLedgerEntry.FindSet() then
                             repeat
-                                VendorLedgerEntry."Ready for Payment" := true;
+                                VendorLedgerEntry.CalcFields("Remaining Amount");
+                                if VendorLedgerEntry."Remaining Amount" = 0 then
+                                    VendorLedgerEntry."Ready for Payment" := true
+                                else
+                                    VendorLedgerEntry."Ready for Payment" := false;
                                 VendorLedgerEntry."CR User Id" := UserId;
                                 VendorLedgerEntry."CR DateTime" := CurrentDateTime;
                                 VendorLedgerEntry.Modify(true);
@@ -769,5 +773,6 @@ page 50078 "E3 VLE Ready for Payment"
         ChangeLogEntry.SetRange("Table No.", Database::"Vendor Ledger Entry");
         ChangeLogEntry.SetRange("Primary Key Field 1 Value", Format(Rec."Entry No.", 0, 9));
     end;
+
 }
 
