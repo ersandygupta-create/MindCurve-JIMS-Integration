@@ -17,6 +17,12 @@ table 50060 "E3 To Destination Type"
             Caption = 'Description';
             DataClassification = ToBeClassified;
         }
+        field(3; "No. Series"; Code[20])
+        {
+            Caption = 'No. Series';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
 
     }
 
@@ -46,6 +52,26 @@ table 50060 "E3 To Destination Type"
     trigger OnRename()
     begin
 
+    end;
+
+    procedure AssistEdit(OldItemSpeciality: Record "E3 To Destination Type"): Boolean
+    var
+        InventorySetup: Record "Inventory Setup";
+        NoSeries: Codeunit "No. Series";
+    begin
+        InventorySetup.Get();
+        InventorySetup.TestField("To Destination Nos");
+
+        if NoSeries.LookupRelatedNoSeries(
+            InventorySetup."To Destination Nos",
+            OldItemSpeciality."No. Series",
+            "No. Series")
+        then begin
+            Code := NoSeries.GetNextNo("No. Series", Today, true);
+            exit(true);
+        end;
+
+        exit(false);
     end;
 
 }

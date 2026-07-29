@@ -16,35 +16,42 @@ page 50169 "E3 GRN Work Sheet"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the purchase order number.';
+                    Editable = false;
                 }
                 field("Line No."; Rec."Line No.")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the line number.';
+                    Editable = false;
                 }
                 field("Item No."; Rec."Item No.")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the item number.';
+                    Editable = false;
                 }
                 field("Item Name"; Rec."Item Name")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the item name.';
                 }
                 field("PO Qty"; Rec."PO Qty")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the purchase order quantity.';
                 }
                 field("Outstanding Qty"; Rec."Outstanding Qty")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the outstanding quantity.';
                 }
                 field("Invoice Qty"; Rec."Invoice Qty")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the invoice quantity.';
                 }
                 field("Receipt Qty"; Rec."Receipt Qty")
@@ -60,6 +67,7 @@ page 50169 "E3 GRN Work Sheet"
                 field("Lot No."; Rec."Lot No.")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the lot number.';
                 }
                 field("Mfg Date"; Rec."Manufacturing Date")
@@ -71,6 +79,7 @@ page 50169 "E3 GRN Work Sheet"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the expiry date.';
+                    Editable = false;
                 }
                 field("Supplier Batch No."; Rec."Supplier Batch No.")
                 {
@@ -80,6 +89,7 @@ page 50169 "E3 GRN Work Sheet"
                 field("Line Gross"; Rec."Line Gross")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the gross amount for the line.';
                 }
                 field(MRP; Rec.MRP)
@@ -117,16 +127,18 @@ page 50169 "E3 GRN Work Sheet"
                     Caption = 'SKU Staff Sale Rate';
                     ToolTip = 'Specifies the SKU staff sale rate.';
                 }
-                field(batchNo; Rec."Batch No.")
+                field("Item Make Name"; Rec."Item Make Name")
                 {
                     ApplicationArea = All;
-                    Caption = 'Batch No.';
-                    ToolTip = 'Specifies the batch number.';
+                    Caption = 'Item Make Name';
+                    Editable = false;
+                    ToolTip = 'Specifies the name of the item make.';
                 }
                 field(itemMakeCode; Rec."Item Make Code")
                 {
                     ApplicationArea = All;
                     Caption = 'Item Make Code';
+                    Editable = false;
                     ToolTip = 'Specifies the item make code.';
                 }
                 field(gstTypeCode; Rec."GST Type Code")
@@ -139,10 +151,12 @@ page 50169 "E3 GRN Work Sheet"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the line discount amount.';
+                    Editable = false;
                 }
                 field("Line Discount Percentage"; Rec."Line Discount Percentage")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the line discount percentage.';
                 }
                 field("Taxable Amount"; Rec."Taxable Amount")

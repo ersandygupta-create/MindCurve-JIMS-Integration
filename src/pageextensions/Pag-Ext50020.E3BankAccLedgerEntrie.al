@@ -162,7 +162,6 @@ pageextension 50020 "E3 Bank Acc. Ledger Entrie" extends "Bank Account Ledger En
                     // Export after collecting all
                     IntegrationMgmt.SCExportTransactionRequestFile(TempBankAccountLedgerEntry);
                 end;
-
             }
         }
     }

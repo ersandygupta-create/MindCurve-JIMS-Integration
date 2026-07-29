@@ -17,24 +17,6 @@ codeunit 50020 "E3 Item Category Mgmt."
         E3APISetup: Record "E3 Integration API Setup";
         ItemCategory: Record "E3 Item Category Master";
 
-
-    //[NonDebuggable]
-    // local procedure GetAuthorizationText(): Text
-    // var
-    //     Base64Converter: Codeunit "Base64 Convert";
-    //     Authorization: Text;
-    //     BasicCred: Text;
-    // begin
-    //     E3APISetup.get();
-    //     E3APISetup.TestField(Username);
-    //     E3APISetup.TestField(Password);
-
-    //     BasicCred := E3APISetup.Username + ':' + E3APISetup.Password;
-    //     Authorization := 'Basic ' + Base64Converter.ToBase64(BasicCred); //, TextEncoding::UTF8);
-
-    //     exit(Authorization);
-    // end;
-
     procedure SendItemCategoryDetails(var ItemCategoryUpdateLog: Record "E3 Item Category Master"): Boolean
     var
         HttpWebClient: HttpClient;
@@ -133,11 +115,14 @@ codeunit 50020 "E3 Item Category Mgmt."
 
                     ChildObj := ResponseToken.AsObject();
 
+                    Clear(ResponseMsg);
                     if ChildObj.SelectToken('errorMsg', CJToken) then
                         ResponseMsg := CJToken.AsValue().AsText();
 
                     if ResponseMsg = 'Created Successfully' then begin
                         ItemCategoryUpdateLog.IsSent := true;
+                        ItemCategoryUpdateLog.Response :=
+                            CopyStr(ResponseMsg, 1, MaxStrLen(ItemCategoryUpdateLog.Response));
                         ItemCategoryUpdateLog."Last Sent" := CurrentDateTime;
                         ItemCategoryUpdateLog.Modify(true);
                         exit(true);
@@ -146,12 +131,16 @@ codeunit 50020 "E3 Item Category Mgmt."
             end;
 
             ItemCategoryUpdateLog.IsSent := false;
+            ItemCategoryUpdateLog.Response :=
+                CopyStr(JsonResponse, 1, MaxStrLen(ItemCategoryUpdateLog.Response));
             ItemCategoryUpdateLog."Last Sent" := CurrentDateTime;
             ItemCategoryUpdateLog.Modify(true);
             exit(false);
 
         end else begin
             ItemCategoryUpdateLog.IsSent := false;
+            ItemCategoryUpdateLog.Response :=
+                CopyStr(JsonResponse, 1, MaxStrLen(ItemCategoryUpdateLog.Response));
             ItemCategoryUpdateLog."Last Sent" := CurrentDateTime;
             ItemCategoryUpdateLog.Modify(true);
             exit(false);

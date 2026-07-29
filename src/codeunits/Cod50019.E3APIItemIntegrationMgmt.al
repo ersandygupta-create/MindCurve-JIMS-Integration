@@ -37,11 +37,12 @@ codeunit 50019 "E3 Item Integration Mgmt."
         if E3ItemLog.FindLast() then begin
             CheckItemLog.Reset();
             CheckItemLog.SetRange("No.", E3Item."No.");
-            CheckItemLog.SetRange("Sync Status", CheckItemLog."Sync Status"::Synced);
-
-            if CheckItemLog.FindFirst() then
-                E3ItemLog.D365_Status := 'Update'
-            else
+            if CheckItemLog.FindFirst() then begin
+                if CheckItemLog."Sync Status" = CheckItemLog."Sync Status"::Synced then
+                    E3ItemLog.D365_Status := 'Update'
+                else
+                    E3ItemLog.D365_Status := 'New';
+            end else
                 E3ItemLog.D365_Status := 'New';
 
             E3ItemLog.Modify(true);
@@ -267,8 +268,8 @@ codeunit 50019 "E3 Item Integration Mgmt."
         Clear(JChildObj);
         Clear(JArray);
         JChildObj.Add('code', Format(ItemUpdateLog."No."));
-        JChildObj.Add('name', Format(ItemUpdateLog.Name));
-        JChildObj.Add('displayName', Format(ItemUpdateLog."Description"));
+        JChildObj.Add('name', Format(ItemUpdateLog.Description));
+        JChildObj.Add('displayName', Format(ItemUpdateLog.Name));
         JChildObj.Add('manualCode', Format(ItemUpdateLog."Manual Code"));
         JChildObj.Add('itemGroup', Format(ItemUpdateLog."Item Group Code"));
         JChildObj.Add('itemGroupName', Format(ItemUpdateLog."Item Group"));
@@ -359,7 +360,6 @@ codeunit 50019 "E3 Item Integration Mgmt."
         JChildObj.Add('segment4', '');
         JChildObj.Add('segment5', '');
         JChildObj.Add('d365_Status', ItemUpdateLog.D365_Status);
-        //JChildObj.Add('d365_Timestamp', Format(CurrentDateTime, 0, 9));
         JChildObj.Add('hisCode', '');
         JValue.SetValueToNull();
         JChildObj.Add('hisTimestamp', JValue);

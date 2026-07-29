@@ -82,7 +82,6 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
                 begin
                     GenerateOrderAddress(Rec);
                 end;
-
             }
         }
     }

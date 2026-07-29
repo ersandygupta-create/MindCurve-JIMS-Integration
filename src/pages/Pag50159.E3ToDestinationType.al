@@ -15,6 +15,11 @@ page 50159 "E3 To Destination Type"
                 field(Code; Rec.Code)
                 {
                     ApplicationArea = All;
+                    trigger OnAssistEdit()
+                    begin
+                        if Rec.AssistEdit(xRec) then
+                            CurrPage.Update();
+                    end;
                 }
                 field(Description; Rec.Description)
                 {

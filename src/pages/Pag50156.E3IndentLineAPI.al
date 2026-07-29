@@ -75,6 +75,10 @@ page 50156 "E3 Indent Line API"
                 {
                     Caption = 'Item Make Name';
                 }
+                field(sNo; Rec."SNo.")
+                {
+                    Caption = 'SNO.';
+                }
                 field(shortcutDimension1Code; Rec."Shortcut Dimension 1 Code")
                 {
                     Caption = 'Shortcut Dimension 1 Code';

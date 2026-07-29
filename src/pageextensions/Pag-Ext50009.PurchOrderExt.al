@@ -11,6 +11,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 ApplicationArea = All;
                 Style = StrongAccent;
                 StyleExpr = true;
+                Visible = false;
                 ToolTip = 'Specifies the value of the Item Type field.';
             }
             field("E3 Delivery Terms"; Rec."E3 Delivery Terms")
@@ -18,6 +19,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 ApplicationArea = All;
                 Style = StrongAccent;
                 StyleExpr = true;
+                Editable = false;
                 ToolTip = 'Specifies the value of the Delivery Terms field.';
             }
             field("Store Name"; Rec."Store Name")
@@ -33,12 +35,14 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
             field("W/S DL No."; Rec."W/S DL No.")
             {
                 ApplicationArea = All;
+                Editable = false;
                 ToolTip = 'Specifies the Wholesale Drug License Number for the vendor.';
             }
 
             field("Retail DL No."; Rec."Retail DL No.")
             {
                 ApplicationArea = All;
+                Editable = false;
                 ToolTip = 'Specifies the Retail Drug License Number for the vendor.';
             }
         }

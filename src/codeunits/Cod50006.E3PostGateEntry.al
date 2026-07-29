@@ -75,6 +75,7 @@ codeunit 50006 "E3 Post Gate Entry"
                     PostedGateEntryLine."Asset No." := GateEntryLine."Asset No.";
                     PostedGateEntryLine."Fixed Asset Name" := GateEntryLine."Fixed Asset Name";
                     PostedGateEntryLine."Serial No." := GateEntryLine."Serial No.";
+                    PostedGateEntryLine.Specification := GateEntryLine.Specification;
                     PostedGateEntryLine."Lot No." := GateEntryLine."Lot No.";
                     PostedGateEntryLine.PostedNo := PostedGateEntryHeader.PostedNo;
                     PostedGateEntryLine."Posted Entry No." := LastEntryno;

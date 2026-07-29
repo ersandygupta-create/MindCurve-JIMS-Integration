@@ -20,16 +20,17 @@ page 50143 "E3 Item Make Master"
                     ApplicationArea = All;
                     AssistEdit = true;
 
-                    trigger OnAssistEdit()
-                    begin
-                        if Rec.AssistEdit(xRec) then
-                            CurrPage.Update();
-                    end;
+
                 }
                 field(Code; Rec.Code)
                 {
                     ToolTip = 'Specifies the value of the Code field';
                     ApplicationArea = All;
+                    trigger OnAssistEdit()
+                    begin
+                        if Rec.AssistEdit(xRec) then
+                            CurrPage.Update();
+                    end;
                 }
                 field("Company Name"; Rec."Company Name")
                 {
@@ -90,7 +91,7 @@ page 50143 "E3 Item Make Master"
                         Error('This record has already been sent.');
 
                     if ItemMakeMastMgmt.SendItemMakeMastDetails(ItemMakeMast) then begin
-                        ItemMakeMast.Get(Rec.Code);
+                        ItemMakeMast.Get(Rec.Code, Rec."Company Name");
                         ItemMakeMast."First Sent" := true;
                         ItemMakeMast.Modify();
                         Message('Data sent successfully.')

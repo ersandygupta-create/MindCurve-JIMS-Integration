@@ -83,6 +83,18 @@ tableextension 50068 "E3 Inventory Setup Ext" extends "Inventory Setup"
             Caption = 'GRN Lot Nos.';
             TableRelation = "No. Series";
         }
+        field(50012; "Purpose Nos"; Code[20])
+        {
+            Caption = 'Purpose Nos';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
+        field(50013; "To Destination Nos"; Code[20])
+        {
+            Caption = 'To Destination Nos';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
     }
 
     keys

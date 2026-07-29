@@ -173,8 +173,9 @@ report 50100 "E3 Create Purchase Order"
         PurchaseLine.Validate("Indent No.", IndentLine."Document No.");
         PurchaseLine.Validate("Indent Line No.", IndentLine."Line No.");
         PurchaseLine.Validate(PurchaseLine."Shortcut Dimension 1 Code", IndentLine."Shortcut Dimension 1 Code");
-        PurchaseLine.Validate(PurchaseLine."Shortcut Dimension 2 Code");
+        PurchaseLine.Validate(PurchaseLine."Shortcut Dimension 2 Code", IndentLine."Shortcut Dimension 2 Code");
         PurchaseLine.Validate("Requested Receipt Date", IndentLine."Requested Received Date");
+        PurchaseLine.Validate("SNo.", IndentLine."SNo.");
         Case PurchLineType of
             1:
                 PurchaseLine.Validate("Line Discount %", IndentLine."Discount %");

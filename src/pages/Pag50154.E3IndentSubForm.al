@@ -87,6 +87,11 @@ page 50154 "E3 Indent Line Subform"
                     ApplicationArea = All;
                     Editable = IsLineEditable;
                 }
+                field("SNo."; Rec."SNo.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specify a value SNo. field.';
+                }
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = All;

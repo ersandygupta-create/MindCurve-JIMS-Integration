@@ -136,10 +136,9 @@ table 50062 "E3 GRN Work Sheet"
             Caption = 'SKU Staff Sale Rate';
             DataClassification = CustomerContent;
         }
-
-        field(22; "Batch No."; Code[50])
+        field(22; "Item Make Name"; Text[60])
         {
-            Caption = 'Batch No.';
+            Caption = 'Item Make Name';
             DataClassification = CustomerContent;
         }
 
@@ -275,6 +274,7 @@ table 50062 "E3 GRN Work Sheet"
                 "Item No." := PurchLine."No.";
                 "Item Name" := PurchLine.Description;
                 "PO Qty" := PurchLine.Quantity;
+                "Line Gross" := PurchLine."Line Amount";
                 "Outstanding Qty" := PurchLine."Outstanding Quantity";
                 "Receipt Qty" := PurchLine."Qty. to Receive";
                 "Quantity Received" := PurchLine."Quantity Received";
@@ -283,11 +283,12 @@ table 50062 "E3 GRN Work Sheet"
                 "Base Unit of Measure" := PurchLine."Unit of Measure Code";
                 "Line Discount Amount" := PurchLine."Line Discount Amount";
                 "Line Discount Percentage" := PurchLine."Line Discount %";
+                "Item Make Code" := PurchLine."Item Make Code";
+                "Item Make Name" := PurchLine."Item Make Name";
+                "GST Type Code" := PurchLine."GST Group Code";
 
                 if Item.Get(PurchLine."No.") then begin
                     "Lot No." := Item."Lot Nos.";
-                    "Item Make Code" := Item."Medicine Company Code";
-                    "GST Type Code" := Item."GST Group Code";
                     "Item Tracking Code" := Item."Item Tracking Code";
                 end;
 

@@ -40,6 +40,11 @@ tableextension 50018 "E3 HIS Purch. Inv. Line" extends "Purch. Inv. Line"
             Caption = 'Critical';
             DataClassification = CustomerContent;
         }
+        field(50009; "SNo."; Integer)
+        {
+            Caption = 'SNo.';
+            DataClassification = CustomerContent;
+        }
 
     }
 }

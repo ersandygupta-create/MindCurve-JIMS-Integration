@@ -38,6 +38,11 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Caption = 'Free Qty';
             DataClassification = CustomerContent;
         }
+        field(50009; "SNo."; Integer)
+        {
+            Caption = 'SNo.';
+            DataClassification = CustomerContent;
+        }
         modify("No.")
         {
             trigger OnAfterValidate()

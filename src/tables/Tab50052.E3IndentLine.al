@@ -161,13 +161,17 @@ table 50052 "E3 Indent Line"
             begin
                 if "Vendor No." = '' then begin
                     "Vendor Name" := '';
+                    "Payment Terms" := '';
                     exit;
                 end;
 
-                if VendorRec.Get("Vendor No.") then
-                    "Vendor Name" := VendorRec.Name
-                else
+                if VendorRec.Get("Vendor No.") then begin
+                    "Vendor Name" := VendorRec.Name;
+                    Validate("Payment Terms", VendorRec."Payment Terms Code");
+                end else begin
                     "Vendor Name" := '';
+                    "Payment Terms" := '';
+                end;
             end;
         }
         field(14; "Vendor Name"; Text[100])
@@ -182,7 +186,7 @@ table 50052 "E3 Indent Line"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                "Quotation Amount" := "Approved Qty" * "Quotation Price";
+                "Quotation Amount" := "Ordered Qty" * "Quotation Price";
             end;
         }
         field(16; "Quotation Amount"; Decimal)
@@ -321,6 +325,11 @@ table 50052 "E3 Indent Line"
         field(40; "Created PO Qty"; Decimal)
         {
             Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(41; "SNo."; Integer)
+        {
+            Caption = 'SNo.';
             DataClassification = CustomerContent;
         }
         field(80285; "Currency Code"; Code[10])

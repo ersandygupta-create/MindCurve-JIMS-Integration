@@ -35,6 +35,12 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 ApplicationArea = All;
                 ToolTip = 'Specifies the line number associated with the selected Indent Number.';
             }
+            field("SNo."; Rec."SNo.")
+            {
+                ApplicationArea = All;
+                Editable = false;
+                ToolTip = 'Specify a value SNo.';
+            }
         }
     }
     actions

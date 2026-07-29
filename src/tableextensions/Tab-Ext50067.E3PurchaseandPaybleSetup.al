@@ -25,6 +25,12 @@ tableextension 50067 "E3 Purchase & Payable Setup" extends "Purchases & Payables
             TableRelation = "No. Series".Code;
             DataClassification = CustomerContent;
         }
+        field(50004; "Indent Nos."; Code[20])
+        {
+            Caption = 'Indent Nos.';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
         field(50005; "Posted Gate Entry Inward No."; Code[20])
         {
             Caption = 'Posted Gate Entry Inward Document No.';
@@ -36,12 +42,6 @@ tableextension 50067 "E3 Purchase & Payable Setup" extends "Purchases & Payables
             Caption = 'Posted Gate Entry Outward Document No.';
             TableRelation = "No. Series".Code;
             DataClassification = CustomerContent;
-        }
-        field(50004; "Indent Nos."; Code[20])
-        {
-            Caption = 'Indent Nos.';
-            DataClassification = CustomerContent;
-            TableRelation = "No. Series";
         }
 
 

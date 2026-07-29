@@ -102,7 +102,7 @@ page 50107 "E3 Posted Gate Ent Outward Hdr"
                 {
                     ToolTip = 'Specifies the value of the GRN ID field';
                     ApplicationArea = All;
-                    Visible = false;
+                    Visible = true;
                 }
                 field("Expected Return Date"; Rec."Expected Return Date")
                 {
@@ -126,6 +126,16 @@ page 50107 "E3 Posted Gate Ent Outward Hdr"
                 UpdatePropagation = Both;
                 SubPageLink = "Outward Document No." = FIELD("Outward Document No.");
                 Caption = 'Gate Entry Outward Line';
+            }
+        }
+        area(factboxes)
+        {
+            part("Attached Documents List"; "Doc. Attachment List Factbox")
+            {
+                ApplicationArea = All;
+                Caption = 'Documents';
+                UpdatePropagation = Both;
+                SubPageLink = "Table ID" = const(Database::"E3 Gate Entry Header"), "No." = field("Document No.");
             }
         }
     }

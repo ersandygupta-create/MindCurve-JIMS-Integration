@@ -4,6 +4,12 @@ pageextension 50080 "E3 Item List Ext" extends "Item List"
     {
         addafter("No.")
         {
+            field(Name; Rec.Name)
+            {
+                ToolTip = 'Specify A value Name field.';
+                ApplicationArea = All;
+                Editable = false;
+            }
             field("CommonItem No."; Rec."Common Item No.")
             {
                 Caption = 'Common Item No.';

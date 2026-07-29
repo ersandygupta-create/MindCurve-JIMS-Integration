@@ -17,6 +17,12 @@ table 50059 "E3 Purpose Type"
             Caption = 'Description';
             DataClassification = ToBeClassified;
         }
+        field(3; "No. Series"; Code[20])
+        {
+            Caption = 'No. Series';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
 
     }
 
@@ -46,6 +52,26 @@ table 50059 "E3 Purpose Type"
     trigger OnRename()
     begin
 
+    end;
+
+    procedure AssistEdit(OldItemSpeciality: Record "E3 Purpose Type"): Boolean
+    var
+        InventorySetup: Record "Inventory Setup";
+        NoSeries: Codeunit "No. Series";
+    begin
+        InventorySetup.Get();
+        InventorySetup.TestField("Purpose Nos");
+
+        if NoSeries.LookupRelatedNoSeries(
+            InventorySetup."Purpose Nos",
+            OldItemSpeciality."No. Series",
+            "No. Series")
+        then begin
+            Code := NoSeries.GetNextNo("No. Series", Today, true);
+            exit(true);
+        end;
+
+        exit(false);
     end;
 
 }

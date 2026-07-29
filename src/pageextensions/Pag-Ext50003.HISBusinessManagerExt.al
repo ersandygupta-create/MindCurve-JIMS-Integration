@@ -711,6 +711,20 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                             ToolTip = 'Create a new Gate Entry Inward for Vendor.';
                         }
                     }
+                    group(Approval)
+                    {
+                        Caption = 'Gate Pass Approval';
+                        action("E3 Gate Pass Approval")
+                        {
+                            AccessByPermission = TableData "E3 Gate Entry Header" = IMD;
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Gate Pass Approval';
+                            Image = Archive;
+                            RunObject = Page "E3 Approval Gate Pass Outward";
+                            RunPageMode = Create;
+                            ToolTip = 'Approval a new Gate Entry Outward';
+                        }
+                    }
 
                     group("E3 Posted Gate Entry")
                     {

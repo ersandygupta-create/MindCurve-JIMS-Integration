@@ -302,4 +302,73 @@ codeunit 50001 "E3 HIS Event Subscriber"
     end;
 
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document Attachment Mgmt",
+ 'OnAfterGetRefTable', '', false, false)]
+    local procedure UploadAttachmentGatePass(DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef)
+    var
+        GateEntryHeader: Record "E3 Gate Entry Header";
+        PostedGateEntryHeader: Record "E3 Posted Gate Entry Header";
+    begin
+        case DocumentAttachment."Table ID" of
+            Database::"E3 Gate Entry Header":
+                begin
+                    GateEntryHeader.SetRange("Document No.", DocumentAttachment."No.");
+                    if GateEntryHeader.FindFirst() then
+                        RecRef.GetTable(GateEntryHeader);
+                end;
+
+            Database::"E3 Posted Gate Entry Header":
+                begin
+                    PostedGateEntryHeader.SetRange("Document No.", DocumentAttachment."No.");
+                    if PostedGateEntryHeader.FindFirst() then
+                        RecRef.GetTable(PostedGateEntryHeader);
+                end;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document Attachment Mgmt", 'OnAfterTableHasNumberFieldPrimaryKey', '', false, false)]
+    local procedure SetPrimaryKeyForGatePassAttachment(TableNo: Integer; var FieldNo: Integer; var Result: Boolean)
+    begin
+        if TableNo <> Database::"E3 Gate Entry Header" then exit;
+        FieldNo := 4;
+        Result := true;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document Attachment Mgmt", 'OnCopyAttachmentsOnAfterSetFromParameters', '', false, false)]
+    local procedure E3SetGatePasstoCopy(FromRecRef: RecordRef; var FromDocumentAttachment: Record "Document Attachment")
+    var
+        FromFieldRef: FieldRef;
+        FromNo: Code[20];
+    begin
+        case FromRecRef.Number() of
+            Database::"E3 Gate Entry Header":
+                begin
+                    FromFieldRef := FromRecRef.Field(1);
+                    FromNo := FromFieldRef.Value();
+                    FromDocumentAttachment.SetRange("No.", FromNo);
+                end;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document Attachment Mgmt", 'OnCopyAttachmentsOnAfterSetDocumentFlowFilter', '', false, false)]
+    local procedure E3RemoveFilterFromAttachment(FromRecRef: RecordRef; var FromDocumentAttachment: Record "Document Attachment")
+    begin
+        If FromRecRef.Number <> Database::"E3 Gate Entry Header" then exit;
+        FromDocumentAttachment.SetRange("Document Flow Purchase");
+    end;
+    //copy attachments
+    procedure DocAttachFlowFromGatePassToPostedGatePass(
+    var GatePass: Record "E3 Gate Entry Header";
+    var PostedGatePass: Record "E3 Posted Gate Entry Header")
+    var
+        DocumentAttachmentMgmt: Codeunit "Document Attachment Mgmt";
+        FromRecRef: RecordRef;
+        ToRecRef: RecordRef;
+    begin
+        FromRecRef.GetTable(GatePass);
+        ToRecRef.GetTable(PostedGatePass);
+
+        DocumentAttachmentMgmt.CopyAttachments(FromRecRef, ToRecRef);
+    end;
+
 }

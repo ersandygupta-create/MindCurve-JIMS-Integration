@@ -100,7 +100,8 @@ page 50134 "E3 Gate Entry Outward Header"
                 {
                     ToolTip = 'Specifies the value of the GRN ID field';
                     ApplicationArea = All;
-                    Visible = false;
+                    Visible = true;
+                    Editable = false;
                 }
                 field("Expected Return Date"; Rec."Expected Return Date")
                 {
@@ -126,6 +127,16 @@ page 50134 "E3 Gate Entry Outward Header"
                 Caption = 'Gate Entry Outward Line';
             }
         }
+        area(factboxes)
+        {
+            part("Attached Documents List"; "Doc. Attachment List Factbox")
+            {
+                ApplicationArea = All;
+                Caption = 'Documents';
+                UpdatePropagation = Both;
+                SubPageLink = "Table ID" = const(Database::"E3 Gate Entry Header"), "No." = field("Document No.");
+            }
+        }
     }
 
     actions
@@ -147,20 +158,61 @@ page 50134 "E3 Gate Entry Outward Header"
                     GateTransfer: Codeunit "E3 Gate Entry Transfer";
                     Inward: Boolean;
                     PurchPaybleSetup: Record "Purchases & Payables Setup";
+                    GateEntryHeader: Record "E3 Gate Entry Header";
                 begin
+                    if Rec.Status <> Rec.Status::Approved then
+                        Error('You can ship only when the Gate Pass status is Approved.');
+
                     PurchPaybleSetup.Get();
-                    //  PurchPaybleSetup.TestField("Posted Gate Entry Inward No.");
                     PurchPaybleSetup.TestField("Posted Gate Entry Outward No.");
 
                     Inward := true;
+
                     if Rec."Gate Pass Type" = Rec."Gate Pass Type"::"Non-Returnable" then begin
                         Message('Inward cannot be created for Gate Pass Type Non-Returnable.');
                         Inward := false;
-                        GateTransfer.PostOutwardGateEntry(Rec, Inward);
-                    end
-                    else
-                        GateTransfer.PostOutwardGateEntry(Rec, Inward);
+                    end;
 
+                    // Print Posted Gate Pass
+                    GateEntryHeader.Reset();
+                    GateEntryHeader.SetRange("Entry No.", Rec."Entry No."); // Change field if required
+
+                    if GateEntryHeader.FindLast() then
+                        Report.RunModal(
+                            Report::"Gate OutWard Print",
+                            false,
+                            false,
+                            GateEntryHeader);
+                    // Post Gate Pass
+                    GateTransfer.PostOutwardGateEntry(Rec, Inward);
+
+
+                end;
+            }
+            action(SendApproval)
+            {
+                Caption = 'Send Approval';
+                Image = SendApprovalRequest;
+                ApplicationArea = All;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                ToolTip = 'Send the Gate Pass for approval.';
+
+                trigger OnAction()
+                begin
+                    if (Rec.Status <> Rec.Status::Open) and
+                       (Rec.Status <> Rec.Status::Cancelled) then
+                        Error('Only Open or Cancelled documents can be sent for approval.');
+
+                    if not Confirm('Do you want to send this Gate Pass for approval?', true) then
+                        exit;
+
+                    Rec.Status := Rec.Status::"Pending Approval";
+                    Rec.Modify(true);
+
+                    Message('Gate Pass has been sent for approval.');
+                    CurrPage.Update(false);
                 end;
             }
         }
@@ -173,6 +225,7 @@ page 50134 "E3 Gate Entry Outward Header"
         UserSetup: Record "User Setup";
         ResponsibiltyCenter: Record "Responsibility Center";
     begin
+        Rec."Posting Date" := WorkDate();
         UserSetup.Reset();
         UserSetup.SetRange("User ID", UserId());
         If UserSetup.Find('-') then begin

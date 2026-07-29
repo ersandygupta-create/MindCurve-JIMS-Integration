@@ -75,6 +75,11 @@ page 50168 "E3 HIS Indent Line Subform"
                     ApplicationArea = All;
                     Editable = false;
                 }
+                field("SNo."; Rec."SNo.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specify a value SNo. field.';
+                }
                 field("Requested Received Date"; Rec."Requested Received Date")
                 {
                     ApplicationArea = All;

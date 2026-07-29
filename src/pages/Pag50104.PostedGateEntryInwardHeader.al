@@ -103,7 +103,7 @@ page 50104 "E3 Posted Gate Ent Inward Hdr"
                 {
                     ToolTip = 'Specifies the value of the GRN ID field';
                     ApplicationArea = All;
-                    Visible = false;
+                    Visible = true;
                 }
                 field("Expected Return Date"; Rec."Expected Return Date")
                 {
@@ -133,6 +133,16 @@ page 50104 "E3 Posted Gate Ent Inward Hdr"
                 UpdatePropagation = Both;
                 SubPageLink = PostedNo = FIELD(PostedNo);
                 Caption = 'Gate Entry Inward Line';
+            }
+        }
+        area(factboxes)
+        {
+            part("Attached Documents List"; "Doc. Attachment List Factbox")
+            {
+                ApplicationArea = All;
+                Caption = 'Documents';
+                UpdatePropagation = Both;
+                SubPageLink = "Table ID" = const(Database::"E3 Gate Entry Header"), "No." = field("Document No.");
             }
         }
     }

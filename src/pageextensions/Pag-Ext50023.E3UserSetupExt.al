@@ -65,6 +65,11 @@ pageextension 50023 "E3 User Setup Ext" extends "User Setup"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the UOM Editable field.';
             }
+            field("Gate Pass Approval"; Rec."Gate Pass Approval")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specify a value Gate Pass Approver Authorization';
+            }
 
         }
     }

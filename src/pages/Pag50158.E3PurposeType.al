@@ -15,6 +15,11 @@ page 50158 "E3 Purpose Type"
                 field(Code; Rec.Code)
                 {
                     ApplicationArea = All;
+                    trigger OnAssistEdit()
+                    begin
+                        if Rec.AssistEdit(xRec) then
+                            CurrPage.Update();
+                    end;
                 }
                 field(Description; Rec.Description)
                 {

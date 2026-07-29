@@ -270,12 +270,6 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies whether this is a IsActive item.';
                 }
-                field(SkuName; Rec.SkuName)
-                {
-                    ApplicationArea = All;
-                    Editable = false;
-                    ToolTip = 'Specifies whether this is a SkuName item.';
-                }
                 field("Allow Negative Stock"; Rec."Allow Negative Stock")
                 {
                     ApplicationArea = All;
@@ -295,19 +289,6 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     Caption = 'Common';
                     ToolTip = 'Specifies whether this is a common item.';
                 }
-
-                field("Scheme On Qty"; Rec."Scheme On Qty")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the quantity on which the scheme is applicable.';
-                }
-
-                field("Scheme Free Qty"; Rec."Scheme Free Qty")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the free quantity provided under the scheme.';
-                }
-
                 field("Is Life Saving"; Rec."Is Life Saving")
                 {
                     ApplicationArea = All;
@@ -333,11 +314,6 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     ApplicationArea = All;
                     Caption = 'Billed Item';
                     ToolTip = 'Specifies whether this item is billed to the customer.';
-                }
-                field(Packing; Rec.Packing)
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of Packing field.';
                 }
                 field("Narcotics Control Substances"; Rec."Narcotics Control Substances")
                 {
@@ -384,6 +360,69 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of BarCode Active field.';
                 }
+                field("Psychotropic Substance Flag"; Rec."Psychotropic Substance Flag")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the item is a psychotropic substance.';
+                }
+
+                field("Schedule H1 Tagging"; Rec."Schedule H1 Tagging")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the item belongs to Schedule H1.';
+                }
+
+                field(Formulary; Rec.Formulary)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the item is a formulary item.';
+                }
+
+                field("Anti TB"; Rec."Anti TB")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the item is an Anti-TB medicine.';
+                }
+
+                field(Antibiotic; Rec.Antibiotic)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the item is an antibiotic.';
+                }
+
+                field("Capex / Opex tagging"; Rec."Capex / Opex tagging")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the item is a Capex / Opex tagging item.';
+                }
+
+                field("PO Mandatory"; Rec."PO Mandatory")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether a Purchase Order is mandatory for this item.';
+                }
+                field(SkuName; Rec.SkuName)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies whether this is a SkuName item.';
+                }
+                field("Scheme On Qty"; Rec."Scheme On Qty")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the quantity on which the scheme is applicable.';
+                }
+                field("Scheme Free Qty"; Rec."Scheme Free Qty")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the free quantity provided under the scheme.';
+                }
+                field(Packing; Rec.Packing)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of Packing field.';
+                }
+
                 field("Filter Item Type Code"; Rec."Filter Item Type Code")
                 {
                     ApplicationArea = All;

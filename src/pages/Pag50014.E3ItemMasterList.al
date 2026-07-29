@@ -30,12 +30,20 @@ page 50014 "E3 Item Master List"
                         CurrPage.Update(false);
                     end;
                 }
+                field("Item Type 1 Name"; Rec."Item Type 1 Name")
+                {
+                    Editable = false;
+                }
                 field("Material Category"; Rec."Material Category Code")
                 {
                     ApplicationArea = All;
                     Caption = 'Material Category';
                     Editable = MaterialCategoryEditable;
                     ToolTip = 'Specifies the Material Category.';
+                }
+                field("Material Category Name"; Rec."Material Category Name")
+                {
+                    Editable = false;
                 }
 
                 field("Display Name"; Rec."Display Name")
@@ -53,6 +61,10 @@ page 50014 "E3 Item Master List"
                     Editable = StrengthEditable;
                     ToolTip = 'Specifies the Strength.';
                 }
+                field("Strength Name"; Rec."Strength Name")
+                {
+                    Editable = false;
+                }
 
                 field("Material Type Code"; Rec."Material Type Code")
                 {
@@ -60,12 +72,19 @@ page 50014 "E3 Item Master List"
                     Editable = MaterialTypeEditable;
                     ToolTip = 'Specifies the Material Type.';
                 }
-
+                field("Material Type Name"; Rec."Material Type Name")
+                {
+                    Editable = false;
+                }
                 field(Specification; Rec."Specification Code")
                 {
                     ApplicationArea = All;
                     Editable = SpecificationEditable;
                     ToolTip = 'Specifies the Specification.';
+                }
+                field("Specification Name"; Rec."Specification Name")
+                {
+                    Editable = false;
                 }
 
                 field(Model; Rec."Model Code")
@@ -73,6 +92,10 @@ page 50014 "E3 Item Master List"
                     ApplicationArea = All;
                     Editable = ModelEditable;
                     ToolTip = 'Specifies the Model.';
+                }
+                field("Model Name"; Rec."Model Name")
+                {
+                    Editable = false;
                 }
             }
         }

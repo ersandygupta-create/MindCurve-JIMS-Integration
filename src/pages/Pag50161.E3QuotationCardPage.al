@@ -105,6 +105,7 @@ page 50161 "E3 Quotation Card"
                 var
                     Location: Record Location;
                     IndentLine: Record "E3 Indent Line";
+                    PONos: Text[200];
                 begin
                     if not Confirm('Do you want to create Purchase Order?', true) then
                         exit;
@@ -134,8 +135,25 @@ page 50161 "E3 Quotation Card"
                     CreatePurchaseOrders.SetNoSeries(Location."E3 Indent PO Series");
                     CreatePurchaseOrders.SetTableView(IndentLine);
                     CreatePurchaseOrders.RunModal();
+                    Clear(PONos);
 
-                    Message('Purchase Order created successfully.');
+                    if IndentLine.FindSet() then
+                        repeat
+                            if StrPos(',' + PONos + ',', ',' + IndentLine."Purchase Order No." + ',') = 0 then begin
+                                if PONos = '' then
+                                    PONos := IndentLine."Purchase Order No."
+                                else
+                                    PONos += ', ' + IndentLine."Purchase Order No.";
+                            end;
+                        until IndentLine.Next() = 0;
+
+                    if PONos <> '' then
+                        Message(
+                            'Purchase Order(s) created successfully.%1PO No.(s): %2',
+                            '\',
+                            PONos)
+                    else
+                        Message('Purchase Order created successfully.');
                 end;
             }
         }

@@ -14,11 +14,13 @@ pageextension 50066 "Posted Purch Receipt Card Ext" extends "Posted Purchase Rec
             field("W/S DL No."; Rec."W/S DL No.")
             {
                 ApplicationArea = All;
+                Editable = false;
             }
 
             field("Retail DL No."; Rec."Retail DL No.")
             {
                 ApplicationArea = All;
+                Editable = false;
             }
         }
 

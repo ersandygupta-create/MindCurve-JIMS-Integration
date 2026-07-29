@@ -67,6 +67,11 @@ tableextension 50027 "E3 Uset Setup Ext" extends "User Setup"
             Caption = 'UOM Editable';
             DataClassification = CustomerContent;
         }
+        field(50013; "Gate Pass Approval"; Boolean)
+        {
+            Caption = 'Gate Pass Approval';
+            DataClassification = CustomerContent;
+        }
 
     }
 }

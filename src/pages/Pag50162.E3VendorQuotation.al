@@ -78,6 +78,12 @@ page 50162 "E3 Vendor Quotation"
                     Caption = 'Amount';
                     ToolTip = 'Specifies the required Amount.';
                 }
+                field("SNo."; Rec."SNo.")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specify a value SNo. field.';
+                }
                 field("Created PO Qty"; Rec."Created PO Qty")
                 {
                     ToolTip = 'Specifies the required Created PO Qty.';
@@ -230,6 +236,7 @@ page 50162 "E3 Vendor Quotation"
         LastLine: Record "E3 Indent Line";
         NextLineNo: Integer;
         UnitAmount: Decimal;
+        QuoteAmt: Decimal;
     begin
         // Validation
         if SplitQty <= 0 then
@@ -241,16 +248,19 @@ page 50162 "E3 Vendor Quotation"
                 SplitQty,
                 SelectedLine."Approved Qty");
 
-        if SelectedLine."Ordered Qty" <= 0 then
-            Error('Ordered Qty must be greater than 0 before splitting.');
+        // if SelectedLine."Ordered Qty" <= 0 then
+        //     Error('Ordered Qty must be greater than 0 before splitting.');
 
-        if SplitQty > SelectedLine."Ordered Qty" then
-            Error(
-                'Split Qty (%1) cannot be greater than Ordered Qty (%2).',
-                SplitQty,
-                SelectedLine."Ordered Qty");
-        if SelectedLine."Requested Qty" <> 0 then
-            UnitAmount := SelectedLine.Amount / SelectedLine."Requested Qty";
+        // if SplitQty > SelectedLine."Ordered Qty" then
+        //     Error(
+        //         'Split Qty (%1) cannot be greater than Ordered Qty (%2).',
+        //         SplitQty,
+        //         SelectedLine."Approved Qty");
+        if SelectedLine."Approved Qty" <> 0 then
+            UnitAmount := SelectedLine.Amount / SelectedLine."Approved Qty";
+
+        if SelectedLine."Approved Qty" <> 0 then
+            QuoteAmt := SelectedLine."Quotation Amount" / SelectedLine."Approved Qty";
 
         // Get Next Line No.
         LastLine.Reset();
@@ -277,7 +287,7 @@ page 50162 "E3 Vendor Quotation"
         // Update Original Line
         SelectedLine.Validate("Requested Qty", SelectedLine."Requested Qty" - SplitQty);
         SelectedLine.Validate("Approved Qty", SelectedLine."Approved Qty" - SplitQty);
-        SelectedLine.Validate("Ordered Qty", SelectedLine."Approved Qty" - SplitQty);
+        //SelectedLine.Validate("Ordered Qty", SelectedLine."Approved Qty" - SplitQty);
 
         SelectedLine."Split Line" := true;
         SelectedLine."SplitedLines" := false;

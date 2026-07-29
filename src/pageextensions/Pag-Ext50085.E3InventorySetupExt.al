@@ -75,7 +75,17 @@ pageextension 50085 "E3 Inventory Setup Ext" extends "Inventory Setup"
                 field("GRN Lot Nos."; Rec."GRN Lot Nos.")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the number series for GRN Lot Nos..';
+                    ToolTip = 'Specifies the number series for GRN Lot Nos.';
+                }
+                field("Purpose Nos"; Rec."Purpose Nos")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the number series for Purpose Nos..';
+                }
+                field("To Destination Nos"; Rec."To Destination Nos")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the number series for To Destination Nos..';
                 }
             }
         }

@@ -691,6 +691,53 @@ table 50046 "E3 API Item Update Log"
             Caption = 'D365_Status';
             DataClassification = CustomerContent;
         }
+        field(50098; "Psychotropic Substance Flag"; Boolean)
+        {
+            Caption = 'Psychotropic Substance Flag';
+            DataClassification = CustomerContent;
+        }
+
+        field(50099; "Schedule H1 Tagging"; Boolean)
+        {
+            Caption = 'Schedule H1 Tagging';
+            DataClassification = CustomerContent;
+        }
+
+        field(50100; Formulary; Boolean)
+        {
+            Caption = 'Formulary';
+            DataClassification = CustomerContent;
+        }
+
+        field(50101; "Non-Formulary"; Boolean)
+        {
+            Caption = 'Non-Formulary';
+            DataClassification = CustomerContent;
+        }
+
+        field(50102; "Anti TB"; Boolean)
+        {
+            Caption = 'Tagging Anti TB';
+            DataClassification = CustomerContent;
+        }
+
+        field(50103; Antibiotic; Boolean)
+        {
+            Caption = 'Tagging Antibiotic';
+            DataClassification = CustomerContent;
+        }
+
+        field(50104; "Capex / Opex Tagging"; Boolean)
+        {
+            Caption = 'Capex / Opex Tagging';
+            DataClassification = CustomerContent;
+        }
+
+        field(50105; "PO Mandatory"; Boolean)
+        {
+            Caption = 'PO Mandatory';
+            DataClassification = CustomerContent;
+        }
         field(91; "Gen. Prod. Posting Group"; Code[20])
         {
             Caption = 'Gen. Prod. Posting Group';
