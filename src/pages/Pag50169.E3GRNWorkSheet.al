@@ -81,6 +81,46 @@ page 50169 "E3 GRN Work Sheet"
                     ToolTip = 'Specifies the expiry date.';
                     Editable = false;
                 }
+                field("Indent Doc ID"; Rec."Indent Doc ID")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the indent number.';
+                }
+                field("Indent Line No."; Rec."Indent Line No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the indent line number.';
+                }
+                field("Department Code"; Rec."Department Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the department code.';
+                }
+                field("Department Name"; Rec."Department Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the department name.';
+                }
+                field("Unit Code"; Rec."Unit Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the SKU unit of measure (UOM).';
+                }
+                field("HSN Code"; Rec."HSN Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the HSN code.';
+                }
+                field("Indent SKU Qty"; Rec."Indent SKU Qty")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the requested quantity from the indent.';
+                }
+                field("Item GST Nature"; Rec."Item GST Nature")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the GST nature of the item.';
+                }
                 field("Supplier Batch No."; Rec."Supplier Batch No.")
                 {
                     ApplicationArea = All;
@@ -126,6 +166,31 @@ page 50169 "E3 GRN Work Sheet"
                     ApplicationArea = All;
                     Caption = 'SKU Staff Sale Rate';
                     ToolTip = 'Specifies the SKU staff sale rate.';
+                }
+                field("OH Amt Net"; Rec."OH Amt Net")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the line net amount.';
+                }
+                field("Landed SKU Value"; Rec."Landed SKU Value")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the line landed SKU value.';
+                }
+                field("Landed SKU Rate"; Rec."Landed SKU Rate")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the line landed SKU rate.';
+                }
+                field(Remark; Rec.Remark)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the line remark.';
+                }
+                field(Rate; Rec.Rate)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the purchase rate.';
                 }
                 field("Item Make Name"; Rec."Item Make Name")
                 {

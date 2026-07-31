@@ -40,6 +40,11 @@ table 50054 "E3 HSN/SAC Log"
         {
             Caption = 'Error Message';
         }
+        field(50000; GLEN; Enum "E3 GLEN Type")
+        {
+            Caption = 'GLEN';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

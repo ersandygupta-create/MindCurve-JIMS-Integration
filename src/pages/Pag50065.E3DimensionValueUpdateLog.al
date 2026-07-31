@@ -27,6 +27,11 @@ page 50065 "E3 Dimension Value List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the dimension value name.';
                 }
+                field(Nature; Rec.Nature)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the dimension value Nature.';
+                }
                 field("Sync Status"; Rec."Sync Status")
                 {
                     ToolTip = 'Specifies the Sync Status.';

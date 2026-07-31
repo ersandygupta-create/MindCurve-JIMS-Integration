@@ -1,5 +1,16 @@
 pageextension 50081 "E3 HSN/SAC Ext" extends "HSN/SAC"
 {
+    layout
+    {
+        addafter(Type)
+        {
+            field(GLEN; Rec.GLEN)
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the GLEN classification for the HSN/SAC code.';
+            }
+        }
+    }
     actions
     {
         addlast(Processing)

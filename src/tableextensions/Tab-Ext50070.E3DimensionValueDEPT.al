@@ -1,5 +1,13 @@
 tableextension 50070 "E3 Dimension Value Ext" extends "Dimension Value"
 {
+    fields
+    {
+        field(50000; Nature; Text[100])
+        {
+            Caption = 'Nature';
+            DataClassification = CustomerContent;
+        }
+    }
     trigger OnBeforeInsert()
     begin
         GeneralLedgerSetup.Get();

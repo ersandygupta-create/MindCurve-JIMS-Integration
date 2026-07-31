@@ -200,7 +200,7 @@ table 50052 "E3 Indent Line"
             Caption = 'Entry No.';
             DataClassification = CustomerContent;
         }
-        field(18; "Item Make Code"; Code[30])
+        field(18; "Item Make Code"; Code[20])
         {
             Caption = 'Item Make Code';
             //Editable = false;

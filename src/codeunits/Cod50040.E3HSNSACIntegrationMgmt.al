@@ -4,12 +4,28 @@ codeunit 50040 "E3 HSN/SAC Mgmt."
     TableNo = "Job Queue Entry";
 
     trigger OnRun()
+    var
+        HSNLog: Record "E3 HSN/SAC Log";
     begin
         if not E3APISetup.Get() then
             exit;
 
         if not E3APISetup."Integration Enabled" then
             exit;
+
+        // Refresh HSN/SAC Log
+        InsertHSNSACToLog(HSNLog);
+
+        // Send Pending/Error records
+        HSNLog.Reset();
+        HSNLog.SetFilter("Sync Status", '%1|%2',
+            HSNLog."Sync Status"::" ",
+            HSNLog."Sync Status"::Error);
+
+        if HSNLog.FindSet() then
+            repeat
+                SendHSNSACDetails(HSNLog);
+            until HSNLog.Next() = 0;
     end;
 
     procedure SendtoHSNLog(var E3HSNUpdateLog: Record "E3 HSN/SAC Log")
@@ -43,11 +59,13 @@ codeunit 50040 "E3 HSN/SAC Mgmt."
                     HSNLogRec.Code := HSNRec.Code;
                     HSNLogRec.Type := HSNRec.Type;
                     HSNLogRec.Description := HSNRec.Description;
+                    HSNLogRec.GLEN := HSNRec.GLEN;
                     HSNLogRec."Sync Status" := HSNLogRec."Sync Status"::" ";
                     HSNLogRec."Error Message" := '';
                     HSNLogRec.Insert(true);
                 end else begin
                     HSNLogRec.Description := HSNRec.Description;
+                    HSNLogRec.GLEN := HSNRec.GLEN;
                     HSNLogRec.Modify(true);
                 end;
             until HSNRec.Next() = 0;
@@ -83,7 +101,7 @@ codeunit 50040 "E3 HSN/SAC Mgmt."
         ItemObj.Add('name', HSNSACUpdateLog.Description);
         ItemObj.Add('hsn', HSNSACUpdateLog.Code);
         ItemObj.Add('segment1', Format(HSNSACUpdateLog.Type));
-        ItemObj.Add('segment2', HSNSACUpdateLog."GST Group Code");
+        ItemObj.Add('segment2', Format(HSNSACUpdateLog.GLEN));
         ItemObj.Add('segment3', '');
         if HSNSACUpdateLog."Sync Status" = HSNSACUpdateLog."Sync Status"::Synced then
             ItemObj.Add('d365_Status', 'Update')

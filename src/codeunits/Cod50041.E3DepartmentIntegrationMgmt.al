@@ -42,11 +42,13 @@ codeunit 50041 "E3 Dimension Value Mgmt."
                     DimLogRec."Dimension Code" := DimValue."Dimension Code";
                     DimLogRec.Code := DimValue.Code;
                     DimLogRec.Name := DimValue.Name;
+                    DimLogRec.Nature := DimValue.Nature;
                     DimLogRec."Sync Status" := DimLogRec."Sync Status"::" ";
                     DimLogRec."Error Message" := '';
                     DimLogRec.Insert();
                 end else begin
                     DimLogRec.Name := DimValue.Name;
+                    DimLogRec.Nature := DimValue.Nature;
                     DimLogRec.Modify();
                 end;
             until DimValue.Next() = 0;
@@ -79,7 +81,7 @@ codeunit 50041 "E3 Dimension Value Mgmt."
         Clear(ItemObj);
         ItemObj.Add('code', DimensionUpdateLog.Code);
         ItemObj.Add('name', DimensionUpdateLog.Name);
-        ItemObj.Add('segment1', '');
+        ItemObj.Add('segment1', DimensionUpdateLog.Nature);
         ItemObj.Add('segment2', '');
         ItemObj.Add('segment3', '');
         ItemObj.Add('hiS_Code', '');

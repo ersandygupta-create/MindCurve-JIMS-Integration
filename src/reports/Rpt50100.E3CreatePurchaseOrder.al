@@ -30,7 +30,8 @@ report 50100 "E3 Create Purchase Order"
                             "E3 Indent Line"."Ordered Qty",
                             RemainingQty);
 
-                    if LastSupplier <> "E3 Indent Line"."Vendor No." then
+                    if (LastSupplier <> "E3 Indent Line"."Vendor No.") or
+                       (LastMakeCode <> "E3 Indent Line"."Item Make Code") then
                         CreatePurchaseHeader("E3 Indent Line", 1);
 
                     CreatePurchaseLines("E3 Indent Line", 1);
@@ -131,7 +132,10 @@ report 50100 "E3 Create Purchase Order"
         PurchaseHeader.Modify();
         Case PurchHeaderType of
             1:
-                LastSupplier := IndentLine."Vendor No.";
+                begin
+                    LastSupplier := IndentLine."Vendor No.";
+                    LastMakeCode := IndentLine."Item Make Code";
+                end;
         end;
         DialogWindow.Update(1, PurchaseHeader."No.");
         LineNo := 0;
@@ -166,6 +170,8 @@ report 50100 "E3 Create Purchase Order"
         PurchaseLine.Validate(Quantity, IndentLine."Ordered Qty");
         PurchaseLine.Validate("Unit of Measure Code", IndentLine."Unit of Measure");
         PurchaseLine.Validate("Location Code", PurchaseHeader."Location Code");
+        if Location.Get(PurchaseHeader."Location Code") then
+            PurchaseLine.Validate("GST Credit", Location."GST Credit");
         Case PurchLineType of
             1:
                 PurchaseLine.Validate("Direct Unit Cost", IndentLine."Quotation Price");
@@ -267,5 +273,7 @@ report 50100 "E3 Create Purchase Order"
         LineNo: Integer;
         DialogWindow: Dialog;
         IndentHeader: Record "E3 Indent Header";
+        LastMakeCode: Code[20];
+        Location: Record Location;
 
 }

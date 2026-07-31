@@ -83,6 +83,17 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
                     GenerateOrderAddress(Rec);
                 end;
             }
+            action(SyncLog)
+            {
+                Caption = 'HIS Sync Logs';
+                ToolTip = 'HIS System Sync Logs.';
+                Image = Log;
+                ApplicationArea = all;
+                RunObject = page "E3 API Supplier Update Logs";
+                RunPageLink = "No." = field("No.");
+                RunPageMode = View;
+            }
+
         }
     }
     procedure GenerateOrderAddress(var VendorRec: Record Vendor)

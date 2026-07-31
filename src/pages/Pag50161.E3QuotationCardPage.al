@@ -121,6 +121,15 @@ page 50161 "E3 Quotation Card"
 
                     if IndentLine.FindSet() then
                         repeat
+                            if IndentLine."Ordered Qty" = 0 then
+                                Error(
+                                    'Ordered Qty cannot be zero for Item %1 (Line No. %2).',
+                                    IndentLine."No.",
+                                    IndentLine."Line No.");
+                        until IndentLine.Next() = 0;
+
+                    if IndentLine.FindSet() then
+                        repeat
                             if IndentLine."Ordered Qty" <= 0 then
                                 Error(
                                     'Ordered Qty must be greater than zero for Line No. %1 (Item No. %2).',

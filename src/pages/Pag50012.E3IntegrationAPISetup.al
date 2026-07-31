@@ -196,6 +196,14 @@ page 50012 "E3 Integration API Setup"
                 {
                     ToolTip = 'Specifies the value of the UOM API Enabled field.';
                 }
+                field("Vendor Master API"; Rec."Vendor Master API")
+                {
+                    ToolTip = 'Specifies the value of the Vendor Master API field.';
+                }
+                field("Vendor Master API Enabled"; Rec."Vendor Master API Enabled")
+                {
+                    ToolTip = 'Specifies the value of the Vendor Master API Enabled field.';
+                }
             }
         }
     }

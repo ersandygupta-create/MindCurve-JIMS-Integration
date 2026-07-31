@@ -25,5 +25,10 @@ tableextension 50065 "E3 Location" extends Location
             DataClassification = CustomerContent;
             TableRelation = "No. Series";
         }
+        field(50004; "GST Credit"; enum "GST Credit")
+        {
+            Caption = 'GST Credit';
+            DataClassification = CustomerContent;
+        }
     }
 }

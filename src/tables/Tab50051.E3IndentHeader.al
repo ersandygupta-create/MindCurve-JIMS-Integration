@@ -184,7 +184,16 @@ table 50051 "E3 Indent Header"
             trigger OnValidate()
             var
                 IndentLine: Record "E3 Indent Line";
+                IndentHeader: Record "E3 Indent Header";
             begin
+                // Duplicate Entry No. Validation
+                IndentHeader.Reset();
+                IndentHeader.SetRange("Entry No.", "Entry No.");
+                IndentHeader.SetFilter("Document No.", '<>%1', "Document No.");
+
+                if IndentHeader.FindFirst() then
+                    Error('Entry No. %1 already exists. Duplicate Entry No. is not allowed.', "Entry No.");
+
                 IndentLine.Reset();
                 IndentLine.SetRange("Document No.", "Document No.");
 

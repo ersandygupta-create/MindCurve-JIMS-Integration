@@ -380,7 +380,6 @@ codeunit 50019 "E3 Item Integration Mgmt."
         HttpWebContent.GetHeaders(ContentHeaders);
         ContentHeaders.Clear();
         ContentHeaders.Add('Content-Type', 'application/json');
-        //HttpWebClient.DefaultRequestHeaders().Add('Authorization', GetAuthorizationText());
         RequestMessage.Content := HttpWebContent;
         RequestMessage.SetRequestUri(E3APISetup."Item Master API");
         RequestMessage.Method := 'POST';

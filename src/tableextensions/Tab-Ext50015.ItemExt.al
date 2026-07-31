@@ -768,21 +768,21 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'IsActive';
             DataClassification = CustomerContent;
         }
-        field(50098; "Psychotropic Substance Flag"; Boolean)
+        field(50098; "Psychotropic Substance"; Boolean)
         {
-            Caption = 'Psychotropic Substance Flag';
+            Caption = 'Psychotropic Substance';
             DataClassification = CustomerContent;
         }
 
-        field(50099; "Schedule H1 Tagging"; Boolean)
+        field(50099; "Schedule H1"; Boolean)
         {
-            Caption = 'Schedule H1 Tagging';
+            Caption = 'Schedule H1';
             DataClassification = CustomerContent;
         }
 
-        field(50100; Formulary; Boolean)
+        field(50100; "Formulary Drug"; Boolean)
         {
-            Caption = 'Formulary';
+            Caption = 'Formulary Drug';
             DataClassification = CustomerContent;
         }
 
@@ -791,28 +791,37 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Non-Formulary';
             DataClassification = CustomerContent;
         }
-
         field(50102; "Anti TB"; Boolean)
         {
-            Caption = 'Tagging Anti TB';
+            Caption = 'Anti TB';
             DataClassification = CustomerContent;
         }
 
         field(50103; Antibiotic; Boolean)
         {
-            Caption = 'Tagging Antibiotic';
+            Caption = 'Antibiotic';
             DataClassification = CustomerContent;
         }
 
-        field(50104; "Capex / Opex Tagging"; Boolean)
+        field(50104; Capex; Boolean)
         {
-            Caption = 'Capex / Opex Tagging';
+            Caption = 'Capex';
             DataClassification = CustomerContent;
         }
 
         field(50105; "PO Mandatory"; Boolean)
         {
             Caption = 'PO Mandatory';
+            DataClassification = CustomerContent;
+        }
+        field(50106; "Margin Code"; Code[20])
+        {
+            Caption = 'Margin Code';
+            DataClassification = CustomerContent;
+        }
+        field(50107; "Margin Amount"; Decimal)
+        {
+            Caption = 'Margin Amount';
             DataClassification = CustomerContent;
         }
 

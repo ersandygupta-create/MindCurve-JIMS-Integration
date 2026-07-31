@@ -28,6 +28,11 @@ pageextension 50077 "E3 Location Extension" extends "Location Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the E3 Indent PO Series field.';
                 }
+                field("GST Credit"; Rec."GST Credit")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the GST Credit field.';
+                }
             }
         }
     }

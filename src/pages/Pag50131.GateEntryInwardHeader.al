@@ -157,11 +157,48 @@ page 50131 "E3 Gate Entry Inward Header"
                     Caption = 'Po&st';
                     Image = Post;
                     Promoted = true;
-                    ApplicationArea = All;
                     PromotedCategory = Process;
                     PromotedIsBig = true;
-                    RunObject = Codeunit 50004;
+                    ApplicationArea = All;
                     ShortCutKey = 'F9';
+
+                    trigger OnAction()
+                    var
+                        GateTransfer: Codeunit "E3 Gate Entry Transfer";
+                        PurchPaybleSetup: Record "Purchases & Payables Setup";
+                        PostedGateEntryHeader: Record "E3 Gate Entry Header";
+                        Inward: Boolean;
+                    begin
+                        // Validate Status
+                        Rec.TestField(Status, Rec.Status::Approved);
+
+                        PurchPaybleSetup.Get();
+                        PurchPaybleSetup.TestField("Posted Gate Entry Inward No.");
+
+                        Inward := true;
+
+                        if Rec."Gate Pass Type" = Rec."Gate Pass Type"::"Non-Returnable" then begin
+                            Message('Inward cannot be created for Gate Pass Type Non-Returnable.');
+                            Inward := false;
+                        end;
+
+                        // Print Posted Inward Gate Entry
+                        PostedGateEntryHeader.Reset();
+                        PostedGateEntryHeader.SetRange("Entry No.", Rec."Entry No.");
+
+                        if PostedGateEntryHeader.FindLast() then
+                            Report.RunModal(
+                                Report::"E3 Gate Inward Print",
+                                false,
+                                false,
+                                PostedGateEntryHeader);
+
+                        // Post Inward Gate Entry
+                        GateTransfer.PostOutwardGateEntry(Rec, Inward);
+
+
+                        CurrPage.Close();
+                    end;
                 }
             }
         }

@@ -42,6 +42,11 @@ table 50056 "E3 Dimension Value Log"
             Caption = 'First Sent';
             DataClassification = CustomerContent;
         }
+        field(50000; Nature; Text[100])
+        {
+            Caption = 'Nature';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

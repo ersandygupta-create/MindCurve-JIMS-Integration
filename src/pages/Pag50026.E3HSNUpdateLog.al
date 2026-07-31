@@ -35,6 +35,11 @@ page 50026 "E3 HSN/SAC Update Log"
                     ApplicationArea = Basic, Suite;
                     ToolTip = 'Specifies whether GST group is for HSN/SAC.';
                 }
+                field(GLEN; Rec.GLEN)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether GLEN';
+                }
                 field("Sync Status"; Rec."Sync Status")
                 {
                     ApplicationArea = All;

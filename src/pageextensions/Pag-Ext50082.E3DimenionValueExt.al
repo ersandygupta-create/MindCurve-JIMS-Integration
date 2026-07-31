@@ -1,5 +1,16 @@
 pageextension 50082 "E3 Dimension Value Ext" extends "Dimension Values"
 {
+    layout
+    {
+        addafter(Name)
+        {
+            field(Nature; Rec.Nature)
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specify a value Nature field.';
+            }
+        }
+    }
     actions
     {
         addlast(Processing)

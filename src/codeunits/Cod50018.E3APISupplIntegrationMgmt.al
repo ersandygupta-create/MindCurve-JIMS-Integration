@@ -5,18 +5,18 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
 
     trigger OnRun()
     begin
-        if not E3AkhilSetup.Get() then
+        if not E3APISetup.Get() then
             exit;
 
-        if not E3AkhilSetup."Integration Enabled" then
+        if not E3APISetup."Integration Enabled" then
             exit;
 
         case Rec."Parameter String" of
             'Supplier', 'supplier', 'SUPPLIER':
-                if E3AkhilSetup."Vendor Master API Enabled" then
+                if E3APISetup."Vendor Master API Enabled" then
                     SyncSupplier(Rec);
             'FailOverSupplier', 'failoversupplier', 'FAILOVERSUPPLIER':
-                if E3AkhilSetup."Vendor Master API Enabled" then
+                if E3APISetup."Vendor Master API Enabled" then
                     SupplierUpdateToHIS();
         end;
     end;
@@ -42,25 +42,7 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
     end;
 
     var
-        E3AkhilSetup: Record "E3 Integration API Setup";
-
-
-    //[NonDebuggable]
-    local procedure GetAuthorizationText(): Text
-    var
-        Base64Converter: Codeunit "Base64 Convert";
-        Authorization: Text;
-        BasicCred: Text;
-    begin
-        E3AkhilSetup.get();
-        E3AkhilSetup.TestField(Username);
-        E3AkhilSetup.TestField(Password);
-
-        BasicCred := E3AkhilSetup.Username + ':' + E3AkhilSetup.Password;
-        Authorization := 'Basic ' + Base64Converter.ToBase64(BasicCred); //, TextEncoding::UTF8);
-
-        exit(Authorization);
-    end;
+        E3APISetup: Record "E3 Integration API Setup";
 
     [EventSubscriber(ObjectType::Table, Database::Vendor, 'OnAfterModifyEvent', '', false, false)]
     local procedure E3SupplierOnModify(var xRec: Record Vendor; var Rec: Record Vendor; RunTrigger: Boolean)
@@ -71,13 +53,13 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
         E3UpdateNeeded: Boolean;
         E3UniqueID: Integer;
     begin
-        if not E3AkhilSetup.Get() then
+        if not E3APISetup.Get() then
             exit;
 
-        if not E3AkhilSetup."Integration Enabled" then
+        if not E3APISetup."Integration Enabled" then
             exit;
 
-        if not E3AkhilSetup."Vendor Master API Enabled" then
+        if not E3APISetup."Vendor Master API Enabled" then
             exit;
 
         E3UpdateNeeded :=
@@ -110,13 +92,13 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
 
         E3UpdateNeeded: Boolean;
     begin
-        if not E3AkhilSetup.Get() then
+        if not E3APISetup.Get() then
             exit;
 
-        if not E3AkhilSetup."Integration Enabled" then
+        if not E3APISetup."Integration Enabled" then
             exit;
 
-        if not E3AkhilSetup."Vendor Master API Enabled" then
+        if not E3APISetup."Vendor Master API Enabled" then
             exit;
 
         E3UpdateNeeded :=
@@ -143,13 +125,13 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
         E3VendBank: Record "Vendor Bank Account";
         E3UpdateNeeded: Boolean;
     begin
-        if not E3AkhilSetup.Get() then
+        if not E3APISetup.Get() then
             exit;
 
-        if not E3AkhilSetup."Integration Enabled" then
+        if not E3APISetup."Integration Enabled" then
             exit;
 
-        if not E3AkhilSetup."Vendor Master API Enabled" then
+        if not E3APISetup."Vendor Master API Enabled" then
             exit;
 
         E3Vend.Get(Rec."Vendor No.");
@@ -357,7 +339,7 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
         SupplierUpdateLog: Record "E3 API Supplier Update Log";
         xSupplierUpdateLog: Record "E3 API Supplier Update Log";
     begin
-        if not E3AkhilSetup."Vendor Master API Enabled" then
+        if not E3APISetup."Vendor Master API Enabled" then
             exit;
 
         xSupplierUpdateLog.Reset();
@@ -389,59 +371,87 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
         IsSuccess: Text;
         JsonResponse: Text;
         ReqPayload: Text;
+        VendorBankAccount: Record "Vendor Bank Account";
+        Vendor: Record Vendor;
     begin
-        E3AkhilSetup.Get();
-        if not E3AkhilSetup."Integration Enabled" then
+        E3APISetup.Get();
+        if not E3APISetup."Integration Enabled" then
             exit;
 
-        if not E3AkhilSetup."Vendor Master API Enabled" then
+        if not E3APISetup."Vendor Master API Enabled" then
             exit;
+        E3APISetup.TestField("Vendor Master API");
 
-        E3AkhilSetup.TestField("Vendor Master API");
+        Clear(VendorBankAccount);
+
+        if Vendor.Get(SupplierUpdateLog."No.") then begin
+            if Vendor."Preferred Bank Account Code" <> '' then begin
+                VendorBankAccount.Reset();
+                VendorBankAccount.SetRange("Vendor No.", Vendor."No.");
+                VendorBankAccount.SetRange(Code, Vendor."Preferred Bank Account Code");
+                VendorBankAccount.FindFirst();
+            end else begin
+                VendorBankAccount.Reset();
+                VendorBankAccount.SetRange("Vendor No.", Vendor."No.");
+                VendorBankAccount.FindFirst();
+            end;
+        end;
 
         Clear(JObject);
         Clear(JChildObj);
         Clear(JArray);
 
-        JChildObj.Add('UniqueID', SupplierUpdateLog."No." + '-' + SupplierUpdateLog."Address Code");
-        JChildObj.Add('FacilityMappingCode', 'VEN');
-        JChildObj.Add('SupplierCode', SupplierUpdateLog."No.");
-        JChildObj.Add('SupplierName', SupplierUpdateLog.Name);
-        JChildObj.Add('SupplierName2', SupplierUpdateLog."Name 2");
-        JChildObj.Add('AddressCode', SupplierUpdateLog."Address Code");
-        JChildObj.Add('AddressName', SupplierUpdateLog."Address Name");
-        JChildObj.Add('SupplierAddress1', SupplierUpdateLog.Address);
-        JChildObj.Add('SupplierAddress2', SupplierUpdateLog."Address 2");
-        JChildObj.Add('SupplierAddress3', '');
-        JChildObj.Add('City', SupplierUpdateLog.City);
-        JChildObj.Add('State', SupplierUpdateLog."State Code");
-        JChildObj.Add('Country', SupplierUpdateLog."Country/Region Code");
-        JChildObj.Add('ZipID', SupplierUpdateLog."Post Code");
-        JChildObj.Add('Phone', SupplierUpdateLog."Phone No.");
-        JChildObj.Add('Mobile', SupplierUpdateLog."Mobile Phone No.");
-        JChildObj.Add('Email', SupplierUpdateLog."E-Mail");
-        JChildObj.Add('Fax', SupplierUpdateLog."Fax No.");
-        //JChildObj.Add('IsSupplierInterState', '');
-        JChildObj.Add('StateCode', SupplierUpdateLog."State Code");
-        JChildObj.Add('DLNO', SupplierUpdateLog."DL No.");
-        JChildObj.Add('PanNo', SupplierUpdateLog."P.A.N. No.");
-        JChildObj.Add('SaleTaxNo', SupplierUpdateLog."Tax Code");
-        JChildObj.Add('GSTIN', SupplierUpdateLog."GST Registration No.");
-        JChildObj.Add('VendorPostingGroup', SupplierUpdateLog."Vendor Posting Group");
-        JChildObj.Add('PaymentTermsCode', SupplierUpdateLog."Payment Terms Code");
-        JChildObj.Add('GSTVendorType', format(SupplierUpdateLog."GST Vendor Type"));
-        JChildObj.Add('BankAccountNo', SupplierUpdateLog.BankAccountNo);
-        JChildObj.Add('BankAccountName', SupplierUpdateLog.BankAccountName);
-        JChildObj.Add('BankBranchNo', SupplierUpdateLog.BankBranchNo);
-        JChildObj.Add('IFSCCode', SupplierUpdateLog.IFSCCode);
-        JChildObj.Add('BankPostCode', SupplierUpdateLog.BankPostCode);
-        JChildObj.Add('BankCity', SupplierUpdateLog.BankCity);
-        JChildObj.Add('ProcessIndicator', 'R');
+        JChildObj.Add('supplierID', SupplierUpdateLog."Supplier ID");
+        JChildObj.Add('supplierName', SupplierUpdateLog.Name);
+        JChildObj.Add('supplierName2', SupplierUpdateLog."Name 2");
+        JChildObj.Add('supplierAddress1', SupplierUpdateLog.Address);
+        JChildObj.Add('supplierAddress2', SupplierUpdateLog."Address 2");
+        JChildObj.Add('postCode', SupplierUpdateLog."Post Code");
+        JChildObj.Add('city', SupplierUpdateLog.City);
+        JChildObj.Add('stateGSTCode', 0);
+        JChildObj.Add('countryCode', SupplierUpdateLog."Country/Region Code");
+        JChildObj.Add('country', SupplierUpdateLog."Country/Region Code");
+        JChildObj.Add('contactNo', 0);
+        JChildObj.Add('mobileNo', SupplierUpdateLog."Mobile Phone No.");
+        JChildObj.Add('emailID', SupplierUpdateLog."E-Mail");
+        JChildObj.Add('genBusPostingGroup', '');
+        JChildObj.Add('vendorPostingGroup', SupplierUpdateLog."Vendor Posting Group");
+        JChildObj.Add('gstVendorType', Format(SupplierUpdateLog."GST Vendor Type"));
+        JChildObj.Add('gstNo', SupplierUpdateLog."GST Registration No.");
+        JChildObj.Add('panno', SupplierUpdateLog."P.A.N. No.");
+        JChildObj.Add('paymentTermCode', SupplierUpdateLog."Payment Terms Code");
+        JChildObj.Add('facilityID', 0);
+        JChildObj.Add('msmeType', '');
+        JChildObj.Add('applicationMethod', Format(SupplierUpdateLog."Application Method"));
+        JChildObj.Add('bankAccountNo', VendorBankAccount."Bank Account No.");
+        JChildObj.Add('vcBankAccountName', VendorBankAccount.Name);
+        JChildObj.Add('bankBranchNo', VendorBankAccount."Bank Branch No.");
+        JChildObj.Add('ifscCode', VendorBankAccount."E3 IFSC Code");
+        JChildObj.Add('bankPostCode', VendorBankAccount."Post Code");
+        JChildObj.Add('bankCity', VendorBankAccount.City);
+        JChildObj.Add('errorRemark', '');
+        JChildObj.Add('navVendorCode', SupplierUpdateLog."No.");
+        JChildObj.Add('msmeNo', SupplierUpdateLog."E3 MSME No.");
+        JChildObj.Add('le', '');
+        JChildObj.Add('instanceName', '');
+        JChildObj.Add('isCreated', true);
+        JChildObj.Add('createdDate', Format(SupplierUpdateLog."Last Modified Date Time", 0, 9));
+        JChildObj.Add('processedDateTime', Format(SupplierUpdateLog."Last Modified Date Time", 0, 9));
+        JChildObj.Add('remarks', '');
+        JChildObj.Add('segment1', '');
+        JChildObj.Add('segment2', '');
+        JChildObj.Add('segment3', '');
+        if SupplierUpdateLog."Sync Status" = SupplierUpdateLog."Sync Status"::" " then
+            JChildObj.Add('d365_Status', 'New')
+        else
+            JChildObj.Add('d365_Status', 'Update');
+        JChildObj.Add('ProcessIndicator', 'E');
         JChildObj.Add('CreationDate', format(DT2Date(SupplierUpdateLog."Last Modified Date Time"), 0, '<Day,2>-<Month,2>-<Year4>'));
         JChildObj.Add('CreationTime', format(DT2Time(SupplierUpdateLog."Last Modified Date Time")));
         JChildObj.Add('ErrorMsg', '');
+
         JArray.Add(JChildObj);
-        JObject.Add('SupplierMaster', JArray);
+        JObject.Add('d365_VendorCat', JArray);
 
         JObject.WriteTo(ReqPayload);
 
@@ -452,18 +462,15 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
         HttpWebContent.GetHeaders(ContentHeaders);
         ContentHeaders.Clear();
         ContentHeaders.Add('Content-Type', 'application/json');
-        HttpWebClient.DefaultRequestHeaders().Add('Authorization', GetAuthorizationText());
         RequestMessage.Content := HttpWebContent;
-        RequestMessage.SetRequestUri(E3AkhilSetup."Vendor Master API");
+        RequestMessage.SetRequestUri(E3APISetup."Vendor Master API");
         RequestMessage.Method := 'POST';
         HttpWebClient.Send(RequestMessage, ResponseMessage);
 
         if not ResponseMessage.IsSuccessStatusCode then begin
             SupplierUpdateLog."Sync Status" := SupplierUpdateLog."Sync Status"::Error;
-            SupplierUpdateLog."Error Message" := CopyStr(ResponseMessage.ReasonPhrase, 1, 250);
-            // error(ConnectionMsg,
-            //       ResponseMessage.HttpStatusCode,
-            //       ResponseMessage.ReasonPhrase);
+            SupplierUpdateLog."Error Message" := CopyStr(ResponseMessage.ReasonPhrase, 1, MaxStrLen(SupplierUpdateLog."Error Message"));
+            SupplierUpdateLog.Modify();
         end else begin
             HttpWebContent := ResponseMessage.Content;
             HttpWebContent.ReadAs(JsonResponse);
@@ -473,26 +480,47 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
 
             Clear(JObject);
             JObject.ReadFrom(JsonResponse);
-            if JObject.SelectToken('SupplierMasterStatus', JToken) then
+
+            if JObject.SelectToken('d365_VendorStatus', JToken) then
                 if JToken.IsArray then
                     JToken.AsArray().WriteTo(JsonResponse)
                 else
                     JsonResponse := JToken.AsValue().AsText();
 
             Clear(JArray);
-            Clear(JObject);
-            Clear(JToken);
             JArray.ReadFrom(JsonResponse);
+
             for J := 0 to JArray.Count - 1 do begin
                 JArray.Get(J, JToken);
-
                 JObject := JToken.AsObject();
-                IF JObject.SelectToken('ErrorMsg', CJToken) then
+
+                Clear(IsSuccess);
+
+                // API returns errorMsg
+                if JObject.SelectToken('errorMsg', CJToken) then
                     IsSuccess := CJToken.AsValue().AsText();
 
-                if IsSuccess = 'Supplier Created Successfully' then begin
+                if GuiAllowed then
+                    Message('API Message: %1', IsSuccess);
+
+                if (StrPos(UpperCase(IsSuccess), 'CREATED') > 0) or
+                   (StrPos(UpperCase(IsSuccess), 'SUCCESS') > 0) then begin
+
                     SupplierUpdateLog."Sync Status" := SupplierUpdateLog."Sync Status"::Synced;
+                    SupplierUpdateLog."Error Message" := 'Created Successfully';
+                    SupplierUpdateLog.Modify();
+
                     exit(true);
+                end else begin
+                    SupplierUpdateLog."Sync Status" := SupplierUpdateLog."Sync Status"::Error;
+
+                    if IsSuccess <> '' then
+                        SupplierUpdateLog."Error Message" :=
+                            CopyStr(IsSuccess, 1, MaxStrLen(SupplierUpdateLog."Error Message"))
+                    else
+                        SupplierUpdateLog."Error Message" := 'Unknown Error';
+
+                    SupplierUpdateLog.Modify();
                 end;
             end;
         end;

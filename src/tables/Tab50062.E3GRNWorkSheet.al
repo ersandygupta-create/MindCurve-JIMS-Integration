@@ -242,6 +242,97 @@ table 50062 "E3 GRN Work Sheet"
             TableRelation = "Item Tracking Code";
             OptimizeForTextSearch = true;
         }
+        field(39; "Indent Doc ID"; Code[20])
+        {
+            Caption = 'Indent Number';
+            DataClassification = CustomerContent;
+        }
+        field(40; "Indent Line No."; Integer)
+        {
+            Caption = 'Indent Line Number';
+            DataClassification = CustomerContent;
+        }
+        field(41; "Department Code"; Code[20])
+        {
+            Caption = 'Department Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
+            ValidateTableRelation = false;
+            DataClassification = ToBeClassified;
+            Editable = true;
+            trigger OnValidate()
+            var
+                DimValue: Record "Dimension Value";
+                GLSetup: Record "General Ledger Setup";
+            begin
+                GLSetup.Get();
+
+                DimValue.Reset();
+                DimValue.SetRange("Dimension Code", GLSetup."Global Dimension 2 Code");
+                DimValue.SetRange(Code, "Department Code");
+
+                if DimValue.FindFirst() then
+                    "Department Name" := DimValue.Name
+                else
+                    "Department Name" := '';
+            end;
+        }
+        field(42; "Department Name"; Text[100])
+        {
+            Caption = 'Department Name';
+            DataClassification = CustomerContent;
+        }
+        field(43; "Unit Code"; Code[50])
+        {
+            Caption = 'SKU Unit of Measure (UOM)';
+            DataClassification = CustomerContent;
+        }
+        field(44; "HSN Code"; Code[20])
+        {
+            Caption = 'HSN Code';
+            DataClassification = CustomerContent;
+            TableRelation = "HSN/SAC".Code;
+        }
+        field(45; "Indent SKU Qty"; Decimal)
+        {
+            Caption = 'Requested Quantity';
+            DecimalPlaces = 0 : 5;
+            DataClassification = CustomerContent;
+        }
+        field(46; "Item GST Nature"; Enum "E3 GLEN Type")
+        {
+            Caption = 'GST Nature';
+            DataClassification = CustomerContent;
+        }
+        field(47; "OH Amt Net"; Decimal)
+        {
+            Caption = 'Line Net Amount';
+            DecimalPlaces = 0 : 5;
+            DataClassification = CustomerContent;
+        }
+        field(48; "Landed SKU Value"; Decimal)
+        {
+            Caption = 'Line Landed SKU Value';
+            DecimalPlaces = 0 : 5;
+            DataClassification = CustomerContent;
+        }
+        field(49; "Landed SKU Rate"; Decimal)
+        {
+            Caption = 'Line Landed SKU Rate';
+            DecimalPlaces = 0 : 5;
+            DataClassification = CustomerContent;
+        }
+        field(50; Remark; Text[250])
+        {
+            Caption = 'Line Remark';
+            DataClassification = CustomerContent;
+        }
+        field(51; Rate; Decimal)
+        {
+            Caption = 'Purchase Rate';
+            DecimalPlaces = 0 : 5;
+            DataClassification = CustomerContent;
+        }
+
     }
 
     keys
@@ -256,6 +347,7 @@ table 50062 "E3 GRN Work Sheet"
     var
         PurchLine: Record "Purchase Line";
         Item: Record Item;
+        HSNSAC: Record "HSN/SAC";
     begin
         PurchLine.Reset();
         PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
@@ -286,6 +378,14 @@ table 50062 "E3 GRN Work Sheet"
                 "Item Make Code" := PurchLine."Item Make Code";
                 "Item Make Name" := PurchLine."Item Make Name";
                 "GST Type Code" := PurchLine."GST Group Code";
+                Validate("Department Code", PurchLine."Shortcut Dimension 2 Code");
+                Validate("HSN Code", PurchLine."HSN/SAC Code");
+                "Indent Doc ID" := PurchLine."Indent No.";
+                "Indent Line No." := PurchLine."Indent Line No.";
+                "Unit Code" := PurchLine."Unit of Measure";
+                "Indent SKU Qty" := PurchLine.Quantity;
+                if HSNSAC.Get(PurchLine."HSN/SAC Code") then
+                    "Item GST Nature" := HSNSAC.GLEN;
 
                 if Item.Get(PurchLine."No.") then begin
                     "Lot No." := Item."Lot Nos.";

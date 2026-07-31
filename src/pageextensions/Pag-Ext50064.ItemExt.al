@@ -360,22 +360,22 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of BarCode Active field.';
                 }
-                field("Psychotropic Substance Flag"; Rec."Psychotropic Substance Flag")
+                field("Psychotropic Substance"; Rec."Psychotropic Substance")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies whether the item is a psychotropic substance.';
                 }
 
-                field("Schedule H1 Tagging"; Rec."Schedule H1 Tagging")
+                field("Schedule H1"; Rec."Schedule H1")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies whether the item belongs to Schedule H1.';
                 }
 
-                field(Formulary; Rec.Formulary)
+                field("Formulary Drug"; Rec."Formulary Drug")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies whether the item is a formulary item.';
+                    ToolTip = 'Specifies whether the item is a formulary Drug item.';
                 }
 
                 field("Anti TB"; Rec."Anti TB")
@@ -383,17 +383,16 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies whether the item is an Anti-TB medicine.';
                 }
-
                 field(Antibiotic; Rec.Antibiotic)
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies whether the item is an antibiotic.';
                 }
 
-                field("Capex / Opex tagging"; Rec."Capex / Opex tagging")
+                field(Capex; Rec.Capex)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies whether the item is a Capex / Opex tagging item.';
+                    ToolTip = 'Specifies whether the item is a Capex item.';
                 }
 
                 field("PO Mandatory"; Rec."PO Mandatory")
@@ -469,6 +468,18 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the name of the person who prepared the record.';
                 }
+                field("Margin Code"; Rec."Margin Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Margin Code';
+                    ToolTip = 'Specifies the margin code for the item.';
+                }
+                field("Margin Amount"; Rec."Margin Amount")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Margin Amount';
+                    ToolTip = 'Specifies the margin amount for the item.';
+                }
             }
         }
     }
@@ -533,6 +544,34 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 begin
                     MedComp.SetRange(Code, Rec."No.");
                     Page.Run(Page::"E3 Medicine Composition", MedComp);
+                end;
+            }
+            action(ItemMargin)
+            {
+                ApplicationArea = All;
+                Caption = 'Item Margin';
+                Image = ListPage;
+                Promoted = true;
+                PromotedCategory = Process;
+
+                trigger OnAction()
+                var
+                    ItemMargin: Record "E3 Item Margin";
+                begin
+                    ItemMargin.Reset();
+                    ItemMargin.SetRange("Item No.", Rec."No.");
+
+                    if not ItemMargin.FindFirst() then begin
+                        Clear(ItemMargin);
+                        ItemMargin.Init();
+                        ItemMargin."Margin Code" := Rec."Margin Code";
+                        ItemMargin.Validate("Item No.", Rec."No.");
+                        ItemMargin."Item Name" := Rec.Description;
+                        ItemMargin.Insert(true);
+                    end;
+                    ItemMargin.Reset();
+                    ItemMargin.SetRange("Item No.", Rec."No.");
+                    Page.Run(Page::"E3 Item Margin List", ItemMargin);
                 end;
 
             }

@@ -1,5 +1,13 @@
 tableextension 50069 HSNExt extends 18009
 {
+    fields
+    {
+        field(50000; GLEN; Enum "E3 GLEN Type")
+        {
+            Caption = 'GLEN';
+            DataClassification = CustomerContent;
+        }
+    }
     trigger OnBeforeInsert()
     begin
         CheckPermission();

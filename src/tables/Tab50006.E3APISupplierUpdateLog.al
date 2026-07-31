@@ -62,9 +62,20 @@ table 50006 "E3 API Supplier Update Log"
         {
             Caption = 'Last Modified Date Time';
         }
+        field(80; "Application Method"; Enum "Application Method")
+        {
+            Caption = 'Application Method';
+            ToolTip = 'Specifies how to apply payments to entries for this vendor.';
+        }
         field(84; "Fax No."; Text[30])
         {
             Caption = 'Fax No.';
+        }
+        field(88; "Gen. Bus. Posting Group"; Code[20])
+        {
+            Caption = 'Gen. Bus. Posting Group';
+            ToolTip = 'Specifies the vendor''s trade type to link transactions made for this vendor with the appropriate general ledger account according to the general posting setup.';
+            TableRelation = "Gen. Business Posting Group";
         }
         field(102; "E-Mail"; Text[80])
         {
@@ -101,9 +112,19 @@ table 50006 "E3 API Supplier Update Log"
         {
             DataClassification = EndUserIdentifiableInformation;
         }
+        field(50001; "E3 MSME Type"; Boolean)
+        {
+            Caption = 'MSME Type';
+            DataClassification = CustomerContent;
+        }
         field(50004; "DL No."; Text[20])
         {
             Caption = 'DL No.';
+        }
+        field(50016; "E3 MSME No."; Code[20])
+        {
+            Caption = 'MSME No.';
+            DataClassification = CustomerContent;
         }
         field(50088; "Request Payload"; Blob)
         {
@@ -164,6 +185,11 @@ table 50006 "E3 API Supplier Update Log"
         field(50101; "Address Name"; Code[100])
         {
             Caption = 'Address Name';
+        }
+        field(50102; "Supplier ID"; Integer)
+        {
+            Caption = 'Supplier ID';
+            AutoIncrement = true;
         }
     }
     keys
