@@ -136,7 +136,7 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
                 OrderAddress."GST Registration No." := VendorRec."GST Registration No.";
                 OrderAddress."Country/Region Code" := VendorRec."Country/Region Code";
                 State.Get(VendorRec."State Code");
-                OrderAddress.Name := VendorRec.Name + '-' + State."State Code (GST Reg. No.)";
+                OrderAddress.Name := VendorRec.Name;// + '-' + State."State Code (GST Reg. No.)";
                 OrderAddress."Name 2" := VendorRec."Name 2";
                 OrderAddress."Post Code" := VendorRec."Post Code";
                 OrderAddress."Phone No." := VendorRec."Phone No.";
