@@ -284,7 +284,7 @@ codeunit 50019 "E3 Item Integration Mgmt."
         JChildObj.Add('saleUnitName', Format(ItemUpdateLog."Sales Unit of Measure Name"));
         JChildObj.Add('purchaseUnitConversionRate', Format(ItemUpdateLog."Purch. Qty. Per Rate"));
         JChildObj.Add('saleUnitConversionRate', Format(ItemUpdateLog."Sale Qty. Per Rate"));
-        JChildObj.Add('itemGSTNature', Format(ItemUpdateLog."HSN/SAC Type"));
+        JChildObj.Add('itemGSTNature', Format(ItemUpdateLog.GLEN));
         JChildObj.Add('propertyList', Format(ItemUpdateLog."Property List Code"));
         JChildObj.Add('propertyListName', Format(ItemUpdateLog."Property List Name"));
         JChildObj.Add('hsnCode', Format(ItemUpdateLog."HSN/SAC Code"));

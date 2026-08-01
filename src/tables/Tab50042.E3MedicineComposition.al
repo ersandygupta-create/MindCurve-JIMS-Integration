@@ -85,7 +85,7 @@ table 50042 "E3 Medicine Composition"
         {
             Caption = 'Unit Of Measure';
             DataClassification = CustomerContent;
-            TableRelation = "Unit of Measure".Code;
+            TableRelation = "Item Unit of Measure".Code;
         }
         field(10; "Item Name"; Text[100])
         {

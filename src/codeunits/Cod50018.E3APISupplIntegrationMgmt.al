@@ -373,6 +373,7 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
         ReqPayload: Text;
         VendorBankAccount: Record "Vendor Bank Account";
         Vendor: Record Vendor;
+        PostCodeInt: Integer;
     begin
         E3APISetup.Get();
         if not E3APISetup."Integration Enabled" then
@@ -406,7 +407,10 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
         JChildObj.Add('supplierName2', SupplierUpdateLog."Name 2");
         JChildObj.Add('supplierAddress1', SupplierUpdateLog.Address);
         JChildObj.Add('supplierAddress2', SupplierUpdateLog."Address 2");
-        JChildObj.Add('postCode', SupplierUpdateLog."Post Code");
+        if Evaluate(PostCodeInt, SupplierUpdateLog."Post Code") then
+            JChildObj.Add('postCode', PostCodeInt)
+        else
+            JChildObj.Add('postCode', 0);
         JChildObj.Add('city', SupplierUpdateLog.City);
         JChildObj.Add('stateGSTCode', 0);
         JChildObj.Add('countryCode', SupplierUpdateLog."Country/Region Code");
@@ -431,7 +435,7 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
         JChildObj.Add('bankCity', VendorBankAccount.City);
         JChildObj.Add('errorRemark', '');
         JChildObj.Add('navVendorCode', SupplierUpdateLog."No.");
-        JChildObj.Add('msmeNo', SupplierUpdateLog."E3 MSME No.");
+        JChildObj.Add('msmeNo', '');
         JChildObj.Add('le', '');
         JChildObj.Add('instanceName', '');
         JChildObj.Add('isCreated', true);
@@ -466,6 +470,7 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
         RequestMessage.SetRequestUri(E3APISetup."Vendor Master API");
         RequestMessage.Method := 'POST';
         HttpWebClient.Send(RequestMessage, ResponseMessage);
+
 
         if not ResponseMessage.IsSuccessStatusCode then begin
             SupplierUpdateLog."Sync Status" := SupplierUpdateLog."Sync Status"::Error;

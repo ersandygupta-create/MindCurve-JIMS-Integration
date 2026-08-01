@@ -533,6 +533,10 @@ page 50035 "E3 API Item Update Log"
                 {
                     ToolTip = 'Specifies the Common Item No. associated with the item.';
                 }
+                field(GLEN; Rec.GLEN)
+                {
+                    ToolTip = 'Specifies the GLEN associated with the item.';
+                }
                 field("Unique Log No."; Rec."Unique Log No.")
                 {
                     ToolTip = 'Specifies the value of the Unique Log No. field.';

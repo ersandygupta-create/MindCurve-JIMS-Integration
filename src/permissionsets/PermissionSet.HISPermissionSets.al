@@ -255,7 +255,10 @@ permissionset 50000 "E3 HIS Permission"
     tabledata "E3 GRN Work Sheet Line" = RIMD,
     page "E3 GRN Work Sheet List" = X,
     page "E3 GRN Work Sheet Header" = X,
-    page "E3 GRN Work Sheet Line" = X;
+    page "E3 GRN Work Sheet Line" = X,
+    table "E3 Order Terms & Conditions" = X,
+    tabledata "E3 Order Terms & Conditions" = RIMD,
+    page "E3 Order Terms & Conditions" = X;
 
 
 }

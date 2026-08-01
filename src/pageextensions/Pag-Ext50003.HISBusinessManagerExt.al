@@ -105,6 +105,15 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                             RunPageMode = Create;
                             ToolTip = 'Executes the Payment Advice E-Mail Setups action.';
                         }
+                        action("Terms & Conditions")
+                        {
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Order Terms & Conditions';
+                            Image = Setup;
+                            runObject = Page "E3 Order Terms & Conditions";
+                            runPageMode = Create;
+                            ToolTip = 'Manage the Terms & Conditions for this Purchase Order.';
+                        }
                     }
                     group("E3 HIS Mapping")
                     {

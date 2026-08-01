@@ -55,6 +55,28 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
             }
         }
     }
+    actions
+    {
+        addlast(Processing)
+        {
+            action("Terms & Conditions")
+            {
+                ApplicationArea = All;
+                Caption = 'Order Terms & Conditions';
+                Image = ViewDetails;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Manage the Terms & Conditions for this Purchase Order.';
+
+                trigger OnAction()
+                var
+                    POTerms: Record "E3 Order Terms & Conditions";
+                begin
+                    Page.Run(Page::"E3 Order Terms & Conditions", POTerms);
+                end;
+            }
+        }
+    }
 
     var
         recPurchHdr: Record "Purchase Header";

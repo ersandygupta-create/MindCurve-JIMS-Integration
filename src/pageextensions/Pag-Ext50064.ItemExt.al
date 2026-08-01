@@ -480,6 +480,12 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     Caption = 'Margin Amount';
                     ToolTip = 'Specifies the margin amount for the item.';
                 }
+                field(GLEN; Rec.GLEN)
+                {
+                    ApplicationArea = All;
+                    Caption = 'GLEN';
+                    ToolTip = 'Specifies the GLEN for the item.';
+                }
             }
         }
     }

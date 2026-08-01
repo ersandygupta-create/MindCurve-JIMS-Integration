@@ -6,7 +6,7 @@ page 50026 "E3 HSN/SAC Update Log"
     SourceTable = "E3 HSN/SAC Log";
     Caption = 'HSN/SAC Log';
     InsertAllowed = false;
-    ModifyAllowed = false;
+    ModifyAllowed = true;
     DeleteAllowed = false;
 
     layout
@@ -17,38 +17,40 @@ page 50026 "E3 HSN/SAC Update Log"
             {
                 field("GST Group Code"; Rec."GST Group Code")
                 {
-                    ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies GST group code.';
+                    ApplicationArea = All;
+                    Editable = false;
                 }
                 field(Code; Rec.Code)
                 {
-                    ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies HSN/SAC codes for various groups.';
+                    ApplicationArea = All;
+                    Editable = false;
                 }
                 field(Description; Rec.Description)
                 {
-                    ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies details of HSN/SAC code.';
+                    ApplicationArea = All;
+                    Editable = false;
                 }
                 field(Type; Rec.Type)
                 {
-                    ApplicationArea = Basic, Suite;
-                    ToolTip = 'Specifies whether GST group is for HSN/SAC.';
+                    ApplicationArea = All;
+                    Editable = false;
                 }
                 field(GLEN; Rec.GLEN)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies whether GLEN';
+                    Editable = false;
                 }
                 field("Sync Status"; Rec."Sync Status")
                 {
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = CanEditResponse;
+                    ToolTip = 'Specifies the synchronization status of the record with the external system.';
                 }
                 field("Error Message"; Rec."Error Message")
                 {
-                    Editable = false;
                     ApplicationArea = All;
+                    Editable = CanEditResponse;
+                    ToolTip = 'Specifies the response or error message received from the external system during synchronization.';
                 }
             }
         }
@@ -86,4 +88,15 @@ page 50026 "E3 HSN/SAC Update Log"
             }
         }
     }
+    var
+        CanEditResponse: Boolean;
+        UserSetup: Record "User Setup";
+
+    trigger OnAfterGetRecord()
+    begin
+        UserSetup.Get(UserId());
+        if Not UserSetup."HSN Master" then
+            Error('You donot have permission Perform operation on HSN.');
+        CanEditResponse := true;
+    end;
 }

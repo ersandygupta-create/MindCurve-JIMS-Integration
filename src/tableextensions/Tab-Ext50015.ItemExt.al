@@ -54,12 +54,12 @@ tableextension 50015 "E3 HIS Item" extends Item
         {
             trigger OnAfterValidate()
             var
-                HSNSACMaster: Record "HSN/SAC";
+                HSNSAC: Record "HSN/SAC";
             begin
-                if HSNSACMaster.Get(Rec."HSN/SAC Code") then
-                    Rec."HSN/SAC Type" := HSNSACMaster.Type
+                if HSNSAC.Get("HSN/SAC Code") then
+                    "HSN/SAC Type" := HSNSAC.Type
                 else
-                    Clear(Rec."HSN/SAC Type");
+                    Clear("HSN/SAC Type");
             end;
         }
         field(50000; "E3 HIS Type"; Enum "E3 HIS Type")
@@ -822,6 +822,11 @@ tableextension 50015 "E3 HIS Item" extends Item
         field(50107; "Margin Amount"; Decimal)
         {
             Caption = 'Margin Amount';
+            DataClassification = CustomerContent;
+        }
+        field(50108; GLEN; Enum "E3 GLEN Type")
+        {
+            Caption = 'GLEN';
             DataClassification = CustomerContent;
         }
 

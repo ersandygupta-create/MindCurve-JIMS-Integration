@@ -738,6 +738,16 @@ table 50046 "E3 API Item Update Log"
             Caption = 'PO Mandatory';
             DataClassification = CustomerContent;
         }
+        field(50106; "Margin Code"; Code[20])
+        {
+            Caption = 'Margin Code';
+            DataClassification = CustomerContent;
+        }
+        field(50108; GLEN; Enum "E3 GLEN Type")
+        {
+            Caption = 'GLEN';
+            DataClassification = CustomerContent;
+        }
         field(91; "Gen. Prod. Posting Group"; Code[20])
         {
             Caption = 'Gen. Prod. Posting Group';
