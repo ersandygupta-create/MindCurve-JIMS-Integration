@@ -97,7 +97,7 @@ codeunit 50040 "E3 HSN/SAC Mgmt."
 
         // Build JSON Request
         Clear(ItemObj);
-        ItemObj.Add('code', HSNSACUpdateLog."GST Group Code");
+        ItemObj.Add('code', HSNSACUpdateLog.Code);
         ItemObj.Add('name', HSNSACUpdateLog.Description);
         ItemObj.Add('hsn', HSNSACUpdateLog.Code);
         ItemObj.Add('segment1', Format(HSNSACUpdateLog.Type));

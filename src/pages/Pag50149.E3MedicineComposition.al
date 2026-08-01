@@ -5,6 +5,7 @@ page 50149 "E3 Medicine Composition"
     UsageCategory = Lists;
     SourceTable = "E3 Medicine Composition";
     Editable = true;
+    deleteAllowed = false;
     Caption = 'Medicine Composition';
 
     layout
@@ -65,7 +66,7 @@ page 50149 "E3 Medicine Composition"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                 }
                 field(Response; Rec.Response)
                 {

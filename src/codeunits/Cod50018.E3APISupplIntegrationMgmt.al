@@ -440,7 +440,7 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
         JChildObj.Add('instanceName', '');
         JChildObj.Add('isCreated', true);
         JChildObj.Add('createdDate', Format(SupplierUpdateLog."Last Modified Date Time", 0, 9));
-        JChildObj.Add('processedDateTime', Format(SupplierUpdateLog."Last Modified Date Time", 0, 9));
+        JChildObj.Add('processedDateTime', Format(CurrentDateTime, 0, 9));
         JChildObj.Add('remarks', '');
         JChildObj.Add('segment1', '');
         JChildObj.Add('segment2', '');
