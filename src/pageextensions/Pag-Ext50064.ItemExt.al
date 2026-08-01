@@ -540,11 +540,25 @@ pageextension 50064 "Item Ext" extends "Item Card"
 
                 trigger OnAction()
                 var
-                    MedComp: Record "E3 Medicine Composition";
+                    MedicineComposition: Record "E3 Medicine Composition";
                 begin
-                    MedComp.SetRange(Code, Rec."No.");
-                    Page.Run(Page::"E3 Medicine Composition", MedComp);
+                    MedicineComposition.Reset();
+                    MedicineComposition.SetRange(Code, Rec."No.");
+
+                    if not MedicineComposition.FindFirst() then begin
+                        Clear(MedicineComposition);
+                        MedicineComposition.Init();
+                        MedicineComposition.Code := Rec."No.";
+                        MedicineComposition."Item Name" := Rec.Description;
+                        MedicineComposition."Unit Of Measure" := Rec."Base Unit of Measure";
+                        MedicineComposition.Insert(true);
+                    end;
+
+                    MedicineComposition.Reset();
+                    MedicineComposition.SetRange(Code, Rec."No.");
+                    Page.Run(Page::"E3 Medicine Composition", MedicineComposition);
                 end;
+
             }
             action(ItemMargin)
             {

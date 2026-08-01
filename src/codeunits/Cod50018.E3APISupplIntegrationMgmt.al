@@ -445,7 +445,7 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
             JChildObj.Add('d365_Status', 'New')
         else
             JChildObj.Add('d365_Status', 'Update');
-        JChildObj.Add('ProcessIndicator', 'E');
+        JChildObj.Add('ProcessIndicator', 'P');
         JChildObj.Add('CreationDate', format(DT2Date(SupplierUpdateLog."Last Modified Date Time"), 0, '<Day,2>-<Month,2>-<Year4>'));
         JChildObj.Add('CreationTime', format(DT2Time(SupplierUpdateLog."Last Modified Date Time")));
         JChildObj.Add('ErrorMsg', '');

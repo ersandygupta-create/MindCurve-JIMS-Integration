@@ -245,6 +245,16 @@ table 50005 "E3 Integration API Setup"
             DataClassification = CustomerContent;
             Caption = 'UOM API Enabled';
         }
+        field(49; "GRN Work Sheet API"; Text[100])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'GRN Work Sheet API';
+        }
+        field(50; "GRN Work Sheet API Enabled"; Boolean)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'GRN Work Sheet API Enabled';
+        }
 
 
     }

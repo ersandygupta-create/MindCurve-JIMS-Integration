@@ -204,6 +204,14 @@ page 50012 "E3 Integration API Setup"
                 {
                     ToolTip = 'Specifies the value of the Vendor Master API Enabled field.';
                 }
+                field("GRN Work Sheet API"; Rec."GRN Work Sheet API")
+                {
+                    ToolTip = 'Specifies the value of the GRN Work Sheet API field.';
+                }
+                field("GRN Work Sheet API Enabled"; Rec."GRN Work Sheet API Enabled")
+                {
+                    ToolTip = 'Specifies the value of the GRN Work Sheet API Enabled field.';
+                }
             }
         }
     }

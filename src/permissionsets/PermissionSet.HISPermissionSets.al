@@ -248,7 +248,14 @@ permissionset 50000 "E3 HIS Permission"
     tabledata "E3 Released Indent Details" = RIMD,
     table "E3 Item Margin" = X,
     tabledata "E3 Item Margin" = RIMD,
-    page "E3 Item Margin List" = X;
+    page "E3 Item Margin List" = X,
+    table "E3 GRN Work Sheet Header" = X,
+    tabledata "E3 GRN Work Sheet Header" = RIMD,
+    table "E3 GRN Work Sheet Line" = X,
+    tabledata "E3 GRN Work Sheet Line" = RIMD,
+    page "E3 GRN Work Sheet List" = X,
+    page "E3 GRN Work Sheet Header" = X,
+    page "E3 GRN Work Sheet Line" = X;
 
 
 }

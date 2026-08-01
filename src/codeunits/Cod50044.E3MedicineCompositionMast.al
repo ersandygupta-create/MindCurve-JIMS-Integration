@@ -76,7 +76,7 @@ codeunit 50044 "E3 Medicine Composition Mgmt."
         ItemObj.Add('hisTimestamp', JValue);
         ItemObj.Add('jpCode', '');
         ItemObj.Add('jpTimestamp', JValue);
-        ItemObj.Add('segment1', '');
+        ItemObj.Add('segment1', Format(MedicineCompositionMastUpdateLog."Active Status"));
         ItemObj.Add('segment2', '');
         ItemObj.Add('segment3', '');
         ItemObj.Add('segment4', '');

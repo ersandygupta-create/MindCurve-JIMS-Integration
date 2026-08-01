@@ -103,6 +103,11 @@ table 50042 "E3 Medicine Composition"
             Caption = 'First Sent';
             DataClassification = CustomerContent;
         }
+        field(13; "Active Status"; Enum "E3 Active Status")
+        {
+            Caption = 'Active Status';
+            DataClassification = CustomerContent;
+        }
 
 
     }
@@ -115,21 +120,22 @@ table 50042 "E3 Medicine Composition"
     }
     trigger OnInsert()
     begin
-        TestField("Item Name");
-        if "Line No." = 0 then
-            "Line No." := GetNextLineNo();
+        SetLineNo();
     end;
 
-    local procedure GetNextLineNo(): Integer
+    local procedure SetLineNo()
     var
-        MedicineComposition: Record "E3 Medicine Composition";
+        ItemComp: Record "E3 Medicine Composition";
     begin
-        MedicineComposition.Reset();
+        if "Line No." <> 0 then
+            exit;
 
-        if MedicineComposition.FindLast() then
-            exit(MedicineComposition."Line No." + 10000);
+        ItemComp.Reset();
+        ItemComp.SetRange(Code, Rec.Code);
 
-        exit(10000);
+        if ItemComp.FindLast() then
+            "Line No." := ItemComp."Line No." + 1
+        else
+            "Line No." := 1;
     end;
 }
-

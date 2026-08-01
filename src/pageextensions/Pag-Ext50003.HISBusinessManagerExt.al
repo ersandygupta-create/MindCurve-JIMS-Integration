@@ -958,7 +958,16 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                     RunPageMode = Create;
                     ToolTip = 'Executes the Create Indenter Entries action.';
                 }
-
+                action("E3 GRN Work Sheet")
+                {
+                    AccessByPermission = TableData "E3 GRN Work Sheet Header" = IMD;
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Posted GRN Work Sheet';
+                    Image = Archive;
+                    RunObject = Page "E3 GRN Work Sheet List";
+                    RunPageMode = Create;
+                    ToolTip = 'Executes the Posted GRN Work Sheet Entries';
+                }
             }
         }
     }

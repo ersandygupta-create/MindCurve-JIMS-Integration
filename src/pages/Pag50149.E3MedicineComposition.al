@@ -56,6 +56,11 @@ page 50149 "E3 Medicine Composition"
                     ToolTip = 'Specifies the value of the Is Base field';
                     ApplicationArea = All;
                 }
+                field("Active Status"; Rec."Active Status")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Active Status field';
+                }
                 field(IsSent; Rec.IsSent)
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
