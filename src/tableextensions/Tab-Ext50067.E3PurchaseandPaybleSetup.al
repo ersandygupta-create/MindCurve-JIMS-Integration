@@ -43,6 +43,11 @@ tableextension 50067 "E3 Purchase & Payable Setup" extends "Purchases & Payables
             TableRelation = "No. Series".Code;
             DataClassification = CustomerContent;
         }
+        field(50007; "Lot Nos."; Code[20])
+        {
+            Caption = 'Lot Nos.';
+            TableRelation = "No. Series";
+        }
 
 
     }

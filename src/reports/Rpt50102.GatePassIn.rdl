@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-07-01T07:02:37.6369303Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-07-29T10:43:39.6279135Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -32,34 +32,58 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1.2222in</Width>
+                  <Width>0.3125in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.88887in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.08333in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.82642in</Width>
+                  <Width>0.3681in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.64583in</Width>
+                  <Width>0.41668in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.56944in</Width>
+                  <Width>0.39583in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.2639in</Width>
+                  <Width>1.22912in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.19444in</Width>
+                  <Width>0.80557in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.70833in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.71528in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.43056in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.09722in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.70488in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.03125in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.09028in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.20139in</Width>
+                  <Width>0.95833in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.75in</Width>
+                  <Width>0.06944in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.04166in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -68,8 +92,8 @@
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox36">
-                          <rd:DefaultName>Textbox36</rd:DefaultName>
+                        <Textbox Name="Textbox10">
+                          <rd:DefaultName>Textbox10</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -102,7 +126,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Employee Name</Value>
+                                  <Value>Person</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -128,7 +152,20 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Estd. Return date</Value>
+                                  <Value>Party Name</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Destination </Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -154,8 +191,10 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <ColSpan>2</ColSpan>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell />
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox17">
@@ -166,7 +205,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>:</Value>
+                                  <Value>::</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -256,7 +295,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!GateNo.Value</Value>
+                                  <Value>=Fields!PostedNo.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -267,6 +306,13 @@
                             </Paragraph>
                             <Paragraph>
                               <TextRuns>
+                                <TextRun>
+                                  <Value>Receive in - </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
                                 <TextRun>
                                   <Value>=Fields!GatePassType.Value</Value>
                                   <Style>
@@ -292,7 +338,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Posting_Date.Value</Value>
+                                  <Value>=Microsoft.VisualBasic.Format(Fields!GatePassDateTime.Value, "dd-MM-yyyy hh:mm tt")</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -305,7 +351,19 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Expected_Return_Date.Value</Value>
+                                  <Value>=Fields!Vendor_Name.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!To_Destination_Name.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -331,23 +389,25 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <ColSpan>4</ColSpan>
+                        <ColSpan>6</ColSpan>
                       </CellContents>
                     </TablixCell>
                     <TablixCell />
                     <TablixCell />
                     <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox21">
-                          <rd:DefaultName>Textbox21</rd:DefaultName>
+                        <Textbox Name="Textbox23">
+                          <rd:DefaultName>Textbox23</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>From Department</Value>
+                                  <Value>Purpose</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -360,7 +420,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Vehicle No.</Value>
+                                  <Value>From Dept</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -373,7 +433,33 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Source Name</Value>
+                                  <Value>Mode</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Expt. Return date</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Ref Doc No.</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -412,12 +498,14 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <ColSpan>2</ColSpan>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell />
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox30">
-                          <rd:DefaultName>Textbox30</rd:DefaultName>
+                        <Textbox Name="Textbox43">
+                          <rd:DefaultName>Textbox43</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -428,6 +516,7 @@
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -440,6 +529,7 @@
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -452,6 +542,7 @@
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -464,6 +555,7 @@
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -476,6 +568,7 @@
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -484,10 +577,11 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>:</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -513,11 +607,23 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox22">
-                          <rd:DefaultName>Textbox22</rd:DefaultName>
+                        <Textbox Name="Textbox44">
+                          <rd:DefaultName>Textbox44</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Purpose_Description.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
@@ -545,7 +651,20 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Vendor_Name.Value</Value>
+                                  <Value>=Fields!Expected_Return_Date.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <Format>d</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Reference_Document_No_.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -582,15 +701,55 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <ColSpan>2</ColSpan>
+                        <ColSpan>6</ColSpan>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
                     <TablixCell />
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
                   <Height>0.25in</Height>
                   <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox12">
+                          <rd:DefaultName>Textbox12</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>SNo</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>LightGrey</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox37">
@@ -638,7 +797,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Quantity</Value>
+                                  <Value>Qty</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -738,15 +897,163 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox9">
-                          <rd:DefaultName>Textbox9</rd:DefaultName>
+                        <Textbox Name="Textbox6">
+                          <rd:DefaultName>Textbox6</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Estm. Value</Value>
+                                  <Value>Serial No </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>LightGrey</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox18">
+                          <rd:DefaultName>Textbox18</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Estm Value </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>LightGrey</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox25">
+                          <rd:DefaultName>Textbox25</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Asset Name</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>LightGrey</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>2</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox38">
+                          <rd:DefaultName>Textbox38</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Out Date</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>LightGrey</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>2</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox28">
+                          <rd:DefaultName>Textbox28</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Fixed Asset Name</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -782,7 +1089,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Asset Name</Value>
+                                  <Value>Out Time</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -806,9 +1113,10 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <ColSpan>3</ColSpan>
+                        <ColSpan>4</ColSpan>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell />
                     <TablixCell />
                     <TablixCell />
                   </TablixCells>
@@ -816,6 +1124,45 @@
                 <TablixRow>
                   <Height>0.25in</Height>
                   <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="SNo">
+                          <rd:DefaultName>SNo</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!SNo.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="ItemName">
@@ -977,19 +1324,18 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Estimated_Value_Receive">
-                          <rd:DefaultName>Estimated_Value_Receive</rd:DefaultName>
+                        <Textbox Name="Serial_No_">
+                          <rd:DefaultName>Serial_No_</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Estimated_Value_Receive.Value</Value>
+                                  <Value>=Fields!Serial_No_.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
-                                    <Format>#,0.00;(#,0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1017,8 +1363,46 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Fixed_Asset_Name">
-                          <rd:DefaultName>Fixed_Asset_Name</rd:DefaultName>
+                        <Textbox Name="OutwardPostingDate">
+                          <rd:DefaultName>OutwardPostingDate</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!EstimatedValue.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <Format>'₹'#,0.00;('₹'#,0.00)</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="OutwardPostingDateTime">
+                          <rd:DefaultName>OutwardPostingDateTime</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -1042,6 +1426,231 @@
                               <Style>None</Style>
                             </Border>
                             <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>2</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="EstimatedValue">
+                          <rd:DefaultName>EstimatedValue</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!OutwardPostingDate.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <Format>d</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <rd:FormatSymbolCulture>en-IN</rd:FormatSymbolCulture>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>2</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Fixed_Asset_Name">
+                          <rd:DefaultName>Fixed_Asset_Name</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Format(Fields!OutwardPostingDateTime.Value, "hh:mm tt")</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <Format>t</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>5</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.25in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox4">
+                          <rd:DefaultName>Textbox4</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Total Estimated Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>14</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="ToDestination">
+                          <rd:DefaultName>ToDestination</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>:</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox13">
+                          <rd:DefaultName>Textbox13</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Sum(Fields!EstimatedValue.Value)</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <Format>'₹'#,0.00;('₹'#,0.00)</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BottomBorder>
                               <Color>Black</Color>
                               <Style>Solid</Style>
                               <Width>1pt</Width>
@@ -1060,12 +1669,13 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.25in</Height>
+                  <Height>0.61806in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox39">
-                          <rd:DefaultName>Textbox39</rd:DefaultName>
+                        <rd:Selected>true</rd:Selected>
+                        <Textbox Name="Textbox14">
+                          <rd:DefaultName>Textbox14</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -1089,85 +1699,35 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <ColSpan>3</ColSpan>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell />
-                    <TablixCell />
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox42">
-                          <rd:DefaultName>Textbox42</rd:DefaultName>
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style />
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                        <ColSpan>4</ColSpan>
+                        <ColSpan>18</ColSpan>
                       </CellContents>
                     </TablixCell>
                     <TablixCell />
                     <TablixCell />
                     <TablixCell />
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox46">
-                          <rd:DefaultName>Textbox46</rd:DefaultName>
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style />
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                        <ColSpan>3</ColSpan>
-                      </CellContents>
-                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
                     <TablixCell />
                     <TablixCell />
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.25in</Height>
+                  <Height>0.29167in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox2">
-                          <rd:DefaultName>Textbox2</rd:DefaultName>
+                        <Textbox Name="Textbox15">
+                          <rd:DefaultName>Textbox15</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -1182,7 +1742,7 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value>=Fields!SystemCreatedBy.Value</Value>
+                                  <Value>=Fields!PreparedBy.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1203,9 +1763,10 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <ColSpan>4</ColSpan>
+                        <ColSpan>5</ColSpan>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell />
                     <TablixCell />
                     <TablixCell />
                     <TablixCell />
@@ -1219,7 +1780,83 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Printed By :</Value>
+                                  <Value>                               Printed By : </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!PrintedBy.Value</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value> on </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Format(Fields!PrintedDateTime.Value, "hh:mm tt")</Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                    <Format>hh:mm tt</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value xml:space="preserve">                           </Value>
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>5</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox49">
+                          <rd:DefaultName>Textbox49</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1240,16 +1877,45 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <ColSpan>4</ColSpan>
                       </CellContents>
                     </TablixCell>
-                    <TablixCell />
-                    <TablixCell />
-                    <TablixCell />
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox20">
-                          <rd:DefaultName>Textbox20</rd:DefaultName>
+                        <Textbox Name="Textbox50">
+                          <rd:DefaultName>Textbox50</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox51">
+                          <rd:DefaultName>Textbox51</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -1277,9 +1943,13 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <ColSpan>2</ColSpan>
+                        <ColSpan>6</ColSpan>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
                     <TablixCell />
                   </TablixCells>
                 </TablixRow>
@@ -1287,6 +1957,14 @@
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -1319,13 +1997,16 @@
                 <TablixMember>
                   <KeepWithGroup>Before</KeepWithGroup>
                 </TablixMember>
+                <TablixMember>
+                  <KeepWithGroup>Before</KeepWithGroup>
+                </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Top>1.30083in</Top>
-            <Left>0.16194in</Left>
-            <Height>2.13888in</Height>
-            <Width>7.84723in</Width>
+            <Top>1.31472in</Top>
+            <Left>0.07167in</Left>
+            <Height>2.79861in</Height>
+            <Width>8.34723in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1383,6 +2064,13 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
+                    <Value>Phone No. : </Value>
+                    <Style>
+                      <FontFamily>Segoe UI</FontFamily>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
                     <Value>=Fields!LocationPhoneNo.Value</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
@@ -1418,7 +2106,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value> Gate Pass Inward</Value>
+                    <Value> Gate Pass In</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>11pt</FontSize>
@@ -1444,12 +2132,72 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
+          <Image Name="JIMS">
+            <Source>Database</Source>
+            <Value>=First(Fields!CompanyLogo.Value, "DataSet_Result")</Value>
+            <MIMEType>image/png</MIMEType>
+            <Sizing>FitProportional</Sizing>
+            <Top>0.06945in</Top>
+            <Left>0.38417in</Left>
+            <Height>0.67361in</Height>
+            <Width>1.16664in</Width>
+            <ZIndex>3</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Image>
         </ReportItems>
-        <Height>3.43971in</Height>
+        <Height>5.55082in</Height>
         <Style />
       </Body>
-      <Width>8.28695in</Width>
+      <Width>8.46751in</Width>
       <Page>
+        <PageFooter>
+          <Height>0.38194in</Height>
+          <PrintOnFirstPage>true</PrintOnFirstPage>
+          <PrintOnLastPage>true</PrintOnLastPage>
+          <ReportItems>
+            <Textbox Name="Textbox2">
+              <rd:DefaultName>Textbox2</rd:DefaultName>
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>="Page " &amp; Globals!PageNumber &amp; " of " &amp; Globals!TotalPages</Value>
+                      <Style>
+                        <FontFamily>Segoe UI</FontFamily>
+                        <FontSize>9pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <Top>0.02778in</Top>
+              <Left>3.79389in</Left>
+              <Height>0.25in</Height>
+              <Width>1in</Width>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+          </ReportItems>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+          </Style>
+        </PageFooter>
         <Style />
       </Page>
     </ReportSection>
@@ -1489,6 +2237,21 @@ Public Function BlankNegAndZero(ByVal Value As Decimal)
     Return Value
 End Function
 </Code>
+  <EmbeddedImages>
+    <EmbeddedImage Name="JIMS">
+      <MIMEType>image/jpeg</MIMEType>
+      <ImageData>/9j/4AAQSkZJRgABAQEAYABgAAD/4QA6RXhpZgAATU0AKgAAAAgAA1EQAAEAAAABAQAAAFERAAQAAAABAAAAAFESAAQAAAABAAAAAAAAAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAD8AMgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9/KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACi
+iigAoor89P8Agq7/AMFEPElp8QI/gF8HbuO38bapbef4h1z7yeG7InDN/vnOAO7HHYg8eOxtPDUnUqNJJN3bskkm25PW0Uk23Zu2iTk0nE5qCuz2z9r3/grf8Iv2Q9W/sO91O58U+MZQRB4f0KI3d5I3oQoIX8emDX58/Fr/AIOkfGEmqzweEPhnoljbxuyrJqt880vHqI/l/I818zftu6Rp37Kvwl0/wz4da6k1/wAdySya7r91IZNS1OGIJ5ivKTuAdpFBUfKFDDHzE18pfDv4f6r8U/G2m+HdDt1utU1WXyoI2cIvClmZmPRVVWYn0U8E8V7/AIf4TL88yeXEOPk1hvecW5OmnGm2pVHytSjG6krSnK6jzPlvyrhliJvbQ/R/wn/wdD/FfTr9W1jwL4P1K3zkrDLLA2M9M8+9fXf7J3/Bxz8Ivjjq9po/jOy1H4eapdMsaTXeJrF3OBgyLnaCema/Fb9oT9lDxb+zM2nN4iGmXFrqpZbe606d5od6gFo23ojK2DkZXBAOCcHHmpGRg19fguF+H84wUcfkdd8k78s4zdSLs7NNTctmrNLle6umTGvNdT+vjw/4isPFmjW+o6ZeW2oWF2gkhuLeQSRyKehBHBq5X87/APwSG/4K4+If2KPiLp/hXxPf3OqfDHVplhmgmcu2kO2AJYyTwnQEHgDuAOP6FtD1u08S6NaajYXEd3Y30Kz280ZykqMAVYH0IIr4XH4HE4DEvB4xLmSumvhnH+aP5Si9YvunGUu6lVU0WqKKK5zUKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigDnviz47h+GHwx8QeIpyBFounzXhz0JRCQPxIFfir+xglz498MeIPilrJkn8Q/FLVrjV55pR+8S2EjJbxZ9AoJ/4H361+t/7emh3HiT9jP4lWVqGNxPoNyFwMnhcn9Aa/KX9iXVINX/AGS/AEttgRppEcBHo8ZMb/8AjytX4x404yrSyScK
+b0nOlB/4X7abi/KUqUJetNeZxYp6pHlv/BUj4M3/AI5+GmkeKNOhkuX8JySi8iQZZbWUJulA9EaNc+isT0FfDXgHx3qnwy8Z6d4g0W5+yappUvnW8u0MAcFSCDwVZWZSO4Y1+xDKHUqwDKwwQRkEelfPvxS/4Jq/Dr4iapLfWKaj4WuZiWddMdBbsfXynVgv0TaPal4MeOuVZNkr4Y4mpt0FzKMlHnXLNtyhOO7V3LVKV0+Vqyu+Q+J/j9+1N4u/aUm04+JJrBLfSgxt7WxtzDCrtjdIQWZixAA5bAGcAZOfOq+xPiJ/wSYvbDSWm8K+Kk1G7jGfsupWwgEvHRZEJAOfVce4r5M8WeE9T8CeI7zSNYsrjTtTsJPKuLeZcPG3X6EEEEEZBBBBINf1h4ccW8H5pgvqXCdSCp0v+XcYuDim7t8klF2beskmm3q7gZxAYEEZBr+hP/g3l/aVvvjv+wnb6Pq9013qfgW9fSt7vukMHLRbieSdvf3r+eyv2r/4NYNAvLP4J/FLUJVdbO81u3WEkcMVgwfyINaeI1GDw2Hq/aVSy72cJ3Xo7KT/AMK7G+Hfvo/VmiiivzM9EKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigCrrujW/iPRLzT7tBLaX8D28yH+NHUqw/EE1+J/hLwLe/sVftQ+M/gdr+6C0kvp9c8IXMg2x39pK2+WFOMbkY7goJO1z6V+3VfO3/BQz/gnd4a/b0+HdvbXM76D4v0N/tOha/bfJc2Ey8r8w525+uMng5IPy3FvDtHOMBUwla9pK11q007xmlpdwd9L6wlUirOSawr0udXW58SVyPx4+Kg+CXwg13xUbCXU/7GgEq20bbTIzOqDLYO1QWBY4OFBOOK5rxp488e/sX68PDPx88N3+mLCSlr4y060efSNTQHAklEYJhc5GcApknkYNdr4W8feGfipo5fRdZ0PxFY3SMrfZLqK6jkUjDKwUnjBwQfXBr+
+RcdwnjshxtOvmuGdXDRmuZxb9nUimnKKqJe7JrRp2qQv70U9Dz2mjyH9ib9se/8A2o5/EFnqmiWumXmiLDMJbN2aCRJC4CkNkqwKHvgjPTHPkf8AwVt8GWNtqXg3xBGscepXa3FhcEfenjTY8ZP+6XcZ/wBse1fUWqav8Pf2YvDMzzHwx4K02RjM0UMMVp9obHJWJAGkb2VST0FfCXx9+I/ij/goH8d7PTfA/hzWdZttPBs9IsLW3Mk77zlppMcRmQquAxwAqjOc1+9eD+Ajj+PHxTkmFeCyukpOTlJ8iTp8nLzy0blN87V2oLrpG6PC9H0e78Rava6fYW8l3fX0qwW8EYy80jEKqj6kiv6af+CUH7ILfsXfsXeGPC95Eia7eJ/aWrMoIJuJcMV55GM9OxzXy1/wR+/4IZJ+zVqll8SPizDaX/jRFEmmaQCJYNIyPvuejS4P4dOOc/pvX9EcUZ+s3xMFQv7Cldxurc0mrc1nqkk3GN7N80na3Kzuw9Jr3mFFFFeAdQUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABUV7fQabbtNcTRW8S9XkcIo/E1l/ELxra/DjwNq2vXgZrbSrV7l0U4aTaMhB7scAe5r+d/8A4KF/8FafiR+0T8Y9YtdI16fR9A0y7ktoPspwZCrFWMZOfLjyMLtwzAAsxzgZ4ajjcdjVl2WU1Opy80nKTjCEb2Tk1GTvJ3UYqLbs9km1jVrKB/Qd4o13wR430WXTtZvvC+q2E4xJb3c8E0bf8BYkZ96+Xfip/wAEif2Q/i3qU95e+E/COm3lw/mPPpmopaybj1YFW4P0xX8/5/aW+Ih6+OPFXP8A1E5R/Wk/4aU+If8A0PPiv/wZy/8AxVfQ/wDEPc/9p7WMqMZ/zKVSMv8AwJRT/E5pYhPeJ+7/AIQ/4Ig/se+ENRe5Gk2Ops/VNR8Qm5T8i1fT/wAHPhx8H/2fNGj0/wAE2Pgfw1axLtVbF4I2
+A9N2dx/Ov5gf+GlPiH/0PPiv/wAGc3/xVH/DSvxD/wCh48V/+DOb/wCKoqeH3ENSSqV6lKpJbOc6s2vRyi2vkxKultE/rA0jxPpviBmFhqFjelOWFvOkm367SavV/Kz8KP28Piv8HfFNvq2meMtYuZYGDGK8uGmVx6bs70+qMD9elf0Jf8Euf23F/bh/ZwsvEE4xqlqiJdZxubJZTuwANyyRyISODsBwN2K8TNMBmWU4ilQzSEeWq2oThJyi5JOThJSjFxk4qUo/Emoy1TVn0Uq6m7M+lKKKKk6AooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAPL/wBs87f2Y/Fh/wCmEX/o+Ov5U9XfzdXu25+aeQ89fvGv6rf2zf8Ak2XxV/1xh/8AR8dfyoagQdQuCOQZW/ma+m8Nl/wvY9/9OcP/AOl4k4MV8SIaKKK/ajmCiiigAr9y/wDg2ZfP7NmrgE43vkep+13P+NfhpX7k/wDBsuwP7OGsDPId/wAP9LuK/KfFj+Bl3/YSv/UfEG2H+NH6d0UUV8KekFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB5d+2l/ybH4q/65Qf+lEVfynTnNxIfV2/ma/qu/bYk8r9mDxUcZzHbj87mIV/KjKQZnI6Fif1r6fw1/5HuYf9ecP/AOl4k4MV8SG0UUV+0nMFFFFABX7i/wDBsn/ybtrf/XV//Smevw6r9xP+DZJ8/s862Mf8tX/9KZv8a/KfFj/d8v8A+wlf+mK5th/jR+oFFFFfCnpBRRRQAUUUUAFFFFABRRRQAUUUUAFczq/xq8H6BdGC98U+HrWdSQ0cmoRKykdQRuyK/Mn/AILt/wDBVPxL8EPEi/DbwRciyupkYXdxtJAUDDsw6N8x2qh+XKOWDDaK/IXXPj9468SahJdXvjLxPLNISx26nNGgz6IjBVHsABXRkeSZvndOWJwChTopyipzu3NxbjJxhG3uqSaU
+nJNtNqLjaT5amJs7JH9Uv/DQ3gP/AKHLwz/4Mov/AIqj/hobwH/0OXhn/wAGUX/xVfym/wDC3vF3/Q2+Kf8Awb3H/wAXR/wt7xd/0Nvin/wb3H/xde5/xD3P/wDoJo/+AT/+TM/rcux/Vl/w0N4D/wChy8M/+DKL/wCKo/4aG8B/9Dl4Z/8ABlF/8VX8pv8Awt7xd/0Nvin/AMG9x/8AF0f8Le8Xf9Db4p/8G9x/8XR/xD3P/wDoJo/+AT/+TD63Lsf00/td/GTwl4r/AGdvEdhpnibQr++nWDyoLe9jkkk23ETHCg5PAJ/Cv5dc5JPqa6H/AIW94u/6G3xT/wCDe4/+Lrnq+o4K4Px2UY3FY3HVoTdWNKKUIuNvZuq7u7d7+0+VvMxqVHN3YUUUV+iGYUUUUAFfsf8A8G+n7RXgH9nj9m6+ufHvjTwv4MttUuJorOXWtThsUunS4kLKhkZQxAIJA6ZFfjhX62f8Et/hlph/4JeeI7/XNH0u+lurq3Wye8tUmaIyX8zkx7wcFo0TOO1fjXjZmdHL8swmMrpyjTrObSaTfLhsRK12nba23U0pNqV0fpT/AMPMf2dv+i5fCb/wqrL/AOOUv/Dy39njP/JcfhR/4VNl/wDHK/O//hW3hz/oXtC/8F8P/wATR/wrbw5/0L2hf+C+H/4mv5h/4j9lP/QDU/8ABkf/AJA2+tS7H6If8PLP2eP+i4/Cj/wqbL/45R/w8s/Z4/6Lj8KP/Cpsv/jlfnf/AMK28Of9C9oX/gvh/wDiaQ/DPw0T/wAi7oP/AILof/iaP+I/ZT/0A1P/AAZH/wCQD61Lsfoj/wAPLP2eP+i4/Cj/AMKmy/8AjlelfC/4y+EPjdoB1XwZ4p8O+LNMVtjXWj6jDfQo2M7S0bMA2Ox5r8o/+FZeGv8AoXNB/wDBdD/8TXF+MvBd5+zjrEvxb+EUdv4T+IHhaJr10sY/Is/EttH88tjewphZkdFIDEbkbaVYEA16+ReN
+WR5jjqeBq0alD2jUVNyjKKbdlzWUWo33kr23sxxxTvqj9tKK5L4C/GDTv2g/gj4R8daQrJpnjDR7XWLZGO5o0niWQIT3K7sH3FdbX69OEoScJKzR2hRRRUgFFFFAH863/Bfb/k/LUf8ArjN/6VzV8SV9t/8ABfb/AJPy1H/rjN/6VzV8SV+p+GH/ACTOG/7if+nJnkS3YUUUV96IKKKKACiiigAooooAKKKKAJbDTrjV7+CztImnu7uVYII16ySMQqqPckgfjX7neGfh/D+zr+wV8NvA0aBLrUnOqTsCMtHDELeMn2cl3/E1+dv/AARs/YuvP2ov2l7DVbqJofD3huQzvdNgRrKoDM+TwBEh3ZP8bRetfot+0J8Rbb4l/E26utOQRaLp8aabpcYGBHawjYmB2B5bHbdjtX8W/Sc4xpzayqhK/s04v/r5PllL/wAF00ov/r/beLLWkWziKKKK/ikgKKKKACsb4j/8k68Qf9gy5/8ARLVs1jfEf/knXiD/ALBlz/6Jau7LP98o/wCKP5oD76/4JOf8oyvgN/2I2lf+kqV9B18+f8EnP+UZXwG/7EbSv/SVK+g6/wBGMz/3yr/il+bPWh8KCiiiuEoKKKKAP51v+C+3/J+Wo/8AXGb/ANK5q+JK+3v+C/MLx/t337MjKrRTgEjAP+lSn+RH5iviGv1Lwwf/ABjOG/7if+nZnky3YUUUV98SFFFFABRRRQAUUUjMEXJIAHc0ALXo/wCy9+y94n/ax+KNn4Z8NWc8pllRbq5SIutqrHA4/idudq9yCeFDMPV/2I/+CU/xL/bI8UW6x6Tf6D4eBD3F5cReXMU65VX4RSM4kk4P8Kyfdr9SvhfoHw//AOCe3w4Twl8LIrLU/FDRGO+8RR/vYbVmADiBm5lkIAzKc+g4+RfwnxL8aMtyTCzoZdVUqusXNWlGD6qPSpVXSC92D1quKSjK4w6vYksvh94e/YL/AGe7f4T+Exbtr9/bKniG7jYS
+Naxnk2ocdXcktIe5Y8YKhfM6fc3Ut7cyTTSSTTTMXkkkYs7sTksSeSSeSTTK/wA6eIc9rZti3iat7a2Td2rtttt6ylKTcpyespNvTRJSlcKKKK8MkKKKKACsb4j/APJOvEH/AGDLn/0S1bNYnxNlWD4a+IndgiJpd0WJOAB5L13ZWr42il/NH80B9+f8EnP+UZXwG/7EbSv/AElSvoOvn3/glDE0H/BM74Do6sjDwNpWQwwR/oqV9BV/ovmf++Vf8UvzZ60PhQUUUVxFBRRRQB8Of8FZv+CR9n+3Zpaa3oU0en+KrMblcBQXbABIyQG3KqhkJGdqkMCDu/JHxp/wRQ+P/g/W5rRfCpv0jYqssKzKGHrgx4/IsPc1/SjRSy3GZplXPHKcRyQk3JwnFTgpN3k4q8ZRcnq0pcrbcuXmbb554eMnc/mW/wCHPf7QH/Qj3X/j/wD8RR/w57/aA/6Ee6/8f/8AiK/ppor1P9buKf8AoIo/+CZf/LiPqq7n8y3/AA57/aA/6Ee6/wDH/wD4ij/hz3+0B/0I91/4/wD/ABFf000Uf63cU/8AQRR/8Ey/+XB9VXc/mH8U/wDBKf41+B9Cn1TW/DUGjaXa7fPvL65+zW8O5gq7pHUKuWYAZPUgd66jw3/wRI/aF8RyADwktqDzmUXB49flhP8Ak1+yv/BeKITf8En/AItBlDDytMOCM9NVszXzZcfEfxFrVqn2zX9bvNyjPn38smeO+5jmvh+P/GLiPhnC4atVqU6jryqL3aXLb2apveVSa19p/L0MKtOMHY+WvAn/AAb2eMLOKO6+IHjPw/4TtW6pJcwwMenAZ2Z8+3k19G/Bj9hr9m39k6aK9htr/wCJHiO25SbY0MAcY6zy/Ovf5oETNOPzMSeSepor+c+JfHLiPOIOlWqy5H0k1y+jjTjThNeVSE0RzJbI73x7+0RrnjHQBoVlHZeGvDMZOzSdKj8mFgc8yN96QkddxwTzgGuC60UV+R43
+H4jF1Pa4mbk7WV+iWyS2SXRKyXREuTe4Vw3iL4/6VoPjy+8NW+jeNfEGsabbw3V3BoPhu81X7NHLny2cwRvtDbWxnHQ13Nd//wAEe/8AlIL+0D/2LHhn/wBCv6/Q/CjhLL+Ic1rYTM+bkhSlP3JKLup04rVxlpaT6diqceaSieCf8L3b/onfxp/8N3rH/wAYo/4Xu3/RO/jT/wCG71j/AOMV+0FFfvH/ABBXhH+Wv/4Nj/8AKjq+qrufi/8A8L3b/onfxp/8N3rH/wAYo/4Xu3/RO/jT/wCG71j/AOMV+0FFH/EFeEf5a/8A4Nj/APKg+qrufi//AML3b/onfxp/8N3rH/xitzwn+zF8Uv8AgoNOng/SvBnjH4c/DrVSI/Efi3xJp76XcPZ5/eW1jay4mklkXKeYyBEBbOTiv2Eor1Ml8LeGMqxlPH4ajOdSm04+0mpRUlqpcqhC7T1Sbcb7pjWFj1ZmeC/CGnfD3wdpOgaRbJZ6TodnDp9lbp92CCJBHGg9gqgfhWnRRX37bbuzqCiiikAUUUUAFFFFABRRRQAUUUUAfJf/AAXRg+0f8Epvi4M7dtrYP0/u6laN/Svkuy/484v9wfyr65/4LjDP/BKv4vdf+PGz6f8AYQta+RbI5soT6xqf0r8H+kH/AMi7LP8AHiP/AEnDnBiviRLRRRX8vnMFFFFABXf/APBHs/8AGwb9oEenhfwx/wCh6hXAV33/AAR6IP8AwUH/AGg+uR4X8MD/AMev6/dPAD/keYr/ALB5f+naJrQ/iI/Saiiiv6kPTCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA+Uv+C4MTTf8ABKz4wBSARp1q2T7X1sf6V8had/yDrfv+6T/0EV9i/wDBa+2luv8Agll8ZREjO0WjxzNgfdRLqB3Y+wVST7A18baFcJd6HYyxsrxy28boynIYFQQRX4R9IJP+zctf9+v/AOk0DhxXxItUUUV/LxyhRRRQ
+AV33/BHj/lIP+0H/ANiz4Y/9Cv64GvQv+CN0Buf28v2jrmMM8NvoXhW2eQLlVkI1BtmcdduDjPfntX7r9H9f8LmLf/UPL/09RNqH8RH6RUUUV/UZ6QUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAGV458E6T8S/BereHdesLfVdD12zl0/ULOdd0V1BKhSSNh6MrEH61+V/jT9hD42fsP3I0DRfCurfGn4Y2WU0bVdGuIf8AhINKthnZbXdpKyeeUGFWWAncBllTha/WWivOzjJ8Bm2EeAzOkqtNu9m2mpLRSjKLTTs2t7NaNNGdSkprU/Hca98QMf8AJAP2gP8AwkD/APHKX+3viB/0QD9oD/wkD/8AHK/Yeivhf+IPcJf8+J/+DH/kY/VY9z8eP7e+IH/RAP2gP/CQP/xyj+3viB/0QD9oD/wkD/8AHK/Yeij/AIg9wl/z4n/4Mf8AkH1WPc/ITRfA/wAdvi3dJpfgr4EeN9Nv7gmM6l41SLQtM07jiWXLtNKoOPlijZjzX6Bf8E9v2I7b9iH4NXWl3ernxP4z8T3zaz4p11ovK/tK9dQuI0yfLgjRVjjTPAXJ5Y17zRX13D3C+U5FSnSymgqfPbmk25Sklsm29EnraKSbs2m0mtKdGMHdBRRRXumwUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB/9k=</ImageData>
+    </EmbeddedImage>
+  </EmbeddedImages>
   <Language>=User!Language</Language>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <DataSets>
@@ -1496,6 +2259,21 @@ End Function
       <Fields>
         <Field Name="GateNo">
           <DataField>GateNo</DataField>
+        </Field>
+        <Field Name="PostedNo">
+          <DataField>PostedNo</DataField>
+        </Field>
+        <Field Name="Reference_Document_No_">
+          <DataField>Reference_Document_No_</DataField>
+        </Field>
+        <Field Name="Purpose_Description">
+          <DataField>Purpose_Description</DataField>
+        </Field>
+        <Field Name="To_Destination_Name">
+          <DataField>To_Destination_Name</DataField>
+        </Field>
+        <Field Name="CompanyLogo">
+          <DataField>CompanyLogo</DataField>
         </Field>
         <Field Name="LocationCode">
           <DataField>LocationCode</DataField>
@@ -1527,9 +2305,6 @@ End Function
         <Field Name="Vehicle_No_">
           <DataField>Vehicle_No_</DataField>
         </Field>
-        <Field Name="Posting_Date">
-          <DataField>Posting_Date</DataField>
-        </Field>
         <Field Name="PurposeCode">
           <DataField>PurposeCode</DataField>
         </Field>
@@ -1545,17 +2320,44 @@ End Function
         <Field Name="Remarks">
           <DataField>Remarks</DataField>
         </Field>
-        <Field Name="SystemCreatedBy">
-          <DataField>SystemCreatedBy</DataField>
+        <Field Name="PreparedBy">
+          <DataField>PreparedBy</DataField>
         </Field>
         <Field Name="PrintedBy">
           <DataField>PrintedBy</DataField>
         </Field>
+        <Field Name="PrintedDateTime">
+          <DataField>PrintedDateTime</DataField>
+        </Field>
+        <Field Name="GatePassDateTime">
+          <DataField>GatePassDateTime</DataField>
+        </Field>
+        <Field Name="GateOutDate">
+          <DataField>GateOutDate</DataField>
+        </Field>
+        <Field Name="GateOutTime">
+          <DataField>GateOutTime</DataField>
+        </Field>
+        <Field Name="Posting_Date">
+          <DataField>Posting_Date</DataField>
+        </Field>
+        <Field Name="OutwardPostingDate">
+          <DataField>OutwardPostingDate</DataField>
+        </Field>
+        <Field Name="OutwardPostingDateTime">
+          <DataField>OutwardPostingDateTime</DataField>
+        </Field>
         <Field Name="Line_No_">
           <DataField>Line_No_</DataField>
         </Field>
+        <Field Name="SNo">
+          <DataField>SNo</DataField>
+        </Field>
         <Field Name="ItemName">
           <DataField>ItemName</DataField>
+        </Field>
+        <Field Name="Serial_No_">
+          <DataField>Serial_No_</DataField>
         </Field>
         <Field Name="Quantity_Received">
           <DataField>Quantity_Received</DataField>
@@ -1571,6 +2373,12 @@ End Function
         </Field>
         <Field Name="Estimated_Value_ReceiveFormat">
           <DataField>Estimated_Value_ReceiveFormat</DataField>
+        </Field>
+        <Field Name="EstimatedValue">
+          <DataField>EstimatedValue</DataField>
+        </Field>
+        <Field Name="EstimatedValueFormat">
+          <DataField>EstimatedValueFormat</DataField>
         </Field>
         <Field Name="AssetNo">
           <DataField>AssetNo</DataField>

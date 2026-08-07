@@ -71,6 +71,41 @@ page 50162 "E3 Vendor Quotation"
                     Caption = 'Requested Quantity';
                     ToolTip = 'Specifies the required quantity.';
                 }
+                field("Indent Qty"; Rec."Indent Qty")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the quantity requested in the indent.';
+                }
+                field("Indent Approved Qty"; Rec."Indent Approved Qty")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the quantity approved against the indent.';
+                }
+                field("Purch. Unit of Measure"; Rec."Purch. Unit of Measure")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the unit of measure used for purchasing the item.';
+                }
+                field("Qty Per Purch. Unit of Measure"; Rec."Qty Per Purch. Unit of Measure")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the quantity contained in one purchase unit of measure.';
+                }
+                field("Short Qty Requisition"; Rec."Short Qty Requisition")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the shortage quantity after comparing the approved quantity with the purchase quantity.';
+                }
+                field("Short Qty Approved"; Rec."Short Qty Approved")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the shortage quantity based on the approved indent quantity.';
+                }
+                field("Short Qty Order"; Rec."Short Qty Order")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the shortage quantity based on the purchase order quantity.';
+                }
                 field(Amount; Rec.Amount)
                 {
                     ApplicationArea = All;

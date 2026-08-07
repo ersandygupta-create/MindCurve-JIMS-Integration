@@ -402,7 +402,7 @@ codeunit 50018 "E3 Supplier Integration Mgmt."
         Clear(JChildObj);
         Clear(JArray);
 
-        JChildObj.Add('supplierID', SupplierUpdateLog."Supplier ID");
+        JChildObj.Add('supplierID', SupplierUpdateLog."Unique Log No.");
         JChildObj.Add('supplierName', SupplierUpdateLog.Name);
         JChildObj.Add('supplierName2', SupplierUpdateLog."Name 2");
         JChildObj.Add('supplierAddress1', SupplierUpdateLog.Address);

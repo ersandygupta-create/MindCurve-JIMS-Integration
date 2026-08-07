@@ -18,6 +18,7 @@ table 50045 "E3 Posted Gate Entry Line"
         {
             Caption = 'Documment No.';
             DataClassification = CustomerContent;
+            TableRelation = "E3 Posted Gate Entry Header";
         }
         field(3; "Line No."; Integer)
         {

@@ -626,6 +626,8 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                         Item."Filter Item Type Code" := '5';
                         Item."Filter Item Type Name" := 'Store Mtrl.';
                     end;
+                    Item."Sale Returnable Item" := true;
+                    Item.IsActive := true;
 
                     Item.INSERT();
 

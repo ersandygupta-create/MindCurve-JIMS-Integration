@@ -2,11 +2,34 @@ pageextension 50064 "Item Ext" extends "Item Card"
 {
     layout
     {
+        modify(Description)
+        {
+            Editable = false;
+            ShowMandatory = true;
+        }
+        modify("GST Group Code")
+        {
+            ShowMandatory = true;
+        }
+        modify("HSN/SAC Code")
+        {
+            ShowMandatory = true;
+        }
+        modify("Purch. Unit of Measure")
+        {
+            ShowMandatory = true;
+        }
+        modify("Sales Unit of Measure")
+        {
+            ShowMandatory = true;
+        }
         addafter(Description)
         {
             field(Name; Rec.Name)
             {
                 ApplicationArea = All;
+                Editable = false;
+                ShowMandatory = true;
                 ToolTip = 'Specifies the value of Name field.';
             }
         }
@@ -18,6 +41,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 {
                     ApplicationArea = All;
                     //Editable = false;
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the value of Item Type field.';
                 }
                 field("Item Type Name"; Rec."Item Type Name")
@@ -31,6 +55,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 {
                     ApplicationArea = All;
                     Editable = false;
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the Material Category Code.';
                 }
                 field("Material Category Name"; Rec."Material Category Name")
@@ -53,6 +78,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Item Group Code"; Rec."Item Group Code")
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the Item Group Code.';
                 }
                 field("Item Group Name"; Rec."Item Group Name")
@@ -94,6 +120,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Category Code"; Rec."Category Code")
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the value of Category field.';
                 }
                 field("Category Name"; Rec."Category Name")
@@ -142,13 +169,14 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Item Make Code"; Rec."Item Make Code")
                 {
                     ApplicationArea = All;
-                    Caption = 'Medicine Company Code';
+                    ShowMandatory = true;
+                    Caption = 'Medicine Company / Brand-Make Code';
                     ToolTip = 'Specifies the Item Make Code.';
                 }
                 field("Make Name"; Rec."Make Name")
                 {
                     ApplicationArea = All;
-                    Caption = 'Medicine Company Name';
+                    Caption = 'Medicine Company/Brand-Make Name';
                     Editable = false;
                     ToolTip = 'Specifies the value of Make field.';
                 }
@@ -208,7 +236,18 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Margin Fix"; Rec."Margin Fix")
                 {
                     ApplicationArea = All;
+                    ShowMandatory = Rec."Margin Fix" = Rec."Margin Fix"::" ";
                     ToolTip = 'Specifies the value of Margin Fix field.';
+                }
+                field("E3 Margin Code"; Rec."E3 Margin Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of E3 Margin Code field.';
+                }
+                field("Margin Name"; Rec."Margin Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of E3 Margin Name field.';
                 }
                 field("Manual Code"; Rec."Manual Code")
                 {
@@ -268,6 +307,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field(IsActive; Rec.IsActive)
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true;
                     ToolTip = 'Specifies whether this is a IsActive item.';
                 }
                 field("Allow Negative Stock"; Rec."Allow Negative Stock")
@@ -419,6 +459,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field(Packing; Rec.Packing)
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the value of Packing field.';
                 }
 
@@ -484,6 +525,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 {
                     ApplicationArea = All;
                     Caption = 'GLEN';
+                    Editable = true;
                     ToolTip = 'Specifies the GLEN for the item.';
                 }
             }
@@ -564,36 +606,6 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     MedicineComposition.SetRange(Code, Rec."No.");
                     Page.Run(Page::"E3 Medicine Composition", MedicineComposition);
                 end;
-
-            }
-            action(ItemMargin)
-            {
-                ApplicationArea = All;
-                Caption = 'Item Margin';
-                Image = ListPage;
-                Promoted = true;
-                PromotedCategory = Process;
-
-                trigger OnAction()
-                var
-                    ItemMargin: Record "E3 Item Margin";
-                begin
-                    ItemMargin.Reset();
-                    ItemMargin.SetRange("Item No.", Rec."No.");
-
-                    if not ItemMargin.FindFirst() then begin
-                        Clear(ItemMargin);
-                        ItemMargin.Init();
-                        ItemMargin."Margin Code" := Rec."Margin Code";
-                        ItemMargin.Validate("Item No.", Rec."No.");
-                        ItemMargin."Item Name" := Rec.Description;
-                        ItemMargin.Insert(true);
-                    end;
-                    ItemMargin.Reset();
-                    ItemMargin.SetRange("Item No.", Rec."No.");
-                    Page.Run(Page::"E3 Item Margin List", ItemMargin);
-                end;
-
             }
         }
     }
@@ -603,5 +615,4 @@ pageextension 50064 "Item Ext" extends "Item Card"
         Rec.TestField("Base Unit of Measure");
         exit(true);
     end;
-
 }

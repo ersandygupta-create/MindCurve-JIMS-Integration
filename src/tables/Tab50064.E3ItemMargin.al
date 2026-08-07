@@ -9,32 +9,25 @@ table 50064 "E3 Item Margin"
         {
             Caption = 'Margin Code';
             DataClassification = CustomerContent;
+            tableRelation = "E3 Margin Type".Code;
+            trigger OnValidate()
+            var
+                MarginType: Record "E3 Margin Type";
+            begin
+                if MarginType.Get("Margin Code") then
+                    "Margin Name" := MarginType.Name
+                else
+                    "Margin Name" := '';
+            end;
         }
         field(2; "Line No."; Integer)
         {
             Caption = 'Line No.';
             DataClassification = CustomerContent;
         }
-        field(3; "Item No."; Code[20])
+        field(3; "Margin Name"; Text[100])
         {
-            Caption = 'Item No.';
-            TableRelation = Item."No.";
-            DataClassification = CustomerContent;
-
-            trigger OnValidate()
-            var
-                ItemRec: Record Item;
-            begin
-                if ItemRec.Get("Item No.") then
-                    "Item Name" := ItemRec.Description
-                else
-                    "Item Name" := '';
-            end;
-        }
-        field(4; "Item Name"; Text[100])
-        {
-            Caption = 'Item Name';
-            Editable = false;
+            Caption = 'Margin Name';
             DataClassification = CustomerContent;
         }
         field(5; "Business Unit Code"; Code[20])
@@ -60,24 +53,6 @@ table 50064 "E3 Item Margin"
                     "Business Unit Name" := DimValue.Name
                 else
                     "Business Unit Name" := '';
-
-                // Validate only one Business Unit per Item
-                if ("Item No." <> '') and ("Business Unit Code" <> '') then begin
-                    ItemMargin.Reset();
-                    ItemMargin.SetRange("Item No.", "Item No.");
-
-                    // Ignore current record while editing
-                    if "Line No." <> 0 then
-                        ItemMargin.SetFilter("Line No.", '<>%1', "Line No.");
-
-                    if ItemMargin.FindFirst() then
-                        if ItemMargin."Business Unit Code" <> "Business Unit Code" then
-                            Error(
-                                'Item %1 is already assigned to Business Unit %2. You cannot assign it to Business Unit %3.',
-                                "Item No.",
-                                ItemMargin."Business Unit Code",
-                                "Business Unit Code");
-                end;
             end;
         }
         field(6; "Business Unit Name"; Text[100])
@@ -101,7 +76,7 @@ table 50064 "E3 Item Margin"
 
     keys
     {
-        key(PK; "Item No.", "Line No.")
+        key(PK; "Margin Code", "Line No.")
         {
         }
     }
@@ -118,7 +93,7 @@ table 50064 "E3 Item Margin"
             exit;
 
         ItemMargin.Reset();
-        ItemMargin.SetRange("Item No.", "Item No.");
+        ItemMargin.SetRange("Margin Code", "Margin Code");
 
         if ItemMargin.FindLast() then
             "Line No." := ItemMargin."Line No." + 10000

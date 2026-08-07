@@ -53,6 +53,11 @@ table 50052 "E3 Indent Line"
                 "Unit of Measure" := Item."Base Unit of Measure";
                 "Item Make Code" := Item."Item Make Code";
                 "Item Make Name" := Item."Make Name";
+                "Purch. Unit of Measure" := Item."Purch. Unit of Measure";
+                if ItemUnitOfMeasure.Get("No.", "Purch. Unit of Measure") then
+                    "Qty Per Purch. Unit of Measure" := ItemUnitOfMeasure."Qty. per Unit of Measure";
+
+
 
                 if Type = Type::" " then
                     Error('Please select Type before selecting No.');
@@ -200,7 +205,7 @@ table 50052 "E3 Indent Line"
             Caption = 'Entry No.';
             DataClassification = CustomerContent;
         }
-        field(18; "Item Make Code"; Code[20])
+        field(18; "Item Make Code"; Code[30])
         {
             Caption = 'Item Make Code';
             //Editable = false;
@@ -332,6 +337,93 @@ table 50052 "E3 Indent Line"
             Caption = 'SNo.';
             DataClassification = CustomerContent;
         }
+        field(42; "Indent Qty"; Decimal)
+        {
+            Caption = 'Indent Qty';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if "Qty Per Purch. Unit of Measure" <> 0 then
+                    "Requested Qty" := Round("Indent Qty" / "Qty Per Purch. Unit of Measure", 1, '<')
+                else
+                    "Requested Qty" := 0;
+
+                "Short Qty Requisition" := "Indent Qty" - ("Qty Per Purch. Unit of Measure" * "Requested Qty");
+                "Short Qty Order" := "Requested Qty" - "Approved Qty";
+            end;
+        }
+        field(43; "Indent Approved Qty"; Decimal)
+        {
+            Caption = 'Indent Approved Qty';
+            DataClassification = CustomerContent;
+
+            trigger OnValidate()
+            begin
+                if "Qty Per Purch. Unit of Measure" <> 0 then begin
+                    "Approved Qty" :=
+                        Round("Indent Approved Qty" / "Qty Per Purch. Unit of Measure", 1, '<');
+
+                    "Short Qty Approved" :=
+                        "Indent Approved Qty" -
+                        ("Approved Qty" * "Qty Per Purch. Unit of Measure");
+                end
+                else begin
+                    "Approved Qty" := 0;
+                    "Short Qty Approved" := 0;
+                end;
+
+                "Short Qty Order" := "Requested Qty" - "Approved Qty";
+            end;
+        }
+        field(44; "Purch. Unit of Measure"; Code[20])
+        {
+            Caption = 'Purch. Unit of Measure';
+            DataClassification = CustomerContent;
+            TableRelation = "Item Unit of Measure".Code;
+        }
+        field(45; "Qty Per Purch. Unit of Measure"; Decimal)
+        {
+            Caption = 'Qty Per Purch. Unit of Measure';
+            DataClassification = CustomerContent;
+
+            trigger OnValidate()
+            begin
+                if "Qty Per Purch. Unit of Measure" <> 0 then begin
+                    "Approved Qty" :=
+                        Round("Indent Approved Qty" / "Qty Per Purch. Unit of Measure", 1, '<');
+
+                    "Short Qty Approved" :=
+                        "Indent Approved Qty" -
+                        ("Approved Qty" * "Qty Per Purch. Unit of Measure");
+                end
+                else begin
+                    "Approved Qty" := 0;
+                    "Short Qty Approved" := 0;
+                end;
+            end;
+        }
+        field(46; "Short Qty Requisition"; Decimal)
+        {
+            Caption = 'Short Qty Requisition';
+            DataClassification = CustomerContent;
+        }
+        field(47; "Short Qty Approved"; Decimal)
+        {
+            Caption = 'Short Qty Approved';
+            DataClassification = CustomerContent;
+        }
+        field(48; "Short Qty Order"; Decimal)
+        {
+            Caption = 'Short Qty Order';
+            DataClassification = CustomerContent;
+        }
+        field(49; "PO Created"; Boolean)
+        {
+            Caption = 'PO Created';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+
         field(80285; "Currency Code"; Code[10])
         {
             DataClassification = CustomerContent;
@@ -401,5 +493,6 @@ table 50052 "E3 Indent Line"
         StdTxt: Record "Standard Text";
         FA: Record "Fixed Asset";
         ItemCharge: Record "Item Charge";
+        ItemUnitOfMeasure: Record "Item Unit of Measure";
 
 }

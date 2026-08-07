@@ -38,19 +38,55 @@ page 50154 "E3 Indent Line Subform"
                     ApplicationArea = All;
                     Editable = IsLineEditable;
                 }
-                field("Critical Item"; Rec."Critical Item")
+                field("Indent Qty"; Rec."Indent Qty")
                 {
                     ApplicationArea = All;
-                    Editable = IsLineEditable;
+                    ToolTip = 'Specifies the quantity requested in the indent.';
+                }
+                field("Indent Approved Qty"; Rec."Indent Approved Qty")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the quantity approved against the indent.';
+                }
+                field("Purch. Unit of Measure"; Rec."Purch. Unit of Measure")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the unit of measure used for purchasing the item.';
+                }
+                field("Qty Per Purch. Unit of Measure"; Rec."Qty Per Purch. Unit of Measure")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the quantity contained in one purchase unit of measure.';
                 }
                 field("Requested Qty"; Rec."Requested Qty")
                 {
                     ApplicationArea = All;
-                    Editable = IsLineEditable;
+                    Editable = false;
                 }
                 field("Approved Qty"; Rec."Approved Qty")
                 {
                     ApplicationArea = All;
+                    Editable = false;
+                }
+                field("Short Qty Requisition"; Rec."Short Qty Requisition")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the shortage quantity after comparing the approved quantity with the purchase quantity.';
+                }
+                field("Short Qty Approved"; Rec."Short Qty Approved")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the shortage quantity based on the approved indent quantity.';
+                }
+                field("Short Qty Order"; Rec."Short Qty Order")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the shortage quantity based on the purchase order quantity.';
                 }
                 field("Unit Cost"; Rec."Unit Cost")
                 {
@@ -95,6 +131,11 @@ page 50154 "E3 Indent Line Subform"
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = All;
+                }
+                field("Critical Item"; Rec."Critical Item")
+                {
+                    ApplicationArea = All;
+                    Editable = IsLineEditable;
                 }
             }
         }

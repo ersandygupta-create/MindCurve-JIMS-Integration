@@ -24,6 +24,7 @@ page 50013 "E3 API Supplier Update Logs"
                 field("Unique Log No."; Rec."Unique Log No.")
                 {
                     ToolTip = 'Specifies the value of the Unique ID field.';
+                    visible = false;
                 }
                 field(Name; Rec.Name)
                 {

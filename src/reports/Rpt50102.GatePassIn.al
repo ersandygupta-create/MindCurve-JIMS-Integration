@@ -4,7 +4,7 @@ report 50102 "E3 Gate Inward Print"
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
     DefaultLayout = RDLC;
-    RDLCLayout = './src/reports/Rpt50102.GatePassInward.rdl';
+    RDLCLayout = './src/reports/Rpt50102.GatePassIn.rdl';
 
     dataset
     {
@@ -13,9 +13,24 @@ report 50102 "E3 Gate Inward Print"
             RequestFilterFields = "Document No.";
 
 
-            column(GateNo; "Document No.")
+            column(GateNo; GateNo)
             {
             }
+            column(PostedNo; "Document No.")
+            { }
+            column(Reference_Document_No_; "Reference Document No.")
+            {
+            }
+            column(Purpose_Description; "Purpose Description")
+            {
+            }
+            column(To_Destination_Name; "To Destination Name")
+            {
+            }
+            column(CompanyLogo; CompanyInfo.Picture)
+            {
+            }
+
             column(LocationCode; "To Destination Code")
             {
             }
@@ -50,10 +65,6 @@ report 50102 "E3 Gate Inward Print"
             {
             }
 
-            column(Posting_Date; "Posting Date")
-            {
-            }
-
             column(PurposeCode; "Purpose Code")
             {
             }
@@ -71,12 +82,36 @@ report 50102 "E3 Gate Inward Print"
             column(Remarks; Remarks)
             {
             }
-            column(SystemCreatedBy; userc."User Name")
+            column(PreparedBy; PreparedByName)
             {
             }
-            column(PrintedBy; userc."User Name")
+            column(PrintedBy; PrintedByName)
             {
             }
+            column(PrintedDateTime; CurrentDateTime())
+            {
+            }
+            column(GatePassDateTime; SystemCreatedAt)
+            {
+            }
+            column(GateOutDate; GateOutDate)
+            {
+            }
+
+            column(GateOutTime; GateOutTime)
+            {
+            }
+            column(Posting_Date; "Posting Date")
+            { }
+            column(OutwardPostingDate; OutwardPostingDate)
+            {
+            }
+
+            column(OutwardPostingDateTime; OutwardPostingDateTime)
+            {
+            }
+
+
 
             dataitem(GateEntryLine; "E3 Gate Entry Line")
             {
@@ -86,8 +121,15 @@ report 50102 "E3 Gate Inward Print"
                 {
 
                 }
+                column(SNo; SNo)
+                {
+                }
                 column(ItemName; "Item Name")
                 {
+                }
+                column(Serial_No_; "Serial No.")
+                {
+
                 }
 
                 column(Quantity_Received; "Quantity Received")
@@ -100,6 +142,9 @@ report 50102 "E3 Gate Inward Print"
                 column(Estimated_Value_Receive; "Estimated Value Receive")
                 {
                 }
+                column(EstimatedValue; "Estimated Value")
+                {
+                }
                 column(AssetNo; "Asset No.")
                 {
                 }
@@ -109,9 +154,11 @@ report 50102 "E3 Gate Inward Print"
                 column(LineRemarks; Specification)
                 {
                 }
+
+
                 trigger OnAfterGetRecord()
                 begin
-
+                    SNo += 1;
                     LocationAdd := '';
                     ToDestination := '';
                     LocationAdd2 := '';
@@ -120,10 +167,11 @@ report 50102 "E3 Gate Inward Print"
 
                     Location.Reset();
                     Location.SetRange(Code, GateEntryHeader."Shortcut Dimension 1 Code");
-                    if userc.Get(SystemCreatedBy) then;
+                    if UserC.Get(SystemCreatedBy) then
+                        PreparedByName := UserC."Full Name";
 
 
-                    //   if userc.Get(PrintedBy) then;
+
                     if Location.FindFirst() then begin
                         LocationAdd := Location.Address;
                         LocationAdd2 := Location."Address 2";
@@ -134,6 +182,38 @@ report 50102 "E3 Gate Inward Print"
                 end;
 
             }
+
+
+            trigger OnAfterGetRecord()
+            begin
+                CompanyInfo.Get();
+                CompanyInfo.CalcFields(Picture);
+
+                if UserC.Get(UserSecurityId()) then
+                    PrintedByName := UserC."Full Name";
+
+                //Getout Date & time logic
+                GateOutDate := 0D;
+                GateOutTime := 0T;
+                GateOutHeader.Reset();
+                GateOutHeader.SetRange("Document No.", "Reference Document No.");
+                if GateOutHeader.FindFirst() then begin
+                    GateOutDate := DT2Date(GateOutHeader.SystemCreatedAt);
+                    GateOutTime := DT2Time(GateOutHeader.SystemCreatedAt);
+                end;
+                Clear(OutwardPostingDate);
+                Clear(OutwardPostingDateTime);
+
+                OutwardHeader.Reset();
+                OutwardHeader.SetRange("Document No.", GateEntryHeader."Document No.");
+
+                if OutwardHeader.FindFirst() then begin
+                    OutwardPostingDate := OutwardHeader."Posting Date";
+                    OutwardPostingDateTime := OutwardHeader.SystemCreatedAt;
+                end;
+
+            end;
+
 
 
         }
@@ -187,6 +267,17 @@ report 50102 "E3 Gate Inward Print"
         LocationName: Text[100];
         UserC: Record User;
         GateLine: Record "E3 Gate Entry Line";
+        Sno: Integer;
+        companyinfo: Record "company information";
+        PrintedByName: Text[100];
+        PreparedByName: Text[100];
+        GateOutHeader: Record "E3 Gate Entry Header";
+        GateOutDate: Date;
+        GateOutTime: Time;
+        OutwardHeader: Record "E3 Gate Entry Header";
+        OutwardPostingDate: Date;
+        OutwardPostingDateTime: DateTime;
+
 
 
 }

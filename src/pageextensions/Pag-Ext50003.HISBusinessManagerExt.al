@@ -561,6 +561,16 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         RunPageMode = Create;
                         ToolTip = 'Check Filter Sub Group Master';
                     }
+                    action("Margin Type Master")
+                    {
+                        AccessByPermission = TableData "E3 Margin Type" = R;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Margin Type';
+                        Image = NewOrder;
+                        RunObject = Page "E3 Margin Type";
+                        RunPageMode = Create;
+                        ToolTip = 'Check Filter Margin Type';
+                    }
                 }
                 group("E3 HIS Collection Staging")
                 {

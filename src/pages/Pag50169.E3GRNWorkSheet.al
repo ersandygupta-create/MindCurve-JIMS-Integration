@@ -42,6 +42,11 @@ page 50169 "E3 GRN Work Sheet"
                     Editable = false;
                     ToolTip = 'Specifies the purchase order quantity.';
                 }
+                field("Free Qty"; Rec."Free Qty")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the purchase Free quantity.';
+                }
                 field("Outstanding Qty"; Rec."Outstanding Qty")
                 {
                     ApplicationArea = All;
@@ -67,8 +72,22 @@ page 50169 "E3 GRN Work Sheet"
                 field("Lot No."; Rec."Lot No.")
                 {
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                     ToolTip = 'Specifies the lot number.';
+                    trigger OnAssistEdit()
+                    var
+                        PurchSetup: Record "Purchases & Payables Setup";
+                        NoSeries: Codeunit "No. Series";
+                    begin
+                        PurchSetup.Get();
+                        PurchSetup.TestField("Lot Nos.");
+
+                        if Rec."Lot No." = '' then begin
+                            Rec."No. Series" := PurchSetup."Lot Nos.";
+                            Rec."Lot No." := NoSeries.GetNextNo(Rec."No. Series", WorkDate(), true);
+                            CurrPage.Update();
+                        end;
+                    end;
                 }
                 field("Mfg Date"; Rec."Manufacturing Date")
                 {
@@ -269,6 +288,108 @@ page 50169 "E3 GRN Work Sheet"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the final discount amount.';
                 }
+                field("Rec SKU QTY"; Rec."Rec SKU QTY")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the received SKU quantity.';
+                }
+                field("UGST %"; Rec."UGST %")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the UGST percentage.';
+                }
+                field("UGST Amount"; Rec."UGST Amount")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the UGST amount.';
+                }
+                field("GRN Date"; Rec."GRN Date")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the GRN date.';
+                }
+                field("Challan No."; Rec."Challan No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the challan number.';
+                }
+                field("Challan Date"; Rec."Challan Date")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the challan date.';
+                }
+                field("Challan Qty"; Rec."Challan Qty")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the challan quantity.';
+                }
+                field("Accepted Qty"; Rec."Accepted Qty")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the accepted quantity.';
+                }
+                field("Supplier State"; Rec."Supplier State")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the supplier state.';
+                }
+                field("V Prefix"; Rec."V Prefix")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the voucher prefix.';
+                }
+                field("Voucher Type"; Rec."Voucher Type")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the voucher type.';
+                }
+                field("Vendor Code"; Rec."Vendor Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the vendor code.';
+                }
+            }
+        }
+    }
+    actions
+    {
+        area(Processing)
+        {
+            action("Receive")
+            {
+                ApplicationArea = All;
+                Caption = 'Receive';
+                Image = Post;
+                Promoted = true;
+                PromotedCategory = Process;
+
+                trigger OnAction()
+                var
+                    GRNWorksheet: Record "E3 GRN Work Sheet";
+                    PurchHeader: Record "Purchase Header";
+                    PurchLine: Record "Purchase Line";
+                begin
+                    CurrPage.SetSelectionFilter(GRNWorksheet);
+
+                    if GRNWorksheet.FindSet() then
+                        repeat
+                            PurchHeader.Get(PurchHeader."Document Type"::Order, GRNWorksheet."PO No.");
+
+                            PurchLine.Get(PurchHeader."Document Type", PurchHeader."No.", GRNWorksheet."Line No.");
+
+                            PurchLine.Validate("Qty. to Receive", GRNWorksheet."Receipt Qty");
+                            PurchLine.Modify(true);
+
+                        until GRNWorksheet.Next() = 0;
+
+                    // Post Receipt
+                    PurchHeader.Receive := true;
+                    PurchHeader.Invoice := false;
+
+                    Codeunit.Run(Codeunit::"Purch.-Post", PurchHeader);
+
+                    Message('Purchase Receipt posted successfully.');
+                end;
             }
         }
     }

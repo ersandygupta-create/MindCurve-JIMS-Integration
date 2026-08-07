@@ -47,6 +47,14 @@ page 50156 "E3 Indent Line API"
                 {
                     Caption = 'Unit of Measure';
                 }
+                field(indentQty; Rec."Indent Qty")
+                {
+                    Caption = 'Indent Qty';
+                }
+                field(indentApprovedQty; Rec."Indent Approved Qty")
+                {
+                    Caption = 'Indent Approved Qty';
+                }
                 field(requestedQty; Rec."Requested Qty")
                 {
                     Caption = 'Requested Qty';

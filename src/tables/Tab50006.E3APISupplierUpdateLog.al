@@ -189,7 +189,7 @@ table 50006 "E3 API Supplier Update Log"
         field(50102; "Supplier ID"; Integer)
         {
             Caption = 'Supplier ID';
-            AutoIncrement = true;
+            //AutoIncrement = true;
         }
     }
     keys

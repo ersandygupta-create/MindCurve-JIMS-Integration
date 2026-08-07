@@ -1,7 +1,7 @@
 report 50101 "Gate OutWard Print"
 {
     Caption = 'Gate Outward Print';
-    //UsageCategory = ReportsAndAnalysis;
+    UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
     DefaultLayout = RDLC;
     RDLCLayout = './src/reports/Rpt50101.GatePassOut.rdl';
@@ -15,7 +15,7 @@ report 50101 "Gate OutWard Print"
             column(GateNo; "Document No.")
             {
             }
-            column(LocationCode; "To Destination Code")
+            column(CompanyLogo; CompanyInfo.Picture)
             {
             }
             column(LocationName; LocationName)
@@ -34,9 +34,17 @@ report 50101 "Gate OutWard Print"
             column(GatePassType; "Gate Pass Type")
             {
             }
+            column(GatePassDateTime; SystemCreatedAt)
+            {
+            }
             column(Vendor_Name; "Vendor Name")
             {
             }
+            column(To_Destination_Name; "To Destination Name")
+            {
+
+            }
+
 
             column(Vendor_No_; "Vendor No.")
             {
@@ -53,7 +61,7 @@ report 50101 "Gate OutWard Print"
             {
             }
 
-            column(PurposeCode; "Purpose Code")
+            column(Purpose_Description; "Purpose Description")
             {
             }
             column(From_Department_Name; "From Department Name")
@@ -66,6 +74,9 @@ report 50101 "Gate OutWard Print"
             column(ToDestination; "To Destination Code")
             {
             }
+            column(Reference_Document_No_; "Reference Document No.")
+            {
+            }
 
             column(Remarks; Remarks)
             {
@@ -73,10 +84,10 @@ report 50101 "Gate OutWard Print"
             column(SystemCreatedBy; userc."Full Name")
             {
             }
-            column(PrintedBy; userc."Full Name")
+            column(PrintedBy; PrintedByName)
             {
             }
-            column(PrintedDateTime; CurrentDateTime)
+            column(PrintedDateTime; CurrentDateTime())
             {
             }
             dataitem(GateEntryLine; "E3 Gate Entry Line")
@@ -84,7 +95,9 @@ report 50101 "Gate OutWard Print"
                 DataItemLink = "Document No." = field("Document No.");
                 column(ItemName; "Item Name")
                 {
-
+                }
+                column(SNo; SNo)
+                {
                 }
 
                 column(Quantity; Quantity)
@@ -93,12 +106,12 @@ report 50101 "Gate OutWard Print"
                 column(UnitOfMeasurement; "Unit of Measurement")
                 {
                 }
-
+                column(Serial_No_; "Serial No.")
+                {
+                }
                 column(EstimatedValue; "Estimated Value")
                 {
                 }
-
-
                 column(AssetNo; "Asset No.")
                 {
                 }
@@ -109,20 +122,29 @@ report 50101 "Gate OutWard Print"
                 column(LineRemarks; Specification)
                 {
                 }
+                trigger OnPreDataItem()
+                begin
+                    SNo := 0;
+                end;
+
                 trigger OnAfterGetRecord()
                 begin
-
+                    SNo += 1;
                     LocationAdd := '';
                     ToDestination := '';
                     LocationAdd2 := '';
                     LocationPhoneNo := '';
                     LocationName := '';
+                    CompanyInfo.Get();
+                    CompanyInfo.CalcFields(Picture);
+
+                    if UserC.Get(UserSecurityId()) then
+                        PrintedByName := UserC."Full Name";
 
                     if GateEntryHeader."To Destination Code" <> '' then begin
                         Location.Reset();
                         Location.SetRange(Code, GateEntryHeader."Shortcut Dimension 1 Code");
                         if userc.Get(SystemCreatedBy) then;
-                        //if userc.Get(PrintedBy) then;
 
                         if Location.FindFirst() then begin
                             LocationAdd := Location.Address;
@@ -158,16 +180,6 @@ report 50101 "Gate OutWard Print"
             }
         }
 
-        actions
-        {
-            // area(processing)
-            // {
-            //     action(LayoutName)
-            //     {
-
-            //     }
-            // }
-        }
     }
     var
         GateNo: Code[20];
@@ -187,6 +199,9 @@ report 50101 "Gate OutWard Print"
         LocationPhoneNo: Text[30];
         LocationName: Text[100];
         UserC: Record User;
+        Sno: Integer;
+        PrintedByName: Text[100];
+        companyinfo: Record "company information";
 
 
 }

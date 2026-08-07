@@ -371,7 +371,7 @@ tableextension 50015 "E3 HIS Item" extends Item
         {
             Caption = 'Item Make Code';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Item Make Master".Code;
+            TableRelation = "E3 Item Make Master".Code where("Make Type" = filter("Medicine/Marketing"));
 
             trigger OnValidate()
             var
@@ -429,7 +429,7 @@ tableextension 50015 "E3 HIS Item" extends Item
         {
             Caption = 'Marketing Company Code';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Item Make Master".Code;
+            TableRelation = "E3 Item Make Master".Code where("Make Type" = filter("Medicine/Marketing"));
             trigger OnValidate()
             var
                 ItemMakeMaster: Record "E3 Item Make Master";
@@ -644,7 +644,7 @@ tableextension 50015 "E3 HIS Item" extends Item
         {
             Caption = 'Medicine Manufacturer Code';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Item Make Master".Code;
+            TableRelation = "E3 Item Make Master".Code where("Make Type" = filter(Manufacturer));
 
             trigger OnValidate()
             var
@@ -827,6 +827,26 @@ tableextension 50015 "E3 HIS Item" extends Item
         field(50108; GLEN; Enum "E3 GLEN Type")
         {
             Caption = 'GLEN';
+            DataClassification = CustomerContent;
+        }
+        field(50109; "E3 Margin Code"; Code[20])
+        {
+            Caption = 'Margin Code';
+            DataClassification = CustomerContent;
+            tableRelation = "E3 Margin Type".Code;
+            trigger OnValidate()
+            var
+                MarginType: Record "E3 Margin Type";
+            begin
+                if MarginType.Get("E3 Margin Code") then
+                    "Margin Name" := MarginType.Name
+                else
+                    "Margin Name" := '';
+            end;
+        }
+        field(50110; "Margin Name"; Text[100])
+        {
+            Caption = 'Margin Name';
             DataClassification = CustomerContent;
         }
 

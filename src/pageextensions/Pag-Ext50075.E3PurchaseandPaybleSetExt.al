@@ -34,6 +34,12 @@ pageextension 50075 "E3 Purchase & Payable Ext" extends "Purchases & Payables Se
             field("Indent Nos."; Rec."Indent Nos.")
             {
                 ApplicationArea = All;
+                ToolTip = 'Specifies a value Indent Nos.';
+            }
+            field("Lot Nos."; Rec."Lot Nos.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies a value Lot Nos.';
             }
 
         }

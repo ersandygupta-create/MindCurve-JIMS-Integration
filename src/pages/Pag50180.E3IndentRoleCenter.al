@@ -1,0 +1,139 @@
+page 50180 "E3 Indent Role Center"
+{
+    PageType = RoleCenter;
+    Caption = 'Indent Module';
+    ApplicationArea = All;
+    UsageCategory = Administration;
+
+    layout
+    {
+        area(RoleCenter)
+        {
+            part(IndentCue; "E3 Indent Cue Card")
+            {
+                ApplicationArea = All;
+            }
+        }
+    }
+
+    actions
+    {
+        area(Embedding)
+        {
+            group("Indent Module")
+            {
+                Caption = 'Indent Module';
+                group("Create Indent")
+                {
+                    Caption = 'Create Indent';
+                    action("System Indent")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'System Indent';
+                        Image = NewDocument;
+                        RunObject = Page "E3 Indent List";
+                        RunPageMode = Create;
+                    }
+                    action("HIS Indent")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'HIS Indent';
+                        Image = NewDocument;
+                        RunObject = Page "E3 HIS Indent List";
+                        RunPageMode = Create;
+                    }
+                }
+                group("Approved Indent")
+                {
+                    Caption = 'Approved Indent';
+
+                    action("System Approved Indent")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'System Approved Indent';
+                        Image = Approvals;
+                        RunObject = Page "E3 Approved Indent List";
+                    }
+                    action("HIS Approved Indent")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'HIS Approved Indent';
+                        Image = Approvals;
+                        RunObject = Page "E3 Approved HIS Indent List";
+                    }
+                }
+                group(Quotation)
+                {
+                    Caption = 'Quotation';
+
+                    action("Vendor Quotation")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Vendor Quotation';
+                        Image = Quote;
+                        RunObject = Page "E3 Quotation List";
+                    }
+                    action("Released Quotation")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Released Quotation';
+                        Image = Quote;
+                        RunObject = Page "E3 Released Indent Details";
+                    }
+                }
+                action("Item Make Master")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Item Make Master';
+                    Image = Item;
+                    RunObject = Page "E3 Item Make Master";
+                }
+            }
+        }
+        // area(Creation)
+        // {
+
+        // }
+        area(Processing)
+        {
+            action(Vendor)
+            {
+                Caption = 'Vendor';
+                Image = Vendor;
+                visible = false;
+                RunObject = Page "Vendor List";
+            }
+            action(SyatemIndent)
+            {
+                Caption = 'System Indent';
+                Image = View;
+                RunObject = Page "E3 Indent List";
+            }
+            action(HISIndent)
+            {
+                Caption = 'HIS Indent';
+                Image = View;
+                RunObject = Page "E3 HIS Indent List";
+            }
+            action(ApprovedIndentList)
+            {
+                Caption = 'Approved Indents';
+                Image = Approvals;
+                RunObject = Page "E3 Approved Indent List";
+            }
+            action(VendorQuotationList)
+            {
+                Caption = 'Vendor Quotation';
+                Image = Quote;
+                RunObject = Page "E3 Quotation List";
+            }
+            action(ItemMake)
+            {
+                Caption = 'Item Make Master';
+                Image = Item;
+                ApplicationArea = All;
+                RunObject = Page "E3 Item Make Master";
+            }
+        }
+    }
+}

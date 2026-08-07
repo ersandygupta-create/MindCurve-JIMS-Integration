@@ -21,6 +21,7 @@ page 50014 "E3 Item Master List"
                 {
                     ApplicationArea = All;
                     Caption = 'Item Type';
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the Item Type.';
 
                     trigger OnValidate()
@@ -39,6 +40,7 @@ page 50014 "E3 Item Master List"
                     ApplicationArea = All;
                     Caption = 'Material Category';
                     Editable = MaterialCategoryEditable;
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the Material Category.';
                 }
                 field("Material Category Name"; Rec."Material Category Name")
@@ -50,6 +52,7 @@ page 50014 "E3 Item Master List"
                 {
                     ApplicationArea = All;
                     Caption = 'Name';
+                    ShowMandatory = true;
                     Editable = NameEditable;
                     ToolTip = 'Specifies the Display Name.';
                 }
@@ -148,6 +151,7 @@ page 50014 "E3 Item Master List"
                                     'Item Description "%1" already exists in Item No. %2.',
                                     NewItemDesc,
                                     Item."No.");
+
 
                             // Create Item
                             HISIntegration.InitItemMaster1(HisMasterStaging."Entry No.");
