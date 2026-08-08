@@ -599,7 +599,7 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                     InventorySetup.Get();
                     InventorySetup.TESTFIELD("Item Nos.");
                     Item."No." := NoSeriesMgmt.GetNextNo(InventorySetup."Item Nos.", Today, true);
-                    Item.VALIDATE(Description, NewItemDesc);
+                    Item.VALIDATE(Description, UpperCase(NewItemDesc));
                     if HisMasterStaging."Display Name" <> '' then
                         Item.Validate(Name, HisMasterStaging."Display Name")
                     else

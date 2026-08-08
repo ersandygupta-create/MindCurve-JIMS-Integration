@@ -718,6 +718,10 @@ table 50000 "E3 HIS Master Staging"
         {
             DataClassification = CustomerContent;
             Caption = 'Display Name';
+            trigger OnValidate()
+            begin
+                "Display Name" := UpperCase("Display Name");
+            end;
         }
 
     }

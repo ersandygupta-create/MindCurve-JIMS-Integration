@@ -1,6 +1,6 @@
 page 50161 "E3 Quotation Card"
 {
-    Caption = 'Quotation Card';
+    Caption = 'Purchase Indent Card';
     DeleteAllowed = false;
     InsertAllowed = false;
     ModifyAllowed = true;
@@ -106,10 +106,10 @@ page 50161 "E3 Quotation Card"
                     Location: Record Location;
                     IndentLine: Record "E3 Indent Line";
                     PONos: Text[200];
+                    WarningRequired: Boolean;
                 begin
                     if not Confirm('Do you want to create Purchase Order?', true) then
                         exit;
-
                     Rec.TestField("Location Code");
 
                     Location.Get(Rec."Location Code");
@@ -121,21 +121,23 @@ page 50161 "E3 Quotation Card"
 
                     if IndentLine.FindSet() then
                         repeat
-                            if IndentLine."Ordered Qty" = 0 then
+                            if IndentLine."Ordered Qty" > IndentLine."Approved Qty" then
+                                WarningRequired := true;
+
+                            if IndentLine."Ordered Qty" <= 0 then
                                 Error(
-                                    'Ordered Qty cannot be zero for Item %1 (Line No. %2).',
+                                    'Ordered Qty must be greater than zero for Item %1, Line No. %2.',
                                     IndentLine."No.",
                                     IndentLine."Line No.");
                         until IndentLine.Next() = 0;
 
-                    if IndentLine.FindSet() then
-                        repeat
-                            if IndentLine."Ordered Qty" <= 0 then
-                                Error(
-                                    'Ordered Qty must be greater than zero for Line No. %1 (Item No. %2).',
-                                    IndentLine."Line No.",
-                                    IndentLine."No.");
-                        until IndentLine.Next() = 0;
+                    // Show warning only
+                    if WarningRequired then
+                        if not Confirm(
+                            'Warning: Ordered Qty is greater than Approved Qty.\Do you want to continue creating the Purchase Order?',
+                            false)
+                        then
+                            exit;
 
                     IndentLine.Reset();
                     IndentLine.SetRange("Document No.", Rec."Document No.");
@@ -144,15 +146,24 @@ page 50161 "E3 Quotation Card"
                     CreatePurchaseOrders.SetNoSeries(Location."E3 Indent PO Series");
                     CreatePurchaseOrders.SetTableView(IndentLine);
                     CreatePurchaseOrders.RunModal();
+
                     Clear(PONos);
+
+                    IndentLine.Reset();
+                    IndentLine.SetRange("Document No.", Rec."Document No.");
 
                     if IndentLine.FindSet() then
                         repeat
-                            if StrPos(',' + PONos + ',', ',' + IndentLine."Purchase Order No." + ',') = 0 then begin
-                                if PONos = '' then
-                                    PONos := IndentLine."Purchase Order No."
-                                else
-                                    PONos += ', ' + IndentLine."Purchase Order No.";
+                            if IndentLine."Purchase Order No." <> '' then begin
+                                if StrPos(
+                                    ',' + PONos + ',',
+                                    ',' + IndentLine."Purchase Order No." + ',') = 0
+                                then begin
+                                    if PONos = '' then
+                                        PONos := IndentLine."Purchase Order No."
+                                    else
+                                        PONos += ', ' + IndentLine."Purchase Order No.";
+                                end;
                             end;
                         until IndentLine.Next() = 0;
 
@@ -167,6 +178,7 @@ page 50161 "E3 Quotation Card"
             }
         }
     }
+
     trigger OnAfterGetRecord()
     begin
         HeaderEditable := Rec.Status <> Rec.Status::Approved;

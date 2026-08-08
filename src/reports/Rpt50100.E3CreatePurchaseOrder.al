@@ -21,14 +21,14 @@ report 50100 "E3 Create Purchase Order"
                 if ("E3 Indent Line"."Vendor No." <> '') and ("E3 Indent Line"."Vendor PO Creation" = true) then begin
 
                     // Calculate Remaining Qty
-                    RemainingQty := GetRemainingQty("E3 Indent Line");
+                    //RemainingQty := GetRemainingQty("E3 Indent Line");
 
                     // Ordered Qty cannot exceed Remaining Qty
-                    if "E3 Indent Line"."Ordered Qty" > RemainingQty then
-                        Error(
-                            'Ordered Qty (%1) cannot be greater than Remaining Approved Qty (%2).',
-                            "E3 Indent Line"."Ordered Qty",
-                            RemainingQty);
+                    // if "E3 Indent Line"."Ordered Qty" > RemainingQty then
+                    //     Error(
+                    //         'Ordered Qty (%1) cannot be greater than Remaining Approved Qty (%2).',
+                    //         "E3 Indent Line"."Ordered Qty",
+                    //         RemainingQty);
 
                     if (LastSupplier <> "E3 Indent Line"."Vendor No.") or
                        (LastMakeCode <> "E3 Indent Line"."Item Make Code") then

@@ -81,7 +81,6 @@ page 50076 "E3 Vendor Ledger Entries"
                 {
                     ApplicationArea = Basic, Suite;
                     Editable = false;
-                    Visible = VendNameVisible;
                 }
                 field("Message to Recipient"; Rec."Message to Recipient")
                 {

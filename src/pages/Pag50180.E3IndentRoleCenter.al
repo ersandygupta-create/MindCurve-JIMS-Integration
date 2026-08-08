@@ -13,6 +13,15 @@ page 50180 "E3 Indent Role Center"
             {
                 ApplicationArea = All;
             }
+            part(EmailActivities; "Email Activities")
+            {
+                ApplicationArea = All;
+            }
+            part(ApprovalsActivities; "Approvals Activities")
+            {
+                ApplicationArea = Suite;
+            }
+
         }
     }
 

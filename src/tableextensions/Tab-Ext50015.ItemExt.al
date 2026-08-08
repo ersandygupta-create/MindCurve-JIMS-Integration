@@ -56,10 +56,18 @@ tableextension 50015 "E3 HIS Item" extends Item
             var
                 HSNSAC: Record "HSN/SAC";
             begin
+                UpdateGLEN();
                 if HSNSAC.Get("HSN/SAC Code") then
                     "HSN/SAC Type" := HSNSAC.Type
                 else
                     Clear("HSN/SAC Type");
+            end;
+        }
+        modify("GST Group Code")
+        {
+            trigger OnAfterValidate()
+            begin
+                UpdateGLEN();
             end;
         }
         field(50000; "E3 HIS Type"; Enum "E3 HIS Type")
@@ -875,5 +883,22 @@ tableextension 50015 "E3 HIS Item" extends Item
             Rec."Prepared By" := UserRec."User Name"
         else
             Rec."Prepared By" := UserId();
+    end;
+
+    local procedure UpdateGLEN()
+    var
+        HSNSAC: Record "HSN/SAC";
+    begin
+        Clear(GLEN);
+
+        if ("GST Group Code" = '') or ("HSN/SAC Code" = '') then
+            exit;
+
+        HSNSAC.Reset();
+        HSNSAC.SetRange("GST Group Code", "GST Group Code");
+        HSNSAC.SetRange(Code, "HSN/SAC Code");
+
+        if HSNSAC.FindFirst() then
+            GLEN := HSNSAC.GLEN;
     end;
 }

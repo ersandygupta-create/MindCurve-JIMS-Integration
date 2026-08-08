@@ -391,6 +391,21 @@ page 50169 "E3 GRN Work Sheet"
                     Message('Purchase Receipt posted successfully.');
                 end;
             }
+            action("Assign Lot No.")
+            {
+                ApplicationArea = ItemTracking;
+                Caption = 'Assign &Lot No.';
+                //Visible = FunctionsSupplyVisible;
+                Image = Lot;
+                ToolTip = 'Automatically assign the required lot numbers from predefined number series.';
+
+                trigger OnAction()
+                begin
+                    // if InsertIsBlocked = true then
+                    //     exit;
+                    // ItemTrackingMgt.CreateTrackingSpecification();
+                end;
+            }
         }
     }
 }

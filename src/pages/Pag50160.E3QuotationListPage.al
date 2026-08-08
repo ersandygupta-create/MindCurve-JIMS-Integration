@@ -6,7 +6,7 @@ page 50160 "E3 Quotation List"
     SourceTableView = sorting("Document No.") order(Descending) WHERE(Status = FILTER(Approved), "Release Indent" = FILTER(false));
     UsageCategory = Lists;
     ApplicationArea = All;
-    Caption = 'Quotation Lists';
+    Caption = 'Purchase Indent Lists';
     SourceTable = "E3 Indent Header";
 
     layout

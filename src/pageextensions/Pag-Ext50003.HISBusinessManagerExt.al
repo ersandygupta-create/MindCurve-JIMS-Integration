@@ -950,11 +950,11 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                 }
                 group(Quotation)
                 {
-                    Caption = 'Quotation';
+                    Caption = 'Purchase Indent';
                     Image = Quote;
                     action(VendorQuotation)
                     {
-                        Caption = 'Vendor Quotation';
+                        Caption = 'Purchase Indent Creation';
                         ApplicationArea = All;
                         RunObject = Page "E3 Quotation List";
                         ToolTip = 'Executes the Vendor Quotation action.';

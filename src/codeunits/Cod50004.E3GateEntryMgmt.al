@@ -1,7 +1,6 @@
 codeunit 50004 "E3 Gate Entry Mgmt."
 {
     TableNo = 50013;
-
     trigger OnRun()
     begin
         GateEntryHeader.Copy(Rec);

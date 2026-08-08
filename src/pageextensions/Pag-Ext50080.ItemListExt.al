@@ -60,23 +60,15 @@ pageextension 50080 "E3 Item List Ext" extends "Item List"
                     //Message('%1 items have been added to the Item Log.', CountItem);
                 end;
             }
-            action(ImportItems)
+            action(ItemMaster)
             {
-                Caption = 'Import Items';
+                Caption = 'Item Master';
                 ApplicationArea = All;
-                Image = Import;
+                Image = ListPage;
                 Promoted = true;
                 PromotedCategory = Process;
-                ToolTip = 'Import Items from an Excel file.';
-
-                trigger OnAction()
-                var
-                    ItemImportMgmt: Codeunit "E3 Item Import Mgmt";
-                begin
-                    ItemImportMgmt.ImportItems();
-
-                    CurrPage.Update(false);
-                end;
+                ToolTip = 'Opens the Item Master List.';
+                RunObject = Page "E3 Item Master List";
             }
         }
     }

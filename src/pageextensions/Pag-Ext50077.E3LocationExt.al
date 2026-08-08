@@ -2,6 +2,18 @@ pageextension 50077 "E3 Location Extension" extends "Location Card"
 {
     layout
     {
+        addlast(General)
+        {
+            group(BankAccount)
+            {
+                field("Invoice Bank"; Rec."Invoice Bank")
+                {
+                    Caption = 'Invoice Bank';
+                    ApplicationArea = All;
+                    ToolTip = 'Specify a Bank Account Master Code field.';
+                }
+            }
+        }
         addafter(Name)
         {
             field("Name 2"; Rec."Name 2")

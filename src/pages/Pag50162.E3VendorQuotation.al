@@ -8,7 +8,7 @@ page 50162 "E3 Vendor Quotation"
     SourceTable = "E3 Indent Line";
     SourceTableView = SORTING("Document No.", "Line No.") ORDER(Ascending);
     ApplicationArea = All;
-    Caption = 'Indent Quotation';
+    Caption = 'Purchase Indent';
 
     layout
     {

@@ -47,7 +47,6 @@ page 50014 "E3 Item Master List"
                 {
                     Editable = false;
                 }
-
                 field("Display Name"; Rec."Display Name")
                 {
                     ApplicationArea = All;
@@ -56,7 +55,6 @@ page 50014 "E3 Item Master List"
                     Editable = NameEditable;
                     ToolTip = 'Specifies the Display Name.';
                 }
-
                 field(Strength; Rec."Strength Code")
                 {
                     ApplicationArea = All;
@@ -68,7 +66,6 @@ page 50014 "E3 Item Master List"
                 {
                     Editable = false;
                 }
-
                 field("Material Type Code"; Rec."Material Type Code")
                 {
                     ApplicationArea = All;
@@ -89,7 +86,6 @@ page 50014 "E3 Item Master List"
                 {
                     Editable = false;
                 }
-
                 field(Model; Rec."Model Code")
                 {
                     ApplicationArea = All;
