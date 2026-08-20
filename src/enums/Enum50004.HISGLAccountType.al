@@ -62,4 +62,12 @@ enum 50004 "E3 HIS G/L Account Type"
     {
         Caption = 'LIMS Revenue';
     }
+    value(15; UnBilledRevenueCr)
+    {
+        Caption = 'UnBilledRevenueCr';
+    }
+    value(16; UnBilledRevenueDr)
+    {
+        Caption = 'UnBilledRevenueDr';
+    }
 }

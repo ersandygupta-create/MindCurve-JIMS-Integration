@@ -45,6 +45,16 @@ pageextension 50077 "E3 Location Extension" extends "Location Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the GST Credit field.';
                 }
+                field("InterCompany Nos."; Rec."InterCompany Nos.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the number series used for InterCompany transactions.';
+                }
+                field("InterUnit Nos."; Rec."InterUnit Nos.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the number series used for InterUnit transactions.';
+                }
             }
         }
     }

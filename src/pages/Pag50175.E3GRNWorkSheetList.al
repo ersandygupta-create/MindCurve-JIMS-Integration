@@ -1,7 +1,7 @@
 page 50175 "E3 GRN Work Sheet List"
 {
     PageType = List;
-    SourceTable = "E3 GRN Work SHeet Header";
+    SourceTable = "E3 GRN Work Sheet Header";
     Caption = 'GRN List';
     ApplicationArea = All;
     UsageCategory = Lists;

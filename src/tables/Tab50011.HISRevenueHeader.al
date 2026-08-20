@@ -119,7 +119,7 @@ table 50011 "E3 HIS Revenue Header"
             Caption = 'Speciality';
             DataClassification = ToBeClassified;
         }
-        field(20; "Sponsor Code"; Code[20])
+        field(20; "Sponsor Code"; Code[30])
         {
             Caption = 'Sponsor Code';
             DataClassification = ToBeClassified;
@@ -232,7 +232,7 @@ table 50011 "E3 HIS Revenue Header"
             CalcFormula = Lookup("G/L Entry"."Document No." WHERE("External Document No." = field("External Document No."), "E3 Payer Code" = field("Payer Code")));
             Editable = false;
         }
-        field(106; "Payer Code"; Code[16])
+        field(106; "Payer Code"; Code[30])
         {
             DataClassification = CustomerContent;
             Caption = 'Payer Code';
@@ -315,27 +315,6 @@ table 50011 "E3 HIS Revenue Header"
         RevLine.SetRange("Document Type", Rec."Document Type");
         RevLine.SetRange("Document No.", Rec."Document No.");
         RevLine.DeleteAll();
-    end;
-
-    trigger OnInsert()
-    var
-        RevenueHeader: Record "E3 HIS Revenue Header";
-    begin
-        // ✅ Default value
-        RevenueHeader.Reset();
-        RevenueHeader.SetRange("Document No.", Rec."Document No.");
-        if RevenueHeader.FindFirst() then
-            DEleteDuplicateData(Rec."Entry No.");
-    end;
-
-    procedure DEleteDuplicateData(var EntryNo: Integer)
-    var
-        RevHeader: Record "E3 HIS Revenue Header";
-    begin
-        RevHeader.Reset();
-        RevHeader.SetRange("Entry No.", EntryNo);
-        if RevHeader.Find('-') then
-            RevHeader.Delete();
     end;
 
     var

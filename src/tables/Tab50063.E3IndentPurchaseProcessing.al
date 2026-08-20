@@ -1,0 +1,595 @@
+table 50063 "E3 Indent Purchase Processing"
+{
+    DataClassification = ToBeClassified;
+    Caption = 'Indent Purchase Processing';
+
+    fields
+    {
+        field(1; "Document No."; Code[20])
+        {
+            TableRelation = "E3 Indent Header";
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateHeaderValues();
+            end;
+        }
+        field(2; "Line No."; Integer)
+        {
+            Caption = 'Line No.';
+            DataClassification = CustomerContent;
+        }
+        field(3; Type; Enum Type)
+        {
+            Caption = 'Type';
+            DataClassification = CustomerContent;
+            InitValue = Item;
+        }
+        field(4; "No."; Code[20])
+        {
+            Caption = 'No.';
+            DataClassification = CustomerContent;
+            TableRelation = IF (Type = const(" ")) "Standard Text"
+            ELSE
+            IF (Type = CONST("G/L Account")) "G/L Account"
+            ELSE
+            IF (Type = CONST(Resource)) Resource
+            ELSE
+            IF (Type = CONST("Fixed Asset")) "Fixed Asset"
+            ELSE
+            IF (Type = CONST("Charge (Item)")) "Item Charge"
+            ELSE
+            IF (Type = CONST(Item)) "item" WHERE(Blocked = CONST(false));
+            ValidateTableRelation = false;
+            trigger OnValidate()
+
+            begin
+                UpdateHeaderValues();
+                Clear(Description);
+                Clear("Unit of Measure");
+                Clear("Item Make Code");
+                Clear("Item Make Name");
+                if Item.Get("No.") then
+                    Description := Item.Description;
+                "Unit of Measure" := Item."Base Unit of Measure";
+                "Item Make Code" := Item."Item Make Code";
+                "Item Make Name" := Item."Make Name";
+                "Purch. Unit of Measure" := Item."Purch. Unit of Measure";
+                if ItemUnitOfMeasure.Get("No.", "Purch. Unit of Measure") then
+                    "Qty Per Purch. Unit of Measure" := ItemUnitOfMeasure."Qty. per Unit of Measure";
+
+
+
+                if Type = Type::" " then
+                    Error('Please select Type before selecting No.');
+
+                GetIndentHeader();
+                CASE Type OF
+                    Type::" ":
+                        BEGIN
+                            StdTxt.GET("No.");
+                            Description := StdTxt.Description;
+                        END;
+                    Type::"G/L Account":
+                        BEGIN
+                            GLAcc.GET("No.");
+                            GLAcc.TESTFIELD("Direct Posting", TRUE);
+                            Description := GLAcc.Name;
+                        END;
+                    Type::Item:
+                        BEGIN
+                            Item.GET("No.");
+                            Item.TESTFIELD(Blocked, FALSE);
+                            Item.TESTFIELD("Gen. Prod. Posting Group");
+                            Description := Item.Description;
+                        END;
+                    Type::Resource:
+                        BEGIN
+                            Res.GET("No.");
+                            Res.TESTFIELD(Blocked, FALSE);
+                            Res.TESTFIELD("Gen. Prod. Posting Group");
+                            Description := Res.Name;
+                        END;
+                    Type::"Fixed Asset":
+                        BEGIN
+                            FA.GET("No.");
+                            FA.TESTFIELD(Inactive, FALSE);
+                            FA.TESTFIELD(Blocked, FALSE);
+                            Description := FA.Description;
+                        END;
+                    Type::"Charge (Item)":
+                        BEGIN
+                            ItemCharge.GET("No.");
+                            Description := ItemCharge.Description;
+                        END;
+                END;
+
+            end;
+        }
+        field(5; Description; Text[100])
+        {
+            Caption = 'Description';
+            DataClassification = CustomerContent;
+        }
+        field(6; "Unit of Measure"; Code[10])
+        {
+            Caption = 'Unit of Measure';
+            DataClassification = CustomerContent;
+            TableRelation = "Item Unit of Measure".Code WHERE("Item No." = FIELD("No."));
+        }
+        field(7; "Requested Qty"; Decimal)
+        {
+            Caption = 'Requested Qty';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if ("Requested Qty" <> 0) then
+                    Amount := "Requested Qty" * "Unit Cost";
+            end;
+        }
+        field(8; "Unit Cost"; Decimal)
+        {
+            Caption = 'Unit Cost';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                Amount := "Requested Qty" * "Unit Cost";
+            end;
+        }
+        field(9; Amount; Decimal)
+        {
+            Caption = 'Amount';
+            DataClassification = CustomerContent;
+        }
+        field(10; "Remarks"; Text[100])
+        {
+            Caption = 'Line Remarks';
+            DataClassification = CustomerContent;
+        }
+        field(11; "Approved Qty"; Decimal)
+        {
+            Caption = 'Approved Qty';
+            DataClassification = CustomerContent;
+        }
+        field(12; "Requested Received Date"; Date)
+        {
+            Caption = 'Requested Received Date';
+            DataClassification = CustomerContent;
+        }
+        field(13; "Vendor No."; Code[20])
+        {
+            Caption = 'Vendor No.';
+            TableRelation = Vendor;
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                VendorRec: Record Vendor;
+            begin
+                if "Vendor No." = '' then begin
+                    "Vendor Name" := '';
+                    "Payment Terms" := '';
+                    exit;
+                end;
+
+                if VendorRec.Get("Vendor No.") then begin
+                    "Vendor Name" := VendorRec.Name;
+                    Validate("Payment Terms", VendorRec."Payment Terms Code");
+                end else begin
+                    "Vendor Name" := '';
+                    "Payment Terms" := '';
+                end;
+            end;
+        }
+        field(14; "Vendor Name"; Text[100])
+        {
+            Caption = 'Vendor Name';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(15; "Quotation Price"; Decimal)
+        {
+            Caption = 'Price';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                "Quotation Amount" := "Ordered Qty" * "Quotation Price";
+            end;
+        }
+        field(16; "Quotation Amount"; Decimal)
+        {
+            Caption = 'Amount';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(17; "Entry No."; Code[50])
+        {
+            Caption = 'Entry No.';
+            DataClassification = CustomerContent;
+        }
+        field(18; "Item Make Code"; Code[30])
+        {
+            Caption = 'Item Make Code';
+            //Editable = false;
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Make Master".Code;
+        }
+        field(19; "Ordered Qty"; Decimal)
+        {
+            Caption = 'Ordered Qty';
+            DataClassification = CustomerContent;
+        }
+        field(20; "Quotation Remarks"; Text[100])
+        {
+            Caption = 'Quotation Remarks';
+            DataClassification = CustomerContent;
+        }
+        field(21; "Item Make Name"; Text[60])
+        {
+            Caption = 'Item Make Name';
+            //Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(22; "Critical Item"; Boolean)
+        {
+            Caption = 'Critical Item';
+            DataClassification = CustomerContent;
+        }
+        field(23; "Quotation Type"; Option)
+        {
+            Caption = 'Quotation Type';
+            OptionCaption = ' ,L1';
+            OptionMembers = " ",L1;
+        }
+        field(24; "Vendor PO Creation"; Boolean)
+        {
+            Caption = 'Vendor PO Creation';
+            DataClassification = CustomerContent;
+        }
+        field(25; "Shortcut Dimension 1 Code"; Code[10])
+        {
+            Caption = 'Business Unit';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            ValidateTableRelation = false;
+        }
+        field(26; "Purchase Order No."; Code[20])
+        {
+            Caption = 'Purchase Order No.';
+            DataClassification = CustomerContent;
+        }
+        field(27; "Purchase Type"; Option)
+        {
+            OptionCaption = 'Contract,Order,Invoice';
+            OptionMembers = Contract,"Order",Invoice;
+            DataClassification = CustomerContent;
+        }
+        field(28; "discount %"; Decimal)
+        {
+            Caption = 'discount %';
+            DataClassification = CustomerContent;
+        }
+        field(29; "Fixed Assets No."; Code[20])
+        {
+            Caption = 'Fixed Assets No.';
+            DataClassification = CustomerContent;
+        }
+        field(30; "Location Code"; Code[10])
+        {
+            Caption = 'Location Code';
+            Editable = true;
+            DataClassification = CustomerContent;
+            TableRelation = Location.Code;
+        }
+        field(31; "Payment Terms"; Code[10])
+        {
+            Caption = 'Payment Terms';
+            DataClassification = CustomerContent;
+            TableRelation = "Payment Terms";
+        }
+        field(32; "Delivery Terms"; Text[100])
+        {
+            Caption = 'Delivery Terms';
+            DataClassification = CustomerContent;
+        }
+        field(33; "AMC Amount"; Decimal)
+        {
+            Caption = 'AMC Amount';
+            DataClassification = CustomerContent;
+        }
+        field(34; "CMC Amount"; Decimal)
+        {
+            Caption = 'CMC Amount';
+            DataClassification = CustomerContent;
+        }
+        field(35; "Shortcut Dimension 2 Code"; Code[20])
+        {
+            Caption = 'Department Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
+            ValidateTableRelation = false;
+            DataClassification = ToBeClassified;
+            Editable = true;
+        }
+        field(36; Released; Boolean)
+        {
+            Caption = 'Released';
+            DataClassification = CustomerContent;
+        }
+        field(37; "Split Line"; Boolean)
+        {
+            Caption = 'Split Line';
+            DataClassification = CustomerContent;
+        }
+        field(38; SplitedLines; Boolean)
+        {
+            Caption = 'SplitedLines';
+            DataClassification = CustomerContent;
+        }
+        field(39; "Short Close"; Boolean)
+        {
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(40; "Created PO Qty"; Decimal)
+        {
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(41; "SNo."; Integer)
+        {
+            Caption = 'SNo.';
+            DataClassification = CustomerContent;
+        }
+        field(42; "Indent Qty"; Decimal)
+        {
+            Caption = 'Indent Qty';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if "Qty Per Purch. Unit of Measure" <> 0 then
+                    "Requested Qty" := Round("Indent Qty" / "Qty Per Purch. Unit of Measure", 1, '<')
+                else
+                    "Requested Qty" := 0;
+
+                "Short Qty Requisition" := "Indent Qty" - ("Qty Per Purch. Unit of Measure" * "Requested Qty");
+                "Short Qty Order" := "Requested Qty" - "Approved Qty";
+            end;
+        }
+        field(43; "Indent Approved Qty"; Decimal)
+        {
+            Caption = 'Indent Approved Qty';
+            DataClassification = CustomerContent;
+
+            trigger OnValidate()
+            begin
+                if "Qty Per Purch. Unit of Measure" <> 0 then begin
+                    "Approved Qty" :=
+                        Round("Indent Approved Qty" / "Qty Per Purch. Unit of Measure", 1, '<');
+
+                    "Short Qty Approved" :=
+                        "Indent Approved Qty" -
+                        ("Approved Qty" * "Qty Per Purch. Unit of Measure");
+                end
+                else begin
+                    "Approved Qty" := 0;
+                    "Short Qty Approved" := 0;
+                end;
+
+                "Short Qty Order" := "Requested Qty" - "Approved Qty";
+            end;
+        }
+        field(44; "Purch. Unit of Measure"; Code[20])
+        {
+            Caption = 'Purch. Unit of Measure';
+            DataClassification = CustomerContent;
+            TableRelation = "Item Unit of Measure".Code;
+        }
+        field(45; "Qty Per Purch. Unit of Measure"; Decimal)
+        {
+            Caption = 'Qty Per Purch. Unit of Measure';
+            DataClassification = CustomerContent;
+
+            trigger OnValidate()
+            begin
+                if "Qty Per Purch. Unit of Measure" <> 0 then begin
+                    "Approved Qty" :=
+                        Round("Indent Approved Qty" / "Qty Per Purch. Unit of Measure", 1, '<');
+
+                    "Short Qty Approved" :=
+                        "Indent Approved Qty" -
+                        ("Approved Qty" * "Qty Per Purch. Unit of Measure");
+                end
+                else begin
+                    "Approved Qty" := 0;
+                    "Short Qty Approved" := 0;
+                end;
+            end;
+        }
+        field(46; "Short Qty Requisition"; Decimal)
+        {
+            Caption = 'Short Qty Requisition';
+            DataClassification = CustomerContent;
+        }
+        field(47; "Short Qty Approved"; Decimal)
+        {
+            Caption = 'Short Qty Approved';
+            DataClassification = CustomerContent;
+        }
+        field(48; "Short Qty Order"; Decimal)
+        {
+            Caption = 'Short Qty Order';
+            DataClassification = CustomerContent;
+        }
+        field(49; "PO Created"; Boolean)
+        {
+            Caption = 'PO Created';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(50; MRP; Decimal)
+        {
+            Caption = 'MRP';
+            DataClassification = CustomerContent;
+        }
+        field(51; Scheme; Text[30])
+        {
+            Caption = 'Scheme';
+            DataClassification = CustomerContent;
+        }
+        field(52; Status; Option)
+        {
+            OptionMembers = Open,"Pending Approval",Approved,Rejected,Closed;
+            Caption = 'Status';
+        }
+        field(80285; "Currency Code"; Code[10])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = Currency;
+        }
+        field(80286; "Currency Factor"; Decimal)
+        {
+            Caption = 'Currency Factor';
+            DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 15;
+            Editable = false;
+            MinValue = 0;
+        }
+    }
+
+    keys
+    {
+        key(PK; "Document No.", "Line No.")
+        {
+            Clustered = true;
+        }
+    }
+    local procedure GetIndentHeader()
+    begin
+        TestField("Document No.");
+        if ("Document No." <> IndentHeader."Document No.") then begin
+            IndentHeader.Reset();
+            IndentHeader.SetRange("Document No.", "Document No.");
+            IndentHeader.FindFirst()
+        end;
+    end;
+
+    procedure SetPurchased(PurchaseOrderNo: Code[20])
+    var
+        IndentLineDetails: Record "E3 Indent Line";
+        PrchaseLineProcessing: Record "Purchase Line";
+    begin
+
+    end;
+
+    trigger OnInsert()
+    begin
+        UpdateHeaderValues();
+    end;
+
+    local procedure UpdateHeaderValues()
+    var
+        IndentHeader: Record "E3 Indent Header";
+    begin
+        if ("Document No." = '') then
+            exit;
+
+        if IndentHeader.Get("Document No.") then begin
+            "Entry No." := IndentHeader."Entry No.";
+            "Requested Received Date" := IndentHeader."Prepared Date";
+            "Location Code" := IndentHeader."Location Code";
+            "Shortcut Dimension 1 Code" := IndentHeader."Shortcut Dimension 1 Code";
+            "Shortcut Dimension 2 Code" := IndentHeader."Shortcut Dimension 2 Code";
+        end;
+    end;
+
+    procedure CreateProcessingLines(IndentNo: Code[20])
+    var
+        IndentLine: Record "E3 Indent Line";
+        ProcessingLine: Record "E3 Indent Purchase Processing";
+    begin
+        IndentLine.Reset();
+        IndentLine.SetRange("Document No.", IndentNo);
+
+        if IndentLine.FindSet() then
+            repeat
+                // Do not create duplicate processing lines
+                ProcessingLine.Reset();
+                ProcessingLine.SetRange("Document No.", IndentLine."Document No.");
+                ProcessingLine.SetRange("Line No.", IndentLine."Line No.");
+
+                if not ProcessingLine.FindFirst() then begin
+                    ProcessingLine.Init();
+
+                    // Key fields
+                    ProcessingLine."Document No." := IndentLine."Document No.";
+                    ProcessingLine."Line No." := IndentLine."Line No.";
+                    // Copy Indent Line data
+                    ProcessingLine.Type := IndentLine.Type;
+                    ProcessingLine."No." := IndentLine."No.";
+                    ProcessingLine.Description := IndentLine.Description;
+                    ProcessingLine."Unit of Measure" := IndentLine."Unit of Measure";
+                    ProcessingLine."Requested Qty" := IndentLine."Requested Qty";
+                    ProcessingLine."Unit Cost" := IndentLine."Unit Cost";
+                    ProcessingLine.Amount := IndentLine.Amount;
+                    ProcessingLine.Remarks := IndentLine.Remarks;
+                    ProcessingLine."Approved Qty" := IndentLine."Approved Qty";
+                    ProcessingLine."Requested Received Date" := IndentLine."Requested Received Date";
+                    ProcessingLine."Vendor No." := IndentLine."Vendor No.";
+                    ProcessingLine."Vendor Name" := IndentLine."Vendor Name";
+                    ProcessingLine."Quotation Price" := IndentLine."Quotation Price";
+                    ProcessingLine."Quotation Amount" := IndentLine."Quotation Amount";
+                    ProcessingLine."Entry No." := IndentLine."Entry No.";
+                    ProcessingLine."Item Make Code" := IndentLine."Item Make Code";
+                    ProcessingLine."Item Make Name" := IndentLine."Item Make Name";
+                    ProcessingLine."Ordered Qty" := IndentLine."Ordered Qty";
+                    ProcessingLine."Quotation Remarks" := IndentLine."Quotation Remarks";
+                    ProcessingLine."Critical Item" := IndentLine."Critical Item";
+                    ProcessingLine."Quotation Type" := IndentLine."Quotation Type";
+                    ProcessingLine."Vendor PO Creation" := IndentLine."Vendor PO Creation";
+                    ProcessingLine."Shortcut Dimension 1 Code" := IndentLine."Shortcut Dimension 1 Code";
+                    ProcessingLine."Purchase Order No." := IndentLine."Purchase Order No.";
+                    ProcessingLine."Purchase Type" := IndentLine."Purchase Type";
+                    ProcessingLine."discount %" := IndentLine."discount %";
+                    ProcessingLine."Fixed Assets No." := IndentLine."Fixed Assets No.";
+                    ProcessingLine."Location Code" := IndentLine."Location Code";
+                    ProcessingLine."Payment Terms" := IndentLine."Payment Terms";
+                    ProcessingLine."Delivery Terms" := IndentLine."Delivery Terms";
+                    ProcessingLine."AMC Amount" := IndentLine."AMC Amount";
+                    ProcessingLine."CMC Amount" := IndentLine."CMC Amount";
+                    ProcessingLine."Shortcut Dimension 2 Code" := IndentLine."Shortcut Dimension 2 Code";
+                    ProcessingLine."Split Line" := IndentLine."Split Line";
+                    ProcessingLine.SplitedLines := IndentLine.SplitedLines;
+                    ProcessingLine."Short Close" := IndentLine."Short Close";
+                    ProcessingLine."Created PO Qty" := IndentLine."Created PO Qty";
+                    ProcessingLine."SNo." := IndentLine."SNo.";
+                    ProcessingLine."Indent Qty" := IndentLine."Indent Qty";
+                    ProcessingLine."Indent Approved Qty" := IndentLine."Indent Approved Qty";
+                    ProcessingLine."Purch. Unit of Measure" := IndentLine."Purch. Unit of Measure";
+                    ProcessingLine."Qty Per Purch. Unit of Measure" := IndentLine."Qty Per Purch. Unit of Measure";
+                    ProcessingLine."Short Qty Requisition" := IndentLine."Short Qty Requisition";
+                    ProcessingLine."Short Qty Approved" := IndentLine."Short Qty Approved";
+                    ProcessingLine."Short Qty Order" := IndentLine."Short Qty Order";
+                    ProcessingLine."PO Created" := IndentLine."PO Created";
+                    ProcessingLine.MRP := IndentLine.MRP;
+                    ProcessingLine.Scheme := IndentLine.Scheme;
+                    ProcessingLine.Status := ProcessingLine.Status;
+
+                    ProcessingLine."Currency Code" := IndentLine."Currency Code";
+                    ProcessingLine."Currency Factor" := IndentLine."Currency Factor";
+
+                    ProcessingLine.Released := true;
+                    ProcessingLine.Insert(true);
+                end;
+
+            until IndentLine.Next() = 0;
+    end;
+
+    var
+        IndentHeader: Record "E3 Indent Header";
+        GLAcc: Record "G/L Account";
+        Item: Record "Item";
+        Res: Record "Resource";
+        StdTxt: Record "Standard Text";
+        FA: Record "Fixed Asset";
+        ItemCharge: Record "Item Charge";
+        ItemUnitOfMeasure: Record "Item Unit of Measure";
+
+}

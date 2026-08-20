@@ -45,6 +45,11 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 Editable = false;
                 ToolTip = 'Specifies the Retail Drug License Number for the vendor.';
             }
+            field("Exp. CN Value"; Rec."Exp. CN Value")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Exp. CN Value';
+            }
         }
         addafter("No.")
         {
@@ -80,5 +85,15 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
 
     var
         recPurchHdr: Record "Purchase Header";
+
+    trigger OnOpenPage()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        UserSetup.Get(UserId());
+
+        if not UserSetup."Purchase Order" then
+            Error('You do not have permission to open Purchase Order.');
+    end;
 
 }

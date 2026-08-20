@@ -129,6 +129,14 @@ page 50067 "E3 Advances API"
                 {
                     Caption = 'Branch';
                 }
+                field(receiptNo; Rec."Receipt No.")
+                {
+                    Caption = 'Receipt No.';
+                }
+                field(lineNarration; Rec."Line Narration")
+                {
+                    Caption = 'Line Narration';
+                }
             }
         }
     }

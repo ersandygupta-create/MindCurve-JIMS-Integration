@@ -31,16 +31,15 @@ pageextension 50060 "E3 Chart of Accounts List" extends "Chart of Accounts"
         }
     }
 
-    // trigger OnAfterGetCurrRecord()
-    // var
-    //     UserSetup: Record "User Setup";
-    // begin
-    //     if UserSetup.Get(UserId) then begin
-    //         if not UserSetup."GL View" then
-    //             Error(
-    //               'Permission of COA is not added in your access. If required, please contact the IT Administrator.');
-    //     end;
-    // end;
+    trigger OnAfterGetCurrRecord()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if UserSetup.Get(UserId) then
+            if not UserSetup."GL View" then
+                Error(
+                  'Permission of COA is not added in your access. If required, please contact the IT Administrator.');
+    end;
 
     var
         CheckBln: Code[30];

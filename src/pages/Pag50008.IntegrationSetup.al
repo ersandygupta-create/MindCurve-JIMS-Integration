@@ -52,7 +52,6 @@ page 50008 "E3 Integration Setup"
                     ToolTip = 'Specifies the value of the Vendor Gen. Bus. Posting Group field';
                     ApplicationArea = All;
                 }
-
                 field("Account Type"; Rec."Account Type")
                 {
                     ToolTip = 'Specifies the value of the Account Type field';
@@ -69,7 +68,6 @@ page 50008 "E3 Integration Setup"
                     ToolTip = 'Specifies the value of the GRN Item Wise/ Account Wise field';
                     ApplicationArea = All;
                 }
-
                 field("GRN Creation Enabled"; Rec."GRN Creation Enabled")
                 {
                     ToolTip = 'Specifies the value of the GRN Creation Enabled Wise field';
@@ -85,7 +83,6 @@ page 50008 "E3 Integration Setup"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the GRN/GRN Return Handling field.';
                 }
-
                 field("Revenue/Rev. Cancel Handling"; Rec."Revenue/Rev. Cancel Handling")
                 {
                     ApplicationArea = All;

@@ -14,7 +14,14 @@ pageextension 50012 "E3 HIS Cash Receipt Voucher" extends "Cash Receipt Voucher"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Narrantion field.';
             }
-
         }
     }
+    trigger OnOpenPage()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        UserSetup.Get(UserId());
+        if not UserSetup."Cash Receipt Voucher" then
+            Error('You do not have permission to open Cash Payment Voucher.');
+    end;
 }

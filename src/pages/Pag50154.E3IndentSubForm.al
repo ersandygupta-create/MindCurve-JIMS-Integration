@@ -91,11 +91,13 @@ page 50154 "E3 Indent Line Subform"
                 field("Unit Cost"; Rec."Unit Cost")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     Editable = IsLineEditable;
                 }
                 field(Amount; Rec.Amount)
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     Editable = IsLineEditable;
                 }
                 field("Item Make Code"; Rec."Item Make Code")

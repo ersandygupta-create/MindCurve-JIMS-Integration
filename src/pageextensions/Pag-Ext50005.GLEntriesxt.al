@@ -149,9 +149,9 @@ pageextension 50005 "E3 HIS G/L Entries" extends "General Ledger Entries"
 
     actions
     {
-        addafter("Print Voucher")
+        addafter("Ent&ry")
         {
-            action("Print Voucher Dimension")
+            action("E3 Print Voucher")
             {
                 ApplicationArea = All;
                 Caption = 'Print Voucher Dimension';
@@ -160,16 +160,16 @@ pageextension 50005 "E3 HIS G/L Entries" extends "General Ledger Entries"
                 PromotedIsBig = true;
                 Image = Print;
                 ToolTip = 'Executes the Print Voucher Dimension action.';
-                // trigger OnAction()
-                // begin
-                //     GLEntry.RESET;
-                //     GLEntry.SETCURRENTKEY("Document No.", "Posting Date");
-                //     GLEntry.SETRANGE("Document No.", Rec."Document No.");
-                //     GLEntry.SETRANGE("Posting Date", Rec."Posting Date");
-                //     if GLEntry.FindFirst() then
-                //REPORT.RUNMODAL(REPORT::"Posted Voucher - Post Voucher", TRUE, TRUE, GLEntry);
+                trigger OnAction()
+                begin
+                    GLEntry.RESET;
+                    GLEntry.SETCURRENTKEY("Document No.", "Posting Date");
+                    GLEntry.SETRANGE("Document No.", Rec."Document No.");
+                    GLEntry.SETRANGE("Posting Date", Rec."Posting Date");
+                    if GLEntry.FindFirst() then
+                        REPORT.RUNMODAL(REPORT::"Posted Voucher - Post Voucher", TRUE, TRUE, GLEntry);
+                end;
 
-                //end;
             }
         }
 

@@ -21,50 +21,42 @@ pageextension 50080 "E3 Item List Ext" extends "Item List"
                 ApplicationArea = All;
                 Editable = false;
             }
+            field("Margin Code"; Rec."Margin Code")
+            {
+                ApplicationArea = All;
+            }
+            field("Item Make Code"; Rec."Item Make Code")
+            {
+                Caption = 'Medicine Company / Brand-Make Code';
+                ApplicationArea = all;
+            }
+            field("Make Name"; Rec."Make Name")
+            {
+                Caption = 'Medicine Company / Brand-Make Name';
+                ApplicationArea = All;
+            }
+            field("Margin Fix"; Rec."Margin Fix")
+            {
+                Caption = 'RC Type';
+                ApplicationArea = All;
+            }
+            field("Composition Name"; Rec."Composition Name")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the Composition Name for the item.';
+            }
         }
     }
 
     actions
     {
-        addlast(Processing)
+        addafter(NewFromPicture)
         {
-            action(SendAllToJIMS)
+            action("Item Master List")
             {
                 ApplicationArea = All;
-                Caption = 'Send All to JIMS';
-                Image = SendTo;
-                Promoted = true;
-                Visible = false;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-
-                trigger OnAction()
-                var
-                    ItemRec: Record Item;
-                    E3IntegrationMgmt: Codeunit "E3 Item Integration Mgmt.";
-                    CountItem: Integer;
-                begin
-                    CurrPage.SetSelectionFilter(ItemRec);
-                    if not Confirm('Do you want to send all items to JIMS?', false) then
-                        exit;
-
-                    CountItem := 0;
-                    ItemRec.Reset();
-
-                    if ItemRec.FindSet() then
-                        repeat
-                            E3IntegrationMgmt.MultipleSendToJIMS(ItemRec);
-                            CountItem += 1;
-                        until ItemRec.Next() = 0;
-
-                    //Message('%1 items have been added to the Item Log.', CountItem);
-                end;
-            }
-            action(ItemMaster)
-            {
-                Caption = 'Item Master';
-                ApplicationArea = All;
-                Image = ListPage;
+                Caption = 'Create Item List';
+                Image = Item;
                 Promoted = true;
                 PromotedCategory = Process;
                 ToolTip = 'Opens the Item Master List.';

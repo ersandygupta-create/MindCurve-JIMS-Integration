@@ -72,6 +72,136 @@ tableextension 50027 "E3 Uset Setup Ext" extends "User Setup"
             Caption = 'Gate Pass Approval';
             DataClassification = CustomerContent;
         }
-
+        field(50014; "GL Insert"; Boolean)
+        {
+            Caption = 'GL Insert';
+            DataClassification = CustomerContent;
+        }
+        field(50015; "GL Modify"; Boolean)
+        {
+            Caption = 'GL Modify';
+            DataClassification = CustomerContent;
+        }
+        field(50016; "GL Delete"; Boolean)
+        {
+            Caption = 'GL Delete';
+            DataClassification = CustomerContent;
+        }
+        field(50017; "Vendor View"; Boolean)
+        {
+            Caption = 'Vendor View';
+            ToolTip = 'Specifies whether the user is allowed to view vendor records.';
+            DataClassification = CustomerContent;
+        }
+        field(50018; "Vendor Insert"; Boolean)
+        {
+            Caption = 'Vendor Insert';
+            ToolTip = 'Specifies whether the user is allowed to create new vendor records.';
+            DataClassification = CustomerContent;
+        }
+        field(50019; "Vendor Modify"; Boolean)
+        {
+            Caption = 'Vendor Modify';
+            ToolTip = 'Specifies whether the user is allowed to modify existing vendor records.';
+            DataClassification = CustomerContent;
+        }
+        field(50020; "Vendor Delete"; Boolean)
+        {
+            Caption = 'Vendor Delete';
+            ToolTip = 'Specifies whether the user is allowed to delete vendor records.';
+            DataClassification = CustomerContent;
+        }
+        field(50021; "Customer View"; Boolean)
+        {
+            Caption = 'Customer View';
+            ToolTip = 'Specifies whether the user is allowed to view customer records.';
+            DataClassification = CustomerContent;
+        }
+        field(50022; "Customer Insert"; Boolean)
+        {
+            Caption = 'Customer Insert';
+            ToolTip = 'Specifies whether the user is allowed to create new customer records.';
+            DataClassification = CustomerContent;
+        }
+        field(50023; "Customer Modify"; Boolean)
+        {
+            Caption = 'Customer Modify';
+            ToolTip = 'Specifies whether the user is allowed to modify existing customer records.';
+            DataClassification = CustomerContent;
+        }
+        field(50024; "Customer Delete"; Boolean)
+        {
+            Caption = 'Customer Delete';
+            ToolTip = 'Specifies whether the user is allowed to delete customer records.';
+            DataClassification = CustomerContent;
+        }
+        field(50025; "Item Insert"; Boolean)
+        {
+            Caption = 'Item Insert';
+            ToolTip = 'Specifies whether the user is allowed to create new item records.';
+            DataClassification = CustomerContent;
+        }
+        field(50026; "Item Modify"; Boolean)
+        {
+            Caption = 'Item Modify';
+            ToolTip = 'Specifies whether the user is allowed to modify existing item records.';
+            DataClassification = CustomerContent;
+        }
+        field(50027; "Item Delete"; Boolean)
+        {
+            Caption = 'Item Delete';
+            ToolTip = 'Specifies whether the user is allowed to delete item records.';
+            DataClassification = CustomerContent;
+        }
+        field(50028; "Bank Payment Voucher"; Boolean)
+        {
+            Caption = 'Bank Payment Voucher';
+            DataClassification = CustomerContent;
+        }
+        field(50029; "Bank Receipt Voucher"; Boolean)
+        {
+            Caption = 'Bank Receipt Voucher';
+            DataClassification = CustomerContent;
+        }
+        field(50030; "Cash Payment Voucher"; Boolean)
+        {
+            Caption = 'Cash Payment Voucher';
+            DataClassification = CustomerContent;
+        }
+        field(50031; "Cash Receipt Voucher"; Boolean)
+        {
+            Caption = 'Cash Receipt Voucher';
+            DataClassification = CustomerContent;
+        }
+        field(50032; "Journal Voucher"; Boolean)
+        {
+            Caption = 'Journal Voucher';
+            DataClassification = CustomerContent;
+        }
+        field(50033; "Contra Voucher"; Boolean)
+        {
+            Caption = 'Contra Voucher';
+            DataClassification = CustomerContent;
+        }
+        field(50034; "Purchase Order"; Boolean)
+        {
+            Caption = 'Purchase Order';
+            DataClassification = CustomerContent;
+        }
+        field(50035; "Purchase Invoice"; Boolean)
+        {
+            Caption = 'Purchase Invoice';
+            DataClassification = CustomerContent;
+        }
+        field(50036; "Sales Order"; Boolean)
+        {
+            Caption = 'Sales Order';
+            DataClassification = CustomerContent;
+        }
+        field(50037; "Sales Invoice"; Boolean)
+        {
+            Caption = 'Sales Invoice';
+            DataClassification = CustomerContent;
+        }
     }
 }

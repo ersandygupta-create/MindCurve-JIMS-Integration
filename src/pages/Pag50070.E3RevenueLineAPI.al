@@ -28,14 +28,14 @@ page 50070 "E3 Revenue Line API"
                 {
                     Caption = 'Documment No.';
                 }
-                field(accountType; Rec."Account Type")
-                {
-                    Caption = 'Account Type';
-                }
-                field(accountNo; Rec."Account No.")
-                {
-                    Caption = 'Account No.';
-                }
+                // field(accountType; Rec."Account Type")
+                // {
+                //     Caption = 'Account Type';
+                // }
+                // field(accountNo; Rec."Account No.")
+                // {
+                //     Caption = 'Account No.';
+                // }
                 field(shortcutDimension2Code; Rec."Shortcut Dimension 2 Code")
                 {
                     Caption = 'Shortcut Dimension 2 Code';
@@ -60,22 +60,22 @@ page 50070 "E3 Revenue Line API"
                 {
                     Caption = 'Item Name';
                 }
-                field(gstGroup; Rec."GST Group Code")
-                {
-                    Caption = 'GST Group';
-                }
-                field(hsnCode; Rec."HSN Code")
-                {
-                    Caption = 'SACHSNCODE';
-                }
-                field(cgstAmount; Rec."CGST Amount")
-                {
-                    Caption = 'CGST Amount';
-                }
-                field(sgstAmount; Rec."sGST Amount")
-                {
-                    Caption = 'sGST Amount';
-                }
+                // // field(gstGroup; Rec."GST Group Code")
+                // // {
+                // //     Caption = 'GST Group';
+                // // }
+                // // field(hsnCode; Rec."HSN Code")
+                // // {
+                // //     Caption = 'SACHSNCODE';
+                // // }
+                // field(cgstAmount; Rec."CGST Amount")
+                // {
+                //     Caption = 'CGST Amount';
+                // }
+                // field(sgstAmount; Rec."sGST Amount")
+                // {
+                //     Caption = 'sGST Amount';
+                // }
                 field(serviceItemCode; Rec."Service Item Code")
                 {
                     Caption = 'Service Item Code';
@@ -112,10 +112,10 @@ page 50070 "E3 Revenue Line API"
                 {
                     Caption = 'Payor Payable';
                 }
-                field(packagePatient; Rec."Package Patient")
-                {
-                    Caption = 'Package Patient';
-                }
+                // field(packagePatient; Rec."Package Patient")
+                // {
+                //     Caption = 'Package Patient';
+                // }
                 field(lineNo; Rec."Line No.")
                 {
                     Caption = 'Line No.';

@@ -129,42 +129,49 @@ page 50051 "E3 HIS Revenue Subform"
                 {
                     ApplicationArea = All;
                     Caption = 'GST Group Code';
+                    Visible = false;
                     ToolTip = 'Specifies the value of the GST Group Code field.';
                 }
                 field("HSN Code"; Rec."HSN Code")
                 {
                     ApplicationArea = All;
                     Caption = 'HSN Code';
+                    Visible = false;
                     ToolTip = 'Specifies the value of the HSN Code field.';
                 }
                 field("Patient Payable"; Rec."Patient Payable")
                 {
                     ApplicationArea = All;
                     Caption = 'Patient Payable';
+                    Visible = false;
                     ToolTip = 'Specifies the value of the Patient Payable field.';
                 }
                 field("Payor Payable"; Rec."Payor Payable")
                 {
                     ApplicationArea = All;
                     Caption = 'Payor Payable';
+                    Visible = false;
                     ToolTip = 'Specifies the value of the Payor Payable field.';
                 }
                 field("CGST Amount"; Rec."CGST Amount")
                 {
                     ApplicationArea = All;
                     Caption = 'CGST Amount';
+                    Visible = false;
                     ToolTip = 'Specifies the value of the CGST Amount field.';
                 }
                 field("SGST Amount"; Rec."SGST Amount")
                 {
                     ApplicationArea = All;
                     Caption = 'SGST Amount';
+                    Visible = false;
                     ToolTip = 'Specifies the value of the SGST Amount field.';
                 }
                 field("Package Patient"; Rec."Package Patient")
                 {
                     ApplicationArea = All;
                     Caption = 'Package Patient';
+                    Visible = false;
                     ToolTip = 'Specifies the value of the Package Patient field.';
                 }
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")

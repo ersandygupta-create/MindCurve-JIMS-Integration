@@ -156,12 +156,14 @@ page 50055 "E3 HIS Revenue Cancel Subform"
                 {
                     ApplicationArea = All;
                     Caption = 'CGST Amount';
+                    Visible = false;
                     ToolTip = 'Specifies the value of the CGST Amount field.';
                 }
                 field("SGST Amount"; Rec."SGST Amount")
                 {
                     ApplicationArea = All;
                     Caption = 'SGST Amount';
+                    Visible = false;
                     ToolTip = 'Specifies the value of the SGST Amount field.';
                 }
                 field("Net Amount"; Rec."Net Amount")
@@ -180,12 +182,14 @@ page 50055 "E3 HIS Revenue Cancel Subform"
                 {
                     ApplicationArea = All;
                     Caption = 'Patient Payable';
+                    Visible = false;
                     ToolTip = 'Specifies the value of the Patient Payable field.';
                 }
                 field("Payor Payable"; Rec."Payor Payable")
                 {
                     ApplicationArea = All;
                     Caption = 'Payor Payable';
+                    Visible = false;
                     ToolTip = 'Specifies the value of the Payor Payable field.';
                 }
                 field("GST Group Code"; Rec."GST Group Code")
@@ -193,17 +197,20 @@ page 50055 "E3 HIS Revenue Cancel Subform"
                     ToolTip = 'Specifies the value of the GST Group Code field';
                     ApplicationArea = All;
                     Caption = 'GST Group Code';
+                    Visible = false;
                 }
                 field("HSN Code"; Rec."HSN Code")
                 {
                     ToolTip = 'Specifies the value of the HSN Code field';
                     ApplicationArea = All;
                     Caption = 'HSN Code';
+                    Visible = false;
                 }
                 field("Package Patient"; Rec."Package Patient")
                 {
                     ApplicationArea = All;
                     Caption = 'Package Patient';
+                    Visible = false;
                     ToolTip = 'Specifies the value of the Package Patient field.';
                 }
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")

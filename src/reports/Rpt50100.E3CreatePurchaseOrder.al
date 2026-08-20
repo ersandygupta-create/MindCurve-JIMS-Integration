@@ -169,6 +169,8 @@ report 50100 "E3 Create Purchase Order"
                 end;
         end;
         PurchaseLine.Validate(Quantity, IndentLine."Ordered Qty");
+        PurchaseLine.Validate(MRP, IndentLine.MRP);
+        PurchaseLine.Validate(Scheme, IndentLine.Scheme);
         PurchaseLine.Validate("Unit of Measure Code", IndentLine."Unit of Measure");
         PurchaseLine.Validate("Location Code", PurchaseHeader."Location Code");
         if Location.Get(PurchaseHeader."Location Code") then
@@ -197,14 +199,13 @@ report 50100 "E3 Create Purchase Order"
 
     local procedure InsertIndentLineDetails(IndentLine: Record "E3 Indent Line")
     var
-        IndentLineDetails: Record "E3 Released Indent Details";
+        IndentLineDetails: Record "E3 Indent Purchase Processing";
     begin
         IndentLineDetails.Init();
 
         IndentLineDetails."Document No." := IndentLine."Document No.";
-        IndentLineDetails."Indent Line No." := IndentLine."Line No.";
+        IndentLineDetails."Line No." := IndentLine."Line No.";
         IndentLineDetails."Purchase Order No." := PurchaseHeader."No.";
-        IndentLineDetails."Purchase Line No." := PurchaseLine."Line No.";
         IndentLineDetails.Type := IndentLine.Type;
         IndentLineDetails."No." := IndentLine."No.";
         IndentLineDetails.Description := IndentLine.Description;
@@ -212,14 +213,14 @@ report 50100 "E3 Create Purchase Order"
         IndentLineDetails."Vendor Name" := IndentLine."Vendor Name";
         IndentLineDetails."Approved Qty" := IndentLine."Approved Qty";
         IndentLineDetails."Created PO Qty" := PurchaseLine.Quantity;
-        IndentLineDetails."Remaining Qty" := GetRemainingQty(IndentLine);
+        //IndentLineDetails."Remaining Qty" := GetRemainingQty(IndentLine);
         IndentLineDetails."Quotation Price" := IndentLine."Quotation Price";
         IndentLineDetails."Location Code" := IndentLine."Location Code";
         IndentLineDetails."Payment Terms" := IndentLine."Payment Terms";
         IndentLineDetails."Delivery Terms" := IndentLine."Delivery Terms";
-        IndentLineDetails."Created Date" := Today;
-        IndentLineDetails."Created Time" := Time;
-        IndentLineDetails."Created By" := CopyStr(UserId(), 1, MaxStrLen(IndentLineDetails."Created By"));
+        // IndentLineDetails."Created Date" := Today;
+        // IndentLineDetails."Created Time" := Time;
+        // IndentLineDetails."Created By" := CopyStr(UserId(), 1, MaxStrLen(IndentLineDetails."Created By"));
 
         IndentLineDetails.Insert(true);
     end;

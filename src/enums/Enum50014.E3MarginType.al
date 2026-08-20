@@ -10,8 +10,12 @@ enum 50014 "E3 Margin Type"
     {
         Caption = 'Percentage';
     }
-    value(2; Amount)
+    value(2; Markup)
     {
-        Caption = 'Amount';
+        Caption = 'Markup';
+    }
+    value(3; "MRP Discount")
+    {
+        Caption = 'MRP Discount';
     }
 }

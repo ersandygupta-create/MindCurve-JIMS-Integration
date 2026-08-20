@@ -8,7 +8,7 @@ page 50162 "E3 Vendor Quotation"
     SourceTable = "E3 Indent Line";
     SourceTableView = SORTING("Document No.", "Line No.") ORDER(Ascending);
     ApplicationArea = All;
-    Caption = 'Purchase Indent';
+    Caption = 'Purchase Creation Line';
 
     layout
     {
@@ -110,6 +110,7 @@ page 50162 "E3 Vendor Quotation"
                 {
                     ApplicationArea = All;
                     Editable = false;
+                    Visible = false;
                     Caption = 'Amount';
                     ToolTip = 'Specifies the required Amount.';
                 }
@@ -145,9 +146,14 @@ page 50162 "E3 Vendor Quotation"
                 field("Price"; Rec."Quotation Price")
                 {
                     ApplicationArea = All;
-                    Caption = 'Quotation Price';
+                    Caption = 'Rate';
                     Editable = true;
                     ToolTip = 'Specifies the quoted unit price from the vendor.';
+                }
+                field(MRP; Rec.MRP)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies The Value MRP';
                 }
                 field("discount %"; Rec."discount %")
                 {
@@ -158,8 +164,13 @@ page 50162 "E3 Vendor Quotation"
                 field("Quotation Amount"; Rec."Quotation Amount")
                 {
                     ApplicationArea = All;
-                    Caption = 'Quotation Amount';
+                    Caption = 'Amount';
                     ToolTip = 'Specifies the total amount quoted by the vendor.';
+                }
+                field(Scheme; Rec.Scheme)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies a value Scheme';
                 }
                 field("Payment Terms"; Rec."Payment Terms")
                 {
@@ -263,6 +274,35 @@ page 50162 "E3 Vendor Quotation"
                     end;
                 end;
             }
+            action("Validate Purch Price")
+            {
+                ApplicationArea = All;
+                Caption = 'Validate Purch Price';
+                Image = Price;
+                Promoted = true;
+                PromotedCategory = Process;
+
+                trigger OnAction()
+                begin
+                    ValidatePurchasePrice();
+                    CurrPage.Update(false);
+                end;
+            }
+            action("Validate Purch Discount")
+            {
+                ApplicationArea = All;
+                Caption = 'Validate Purch Discount';
+                Image = Discount;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Update the purchase line discount percentage from the applicable RC Discount based on Item Make Code.';
+
+                trigger OnAction()
+                begin
+                    ValidatePurchaseDiscount();
+                    CurrPage.Update(false);
+                end;
+            }
         }
     }
     local procedure CreateSplitLines(var SelectedLine: Record "E3 Indent Line"; SplitQty: Decimal)
@@ -343,5 +383,84 @@ page 50162 "E3 Vendor Quotation"
                 Rec.Validate("Shortcut Dimension 1 Code", IndentHeader."Shortcut Dimension 1 Code");
                 Rec.Modify();
             end;
+    end;
+
+    local procedure ValidatePurchasePrice()
+    var
+        PRC: Record "E3 Rate Contract Line";
+        VendorQuotationLine: Record "E3 Indent Line";
+    begin
+        VendorQuotationLine.Reset();
+        VendorQuotationLine.SetRange("Document No.", Rec."Document No.");
+        //VendorQuotationLine.SetRange("No.", PRC."Product No.");
+
+        if VendorQuotationLine.FindSet(true) then
+            repeat
+                if VendorQuotationLine."No." = '' then
+                    exit;
+
+                PRC.Reset();
+                PRC.SetRange("Product No.", VendorQuotationLine."No.");
+
+                if PRC.FindFirst() then begin
+                    VendorQuotationLine.Validate("Quotation Price", PRC.Price);
+
+                    VendorQuotationLine.Validate(MRP, PRC.MRP);
+
+                    VendorQuotationLine.Validate(Scheme, PRC.Scheme);
+
+                    VendorQuotationLine.Modify(true);
+                end;
+            until VendorQuotationLine.Next() = 0;
+    end;
+
+    local procedure ValidatePurchaseDiscount()
+    var
+        VendorQuotationLine: Record "E3 Indent Line";
+        IndentLine: Record "E3 Indent Line";
+        RCDiscountLine: Record "E3 RC Discount Line";
+    begin
+        VendorQuotationLine.Reset();
+        VendorQuotationLine.SetRange(
+            "Document No.",
+            Rec."Document No.");
+
+        if VendorQuotationLine.FindSet(true) then
+            repeat
+                if VendorQuotationLine."No." = '' then
+                    continue;
+
+                // Find related Indent Line
+                IndentLine.Reset();
+                IndentLine.SetRange(
+                    "Document No.",
+                    VendorQuotationLine."Document No.");
+                IndentLine.SetRange(
+                    "No.",
+                    VendorQuotationLine."No.");
+
+                if IndentLine.FindFirst() then begin
+
+                    // Item Make Code must be available
+                    if IndentLine."Item Make Code" = '' then
+                        continue;
+
+                    // Find RC Discount Line using Make Code
+                    RCDiscountLine.Reset();
+                    RCDiscountLine.SetRange(
+                        "Make Code",
+                        IndentLine."Item Make Code");
+
+                    if RCDiscountLine.FindFirst() then begin
+
+                        // Only update Vendor Quotation Discount %
+                        VendorQuotationLine.Validate(
+                            "discount %",
+                            RCDiscountLine."Line Discount %");
+
+                        VendorQuotationLine.Modify(true);
+                    end;
+                end;
+            until VendorQuotationLine.Next() = 0;
     end;
 }

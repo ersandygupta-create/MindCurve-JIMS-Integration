@@ -146,28 +146,37 @@ page 50104 "E3 Posted Gate Ent Inward Hdr"
             }
         }
     }
-    // actions
-    // {
-    //     area(processing)
-    //     {
-    //         group("P&osting")
-    //         {
-    //             Caption = 'P&osting';
-    //             Image = Post;
-    //             action("Po&st")
-    //             {
-    //                 Caption = 'Po&st';
-    //                 Image = Post;
-    //                 Promoted = true;
-    //                 ApplicationArea = All;
-    //                 PromotedCategory = Process;
-    //                 PromotedIsBig = true;
-    //                 RunObject = Codeunit 50004;
-    //                 ShortCutKey = 'F9';
-    //             }
-    //         }
-    // }
-    // }
+    actions
+    {
+        area(Processing)
+        {
+            action(GatePassInward)
+            {
+                ApplicationArea = All;
+                Caption = 'Gate Pass Inward Print';
+                Image = Print;
+                Promoted = true;
+                PromotedCategory = Report;
+                ToolTip = 'Print the Gate Pass Inward report for the selected posted gate entry.';
 
+                trigger OnAction()
+                var
+                    GateEntryHeader: Record "E3 Posted Gate Entry Header";
+                begin
+                    GateEntryHeader.Reset();
+                    GateEntryHeader.SetRange(PostedNo, Rec.PostedNo);
 
+                    if GateEntryHeader.FindFirst() then
+                        Report.RunModal(
+                            Report::"E3 Gate In Print",
+                            true,
+                            true,
+                            GateEntryHeader)
+                    else
+                        Error('No posted gate entry found for Posted No. %1.', Rec."Posted Entry No.");
+                end;
+
+            }
+        }
+    }
 }

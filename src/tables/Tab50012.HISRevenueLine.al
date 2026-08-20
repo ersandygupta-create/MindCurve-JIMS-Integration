@@ -305,19 +305,8 @@ table 50012 "E3 HIS Revenue Line"
     end;
 
     trigger OnInsert()
-    var
-        RevLine: Record "E3 HIS Revenue Line";
     BEGIN
         GetHISIntegrationSalesHdr();
-
-        // ✅ Default value
-        RevLine.Reset();
-        RevLine.SetRange("Document No.", Rec."Document No.");
-        RevLine.SetRange("Line No.", Rec."Line No.");
-        if RevLine.FindFirst() then
-            rec.Delete();
-
-
     END;
 
     var

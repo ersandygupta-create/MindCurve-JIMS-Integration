@@ -993,44 +993,6 @@ codeunit 50000 "E3 HIS Integration Mgmt."
 
                     GenJournalLine.INSERT();
 
-                    // GenJournalLine.INIT();
-                    // GenJournalLine.VALIDATE(GenJournalLine."Journal Template Name", IntegrationSetupLine."General Journal Template Code");
-                    // GenJournalLine.VALIDATE(GenJournalLine."Journal Batch Name", IntegrationSetupLine."General Journal Batch Code");
-                    // intLineNo += 10000;
-                    // GenJournalLine."Line No." := intLineNo;
-                    // GenJournalLine.VALIDATE("Document Type", HISSettlementStaging."Document Type");
-                    // GenJournalLine.VALIDATE("Document No.", HISSettlementStaging."Document No.");
-                    // GenJournalLine.VALIDATE("Posting Date", HISSettlementStaging."Document Date");
-
-                    // GenJournalLine.VALIDATE(Amount, -HISSettlementStaging.Amount);
-                    // GenJournalLine.validate("Account Type", HISSettlementStaging."Bal. Account Type");
-                    // GenJournalLine.validate("Account No.", HISSettlementStaging."Bal. Account No");
-                    // GenJournalLine.VALIDATE("Cheque Date", HISSettlementStaging."Cheque Date");
-                    // GenJournalLine.VALIDATE("Cheque No.", COPYSTR(HISSettlementStaging."Cheque No.", 1, 10));
-                    // if HISSettlementStaging."Shortcut Dimension 1 Code" <> '' then begin
-                    //     GenJournalLine.VALIDATE("Location Code", HISSettlementStaging."Shortcut Dimension 1 Code");
-                    //     GenJournalLine.VALIDATE("Shortcut Dimension 1 Code", HISSettlementStaging."Shortcut Dimension 1 Code");
-                    // end;
-
-                    // if HISSettlementStaging."Shortcut Dimension 1 Code" <> '' then
-                    //     GenJournalLine.VALIDATE("Shortcut Dimension 2 Code", GetMappedDimension(HISSettlementStaging."Shortcut Dimension 2 Code"));
-
-                    // GenJournalLine.VALIDATE("External Document No.", HISSettlementStaging."External Document No.");
-                    // GenJournalLine."E3 Narration" := COPYSTR(HISSettlementStaging."Line Narration", 1, 50);
-                    // GenJournalLine."E3 HIS Module" := HISSettlementStaging."HIS Module";
-                    // GenJournalLine."E3 HIS Document Type" := COPYSTR(HISSettlementStaging."HIS Document Type", 1, 60);
-                    // GenJournalLine."E3 UTR No." := HISSettlementStaging."Cheque No.";
-                    // GenJournalLine."E3 Sub Group Code" := HISSettlementStaging."Sub Group";
-                    // GenJournalLine."E3 Receipt No." := COPYSTR(HISSettlementStaging."Receipt No.", 1, 20);
-                    // GenJournalLine."E3 UHID" := HISSettlementStaging.UHID;
-                    // GenJournalLine."E3 Validation Key" := HISSettlementStaging."Validation HIS Key";
-                    // GenJournalLine."E3 Store Code" := HISSettlementStaging."Store Code";
-                    // GenJournalLine."E3 Patient Name" := HISSettlementStaging."Patient Name";
-                    // GenJournalLine."E3 Transaction Type" := HISSettlementStaging.TRANSACTION_TYPE;
-                    // GenJournalLine."E3 Sponsor Code" := HISSettlementStaging."Sponsor Code";
-                    // GenJournalLine."E3 Sponsor Name" := HISSettlementStaging."Sponsor Name";
-                    // GenJournalLine.INSERT();
-
                     HISSettlementStaging."Created By" := USERID;
                     HISSettlementStaging."Created Date Time" := CURRENTDATETIME;
                     HISSettlementStaging."General Entries Created" := TRUE;
@@ -1041,6 +1003,96 @@ codeunit 50000 "E3 HIS Integration Mgmt."
     end;
 
     //ak
+
+    procedure InitGenJnlLinesUnBilledEntries()
+    var
+        GenJournalLine: Record "Gen. Journal Line";
+        HISGLAccountMapping: Record "E3 HIS GL Accounts Mapping";
+        intLineNo: Integer;
+        MOPLbl: Label 'Unbilled Setup not found %1.';
+        DocumentTypeLbl: Label 'Setup not found for Document Type %1.';
+    begin
+        IntegrationSetup.GET();
+        IntegrationSetup.TESTFIELD("Integration Enabled", TRUE);
+        IntegrationSetup.TESTFIELD("Revenue Creation Enabled", TRUE);
+        IntegrationSetup.TESTFIELD("Vendor Gen. Bus. Posting Group");
+        IntegrationSetup.TESTFIELD("Custom Gen. Bus. Posting Group");
+
+        IntegrationSetupLine.Reset();
+        IntegrationSetupLine.SetRange(Type, IntegrationSetupLine.Type::Revenue);
+        IntegrationSetupLine.FindFirst();
+        IntegrationSetupLine.TestField("General Journal Template Code");
+        IntegrationSetupLine.TestField("General Journal Batch Code");
+
+        IF NOT (IntegrationSetup."Integration Enabled") AND (IntegrationSetup."Revenue Creation Enabled") THEN
+            EXIT;
+
+        UnBilledEntries.RESET();
+        UnBilledEntries.SETFILTER(UnBilledEntries.Created, '%1', FALSE);
+        UnBilledEntries.SETFILTER(UnBilledEntries."Net Amount", '<>%1', 0);
+        IF UnBilledEntries.FINDSET() THEN
+            REPEAT
+                GenJournalLine.RESET();
+                GenJournalLine.SETRANGE("Journal Template Name", IntegrationSetupLine."General Journal Template Code");
+                GenJournalLine.SETRANGE("Journal Batch Name", IntegrationSetupLine."General Journal Batch Code");
+                IF GenJournalLine.FINDLAST() THEN
+                    intLineNo := GenJournalLine."Line No."
+                ELSE
+                    intLineNo := 10000;
+
+                GenJournalLine.INIT();
+                GenJournalLine.VALIDATE(GenJournalLine."Journal Template Name", IntegrationSetupLine."General Journal Template Code");
+                GenJournalLine.VALIDATE(GenJournalLine."Journal Batch Name", IntegrationSetupLine."General Journal Batch Code");
+                intLineNo += 10000;
+                GenJournalLine."Line No." := intLineNo;
+                GenJournalLine.VALIDATE("Document No.", UnBilledEntries."Entry No.");
+                GenJournalLine.VALIDATE("Posting Date", UnBilledEntries."Document Date");
+
+                HISGLAccountMapping.Reset();
+                HISGLAccountMapping.SetRange(Type, HISGLAccountMapping.Type::UnBilledRevenueCr);
+                HISGLAccountMapping.SetRange("MOP Code", UnBilledEntries."Service Item Code");
+                if HISGLAccountMapping.FindFirst() then begin
+
+                    GenJournalLine.VALIDATE("Account Type", HISGLAccountMapping."Account Type");
+                    GenJournalLine.VALIDATE("Account No.", HISGLAccountMapping."Account No.");
+                end ELSE
+                    Error(MOPLbl, UnBilledEntries."Service Item Code");//ak
+
+                GenJournalLine.VALIDATE(Amount, -UnBilledEntries."Net Amount");
+                HISGLAccountMapping.Reset();
+                HISGLAccountMapping.SetRange(Type, HISGLAccountMapping.Type::UnBilledRevenueDr);
+                HISGLAccountMapping.SetRange("MOP Code", UnBilledEntries."Service Type");
+                if HISGLAccountMapping.FindFirst() then begin
+
+
+                    GenJournalLine.validate("Bal. Account Type", HISGLAccountMapping."Account Type");
+                    GenJournalLine.validate("Bal. Account No.", HISGLAccountMapping."Account No.");
+                    if UnBilledEntries."Facility ID" <> '' then begin
+                        GenJournalLine.VALIDATE("Location Code", UnBilledEntries."Facility ID");
+                        GenJournalLine.VALIDATE("Shortcut Dimension 1 Code", UnBilledEntries."Facility ID");
+                    end;
+                end;
+                if UnBilledEntries."Department Code" <> '' then
+                    GenJournalLine.VALIDATE("Shortcut Dimension 2 Code", GetMappedDimension(UnBilledEntries."Department Code"));
+
+                GenJournalLine.VALIDATE("External Document No.", UnBilledEntries."Reg. No.");
+                GenJournalLine."E3 Encounter No." := UnBilledEntries."Reg. No.";
+                GenJournalLine."E3 UHID" := UnBilledEntries.UHID;
+                GenJournalLine."E3 Patient Name" := UnBilledEntries."Patient Name";
+                GenJournalLine."E3 HIS Document Type" := COPYSTR(UnBilledEntries."Service Type", 1, 60);
+                GenJournalLine."E3 Receipt No." := COPYSTR(UnBilledEntries."Header ID", 1, 20);
+                GenJournalLine."E3 Transaction Type" := UnBilledEntries."Service Category";
+
+                GenJournalLine.INSERT();
+
+                UnBilledEntries."Created By" := USERID;
+                UnBilledEntries."Created Date Time" := CURRENTDATETIME;
+                UnBilledEntries.Created := TRUE;
+                UnBilledEntries.MODIFY();
+            UNTIL UnBilledEntries.NEXT() = 0;
+
+    end;
+    //AK
 
     procedure InitGenJnlLineDoctorPayoutEntries()
     var
@@ -1120,42 +1172,9 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                 GenJournalLine."E3 Transaction Type" := HISDoctorPayoutEntries.TRANSACTION_TYPE;
                 GenJournalLine.INSERT();
 
-                // GenJournalLine.INIT();
-                // GenJournalLine.VALIDATE(GenJournalLine."Journal Template Name", IntegrationSetupLine."General Journal Template Code");
-                // GenJournalLine.VALIDATE(GenJournalLine."Journal Batch Name", IntegrationSetupLine."General Journal Batch Code");
-                // intLineNo += 10000;
-                // GenJournalLine."Line No." := intLineNo;
-                // GenJournalLine.VALIDATE("Document Type", HISDoctorPayoutEntries."Document Type");
-                // GenJournalLine.VALIDATE("Document No.", HISDoctorPayoutEntries."Document No.");
-                // GenJournalLine.VALIDATE("Posting Date", HISDoctorPayoutEntries."Document Date");
-
-                // GenJournalLine.VALIDATE(Amount, -HISDoctorPayoutEntries.Amount);
-                // GenJournalLine.validate("Account Type", HISDoctorPayoutEntries."Account Type");
-                // GenJournalLine.validate("Account No.", HISDoctorPayoutEntries."Bal. Account No");
-                // if HISDoctorPayoutEntries."Shortcut Dimension 1 Code" <> '' then begin
-                //     GenJournalLine.VALIDATE("Location Code", HISDoctorPayoutEntries."Shortcut Dimension 1 Code");
-                //     GenJournalLine.VALIDATE("Shortcut Dimension 1 Code", HISDoctorPayoutEntries."Shortcut Dimension 1 Code");
-                // end;
-
-                // if HISDoctorPayoutEntries."Shortcut Dimension 1 Code" <> '' then
-                //     GenJournalLine.VALIDATE("Shortcut Dimension 2 Code", GetMappedDimension(HISDoctorPayoutEntries."Shortcut Dimension 2 Code"));
-
-                // GenJournalLine.VALIDATE("External Document No.", HISDoctorPayoutEntries."External Document No.");
-                // GenJournalLine."E3 Narration" := COPYSTR(HISDoctorPayoutEntries."Line Narration", 1, 50);
-                // GenJournalLine."E3 HIS Document Type" := COPYSTR(HISDoctorPayoutEntries."HIS Document Type", 1, 60);
-                // GenJournalLine."E3 UHID" := HISDoctorPayoutEntries.UHID;
-                // GenJournalLine."E3 Encounter No." := HISDoctorPayoutEntries."Encounter No.";
-                // GenJournalLine."E3 Receipt No." := HISDoctorPayoutEntries."IP No.";
-                // GenJournalLine."E3 Patient Name" := HISDoctorPayoutEntries."Patient Name";
-                // GenJournalLine."E3 Transaction Type" := HISDoctorPayoutEntries.TRANSACTION_TYPE;
-                // GenJournalLine.INSERT();
-
-                // HISDoctorPayoutEntries."Created By" := USERID;
-                // HISDoctorPayoutEntries."Created Date Time" := CURRENTDATETIME;
                 HISDoctorPayoutEntries."General Entries Created" := TRUE;
                 HISDoctorPayoutEntries.MODIFY();
             UNTIL HISDoctorPayoutEntries.NEXT() = 0;
-
     end;
 
     //ak
@@ -1163,7 +1182,6 @@ codeunit 50000 "E3 HIS Integration Mgmt."
     var
         AllowPostingDate: Record "HIS Allow Posting Date";
         DocDate: Date;
-
     begin
         DocDate := HISConsumptionEntry1."Posting Date";
 
@@ -1712,12 +1730,13 @@ codeunit 50000 "E3 HIS Integration Mgmt."
             Error('Document Date %1 is not allowed. Allowed date range not defined for %2.', DocDate, '50011 Allow Integration Setup From date and To Date');
     end;
 
-    procedure InitRevenueInvoice(RecordType: Option; DocumentType: Option; DocumentNo: CODE[20])
+    procedure InitRevenueInvoice(RecordType: Option; DocumentType: Option; DocumentNo: Code[20])
     var
         SalesHeader: Record "Sales Header";
         SalesLine: Record "Sales Line";
         GenJournalLine: Record "Gen. Journal Line";
         InvoicePostingBuffer: Record "Invoice Posting Buffer" temporary;
+        RevenueHISDocTypeSetup: Record "E3 Revenue HIS Doc. Type Setup";
         PostGenJnlLine: Codeunit "Gen. Jnl.-Post Line";
         AmountToCustomer: Decimal;
         PatientPayble: Decimal;
@@ -1725,11 +1744,12 @@ codeunit 50000 "E3 HIS Integration Mgmt."
     begin
         AmountToCustomer := 0;
         PatientPayble := 0;
+
         IntegrationSetup.GET();
         //IntegrationSetup.testfield("Account Type");
-        IntegrationSetup.testfield("Account No.");
+        //IntegrationSetup.testfield("Account No.");
 
-        RevenueInvoiceValidation(RecordType, documentType, DocumentNo);
+        RevenueInvoiceValidation(RecordType, DocumentType, DocumentNo);
 
         HISRevenueHeader.RESET();
         HISRevenueHeader.SETRANGE(HISRevenueHeader."Document No.", DocumentNo);
@@ -1743,16 +1763,20 @@ codeunit 50000 "E3 HIS Integration Mgmt."
         HISRevenueHeader.SETRANGE(HISRevenueHeader."Error 2", FALSE);
         HISRevenueHeader.SETRANGE(HISRevenueHeader."Error 3", FALSE);
         HISRevenueHeader.SETRANGE(HISRevenueHeader."Error 4", FALSE);
+
         IF HISRevenueHeader.FINDFIRST() THEN BEGIN
 
-            CheckRevenueHISDocumentDate(HISRevenueHeader);//ak
-
-            if IntegrationSetup."Revenue/Rev. Cancel Handling" = IntegrationSetup."Revenue/Rev. Cancel Handling"::"Via Invoices" then begin
+            CheckRevenueHISDocumentDate(HISRevenueHeader);
+            // VIA INVOICES
+            if IntegrationSetup."Revenue/Rev. Cancel Handling" = IntegrationSetup."Revenue/Rev. Cancel Handling"::"Via Invoices"
+            then begin
                 SalesHeader.INIT();
-                IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::Revenue) AND (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::Invoice) THEN BEGIN
-                    SalesHeader."Document Type" := SalesHeader."Document Type"::Invoice
+                IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::Revenue) AND (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::Invoice)
+                THEN BEGIN
+                    SalesHeader."Document Type" := SalesHeader."Document Type"::Invoice;
                 END ELSE
-                    IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::"Revenue Cancel") AND (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::"Credit Memo") THEN
+                    IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::"Revenue Cancel") AND (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::"Credit Memo")
+                    THEN
                         SalesHeader."Document Type" := SalesHeader."Document Type"::"Credit Memo";
 
                 SalesHeader."No." := HISRevenueHeader."Document No.";
@@ -1762,19 +1786,18 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                 if HISRevenueHeader."Posting Date" <> 0D then
                     SalesHeader.VALIDATE("Posting Date", HISRevenueHeader."Posting Date")
                 else
-                    SalesHeader.Validate("Posting Date", HISRevenueHeader."Document Date");
+                    SalesHeader.VALIDATE("Posting Date", HISRevenueHeader."Document Date");
                 SalesHeader.VALIDATE("External Document No.", HISRevenueHeader."External Document No.");
+
                 if HISRevenueHeader."Location Code" <> '' then
                     SalesHeader.VALIDATE("Location Code", HISRevenueHeader."Location Code")
                 else
-                    SalesHeader.Validate("Location Code", HISRevenueHeader."Shortcut Dimension 1 Code");
+                    SalesHeader.VALIDATE("Location Code", HISRevenueHeader."Shortcut Dimension 1 Code");
                 SalesHeader.VALIDATE(SalesHeader."Shortcut Dimension 1 Code", HISRevenueHeader."Shortcut Dimension 1 Code");
                 SalesHeader.VALIDATE(SalesHeader."Shortcut Dimension 2 Code", GetMappedDimension(HISRevenueHeader."Shortcut Dimension 2 Code"));
                 SalesHeader.VALIDATE("Posting No. Series", '');
                 SalesHeader.VALIDATE("Posting No.", HISRevenueHeader."Document No.");
-                SalesHeader.Validate("Reference Invoice No.", HISRevenueHeader."Reference Invoice No.");
-                //Code
-                //SalesHeader."E3 HIS Module" := HISRevenueHeader."E3 HIS Module";
+                SalesHeader.VALIDATE("Reference Invoice No.", HISRevenueHeader."Reference Invoice No.");
                 SalesHeader."E3 HIS Document Type" := HISRevenueHeader."HIS Document Type";
                 SalesHeader."E3 UHID" := HISRevenueHeader."UHID";
                 SalesHeader."E3 Patient Name" := HISRevenueHeader."Patient Name";
@@ -1786,16 +1809,21 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                 SalesHeader."E3 Payer Code" := HISRevenueHeader."Payer Code";
                 SalesHeader."E3 Payer Name" := HISRevenueHeader."Payer Name";
                 SalesHeader.MODIFY();
+
             end else begin
-                IntegrationSetupLine.Reset();
-                IntegrationSetupLine.SetRange(Type, IntegrationSetupLine.Type::Revenue);
-                IntegrationSetupLine.FindFirst();
+                IntegrationSetupLine.RESET();
+                IntegrationSetupLine.SETRANGE(Type, IntegrationSetupLine.Type::Revenue);
+                IntegrationSetupLine.FINDFIRST();
                 IntegrationSetupLine.TestField("General Journal Template Code");
                 IntegrationSetupLine.TestField("General Journal Batch Code");
+
             end;
 
             LineNo := 0;
-            if IntegrationSetup."Revenue/Rev. Cancel Handling" = IntegrationSetup."Revenue/Rev. Cancel Handling"::"Via Invoices" then begin
+
+            // VIA INVOICES - SALES LINES
+            if IntegrationSetup."Revenue/Rev. Cancel Handling" = IntegrationSetup."Revenue/Rev. Cancel Handling"::"Via Invoices"
+            then begin
                 HISRevenueLine.RESET();
                 HISRevenueLine.SetRange("Record Type", HISRevenueHeader."Record Type");
                 HISRevenueLine.SetRange("document Type", HISRevenueHeader."document Type");
@@ -1803,6 +1831,7 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                 HISRevenueLine.SetRange("Package Patient", false);
                 IF HISRevenueLine.FINDFIRST() THEN
                     REPEAT
+
                         LineNo += 10000;
                         SalesLine.INIT();
                         SalesLine.VALIDATE("Document Type", SalesHeader."Document Type");
@@ -1821,48 +1850,61 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                         SalesLine.VALIDATE(SalesLine."GST Credit", HISRevenueLine."Credit Type");
                         SalesLine.VALIDATE("Line Discount Amount", -1 * HISRevenueLine.Discount);
                         SalesLine.INSERT(TRUE);
-                    UNTIL HISRevenueLine.NEXT() = 0;
-            end else begin
-                InvoicePostingBuffer.DeleteAll();
-                AmountToCustomer := 0;
-                PatientPayble := 0;
 
+                    UNTIL HISRevenueLine.NEXT() = 0;
+
+            end else begin
+
+                // DIRECT G/L POSTING
+                InvoicePostingBuffer.DELETEALL();
+                // PAYOR PAYABLE - AMOUNT FROM HEADER
+                AmountToCustomer := HISRevenueHeader."Payor Payable";
+                // PATIENT PAYABLE - AMOUNT FROM HEADER
+                PatientPayble := HISRevenueHeader."Patient Payable";
                 HISRevenueLine.RESET();
+
                 HISRevenueLine.SetRange("Record Type", HISRevenueHeader."Record Type");
                 HISRevenueLine.SetRange("document Type", HISRevenueHeader."document Type");
                 HISRevenueLine.SETRANGE(HISRevenueLine."Document No.", HISRevenueHeader."Document No.");
                 HISRevenueLine.SetRange("Package Patient", false);
                 IF HISRevenueLine.FINDFIRST() THEN
                     REPEAT
-                        AmountToCustomer += HISRevenueLine."Payor Payable";
-                        PatientPayble += HISRevenueLine."Patient Payable";
 
+                        // REVENUE ACCOUNT
                         InvoicePostingBuffer.SetRange("G/L Account", HISRevenueLine."Account No.");
                         InvoicePostingBuffer.SetRange("Global Dimension 1 Code", HISRevenueLine."Shortcut Dimension 1 Code");
                         InvoicePostingBuffer.SetRange("Global Dimension 2 Code", HISRevenueLine."Shortcut Dimension 2 Code");
                         if InvoicePostingBuffer.FindFirst() then begin
-                            InvoicePostingBuffer.Amount := InvoicePostingBuffer.Amount + (-(HISRevenueLine.Amount));
+                            InvoicePostingBuffer.Amount := InvoicePostingBuffer.Amount + (-HISRevenueLine.Amount);
                             InvoicePostingBuffer.Modify();
+
                         end else begin
+
                             InvoicePostingBuffer.Init();
                             InvoicePostingBuffer."Group ID" := HISRevenueLine."Account No." + ';' + HISRevenueLine."Shortcut Dimension 1 Code" + ';' + HISRevenueLine."Shortcut Dimension 2 Code";
                             InvoicePostingBuffer.Type := InvoicePostingBuffer.Type::"G/L Account";
                             InvoicePostingBuffer."G/L Account" := HISRevenueLine."Account No.";
                             InvoicePostingBuffer."Global Dimension 1 Code" := HISRevenueLine."Shortcut Dimension 1 Code";
                             InvoicePostingBuffer."Global Dimension 2 Code" := HISRevenueLine."Shortcut Dimension 2 Code";
-                            InvoicePostingBuffer.Amount := -(HISRevenueLine.Amount);
+                            InvoicePostingBuffer.Amount := -HISRevenueLine.Amount;
                             InvoicePostingBuffer.Insert();
+
                         end;
 
+                        // DISCOUNT
                         if HISRevenueLine.Discount <> 0 then begin
-                            //AmountToCustomer += HISRevenueLine.Discount;
+
+                            // AmountToCustomer += HISRevenueLine.Discount;
+
                             InvoicePostingBuffer.SetRange("G/L Account", HISRevenueLine."Discount G/L Account");
                             InvoicePostingBuffer.SetRange("Global Dimension 1 Code", HISRevenueLine."Shortcut Dimension 1 Code");
                             InvoicePostingBuffer.SetRange("Global Dimension 2 Code", HISRevenueLine."Shortcut Dimension 2 Code");
                             if InvoicePostingBuffer.FindFirst() then begin
                                 InvoicePostingBuffer.Amount := InvoicePostingBuffer.Amount + (-HISRevenueLine.Discount);
                                 InvoicePostingBuffer.Modify();
+
                             end else begin
+
                                 InvoicePostingBuffer.Init();
                                 InvoicePostingBuffer."Group ID" := HISRevenueLine."Account No." + ';' + HISRevenueLine."Shortcut Dimension 1 Code" + ';' + HISRevenueLine."Shortcut Dimension 2 Code" + ';Discount';
                                 InvoicePostingBuffer.Type := InvoicePostingBuffer.Type::"G/L Account";
@@ -1870,20 +1912,28 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                                 InvoicePostingBuffer."Global Dimension 1 Code" := HISRevenueLine."Shortcut Dimension 1 Code";
                                 InvoicePostingBuffer."Global Dimension 2 Code" := HISRevenueLine."Shortcut Dimension 2 Code";
                                 InvoicePostingBuffer.Amount := -HISRevenueLine.Discount;
+
                                 InvoicePostingBuffer.Insert();
+
                             end;
                         end;
 
+                        // MOU DISCOUNT
                         if HISRevenueLine."MOU Discount" <> 0 then begin
-                            //AmountToCustomer += HISRevenueLine.Discount;
+
+                            // AmountToCustomer += HISRevenueLine.Discount;
+
                             InvoicePostingBuffer.SetRange("G/L Account", HISRevenueLine."MOU Discount G/L Account");
+
                             InvoicePostingBuffer.SetRange("Global Dimension 1 Code", HISRevenueLine."Shortcut Dimension 1 Code");
                             InvoicePostingBuffer.SetRange("Global Dimension 2 Code", HISRevenueLine."Shortcut Dimension 2 Code");
                             if InvoicePostingBuffer.FindFirst() then begin
                                 InvoicePostingBuffer.Amount := InvoicePostingBuffer.Amount + (-HISRevenueLine."MOU Discount");
                                 InvoicePostingBuffer.Modify();
+
                             end else begin
                                 InvoicePostingBuffer.Init();
+
                                 InvoicePostingBuffer."Group ID" := HISRevenueLine."Account No." + ';' + HISRevenueLine."Shortcut Dimension 1 Code" + ';' + HISRevenueLine."Shortcut Dimension 2 Code" + ';MOUDiscount';
                                 InvoicePostingBuffer.Type := InvoicePostingBuffer.Type::"G/L Account";
                                 InvoicePostingBuffer."G/L Account" := HISRevenueLine."MOU Discount G/L Account";
@@ -1891,56 +1941,71 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                                 InvoicePostingBuffer."Global Dimension 2 Code" := HISRevenueLine."Shortcut Dimension 2 Code";
                                 InvoicePostingBuffer.Amount := -HISRevenueLine."MOU Discount";
                                 InvoicePostingBuffer.Insert();
+
                             end;
                         end;
+
                     UNTIL HISRevenueLine.NEXT() = 0;
 
-                GenJournalLine.Reset();
-                GenJournalLine.SetRange("Journal Template Name", IntegrationSetupLine."General Journal Template Code");
-                GenJournalLine.SetRange("Journal Batch Name", IntegrationSetupLine."General Journal Batch Code");
+                // GET LAST JOURNAL LINE
+                GenJournalLine.RESET();
+
+                GenJournalLine.SETRANGE("Journal Template Name", IntegrationSetupLine."General Journal Template Code");
+
+                GenJournalLine.SETRANGE("Journal Batch Name", IntegrationSetupLine."General Journal Batch Code");
                 if GenJournalLine.FindLast() then
                     LineNo := GenJournalLine."Line No."
                 else
                     LineNo := 0;
 
-                InvoicePostingBuffer.Reset();
+                // POST REVENUE / DISCOUNT / MOU DISCOUNT
+                InvoicePostingBuffer.RESET();
                 InvoicePostingBuffer.SetFilter(Amount, '<>0');
                 if InvoicePostingBuffer.FindSet() then
                     repeat
+
                         LineNo += 10000;
+
                         GenJournalLine.INIT();
+
                         GenJournalLine.VALIDATE(GenJournalLine."Journal Template Name", IntegrationSetupLine."General Journal Template Code");
                         GenJournalLine.VALIDATE(GenJournalLine."Journal Batch Name", IntegrationSetupLine."General Journal Batch Code");
                         GenJournalLine."Line No." := LineNo;
-                        IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::Revenue) AND (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::Invoice) THEN
+
+                        IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::Revenue) AND
+                           (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::Invoice)
+                        THEN
                             GenJournalLine.VALIDATE("Document Type", GenJournalLine."Document Type"::Invoice)
                         ELSE
-                            IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::"Revenue Cancel") AND (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::"Credit Memo") THEN
+                            IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::"Revenue Cancel") AND
+                               (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::"Credit Memo")
+                            THEN
                                 GenJournalLine.VALIDATE("Document Type", GenJournalLine."Document Type"::"Credit Memo");
-
                         GenJournalLine.VALIDATE("Document No.", HISRevenueHeader."Document No.");
                         GenJournalLine.VALIDATE("Document Date", HISRevenueHeader."Document Date");
-                        GenJournalLine.VALIDATE("Posting Date", HISRevenueHeader."Posting Date");
+                        if HISRevenueHeader."Posting Date" <> 0D then
+                            GenJournalLine.VALIDATE("Posting Date", HISRevenueHeader."Posting Date")
+                        else
+                            GenJournalLine.VALIDATE("Posting Date", HISRevenueHeader."Document Date");
                         GenJournalLine.VALIDATE("Account Type", GenJournalLine."Account Type"::"G/L Account");
                         GenJournalLine.VALIDATE("Account No.", InvoicePostingBuffer."G/L Account");
                         GenJournalLine."Location Code" := HISRevenueHeader."Location Code";
                         GenJournalLine."Your Reference" := HISRevenueHeader."Reference Invoice No.";
-                        IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::Revenue) AND (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::Invoice) THEN
+                        IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::Revenue) AND
+                           (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::Invoice)
+                        THEN
                             GenJournalLine.VALIDATE(Amount, InvoicePostingBuffer.Amount)
-                        else
+                        ELSE
                             GenJournalLine.VALIDATE(Amount, -InvoicePostingBuffer.Amount);
-                        //GenJournalLine.VALIDATE("Bal. Account Type", GenJournalLine."Bal. Account Type"::Customer);
-                        //GenJournalLine.Validate("Bal. Account No.", HISRevenueHeader."Customer No.");
                         if InvoicePostingBuffer."Global Dimension 1 Code" <> '' then begin
                             GenJournalLine.VALIDATE("Location Code", InvoicePostingBuffer."Global Dimension 1 Code");
                             GenJournalLine.VALIDATE("Shortcut Dimension 1 Code", InvoicePostingBuffer."Global Dimension 1 Code");
+
                         end;
 
                         if InvoicePostingBuffer."Global Dimension 2 Code" <> '' then
                             GenJournalLine.VALIDATE("Shortcut Dimension 2 Code", GetMappedDimension(InvoicePostingBuffer."Global Dimension 2 Code"));
-
                         GenJournalLine.VALIDATE("External Document No.", HISRevenueHeader."External Document No.");
-
                         GenJournalLine."E3 HIS Document Type" := HISRevenueHeader."HIS Document Type";
                         GenJournalLine."E3 UHID" := HISRevenueHeader."UHID";
                         GenJournalLine."E3 Patient Name" := HISRevenueHeader."Patient Name";
@@ -1955,43 +2020,65 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                             PostGenJnlLine.RunWithCheck(GenJournalLine)
                         else
                             GenJournalLine.INSERT();
+
                     until InvoicePostingBuffer.Next() = 0;
 
+                // PATIENT PAYABLE
+                // Amount  : Revenue Header
+                // Account : E3 Revenue HIS Doc. Type Setup
                 if PatientPayble <> 0 then begin
+                    RevenueHISDocTypeSetup.RESET();
+                    RevenueHISDocTypeSetup.SETRANGE("HIS Document Type", HISRevenueHeader."HIS Document Type");
+                    RevenueHISDocTypeSetup.FINDFIRST();
+                    RevenueHISDocTypeSetup.TESTFIELD("Cash/Patient Payable");
+
                     LineNo += 10000;
+
                     GenJournalLine.INIT();
+
                     GenJournalLine.VALIDATE(GenJournalLine."Journal Template Name", IntegrationSetupLine."General Journal Template Code");
                     GenJournalLine.VALIDATE(GenJournalLine."Journal Batch Name", IntegrationSetupLine."General Journal Batch Code");
                     GenJournalLine."Line No." := LineNo;
-                    IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::Revenue) AND (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::Invoice) THEN
+
+                    IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::Revenue) AND
+                       (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::Invoice)
+                    THEN
                         GenJournalLine.VALIDATE("Document Type", GenJournalLine."Document Type"::Invoice)
                     ELSE
-                        IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::"Revenue Cancel") AND (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::"Credit Memo") THEN
+                        IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::"Revenue Cancel") AND
+                           (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::"Credit Memo")
+                        THEN
                             GenJournalLine.VALIDATE("Document Type", GenJournalLine."Document Type"::"Credit Memo");
 
                     GenJournalLine.VALIDATE("Document No.", HISRevenueHeader."Document No.");
                     GenJournalLine.VALIDATE("Document Date", HISRevenueHeader."Document Date");
-                    GenJournalLine.VALIDATE("Posting Date", HISRevenueHeader."Posting Date");
-                    GenJournalLine.VALIDATE("Account Type", IntegrationSetup."Account Type");
-                    GenJournalLine.VALIDATE("Account No.", IntegrationSetup."Account No.");
+                    if HISRevenueHeader."Posting Date" <> 0D then
+                        GenJournalLine.VALIDATE("Posting Date", HISRevenueHeader."Posting Date")
+                    else
+                        GenJournalLine.VALIDATE("Posting Date", HISRevenueHeader."Document Date");
+
+                    // Patient Payable G/L Account
+                    // comes from E3 Revenue HIS Doc. Type Setup
+                    GenJournalLine.VALIDATE("Account Type", GenJournalLine."Account Type"::"G/L Account");
+                    GenJournalLine.VALIDATE("Account No.", RevenueHISDocTypeSetup."Cash/Patient Payable");
                     GenJournalLine."Location Code" := HISRevenueHeader."Location Code";
                     GenJournalLine."Your Reference" := HISRevenueHeader."Reference Invoice No.";
-                    IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::Revenue) AND (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::Invoice) THEN
+                    IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::Revenue) AND
+                       (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::Invoice)
+                    THEN
                         GenJournalLine.VALIDATE(Amount, PatientPayble)
-                    else
-                        GenJournalLine.Validate(Amount, -PatientPayble);
-                    //GenJournalLine.VALIDATE("Bal. Account Type", GenJournalLine."Bal. Account Type"::Customer);
-                    //GenJournalLine.Validate("Bal. Account No.", HISRevenueHeader."Customer No.");
+                    ELSE
+                        GenJournalLine.VALIDATE(Amount, -PatientPayble);
+
                     if HISRevenueHeader."Shortcut Dimension 1 Code" <> '' then begin
                         GenJournalLine.VALIDATE("Location Code", HISRevenueHeader."Shortcut Dimension 1 Code");
                         GenJournalLine.VALIDATE("Shortcut Dimension 1 Code", HISRevenueHeader."Shortcut Dimension 1 Code");
+
                     end;
 
                     if HISRevenueHeader."Shortcut Dimension 2 Code" <> '' then
                         GenJournalLine.VALIDATE("Shortcut Dimension 2 Code", GetMappedDimension(HISRevenueHeader."Shortcut Dimension 2 Code"));
-
                     GenJournalLine.VALIDATE("External Document No.", HISRevenueHeader."External Document No.");
-
                     GenJournalLine."E3 HIS Document Type" := HISRevenueHeader."HIS Document Type";
                     GenJournalLine."E3 UHID" := HISRevenueHeader."UHID";
                     GenJournalLine."E3 Patient Name" := HISRevenueHeader."Patient Name";
@@ -2002,37 +2089,55 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                     GenJournalLine."E3 Sponsor Name" := HISRevenueHeader."Sponsor Name";
                     GenJournalLine."E3 Payer Code" := HISRevenueHeader."Payer Code";
                     GenJournalLine."E3 Payer Name" := HISRevenueHeader."Payer Name";
+
                     if IntegrationSetup."Rev./Rev.Cancel Direct Post" then
                         PostGenJnlLine.RunWithCheck(GenJournalLine)
                     else
                         GenJournalLine.INSERT();
+
                 end;
+
+                // PAYOR PAYABLE
+                // Amount  : Revenue Header "Payor Payable"
+                // Account : Customer - UNCHANGED
 
                 if AmountToCustomer <> 0 then begin
                     LineNo += 10000;
                     GenJournalLine.INIT();
+
                     GenJournalLine.VALIDATE(GenJournalLine."Journal Template Name", IntegrationSetupLine."General Journal Template Code");
                     GenJournalLine.VALIDATE(GenJournalLine."Journal Batch Name", IntegrationSetupLine."General Journal Batch Code");
                     GenJournalLine."Line No." := LineNo;
-                    IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::Revenue) AND (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::Invoice) THEN
+
+                    IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::Revenue) AND
+                       (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::Invoice)
+                    THEN
                         GenJournalLine.VALIDATE("Document Type", GenJournalLine."Document Type"::Invoice)
                     ELSE
-                        IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::"Revenue Cancel") AND (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::"Credit Memo") THEN
+                        IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::"Revenue Cancel") AND
+                           (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::"Credit Memo")
+                        THEN
                             GenJournalLine.VALIDATE("Document Type", GenJournalLine."Document Type"::"Credit Memo");
 
                     GenJournalLine.VALIDATE("Document No.", HISRevenueHeader."Document No.");
                     GenJournalLine.VALIDATE("Document Date", HISRevenueHeader."Document Date");
-                    GenJournalLine.VALIDATE("Posting Date", HISRevenueHeader."Posting Date");
+                    if HISRevenueHeader."Posting Date" <> 0D then
+                        GenJournalLine.VALIDATE("Posting Date", HISRevenueHeader."Posting Date")
+                    else
+                        GenJournalLine.VALIDATE("Posting Date", HISRevenueHeader."Document Date");
+
+                    // Payor Payable account remains Customer
                     GenJournalLine.VALIDATE("Account Type", GenJournalLine."Account Type"::Customer);
                     GenJournalLine.VALIDATE("Account No.", HISRevenueHeader."Customer No.");
                     GenJournalLine."Location Code" := HISRevenueHeader."Location Code";
                     GenJournalLine."Your Reference" := HISRevenueHeader."Reference Invoice No.";
-                    IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::Revenue) AND (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::Invoice) THEN
+                    IF (HISRevenueHeader."Record Type" = HISRevenueHeader."Record Type"::Revenue) AND
+                       (HISRevenueHeader."Document Type" = HISRevenueHeader."Document Type"::Invoice)
+                    THEN
                         GenJournalLine.VALIDATE(Amount, AmountToCustomer)
-                    else
+                    ELSE
                         GenJournalLine.VALIDATE(Amount, -AmountToCustomer);
-                    //GenJournalLine.VALIDATE("Bal. Account Type", GenJournalLine."Bal. Account Type"::Customer);
-                    //GenJournalLine.Validate("Bal. Account No.", HISRevenueHeader."Customer No.");
+
                     if HISRevenueHeader."Shortcut Dimension 1 Code" <> '' then begin
                         GenJournalLine.VALIDATE("Location Code", HISRevenueHeader."Shortcut Dimension 1 Code");
                         GenJournalLine.VALIDATE("Shortcut Dimension 1 Code", HISRevenueHeader."Shortcut Dimension 1 Code");
@@ -2040,9 +2145,7 @@ codeunit 50000 "E3 HIS Integration Mgmt."
 
                     if HISRevenueHeader."Shortcut Dimension 2 Code" <> '' then
                         GenJournalLine.VALIDATE("Shortcut Dimension 2 Code", GetMappedDimension(HISRevenueHeader."Shortcut Dimension 2 Code"));
-
                     GenJournalLine.VALIDATE("External Document No.", HISRevenueHeader."External Document No.");
-
                     GenJournalLine."E3 HIS Document Type" := HISRevenueHeader."HIS Document Type";
                     GenJournalLine."E3 UHID" := HISRevenueHeader."UHID";
                     GenJournalLine."E3 Patient Name" := HISRevenueHeader."Patient Name";
@@ -2053,16 +2156,22 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                     GenJournalLine."E3 Sponsor Name" := HISRevenueHeader."Sponsor Name";
                     GenJournalLine."E3 Payer Code" := HISRevenueHeader."Payer Code";
                     GenJournalLine."E3 Payer Name" := HISRevenueHeader."Payer Name";
+
                     if IntegrationSetup."Rev./Rev.Cancel Direct Post" then
                         PostGenJnlLine.RunWithCheck(GenJournalLine)
                     else
                         GenJournalLine.INSERT();
+
                 end;
             end;
+
             HISRevenueHeader."Create Revenue" := TRUE;
             if IntegrationSetup."Rev./Rev.Cancel Direct Post" then
-                HISRevenueHeader."Posted Document No." := HISRevenueHeader."Document No.";
+                HISRevenueHeader."Posted Document No." :=
+                    HISRevenueHeader."Document No.";
+
             HISRevenueHeader.MODIFY();
+
             if IntegrationSetup."Rev./Rev.Cancel Direct Post" then
                 Commit();
         END;
@@ -2713,6 +2822,7 @@ codeunit 50000 "E3 HIS Integration Mgmt."
         SamePANErr: Label 'From postion 3 to 12 in GST Registration No. should be same as it is in PAN No. so delete and then update it.';
         HISSettlementStaging: Record "E3 HIS Settlement Staging";
         HISDoctorPayoutEntries: Record "E3 HIS Doctor Payout";
+        UnBilledEntries: Record "E3 UnBilled Service Revenue";
 
 
 }

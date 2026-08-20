@@ -19,11 +19,13 @@ page 50134 "E3 Gate Entry Outward Header"
                 {
                     ToolTip = 'Specifies the value of the Gate Pass Type field';
                     ApplicationArea = All;
+                    Editable = IsEditable;
                 }
                 field("Entry Type"; Rec."Entry Type")
                 {
                     ToolTip = 'Specifies the value of the Entry Type field';
                     ApplicationArea = All;
+                    Editable = IsEditable;
                 }
                 field("Document No."; Rec."Document No.")
                 {
@@ -35,66 +37,78 @@ page 50134 "E3 Gate Entry Outward Header"
                 {
                     ToolTip = 'Specifies the value of the Purpose Code field';
                     ApplicationArea = All;
+                    Editable = IsEditable;
                 }
                 field("Purpose Description"; Rec."Purpose Description")
                 {
                     ToolTip = 'Specifies the value of the Purpose Description field';
                     ApplicationArea = All;
+                    Editable = IsEditable;
                 }
                 field(Mode; Rec.Mode)
                 {
                     ToolTip = 'Specifies the value of the Mode field';
                     ApplicationArea = All;
+                    Editable = IsEditable;
                 }
                 field("Posting Date"; Rec."Posting Date")
                 {
                     ToolTip = 'Specifies the value of the Posting Date field';
                     ApplicationArea = All;
+                    Editable = IsEditable;
                 }
                 field("From Department Code"; Rec."From Department Code")
                 {
                     ToolTip = 'Specifies the value of the Department Code field';
                     ApplicationArea = All;
                     Caption = 'From Department Code';
+                    Editable = IsEditable;
                 }
                 field("From Department Name"; Rec."From Department Name")
                 {
                     ToolTip = 'Specifies the value of the To Department Code field';
                     ApplicationArea = All;
+                    Editable = IsEditable;
                 }
                 field("To Destination Code"; Rec."To Destination Code")
                 {
                     ToolTip = 'Specifies the value of the To Destination field';
                     ApplicationArea = All;
                     Caption = 'To Destination Code';
+                    Editable = IsEditable;
                 }
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Shortcut Dimension 1 Code field';
+                    Editable = IsEditable;
                 }
                 field("To Destination Name"; Rec."To Destination Name")
                 {
                     ToolTip = 'Specifies the value of the To Destination Name field';
                     ApplicationArea = All;
                     Caption = 'To Destination Name';
+                    Editable = IsEditable;
                 }
                 field("Vendor No."; Rec."Vendor No.")
                 {
                     ToolTip = 'Specifies the value of the Vendor No. field';
                     ApplicationArea = All;
+                    Editable = IsEditable;
                     Caption = 'Party No.';
                 }
                 field("Vendor Name"; Rec."Vendor Name")
                 {
                     ToolTip = 'Specifies the value of the Vendor Name field';
                     ApplicationArea = All;
+                    Editable = IsEditable;
                     Caption = 'Party Name';
                 }
                 field(Person; Rec.Person)
                 {
                     ToolTip = 'Specifies the value of the Person field';
                     ApplicationArea = All;
+                    Editable = IsEditable;
                 }
                 field(Status; Rec.Status)
                 {
@@ -107,22 +121,26 @@ page 50134 "E3 Gate Entry Outward Header"
                 {
                     ToolTip = 'Specifies the value of the Expected Return Date field';
                     ApplicationArea = All;
+                    Editable = IsEditable;
                 }
                 field("Reference Document No."; Rec."Reference Document No.")
                 {
                     ToolTip = 'Specifies the value of the Reference Document No. field';
                     ApplicationArea = All;
+                    Editable = IsEditable;
                 }
                 field(Remarks; Rec.Remarks)
                 {
                     ToolTip = 'Specifies the value of the Remarks field';
                     ApplicationArea = All;
+                    Editable = IsEditable;
                 }
             }
             part(HISPurchaseSubform; "E3 Gate Entry Outward Subform")
             {
                 ApplicationArea = Basic, Suite;
                 UpdatePropagation = Both;
+                Editable = IsEditable;
                 SubPageLink = "Document No." = FIELD("Document No.");
                 Caption = 'Gate Entry Outward Line';
             }
@@ -185,8 +203,6 @@ page 50134 "E3 Gate Entry Outward Header"
                             GateEntryHeader);
                     // Post Gate Pass
                     GateTransfer.PostOutwardGateEntry(Rec, Inward);
-
-
                 end;
             }
             action(SendApproval)
@@ -215,6 +231,36 @@ page 50134 "E3 Gate Entry Outward Header"
                     CurrPage.Update(false);
                 end;
             }
+            action(Reopen)
+            {
+                Caption = 'Reopen';
+                Image = ReOpen;
+                ApplicationArea = All;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                ToolTip = 'Reopens the Gate Entry for modification.';
+
+                trigger OnAction()
+                begin
+                    if Rec.Status <> Rec.Status::"Pending Approval" then
+                        Error('Only documents with Pending Approval status can be reopened.');
+
+                    if not Confirm(
+                        'Do you want to reopen Gate Entry %1?',
+                        true,
+                        Rec."Document No.")
+                    then
+                        exit;
+
+                    Rec.Status := Rec.Status::Open;
+                    Rec.Modify(true);
+
+                    CurrPage.Update(false);
+
+                    Message('Gate Entry %1 has been reopened.', Rec."Document No.");
+                end;
+            }
         }
     }
 
@@ -241,5 +287,24 @@ page 50134 "E3 Gate Entry Outward Header"
         Rec."Document No." := NoSeries.GetNextNo(Rec."No. Series", WorkDate(), true);
         Rec."Shortcut Dimension 1 Code" := ResponsibiltyCenter."Global Dimension 1 Code";
     end;
+
+    trigger OnOpenPage()
+    begin
+        SetPageEditable();
+    end;
+
+    trigger OnAfterGetRecord()
+    begin
+        SetPageEditable();
+    end;
+
+    local procedure SetPageEditable()
+    begin
+        IsEditable := Rec.Status <> Rec.Status::"Pending Approval";
+        IsEditable := Rec.Status <> Rec.Status::Approved;
+    end;
+
+    var
+        IsEditable: Boolean;
 
 }

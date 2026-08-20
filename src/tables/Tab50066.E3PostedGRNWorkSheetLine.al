@@ -16,7 +16,7 @@ table 50066 "E3 GRN Work Sheet Line"
             Caption = 'Line No.';
             DataClassification = CustomerContent;
         }
-        field(3; "Indent Document ID"; BigInteger)
+        field(3; "Indent Document ID"; Code[20])
         {
             Caption = 'Indent Document ID';
             DataClassification = CustomerContent;
@@ -218,15 +218,15 @@ table 50066 "E3 GRN Work Sheet Line"
         {
             Caption = 'Batch No.';
         }
-        field(44; "Manufacturing Date"; DateTime)
+        field(44; "Manufacturing Date"; Date)
         {
             Caption = 'Manufacturing Date';
         }
-        field(45; "Expiry Date"; DateTime)
+        field(45; "Expiry Date"; Date)
         {
             Caption = 'Expiry Date';
         }
-        field(46; "Item Make Code"; Integer)
+        field(46; "Item Make Code"; Code[20])
         {
             Caption = 'Item Make Code';
         }

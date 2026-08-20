@@ -164,6 +164,69 @@ pageextension 50020 "E3 Bank Acc. Ledger Entrie" extends "Bank Account Ledger En
                 end;
             }
         }
+        addafter("Export Payment")
+        {
+            action("Vendor Excel Report")
+            {
+                ApplicationArea = Basic, Suite;
+                Caption = 'Bank Pay Letter';
+                Image = Report;
+
+                trigger OnAction()
+                var
+                    BankAccountLed: Record "Bank Account Ledger Entry";
+                    FirstBankAccountNo: Code[20];
+                    FirstChequeNo: Code[20];
+                begin
+                    CurrPage.SetSelectionFilter(BankAccountLed);
+
+                    if BankAccountLed.IsEmpty() then
+                        Error('Please select at least one bank ledger entry.');
+
+                    // First selected record
+                    BankAccountLed.FindFirst();
+
+                    FirstBankAccountNo := BankAccountLed."Bank Account No.";
+                    FirstChequeNo := BankAccountLed."Cheque No.";
+
+                    if FirstChequeNo = '' then
+                        Error('Cheque No. is blank for the selected record.');
+
+                    // Check all selected records
+                    if BankAccountLed.FindSet() then
+                        repeat
+                            if BankAccountLed."Bank Account No." <> FirstBankAccountNo then
+                                Error(
+                                    'Selected entries must have the same Bank Account No. %1.',
+                                    FirstBankAccountNo);
+
+                            if BankAccountLed."Cheque No." = '' then
+                                Error(
+                                    'Cheque No. is blank for Document No. %1.',
+                                    BankAccountLed."Document No.");
+
+                            if BankAccountLed."Cheque No." <> FirstChequeNo then
+                                Error(
+                                    'You cannot select different Cheque Nos. Selected Cheque No. %1, but Document No. %2 has Cheque No. %3.',
+                                    FirstChequeNo,
+                                    BankAccountLed."Document No.",
+                                    BankAccountLed."Cheque No.");
+
+                        until BankAccountLed.Next() = 0;
+
+                    // Apply filters for report
+                    BankAccountLed.Reset();
+                    BankAccountLed.SetRange("Bank Account No.", FirstBankAccountNo);
+                    BankAccountLed.SetRange("Cheque No.", FirstChequeNo);
+
+                    Report.RunModal(
+                        Report::"Vendor Payment Report",
+                        true,
+                        false,
+                        BankAccountLed);
+                end;
+            }
+        }
     }
 }
 

@@ -10,17 +10,17 @@ table 50065 "E3 GRN Work Sheet Header"
             Caption = 'Document ID';
             DataClassification = CustomerContent;
         }
-        field(2; "Voucher Type"; Integer)
+        field(2; "Voucher Type"; Code[20])
         {
             Caption = 'Voucher Type';
             DataClassification = CustomerContent;
         }
-        field(3; Prefix; Integer)
+        field(3; Prefix; Code[20])
         {
             Caption = 'Prefix';
             DataClassification = CustomerContent;
         }
-        field(4; "Voucher Date"; DateTime)
+        field(4; "Voucher Date"; Date)
         {
             Caption = 'Voucher Date';
             DataClassification = CustomerContent;
@@ -55,7 +55,7 @@ table 50065 "E3 GRN Work Sheet Header"
             Caption = 'Purchase Challan No.';
             DataClassification = CustomerContent;
         }
-        field(11; "Purchase Challan Date"; DateTime)
+        field(11; "Purchase Challan Date"; Date)
         {
             Caption = 'Purchase Challan Date';
             DataClassification = CustomerContent;
@@ -161,11 +161,11 @@ table 50065 "E3 GRN Work Sheet Header"
         {
             Caption = 'GSTIN';
         }
-        field(34; "E-Way Bill No."; Code[30])
+        field(34; "E-Way Bill No."; Code[50])
         {
             Caption = 'E-Way Bill No.';
         }
-        field(35; "E-Way Bill Date"; DateTime)
+        field(35; "E-Way Bill Date"; Date)
         {
             Caption = 'E-Way Bill Date';
         }

@@ -93,7 +93,26 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
                 RunPageLink = "No." = field("No.");
                 RunPageMode = View;
             }
+        }
+        addafter(PayVendor)
+        {
+            action("Vendor NotePad Report")
+            {
+                ApplicationArea = Basic, Suite;
+                Caption = 'Vendor Payment Report_N';
+                Image = xmlport;
+                RunObject = xmlport "Vendor Payment Report_N";
+                RunPageMode = Edit;
+            }
+            action("Vendor Excel Report")
+            {
+                ApplicationArea = Basic, Suite;
+                Caption = 'Vendor Payment Report_Excel';
+                Image = Report;
+                RunObject = report "Vendor Payment Report";
+                RunPageMode = Edit;
 
+            }
         }
     }
     procedure GenerateOrderAddress(var VendorRec: Record Vendor)

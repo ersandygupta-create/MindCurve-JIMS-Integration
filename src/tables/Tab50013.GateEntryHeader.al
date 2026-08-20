@@ -232,5 +232,13 @@ table 50013 "E3 Gate Entry Header"
         end;
     end;
 
+    // trigger OnModify()
+    // begin
+    //     if (xRec.Status = xRec.Status::"Pending Approval") and
+    //        (Rec.Status = Rec.Status::"Pending Approval") then
+    //         Error(
+    //             'Gate Pass %1 is pending approval and cannot be modified.',
+    //             Rec."Document No.");
+    // end;
 
 }

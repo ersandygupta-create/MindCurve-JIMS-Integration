@@ -14,24 +14,22 @@ pageextension 50023 "E3 User Setup Ext" extends "User Setup"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Document Delete Processor field.';
             }
-            field("GL View"; Rec."GL View")
-            {
-                ApplicationArea = All;
-                ToolTip = 'Specifies the value of the GL View field.';
-            }
             field(Payroll; Rec.Payroll)
             {
                 ApplicationArea = All;
+                Visible = false;
                 ToolTip = 'Specifies the value of the Payroll field.';
             }
             field("Item Approval1"; Rec."Item Approval1")
             {
                 ApplicationArea = All;
+                Visible = false;
                 ToolTip = 'Specifies the value of the Item Approval1 field.';
             }
             field("Item Approval2"; Rec."Item Approval2")
             {
                 ApplicationArea = All;
+                Visible = false;
                 ToolTip = 'Specifies the value of the Item Approval2 field.';
             }
             field("PO Line Modify"; Rec."PO Line Modify")
@@ -73,5 +71,19 @@ pageextension 50023 "E3 User Setup Ext" extends "User Setup"
 
         }
     }
-
+    actions
+    {
+        addlast(Processing)
+        {
+            action("E3 Master Permissions")
+            {
+                ApplicationArea = All;
+                Caption = 'Advanced Controls';
+                ToolTip = 'Open the master permissions for the selected user.';
+                Image = Permission;
+                RunObject = page "E3 Advanced User Control Setup";
+                RunPageLink = "User ID" = field("User ID");
+            }
+        }
+    }
 }

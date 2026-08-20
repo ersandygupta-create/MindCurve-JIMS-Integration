@@ -23,6 +23,28 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                     group("E3 Masters Setups")
                     {
                         Caption = 'Setups';
+                        group(UnBilled)
+                        {
+                            Caption = 'UnBilled Revenue';
+                            action("E3 UnBilled Setup")
+                            {
+                                ApplicationArea = Basic, Suite;
+                                Caption = 'ServiceCode Revenue Cr';
+                                Image = Setup;
+                                RunObject = Page "E3 HIS UnBilled Setup";
+                                RunPageMode = Create;
+                                ToolTip = 'Executes the UnBilled Setup Cr action.';
+                            }
+                            action("E3 UnBilled Setup Dr")
+                            {
+                                ApplicationArea = Basic, Suite;
+                                Caption = 'Service Type Dr';
+                                Image = Setup;
+                                RunObject = Page "E3 HIS UnBilled Setup Dr";
+                                RunPageMode = Create;
+                                ToolTip = 'Executes the UnBilled Setup Dr action.';
+                            }
+                        }
                         action("E3 MOP Setup")
                         {
                             ApplicationArea = Basic, Suite;
@@ -57,6 +79,15 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                             Caption = 'Revenue Setup';
                             Image = Setup;
                             RunObject = Page "E3 HIS Revenue Setup";
+                            RunPageMode = Create;
+                            ToolTip = 'Executes the Revenue Setup action.';
+                        }
+                        action("E3 HIS Revenue Setup")
+                        {
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'HIS Document Type Revenue Setup';
+                            Image = Setup;
+                            RunObject = Page "E3 HIS G/L Account Mapping";
                             RunPageMode = Create;
                             ToolTip = 'Executes the Revenue Setup action.';
                         }
@@ -155,6 +186,13 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                             RunPageMode = Create;
                             ToolTip = 'Executes the HIS Customer Mapping Setups action.';
                         }
+                        action(AllowedAdvanceSettlement)
+                        {
+                            Caption = 'Advance Settlement via Invoice';
+                            ApplicationArea = All;
+                            RunObject = Page "E3 Advance Settlement";
+                            ToolTip = 'Specifies the Advance Settlement action.';
+                        }
                     }
                     group("Allow Date")
                     {
@@ -167,6 +205,19 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                             RunObject = Page "Allow Posting Date";
                             RunPageMode = Create;
                             ToolTip = 'Executes the Allow Posting Date action.';
+                        }
+                    }
+                    group(SettlementSetups)
+                    {
+                        Caption = 'Settlement Process Setup';
+                        action("E3 Settlement Process Setup")
+                        {
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Settlement Process Setup';
+                            Image = Setup;
+                            RunObject = Page "E3 Settlement Process Setup";
+                            RunPageMode = Create;
+                            ToolTip = 'Executes the Settlement Process Setup action.';
                         }
                     }
                 }
@@ -770,6 +821,83 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         }
                     }
                 }
+                group(StockConsumption)
+                {
+                    Caption = 'Stock Consumption';
+                    action("Stock Consumption")
+                    {
+                        AccessByPermission = TableData "E3 Stock Consumption Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Stock Consumption Creation';
+                        Image = Archive;
+                        RunObject = Page "E3 Stock Consumption List";
+                        RunPageMode = Create;
+                        ToolTip = 'Create a new Stock Consumption.';
+                    }
+                    action("Posted Stock Consumption")
+                    {
+                        AccessByPermission = TableData "E3 Stock Consumption Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Posted Stock Consumption';
+                        Image = Archive;
+                        RunObject = Page "E3 Posted Stock Cons. List";
+                        RunPageMode = View;
+                        ToolTip = 'Specifies a view Stock Consumption.';
+                    }
+
+                }
+                group(UnBilledRevenue)
+                {
+                    Caption = 'UnBilled Revenue Services';
+                    action("UnBilled Revenue")
+                    {
+                        AccessByPermission = TableData "E3 UnBilled Service Revenue" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'UnBilled Revenue Creation';
+                        Image = Archive;
+                        RunObject = Page "E3 UnBilled Service Revenue";
+                        RunPageMode = Create;
+                        ToolTip = 'Create a new UnBilled Revenue Services.';
+                    }
+                    action("Posted UnBilled Revenue")
+                    {
+                        AccessByPermission = TableData "E3 UnBilled Service Revenue" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Posted UnBilled Revenue';
+                        Image = Archive;
+                        RunObject = Page "E3 Posted UnBilled Service";
+                        RunPageMode = Create;
+                        ToolTip = 'View a Posted UnBilled Revenue Services.';
+                    }
+                }
+                group("IndentSales&Purchase")
+                {
+                    Caption = 'Indent Sale/Purchase Entries';
+                    action("Indent Sale/Purchase Entry")
+                    {
+                        AccessByPermission = TableData "E3 Indent Sale/Purchase Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Indent Sale/Purchase Entries';
+                        Image = Archive;
+                        RunObject = Page "E3 Indent Sale/Purchase List";
+                        RunPageMode = Create;
+                        ToolTip = 'Create a Indent Sale/Purchase List';
+                    }
+                }
+                group("Settlement Data Process")
+                {
+                    Caption = 'Settlement Data Process';
+                    action("Settlement")
+                    {
+                        AccessByPermission = TableData "E3 Indent Sale/Purchase Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'D365 Settlement Data Process';
+                        Image = Create;
+                        RunObject = Page "E3 Organization Receipt List";
+                        RunPageMode = Create;
+                        ToolTip = 'Create a Organization Receipt List';
+                    }
+                }
             }
         }
 
@@ -815,6 +943,109 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         ApplicationArea = All;
                         RunObject = Page "Update UTR No./RTGS";
                         ToolTip = 'Executes the Update UTR No./RTGS action.';
+                    }
+                    action("Account Ledger Excel")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Account Ledger';
+                        Image = Report;
+                        RunObject = report "Account Ledger Report Excel";
+                        RunPageMode = Edit;
+                        ToolTip = 'Executes the Account Ledger action.';
+                    }
+                    action("Purchase Tax Register Excel")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Purchase Tax Register';
+                        Image = Report;
+                        RunObject = report "Purchase Tax Register";
+                        RunPageMode = Edit;
+                        ToolTip = 'Executes the Purchase Tax Register action.';
+                    }
+                    action("Sales Tax Register Excel")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Sales Tax Register';
+                        Image = Report;
+                        RunObject = report "Sales Tax Register";
+                        RunPageMode = Edit;
+                        ToolTip = 'Executes the Sales Tax Register action.';
+                    }
+                }
+                group("E3 Ledger Report")
+                {
+                    Caption = 'Ledger Report';
+                    action("Voucher Print-Posted")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Voucher Print New';
+                        Image = Report;
+                        RunObject = report "Posted Voucher - Post Voucher";
+                        RunPageMode = Edit;
+                        ToolTip = 'Executes the Voucher Print-Posted action.';
+                    }
+                    action("Vendor Ledger Report")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Vendor Ledger Report';
+                        Image = Report;
+                        RunObject = report "Vendor Ledger Report";
+                        RunPageMode = Edit;
+                        ToolTip = 'Executes the Vendor Ledger Report action.';
+                    }
+                    action("Customer Ledger Report")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Customer Ledger Report';
+                        Image = Report;
+                        RunObject = report "Customer Ledger Report";
+                        RunPageMode = Edit;
+                        ToolTip = 'Executes the Customer Ledger Report action.';
+                    }
+                    action("Bank Reconciliation Report")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Bank Reconciliation Report';
+                        Image = Report;
+                        RunObject = report "Print Bank Reconciliatio Rep.";
+                        RunPageMode = Edit;
+                        ToolTip = 'Executes the Bank Reconciliation Report action.';
+                    }
+                    action("TDS Register Report")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'TDS Register Report';
+                        Image = Report;
+                        RunObject = report "TDS Register Report";
+                        RunPageMode = Edit;
+                        ToolTip = 'Executes the TDS Register Report action.';
+                    }
+                    action("Vendor - Payment Advice")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Vendor - Payment Advice';
+                        Image = Report;
+                        RunObject = report "E3 Vendor - Payment Advice";
+                        RunPageMode = Edit;
+                        ToolTip = 'Executes the Vendor - Payment Advice action.';
+                    }
+                    action("Purchase Order Print")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Purchase Order Print';
+                        Image = Report;
+                        RunObject = report "Purchase Order Print";
+                        RunPageMode = Edit;
+                        ToolTip = 'Executes the Purchase Order Print action.';
+                    }
+                    action("TCS Register")
+                    {
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'TCS Register';
+                        Image = Report;
+                        RunObject = report "TCS Register Report";
+                        RunPageMode = Edit;
+                        ToolTip = 'Executes the TCS Register action.';
                     }
                 }
             }
@@ -959,11 +1190,11 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         RunObject = Page "E3 Quotation List";
                         ToolTip = 'Executes the Vendor Quotation action.';
                     }
-                    action(ReleasedQoutation)
+                    action(PurchaseReleased)
                     {
-                        Caption = 'Released Quotation';
+                        Caption = 'Purchase Released';
                         ApplicationArea = All;
-                        RunObject = Page "E3 Released Indent Details";
+                        RunObject = Page "E3 Indent Purchase Processing";
                         ToolTip = 'Executes the Released Quotation List action.';
                     }
                 }
@@ -986,6 +1217,88 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                     RunObject = Page "E3 GRN Work Sheet List";
                     RunPageMode = Create;
                     ToolTip = 'Executes the Posted GRN Work Sheet Entries';
+                }
+                group(RCDetails)
+                {
+                    Caption = 'Purchase Agreement';
+                    Image = Ratecontract;
+                    group(PurchaseAgreement)
+                    {
+                        Caption = 'Purchase Agreement Creation';
+                        action("E3 RC Details")
+                        {
+                            AccessByPermission = TableData "E3 Rate Contract Header" = RIMD;
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Purchase Price Agreement';
+                            Image = List;
+                            RunObject = Page "E3 Rate Contract List";
+                            RunPageMode = Create;
+                            ToolTip = 'Executes the Create Rate Contract Entries action.';
+                        }
+                        action("E3 RC Discount Details")
+                        {
+                            AccessByPermission = TableData "E3 RC Discount Header" = RIMD;
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Purchase Discount Agreement';
+                            Image = List;
+                            RunObject = Page "E3 RC Discount List";
+                            RunPageMode = Create;
+                            ToolTip = 'Executes the Create RC Discount Entries action.';
+                        }
+                    }
+                    group(ApprovedList)
+                    {
+                        Caption = 'Approved Price List';
+                        action("E3 Approved RC Details")
+                        {
+                            AccessByPermission = TableData "E3 Rate Contract Header" = RIMD;
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Approved Purch. Price Aggreement';
+                            Image = List;
+                            RunObject = Page "E3 App. Rate Contract List";
+                            RunPageMode = Create;
+                            ToolTip = 'Executes the Approved Rate Contract Entries action.';
+                        }
+                        action("E3 Approved RC Dis. Details")
+                        {
+                            AccessByPermission = TableData "E3 RC Discount Header" = RIMD;
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Approved Disc. Price Aggreement';
+                            Image = List;
+                            RunObject = Page "E3 App. RC Discount List";
+                            RunPageMode = View;
+                            ToolTip = 'Executes the App. RC Discount List.';
+                        }
+                    }
+                }
+                group(StockTransferSetup)
+                {
+                    Caption = 'Stock Transfer Setups';
+                    action("Stock Transfer")
+                    {
+                        AccessByPermission = TableData "E3 Stock Transfer Setup" = RIMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Stock Transfer Setups';
+                        Image = List;
+                        RunObject = Page "E3 Stock Transfer List";
+                        RunPageMode = View;
+                        ToolTip = 'Executes the Stock Transfer List.';
+                    }
+                }
+                group(Scheme)
+                {
+                    Caption = 'Scheme Type';
+                    action("E3 Scheme Type")
+                    {
+                        AccessByPermission = TableData "E3 Scheme Type" = RIMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Scheme Type';
+                        Image = List;
+                        RunObject = Page "E3 Scheme Type";
+                        RunPageMode = View;
+                        ToolTip = 'Executes the Scheme Type List.';
+
+                    }
                 }
             }
         }

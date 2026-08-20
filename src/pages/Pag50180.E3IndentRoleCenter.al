@@ -73,21 +73,21 @@ page 50180 "E3 Indent Role Center"
                 }
                 group(Quotation)
                 {
-                    Caption = 'Quotation';
+                    Caption = 'Purchase Indent';
 
                     action("Vendor Quotation")
                     {
                         ApplicationArea = All;
-                        Caption = 'Vendor Quotation';
+                        Caption = 'Purchase Indent Creation';
                         Image = Quote;
                         RunObject = Page "E3 Quotation List";
                     }
                     action("Released Quotation")
                     {
                         ApplicationArea = All;
-                        Caption = 'Released Quotation';
+                        Caption = 'Purchase Released';
                         Image = Quote;
-                        RunObject = Page "E3 Released Indent Details";
+                        RunObject = Page "E3 Indent Purchase Processing";
                     }
                 }
                 action("Item Make Master")

@@ -72,6 +72,16 @@ table 50064 "E3 Item Margin"
             DecimalPlaces = 0 : 2;
             DataClassification = CustomerContent;
         }
+        field(9; "Company Value"; Decimal)
+        {
+            Caption = 'Company Value';
+            DataClassification = CustomerContent;
+        }
+        field(10; "Patient Value"; Decimal)
+        {
+            Caption = 'Patient Value';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

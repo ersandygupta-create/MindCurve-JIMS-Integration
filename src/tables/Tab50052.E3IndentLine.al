@@ -48,11 +48,13 @@ table 50052 "E3 Indent Line"
                 Clear("Unit of Measure");
                 Clear("Item Make Code");
                 Clear("Item Make Name");
+                Clear("Margin Fix");
                 if Item.Get("No.") then
                     Description := Item.Description;
                 "Unit of Measure" := Item."Base Unit of Measure";
                 "Item Make Code" := Item."Item Make Code";
                 "Item Make Name" := Item."Make Name";
+                Validate("Margin Fix", Item."Margin Fix");
                 "Purch. Unit of Measure" := Item."Purch. Unit of Measure";
                 if ItemUnitOfMeasure.Get("No.", "Purch. Unit of Measure") then
                     "Qty Per Purch. Unit of Measure" := ItemUnitOfMeasure."Qty. per Unit of Measure";
@@ -205,7 +207,7 @@ table 50052 "E3 Indent Line"
             Caption = 'Entry No.';
             DataClassification = CustomerContent;
         }
-        field(18; "Item Make Code"; Code[30])
+        field(18; "Item Make Code"; Code[20])
         {
             Caption = 'Item Make Code';
             //Editable = false;
@@ -423,7 +425,26 @@ table 50052 "E3 Indent Line"
             DataClassification = CustomerContent;
             Editable = false;
         }
-
+        field(50; MRP; Decimal)
+        {
+            Caption = 'MRP';
+            DataClassification = CustomerContent;
+        }
+        field(51; Scheme; Text[30])
+        {
+            Caption = 'Scheme';
+            DataClassification = CustomerContent;
+        }
+        field(52; Status; Option)
+        {
+            OptionMembers = Open,"Pending Approval",Approved,Rejected,Closed;
+            Caption = 'Status';
+        }
+        field(53; "Margin Fix"; Enum "E3 Margin Fix")
+        {
+            Caption = 'Margin Fix';
+            DataClassification = CustomerContent;
+        }
         field(80285; "Currency Code"; Code[10])
         {
             DataClassification = CustomerContent;

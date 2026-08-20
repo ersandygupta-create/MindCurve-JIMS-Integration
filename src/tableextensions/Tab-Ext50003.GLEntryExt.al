@@ -72,7 +72,7 @@ tableextension 50003 "E3 HIS G/L Entry" extends "G/L Entry"
             DataClassification = CustomerContent;
             Caption = 'Speciality';
         }
-        field(50104; "E3 Sponsor Code"; Code[20])
+        field(50104; "E3 Sponsor Code"; Code[30])
         {
             DataClassification = CustomerContent;
             Caption = 'Sponsor Code';
@@ -82,7 +82,7 @@ tableextension 50003 "E3 HIS G/L Entry" extends "G/L Entry"
             DataClassification = CustomerContent;
             Caption = 'Sponsor Name';
         }
-        field(50106; "E3 Payer Code"; Code[16])
+        field(50106; "E3 Payer Code"; Code[30])
         {
             DataClassification = CustomerContent;
             Caption = 'Payer Code';

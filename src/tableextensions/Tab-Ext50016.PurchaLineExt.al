@@ -43,6 +43,26 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Caption = 'SNo.';
             DataClassification = CustomerContent;
         }
+        field(50010; MRP; Decimal)
+        {
+            Caption = 'MRP';
+            DataClassification = CustomerContent;
+        }
+        field(50011; Scheme; Text[30])
+        {
+            Caption = 'Scheme';
+            DataClassification = CustomerContent;
+        }
+        field(50012; "Margin Fix"; Enum "E3 Margin Fix")
+        {
+            Caption = 'Margin Fix';
+            DataClassification = CustomerContent;
+        }
+        field(50013; "Incl Free Qty in Sale Rate"; Boolean)
+        {
+            Caption = 'Include Free Qty in Sale Rate';
+            DataClassification = CustomerContent;
+        }
         modify("No.")
         {
             trigger OnAfterValidate()

@@ -30,5 +30,17 @@ tableextension 50065 "E3 Location" extends Location
             Caption = 'GST Credit';
             DataClassification = CustomerContent;
         }
+        field(50005; "InterCompany Nos."; Code[20])
+        {
+            Caption = 'InterCompany Nos.';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
+        field(50006; "InterUnit Nos."; Code[20])
+        {
+            Caption = 'InterUnit Nos.';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
     }
 }

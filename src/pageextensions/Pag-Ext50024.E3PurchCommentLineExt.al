@@ -1,12 +1,18 @@
 pageextension 50024 "E3 Purch. Comment Line Ext" extends "Purch. Comment Sheet"
 {
+    DeleteAllowed = false;
     layout
     {
+        modify(Date)
+        {
+            Editable = false;
+        }
         addafter(Date)
         {
             field("Order Terms"; Rec."Order Terms")
             {
                 ApplicationArea = All;
+                Editable = false;
                 ToolTip = 'Specifies the value of the Order Terms field.';
             }
         }

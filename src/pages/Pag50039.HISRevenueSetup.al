@@ -36,7 +36,6 @@ page 50039 "E3 HIS Revenue Setup"
                     ToolTip = 'Specifies the value of the Service Head Name field';
                     ApplicationArea = All;
                 }
-
                 field(OPIP; Rec.OPIP)
                 {
                     ApplicationArea = ALL;

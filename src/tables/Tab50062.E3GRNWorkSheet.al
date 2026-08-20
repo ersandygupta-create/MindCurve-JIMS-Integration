@@ -50,16 +50,33 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Invoice Qty';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalculateNetQtyReceived();
+
+                "Shortage Qty" := "Invoice Qty" - "Receipt Qty";
+            end;
+
         }
         field(9; "Receipt Qty"; Decimal)
         {
             Caption = 'Receipt Qty';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                "Shortage Qty" := "Invoice Qty" - "Receipt Qty";
+                CalculateNetQtyReceived();
+            end;
+
         }
         field(10; "Rejected Qty"; Decimal)
         {
             Caption = 'Rejected Qty';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalculateNetQtyReceived();
+            end;
         }
         field(11; "Lot No."; Code[20])
         {
@@ -95,6 +112,10 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'SKU MRP';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalculateLandedValue();
+            end;
         }
         field(18; "Sale Rate"; Decimal)
         {
@@ -110,11 +131,19 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Staff Sale Rate';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalculateLandedValue();
+            end;
         }
         field(21; "SKU Staff Sale Rate"; Decimal)
         {
             Caption = 'SKU Staff Sale Rate';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalculateLandedValue();
+            end;
         }
         field(22; "Item Make Name"; Text[60])
         {
@@ -145,21 +174,34 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Taxable Amount';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalculateLandedValue();
+            end;
         }
         field(28; "CGST %"; Decimal)
         {
             Caption = 'CGST %';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalculateLandedValue();
+            end;
         }
         field(29; "CGST Amount"; Decimal)
         {
             Caption = 'CGST Amount';
             DataClassification = CustomerContent;
+            Editable = false;
         }
         field(30; "SGST %"; Decimal)
         {
             Caption = 'SGST %';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalculateLandedValue();
+            end;
         }
         field(31; "SGST Amount"; Decimal)
         {
@@ -170,6 +212,10 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'IGST %';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalculateLandedValue();
+            end;
         }
         field(33; "IGST Amount"; Decimal)
         {
@@ -197,7 +243,6 @@ table 50062 "E3 GRN Work Sheet"
         {
             AutoFormatType = 0;
             Caption = 'Quantity Received';
-            DecimalPlaces = 0 : 5;
             Editable = false;
             ToolTip = 'Specifies how many units of the item on the line have been posted as received.';
 
@@ -258,11 +303,22 @@ table 50062 "E3 GRN Work Sheet"
             Caption = 'HSN Code';
             DataClassification = CustomerContent;
             TableRelation = "HSN/SAC".Code;
+            trigger OnValidate()
+            var
+                HSNSAC: Record "HSN/SAC";
+            begin
+                Clear("Item GST Nature");
+
+                if "HSN Code" = '' then
+                    exit;
+
+                if HSNSAC.Get("HSN Code") then
+                    "Item GST Nature" := HSNSAC.GLEN;
+            end;
         }
         field(45; "Indent SKU Qty"; Decimal)
         {
             Caption = 'Requested Quantity';
-            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
         }
         field(46; "Item GST Nature"; Enum "E3 GLEN Type")
@@ -273,20 +329,29 @@ table 50062 "E3 GRN Work Sheet"
         field(47; "OH Amt Net"; Decimal)
         {
             Caption = 'Line Net Amount';
-            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalculateLandedValue();
+            end;
         }
         field(48; "Landed SKU Value"; Decimal)
         {
             Caption = 'Line Landed SKU Value';
-            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalculateLandedValue();
+            end;
         }
         field(49; "Landed SKU Rate"; Decimal)
         {
             Caption = 'Line Landed SKU Rate';
-            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalculateLandedValue();
+            end;
         }
         field(50; Remark; Text[250])
         {
@@ -296,7 +361,6 @@ table 50062 "E3 GRN Work Sheet"
         field(51; Rate; Decimal)
         {
             Caption = 'Purchase Rate';
-            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
         }
         field(52; "Rec SKU QTY"; Decimal)
@@ -307,8 +371,11 @@ table 50062 "E3 GRN Work Sheet"
         field(53; "UGST %"; Decimal)
         {
             Caption = 'UGST %';
-            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                "UGST Amount" := "Taxable Amount" * "UGST %" / 100;
+            end;
         }
         field(54; "UGST Amount"; Decimal)
         {
@@ -370,6 +437,44 @@ table 50062 "E3 GRN Work Sheet"
             Editable = false;
             DataClassification = CustomerContent;
         }
+        field(65; "PO MRP"; Decimal)
+        {
+            Caption = 'PO MRP';
+            DataClassification = CustomerContent;
+        }
+        field(66; Scheme; Text[30])
+        {
+            Caption = 'Scheme';
+            DataClassification = CustomerContent;
+        }
+        field(67; "Net Qty Received"; Decimal)
+        {
+            Caption = 'Net Qty Received';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(68; "Shortage Qty"; Decimal)
+        {
+            Caption = 'Shortage Qty';
+            DataClassification = CustomerContent;
+        }
+        field(69; "Unit of Measure"; Text[50])
+        {
+            Caption = 'Unit of Measure';
+            ToolTip = 'Specifies the unit of measure.';
+        }
+        field(70; Split; Boolean)
+        {
+            Caption = 'Split';
+            DataClassification = CustomerContent;
+        }
+        field(5404; "Qty. per Unit of Measure"; Decimal)
+        {
+            AutoFormatType = 0;
+            Caption = 'Qty. per Unit of Measure';
+            Editable = false;
+            InitValue = 1;
+        }
     }
 
     keys
@@ -384,6 +489,13 @@ table 50062 "E3 GRN Work Sheet"
         PurchPayablesSetup: Record "Purchases & Payables Setup";
         NoSeries: Codeunit "No. Series";
     begin
+        if "GRN Date" = 0D then
+            "GRN Date" := Today;
+
+        if "V Prefix" = '' then
+            "V Prefix" := CopyStr(Format(Date2DMY("GRN Date", 3)), 3, 2);
+
+        Rec.TestField("Invoice Qty");
         Rec."GRN Date" := WorkDate();
         if "Lot No." = '' then begin
             PurchPayablesSetup.Get();
@@ -394,12 +506,17 @@ table 50062 "E3 GRN Work Sheet"
 
     procedure InitFromPurchaseLine(PONo: Code[20])
     var
+        PurchaseHeader: Record "Purchase Header";
         PurchLine: Record "Purchase Line";
         Item: Record Item;
         HSNSAC: Record "HSN/SAC";
         DimensionValue: Record "Dimension Value";
         GeneralLedgerSetup: Record "General Ledger Setup";
         ItemUOM: Record "Item Unit of Measure";
+        GSTPercentage: Decimal;
+        DepartmentValue: Record "Dimension Value";
+        CompanyInformation: Record "Company Information";
+        Vendor: Record Vendor;
 
     begin
         PurchLine.Reset();
@@ -408,7 +525,6 @@ table 50062 "E3 GRN Work Sheet"
 
         if PurchLine.FindSet() then
             repeat
-                // Skip if worksheet line already exists
                 if Get(PurchLine."Document No.", PurchLine."Line No.") then
                     continue;
 
@@ -418,44 +534,84 @@ table 50062 "E3 GRN Work Sheet"
                 "Line No." := PurchLine."Line No.";
                 "Item No." := PurchLine."No.";
                 "Item Name" := PurchLine.Description;
+                "Unit of Measure" := PurchLine."Unit of Measure";
+                "Qty. per Unit of Measure" := PurchLine."Qty. per Unit of Measure";
                 "PO Qty" := PurchLine.Quantity;
-                "Line Gross" := PurchLine."Line Amount";
-                "Outstanding Qty" := PurchLine."Quantity";
                 "Receipt Qty" := PurchLine."Qty. to Receive";
                 "Invoice Qty" := PurchLine."Qty. to Invoice";
+                "Line Gross" := PurchLine."Line Amount";
+                "Outstanding Qty" := PurchLine."Quantity";
                 "Quantity Received" := PurchLine."Quantity Received";
-                "Invoice Qty" := PurchLine."Qty. to Invoice";
                 "Rejected Qty" := PurchLine."Qty. to Reject (C.E.)";
+                Validate("PO MRP", PurchLine.MRP);
+                Validate(MRP, PurchLine.MRP);
+                Scheme := PurchLine.Scheme;
                 "Base Unit of Measure" := PurchLine."Unit of Measure Code";
                 "Line Discount Amount" := PurchLine."Line Discount Amount";
                 "Line Discount Percentage" := PurchLine."Line Discount %";
                 "Item Make Code" := PurchLine."Item Make Code";
                 "Item Make Name" := PurchLine."Item Make Name";
-                "GST Type Code" := Format(PurchLine."GST Jurisdiction Type");
+                "GST Type Code" := Format(PurchLine."GST Vendor Type");
                 Validate("Department Code", PurchLine."Shortcut Dimension 2 Code");
+                DepartmentValue.Reset();
+                DepartmentValue.SetRange("Dimension Code", GeneralLedgerSetup."Global Dimension 2 Code");
+                DepartmentValue.SetRange(Code, "Department Code");
+                if DepartmentValue.FindFirst() then
+                    "Department Name" := DepartmentValue.Name;
                 Validate("HSN Code", PurchLine."HSN/SAC Code");
                 "Indent Doc ID" := PurchLine."Indent No.";
                 "Indent Line No." := PurchLine."Indent Line No.";
                 "Unit Code" := PurchLine."Unit of Measure";
                 "Indent SKU Qty" := PurchLine.Quantity;
                 "Taxable Amount" := PurchLine."Line Amount";
+                "Voucher Type" := '26';
                 "Department Code" := PurchLine."Shortcut Dimension 2 Code";
+                "Final Discount %" := PurchLine."Line Discount %";
+                "Final Discount Amount" := PurchLine."Line Discount Amount";
+                Rate := PurchLine."Direct Unit Cost";
 
                 GeneralLedgerSetup.Get();
                 Clear("Department Name");
                 if "Department Code" <> '' then begin
-                    if DimensionValue.Get(
-                        GeneralLedgerSetup."Global Dimension 2 Code",
-                        "Department Code")
+                    if DimensionValue.Get(GeneralLedgerSetup."Global Dimension 2 Code", "Department Code")
                     then
                         "Department Name" := DimensionValue.Name;
                 end;
                 "OH Amt Net" := PurchLine."Line Amount";
                 "Indent SKU Qty" := PurchLine.Quantity;
                 "Vendor Code" := PurchLine."Buy-from Vendor No.";
+                if PurchLine."Buy-from Vendor No." <> '' then begin
 
-                if HSNSAC.Get(PurchLine."HSN/SAC Code") then
-                    "Item GST Nature" := HSNSAC.GLEN;
+                    Vendor.Reset();
+                    Vendor.SetRange("No.", PurchLine."Buy-from Vendor No.");
+
+                    if Vendor.FindFirst() then
+                        "Supplier State" := Vendor."State Code";
+                end;
+                if Evaluate(GSTPercentage, PurchLine."GST Group Code") then begin
+                    if "Supplier State" = PurchaseHeader."Location State Code" then begin
+                        // Same State
+                        "CGST %" := GSTPercentage / 2;
+                        "SGST %" := GSTPercentage / 2;
+                        "IGST %" := 0;
+                    end else begin
+                        // Inter State
+                        "CGST %" := 0;
+                        "SGST %" := 0;
+                        "IGST %" := GSTPercentage;
+                    end;
+                end;
+                CalculateLandedValue();
+
+                if PurchLine."HSN/SAC Code" <> '' then begin
+                    "HSN Code" := PurchLine."HSN/SAC Code";
+                    HSNSAC.Reset();
+                    HSNSAC.SetRange(Code, PurchLine."HSN/SAC Code");
+                    if HSNSAC.FindFirst() then begin
+                        if PurchLine."GST Group Code" <> '' then
+                            "Item GST Nature" := HSNSAC.GLEN;
+                    end;
+                end;
 
                 if Item.Get(PurchLine."No.") then begin
                     "Lot No." := Item."Lot Nos.";
@@ -467,8 +623,235 @@ table 50062 "E3 GRN Work Sheet"
                         "Rec SKU QTY" := PurchLine.Quantity * ItemUOM."Qty. per Unit of Measure"
                     else
                         "Rec SKU QTY" := PurchLine.Quantity;
+                CalculateLandedValue();
 
                 Insert(true);
             until PurchLine.Next() = 0;
+    end;
+
+    local procedure CalculateNetQtyReceived()
+    begin
+        "Shortage Qty" := "Invoice Qty" - "Receipt Qty";
+
+        "Net Qty Received" :=
+            "Invoice Qty" - "Shortage Qty" - "Rejected Qty";
+        "Receipt Qty" := "Invoice Qty" + "Free Qty";
+    end;
+
+    local procedure CalculateLandedValue()
+    var
+        PurchaseHeader: Record "Purchase Header";
+    begin
+        if PurchaseHeader.Get(PurchaseHeader."Document Type"::Order, "PO No.")
+        then begin
+            if "Supplier State" = PurchaseHeader."Location State Code" then begin
+                // Same State
+                "IGST Amount" := 0;
+                "CGST Amount" := "Taxable Amount" * "CGST %" / 100;
+                "SGST Amount" := "Taxable Amount" * "SGST %" / 100;
+            end else begin
+                // Interstate
+                "CGST Amount" := 0;
+                "SGST Amount" := 0;
+                "IGST Amount" := "Taxable Amount" * "IGST %" / 100;
+            end;
+
+            "UGST Amount" := "Taxable Amount" * "UGST %" / 100;
+
+            "Landed SKU Value" :=
+                "OH Amt Net"
+                + "CGST Amount"
+                + "SGST Amount"
+                + "IGST Amount"
+                + "UGST Amount";
+
+            if "Rec SKU QTY" <> 0 then
+                "Landed SKU Rate" := "Landed SKU Value" / "Rec SKU QTY"
+            else
+                "Landed SKU Rate" := 0;
+
+            if "Indent SKU Qty" <> 0 then
+                "Staff Sale Rate" := ("Taxable Amount" + "Line Discount Amount" + "CGST Amount" + "SGST Amount" + "IGST Amount" + "UGST Amount") / "Indent SKU Qty"
+            else
+                "Staff Sale Rate" := 0;
+
+            if "Qty. per Unit of Measure" <> 0 then
+                "SKU Staff Sale Rate" := "Staff Sale Rate" / "Qty. per Unit of Measure"
+            else
+                "SKU Staff Sale Rate" := 0;
+
+            if "Qty. per Unit of Measure" <> 0 then
+                "SKU MRP" := MRP / "Qty. per Unit of Measure"
+            else
+                "SKU MRP" := 0;
+        end;
+    end;
+
+    procedure AssignLotNoToPurchaseLine()
+    var
+        PurchLine: Record "Purchase Line";
+        ReservationEntry: Record "Reservation Entry";
+        CreateReservEntry: Codeunit "Create Reserv. Entry";
+        Item: Record Item;
+        QtyToHandle: Decimal;
+        QtyToHandleBase: Decimal;
+        Vendor: Record Vendor;
+        LotInformation: Record "Lot No. Information";
+    begin
+        // Get Purchase Line
+        PurchLine.Reset();
+        PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+        PurchLine.SetRange("Document No.", "PO No.");
+        PurchLine.SetRange("Line No.", "Line No.");
+
+        if not PurchLine.FindFirst() then
+            Error('Purchase Line not found for PO %1, Line %2.', "PO No.", "Line No.");
+
+        PurchLine.TestField(Type, PurchLine.Type::Item);
+        PurchLine.TestField("No.");
+
+        Item.Get(PurchLine."No.");
+
+        if Item."Item Tracking Code" = '' then
+            Error('Item %1 does not have an Item Tracking Code.', Item."No.");
+
+        TestField("Lot No.");
+
+        // Check quantity
+        if "Receipt Qty" <= 0 then
+            Error(
+                'Receipt Qty must be greater than zero for Item %1.',
+                "Item No.");
+
+        if "Receipt Qty" > PurchLine."Qty. to Receive" then
+            Error(
+                'Receipt Qty %1 cannot be greater than Purchase Line Qty. to Receive %2.',
+                "Receipt Qty",
+                PurchLine."Qty. to Receive");
+
+        ReservationEntry.Reset();
+        ReservationEntry.SetRange("Source Type", Database::"Purchase Line");
+        ReservationEntry.SetRange("Source Subtype", PurchLine."Document Type");
+        ReservationEntry.SetRange("Source ID", PurchLine."Document No.");
+        ReservationEntry.SetRange("Source Ref. No.", PurchLine."Line No.");
+
+        if not ReservationEntry.IsEmpty() then
+            ReservationEntry.DeleteAll(true);
+
+        QtyToHandle := "Receipt Qty";
+
+        if "Rec SKU QTY" <> 0 then
+            QtyToHandleBase := "Rec SKU QTY"
+        else
+            QtyToHandleBase :=
+                Round(
+                    QtyToHandle * PurchLine."Qty. per Unit of Measure",
+                    0.00001);
+
+        Clear(ReservationEntry);
+
+        ReservationEntry.Init();
+        ReservationEntry."Lot No." := "Lot No.";
+        ReservationEntry.Quantity := QtyToHandle;
+        ReservationEntry."Quantity (Base)" := QtyToHandleBase;
+
+        if "Expiry Date" <> 0D then
+            ReservationEntry."Expiration Date" := "Expiry Date";
+
+        // Create Purchase Line reservation/tracking entry
+        CreateReservEntry.SetDates(
+            0D,
+            ReservationEntry."Expiration Date");
+
+        CreateReservEntry.CreateReservEntryFor(
+            Database::"Purchase Line",
+            PurchLine."Document Type",
+            PurchLine."Document No.",
+            '',
+            0,
+            PurchLine."Line No.",
+            PurchLine."Qty. per Unit of Measure",
+            QtyToHandle,
+            QtyToHandleBase,
+            ReservationEntry);
+
+        // Set Qty. to Handle / Invoice
+        CreateReservEntry.SetQtyToHandleAndInvoice(
+            QtyToHandleBase,
+            QtyToHandleBase);
+
+        // Create reservation entry
+        CreateReservEntry.CreateEntry(
+            PurchLine."No.",
+            PurchLine."Variant Code",
+            PurchLine."Location Code",
+            PurchLine.Description,
+            PurchLine."Expected Receipt Date",
+            0D,
+            0,
+            ReservationEntry."Reservation Status"::Surplus);
+
+        LotInformation.Reset();
+        LotInformation.SetRange("Item No.", PurchLine."No.");
+        LotInformation.SetRange("Lot No.", "Lot No.");
+
+        if not LotInformation.FindFirst() then begin
+            LotInformation.Init();
+            LotInformation."Item No." := PurchLine."No.";
+            LotInformation."Lot No." := "Lot No.";
+            LotInformation.Insert(true);
+        end;
+
+        LotInformation."Item Name" := Item.Description;
+        LotInformation."Vendor Code" := PurchLine."Buy-from Vendor No.";
+        if Vendor.Get(PurchLine."Buy-from Vendor No.") then
+            LotInformation."Vendor Name" := Vendor.Name;
+        LotInformation."Manufacturing Date" := "Manufacturing Date";
+        LotInformation."Expairy Date" := "Expiry Date";
+
+        LotInformation.Modify(true);
+
+    end;
+
+    procedure SplitGRNLine(
+        var SelectedLine: Record "E3 GRN Work Sheet";
+        SplitQty: Decimal)
+    var
+        NewLine: Record "E3 GRN Work Sheet";
+        LastLine: Record "E3 GRN Work Sheet";
+        NextLineNo: Integer;
+        RemainingQty: Decimal;
+    begin
+        if SplitQty <= 0 then
+            Error('Split Quantity must be greater than zero.');
+
+        if SplitQty >= SelectedLine."Receipt Qty" then
+            Error('Split Quantity %1 must be less than Receipt Quantity %2.', SplitQty, SelectedLine."Receipt Qty");
+        LastLine.Reset();
+        LastLine.SetRange("PO No.", SelectedLine."PO No.");
+
+        if LastLine.FindLast() then
+            NextLineNo := LastLine."Line No." + 10000
+        else
+            NextLineNo := 10000;
+        RemainingQty := SelectedLine."Receipt Qty" - SplitQty;
+        NewLine := SelectedLine;
+        NewLine."Line No." := NextLineNo;
+        NewLine."Receipt Qty" := SplitQty;
+        NewLine."Net Qty Received" := NewLine."Receipt Qty" - NewLine."Rejected Qty";
+        NewLine."Shortage Qty" := NewLine."Invoice Qty" - NewLine."Receipt Qty";
+        NewLine.Split := true;
+        NewLine.Insert(true);
+        SelectedLine."Receipt Qty" := RemainingQty;
+        SelectedLine."Net Qty Received" := SelectedLine."Receipt Qty" - SelectedLine."Rejected Qty";
+        SelectedLine."Shortage Qty" := SelectedLine."Invoice Qty" - SelectedLine."Receipt Qty";
+
+        SelectedLine.Split := true;
+        SelectedLine.Modify(true);
+    end;
+
+    procedure CalculateNetQtyReceived1()
+    begin
+        "Net Qty Received" := "Receipt Qty" - "Rejected Qty";
     end;
 }

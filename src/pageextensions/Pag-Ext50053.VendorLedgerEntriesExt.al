@@ -124,7 +124,7 @@ pageextension 50053 "E3 HIS Vend. Ledger Entries" extends "Vendor Ledger Entries
     {
         addbefore("&Navigate")
         {
-            action("E3 Print Payment Advice")
+            action("Payment Advice")
             {
                 ApplicationArea = All;
                 Caption = 'Print Payment Advice';
@@ -133,17 +133,17 @@ pageextension 50053 "E3 HIS Vend. Ledger Entries" extends "Vendor Ledger Entries
                 PromotedCategory = Process;
                 PromotedIsBig = true;
 
-                // trigger OnAction()
-                // begin
-                //     IF (Rec."Document Type" = Rec."Document Type"::Payment) OR (Rec."Document Type" = Rec."Document Type"::" ") THEN begin
-                //         VendorLedgerEntry.Reset();
-                //         VendorLedgerEntry.SetRange("Document No.", Rec."Document No.");
-                //         VendorLedgerEntry.SetRange("Vendor No.", Rec."Vendor No.");
-                //     //     if VendorLedgerEntry.FindFirst() then
-                //     //         Report.RunModal(Report::"E3 Vendor - Payment Advice", true, false, VendorLedgerEntry);
-                //     // end else
-                //     //     Error('Please Payment Advice Select only Payment Document !');
-                // end;
+                trigger OnAction()
+                begin
+                    IF (Rec."Document Type" = Rec."Document Type"::Payment) OR (Rec."Document Type" = Rec."Document Type"::" ") THEN begin
+                        VendorLedgerEntry.Reset();
+                        VendorLedgerEntry.SetRange("Document No.", Rec."Document No.");
+                        VendorLedgerEntry.SetRange("Vendor No.", Rec."Vendor No.");
+                        if VendorLedgerEntry.FindFirst() then
+                            Report.RunModal(Report::"E3 Vendor - Payment Advice", true, false, VendorLedgerEntry);
+                    end else
+                        Error('Please Payment Advice Select only Payment Document !');
+                end;
             }
         }
     }

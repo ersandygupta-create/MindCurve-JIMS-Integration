@@ -2,6 +2,21 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
 {
     fields
     {
+        modify("Document Date")
+        {
+            trigger OnAfterValidate()
+            begin
+                ValidateDocumentDate();
+            end;
+        }
+
+        modify("Posting Date")
+        {
+            trigger OnAfterValidate()
+            begin
+                ValidateDocumentDate();
+            end;
+        }
         field(50000; "E3 Capex Type"; Enum "E3 Capex Type")
         {
             Caption = 'Capex Type';
@@ -84,6 +99,21 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Caption = 'Indent No.';
             DataClassification = CustomerContent;
         }
+        field(50011; "Exp. CN Value"; Decimal)
+        {
+            Caption = 'Exp. CN Value';
+            DataClassification = CustomerContent;
+        }
 
     }
+    local procedure ValidateDocumentDate()
+    begin
+        if (Rec."Document Date" <> 0D) and
+           (Rec."Posting Date" <> 0D) and
+           (Rec."Document Date" < Rec."Posting Date") then
+            Error(
+                'Document Date %1 cannot be greater than Posting Date %2.',
+                Rec."Document Date",
+                Rec."Posting Date");
+    end;
 }

@@ -1,6 +1,6 @@
 page 50161 "E3 Quotation Card"
 {
-    Caption = 'Purchase Indent Card';
+    Caption = 'Purchase Creation Card';
     DeleteAllowed = false;
     InsertAllowed = false;
     ModifyAllowed = true;
@@ -90,90 +90,25 @@ page 50161 "E3 Quotation Card"
             }
         }
     }
-
     actions
     {
         area(Processing)
         {
-            action(CreatePO)
+            action(Release)
             {
-                Caption = 'Create Purchase Order';
+                Caption = 'Release';
                 ApplicationArea = All;
-                Image = CreateDoc;
+                Image = ReleaseDoc;
+                Promoted = true;
+                PromotedCategory = Process;
 
                 trigger OnAction()
                 var
-                    Location: Record Location;
-                    IndentLine: Record "E3 Indent Line";
-                    PONos: Text[200];
-                    WarningRequired: Boolean;
+                    IndentProcessing: Record "E3 Indent Purchase Processing";
                 begin
-                    if not Confirm('Do you want to create Purchase Order?', true) then
-                        exit;
-                    Rec.TestField("Location Code");
+                    IndentProcessing.CreateProcessingLines(Rec."Document No.");
 
-                    Location.Get(Rec."Location Code");
-                    Location.TestField("E3 Indent PO Series");
-
-                    IndentLine.Reset();
-                    IndentLine.SetRange("Document No.", Rec."Document No.");
-                    IndentLine.SetRange("Vendor PO Creation", true);
-
-                    if IndentLine.FindSet() then
-                        repeat
-                            if IndentLine."Ordered Qty" > IndentLine."Approved Qty" then
-                                WarningRequired := true;
-
-                            if IndentLine."Ordered Qty" <= 0 then
-                                Error(
-                                    'Ordered Qty must be greater than zero for Item %1, Line No. %2.',
-                                    IndentLine."No.",
-                                    IndentLine."Line No.");
-                        until IndentLine.Next() = 0;
-
-                    // Show warning only
-                    if WarningRequired then
-                        if not Confirm(
-                            'Warning: Ordered Qty is greater than Approved Qty.\Do you want to continue creating the Purchase Order?',
-                            false)
-                        then
-                            exit;
-
-                    IndentLine.Reset();
-                    IndentLine.SetRange("Document No.", Rec."Document No.");
-
-                    Clear(CreatePurchaseOrders);
-                    CreatePurchaseOrders.SetNoSeries(Location."E3 Indent PO Series");
-                    CreatePurchaseOrders.SetTableView(IndentLine);
-                    CreatePurchaseOrders.RunModal();
-
-                    Clear(PONos);
-
-                    IndentLine.Reset();
-                    IndentLine.SetRange("Document No.", Rec."Document No.");
-
-                    if IndentLine.FindSet() then
-                        repeat
-                            if IndentLine."Purchase Order No." <> '' then begin
-                                if StrPos(
-                                    ',' + PONos + ',',
-                                    ',' + IndentLine."Purchase Order No." + ',') = 0
-                                then begin
-                                    if PONos = '' then
-                                        PONos := IndentLine."Purchase Order No."
-                                    else
-                                        PONos += ', ' + IndentLine."Purchase Order No.";
-                                end;
-                            end;
-                        until IndentLine.Next() = 0;
-
-                    if PONos <> '' then
-                        Message(
-                            'Purchase Order(s) created successfully.%1PO No.(s): %2',
-                            '\',
-                            PONos)
-                    else
-                        Message('Purchase Order created successfully.');
+                    CurrPage.Update(false);
                 end;
             }
         }

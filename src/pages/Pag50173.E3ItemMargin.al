@@ -49,7 +49,20 @@ page 50173 "E3 Item Margin List"
                 field(Value; Rec.Value)
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the margin value.';
+                }
+                field("Company Value"; Rec."Company Value")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Company Value';
+                    ToolTip = 'Specifies a value Company value';
+                }
+                field("Patient Value"; Rec."Patient Value")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Patient Value';
+                    ToolTip = 'Specifies a value Patient';
                 }
             }
         }

@@ -32,6 +32,11 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 ShowMandatory = true;
                 ToolTip = 'Specifies the value of Name field.';
             }
+            field("Composition Name"; Rec."Composition Name")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the Composition Name for the item.';
+            }
         }
         addlast(content)
         {
@@ -237,6 +242,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 {
                     ApplicationArea = All;
                     ShowMandatory = Rec."Margin Fix" = Rec."Margin Fix"::" ";
+                    Caption = 'Type of RC';
                     ToolTip = 'Specifies the value of Margin Fix field.';
                 }
                 field("E3 Margin Code"; Rec."E3 Margin Code")
@@ -607,6 +613,20 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     Page.Run(Page::"E3 Medicine Composition", MedicineComposition);
                 end;
             }
+            action("Update Composition Name")
+            {
+                Caption = 'Update Composition Name';
+                ApplicationArea = All;
+                Image = Refresh;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Updates the Composition Name from the Medicine Composition records for the current item.';
+
+                trigger OnAction()
+                begin
+                    UpdateCompositionName();
+                end;
+            }
         }
     }
 
@@ -614,5 +634,39 @@ pageextension 50064 "Item Ext" extends "Item Card"
     begin
         Rec.TestField("Base Unit of Measure");
         exit(true);
+    end;
+
+    local procedure UpdateCompositionName()
+    var
+        MedicineComposition: Record "E3 Medicine Composition";
+        CompositionNames: Text;
+        Separator: Text;
+    begin
+        CompositionNames := '';
+        Separator := '';
+
+        MedicineComposition.Reset();
+        MedicineComposition.SetRange(Code, Rec."No.");
+
+        if MedicineComposition.FindSet() then
+            repeat
+                if MedicineComposition."Medicine Component Name" <> '' then begin
+                    CompositionNames +=
+                        Separator +
+                        MedicineComposition."Medicine Component Name";
+
+                    Separator := ' + ';
+                end;
+            until MedicineComposition.Next() = 0;
+
+        Rec."Composition Name" :=
+            CopyStr(
+                CompositionNames,
+                1,
+                MaxStrLen(Rec."Composition Name"));
+
+        Rec.Modify(true);
+
+        CurrPage.Update(false);
     end;
 }

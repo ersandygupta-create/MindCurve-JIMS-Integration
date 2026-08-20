@@ -19,6 +19,7 @@ page 50153 "E3 Indent Card"
                     ApplicationArea = All;
                     AssistEdit = true;
                     Editable = IsPageEditable;
+                    ToolTip = 'Specifies the unique number assigned to the indent.';
 
                     trigger OnAssistEdit()
                     begin
@@ -35,26 +36,32 @@ page 50153 "E3 Indent Card"
                 {
                     ApplicationArea = All;
                     Editable = IsPageEditable;
+                    ToolTip = 'Specifies the code of the person who created or requested the indent.';
                 }
                 field("Indenter Name"; Rec."Indenter Name")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the name of the person who created or requested the indent.';
                 }
                 field("Requested To"; Rec."Prepared By")
                 {
                     ApplicationArea = All;
-                    Editable = IsPageEditable;
+                    Editable = false;
+                    ToolTip = 'Specifies the user or person to whom the indent is requested.';
                 }
 
                 field("Request Date"; Rec."Request Date")
                 {
                     ApplicationArea = All;
                     Editable = false;
+                    ToolTip = 'Specifies the date on which the indent request was created.';
                 }
                 field("Prepared Date"; Rec."Prepared Date")
                 {
+                    Caption = 'Required Date';
                     ApplicationArea = All;
                     Editable = IsPageEditable;
+                    ToolTip = 'Specifies the date on which the indent was prepared.';
                     trigger OnValidate()
                     begin
                         if Rec."Request Date" = 0D then
@@ -71,36 +78,43 @@ page 50153 "E3 Indent Card"
                 {
                     ApplicationArea = All;
                     Editable = IsPageEditable;
+                    ToolTip = 'Specifies the code of the voucher type associated with the indent.';
                 }
                 field("Voucher Type Name"; Rec."Voucher Type Name")
                 {
                     ApplicationArea = All;
                     Editable = IsPageEditable;
+                    ToolTip = 'Specifies the name of the voucher type associated with the indent.';
                 }
                 field(Remarks; Rec.Remarks)
                 {
                     ApplicationArea = All;
                     Editable = IsPageEditable;
+                    ToolTip = 'Specifies any additional remarks or comments related to the indent.';
                 }
                 field(Status; Rec.Status)
                 {
                     ApplicationArea = All;
                     Editable = false;
+                    ToolTip = 'Specifies the current status of the indent.';
                 }
                 field("Approved By"; Rec."Approved By")
                 {
                     ApplicationArea = All;
                     Editable = IsPageEditable;
+                    ToolTip = 'Specifies the user who approved the indent.';
                 }
                 field("Approval Date Time"; Rec."Approval Date Time")
                 {
                     ApplicationArea = All;
                     Editable = IsPageEditable;
+                    ToolTip = 'Specifies the date and time when the indent was approved.';
                 }
                 field("Entry No."; Rec."Entry No.")
                 {
                     ApplicationArea = All;
                     Editable = IsPageEditable;
+                    ToolTip = 'Specifies the unique entry number associated with the indent.';
                 }
             }
 
@@ -112,54 +126,64 @@ page 50153 "E3 Indent Card"
                     ApplicationArea = All;
                     Caption = 'Business Unit';
                     Editable = IsPageEditable;
+                    ToolTip = 'Specifies the business unit associated with the indent.';
                 }
                 field("Business Unit Name"; Rec."Business Unit Name")
                 {
                     ApplicationArea = All;
                     Editable = false;
+                    ToolTip = 'Specifies the name of the business unit associated with the indent.';
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = All;
                     Editable = IsPageEditable;
                     Caption = 'Department Code';
+                    ToolTip = 'Specifies the department code associated with the indent.';
                 }
                 field("Department Name"; Rec."Department Name")
                 {
                     ApplicationArea = All;
                     Editable = false;
+                    ToolTip = 'Specifies the destination department name for the indent.';
                 }
                 field("To Department Code"; Rec."To Department Code")
                 {
                     ApplicationArea = All;
                     Editable = IsPageEditable;
+                    ToolTip = 'Specifies the department code associated with the indent.';
                 }
                 field("To Department Name"; Rec."To Department Name")
                 {
                     ApplicationArea = All;
                     Editable = IsPageEditable;
+                    ToolTip = 'Specifies the destination department name for the indent.';
                 }
                 field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = All;
                     Editable = IsPageEditable;
+                    ToolTip = 'Specifies the location associated with the indent.';
                 }
 
                 field("Location Name"; Rec."Location Name")
                 {
                     ApplicationArea = All;
                     Editable = false;
+                    ToolTip = 'Specifies the name of the location associated with the indent.';
                 }
                 field("To Location Code"; Rec."To Location Code")
                 {
                     ApplicationArea = All;
                     Editable = IsPageEditable;
+                    ToolTip = 'Specifies the name of the destination code location.';
                 }
 
                 field("To Location Name"; Rec."To Location Name")
                 {
                     ApplicationArea = All;
                     Editable = false;
+                    ToolTip = 'Specifies the name of the destination location.';
                 }
             }
             part(IndentLines; "E3 Indent Line Subform")
@@ -294,7 +318,32 @@ page 50153 "E3 Indent Card"
                     Rec.ShortCloseIndent(Rec);
                 end;
             }
+            action(IndentSlip)
+            {
+                ApplicationArea = All;
+                Caption = 'Indent Slip';
+                Image = Print;
+                Promoted = true;
+                PromotedCategory = Report;
+                ToolTip = 'Print the Indent Slip for the selected Indent Card.';
 
+                trigger OnAction()
+                var
+                    IndentSlip: Record "E3 Indent Header";
+                begin
+                    IndentSlip.Reset();
+                    IndentSlip.SetRange("Document No.", Rec."Document No.");
+
+                    if IndentSlip.FindFirst() then
+                        Report.RunModal(
+                            Report::"E3 Indent Slip",
+                            true,
+                            true,
+                            IndentSlip)
+                    else
+                        Error('No posted gate entry found for Document No. %1.', Rec."Document No.");
+                end;
+            }
         }
     }
     var
@@ -304,6 +353,8 @@ page 50153 "E3 Indent Card"
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
+        if Rec."Prepared By" = '' then
+            Rec."Prepared By" := CopyStr(UserId(), 1, MaxStrLen(Rec."Prepared By"));
         Rec."Request Date" := WorkDate();
         Rec."Source Type" := "E3 Indent Source Type"::D365
     end;

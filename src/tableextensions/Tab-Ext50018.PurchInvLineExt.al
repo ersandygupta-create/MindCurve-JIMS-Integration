@@ -45,6 +45,16 @@ tableextension 50018 "E3 HIS Purch. Inv. Line" extends "Purch. Inv. Line"
             Caption = 'SNo.';
             DataClassification = CustomerContent;
         }
+        field(50010; MRP; Decimal)
+        {
+            Caption = 'MRP';
+            DataClassification = CustomerContent;
+        }
+        field(50011; Scheme; Text[30])
+        {
+            Caption = 'Scheme';
+            DataClassification = CustomerContent;
+        }
 
     }
 }

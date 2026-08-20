@@ -39,5 +39,15 @@ tableextension 50017 "E3 HIS Purch. Recpt. Line" extends "Purch. Rcpt. Line"
             Caption = 'SNo.';
             DataClassification = CustomerContent;
         }
+        field(50010; MRP; Decimal)
+        {
+            Caption = 'MRP';
+            DataClassification = CustomerContent;
+        }
+        field(50011; Scheme; Text[30])
+        {
+            Caption = 'Scheme';
+            DataClassification = CustomerContent;
+        }
     }
 }

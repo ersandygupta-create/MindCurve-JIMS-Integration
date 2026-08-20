@@ -48,8 +48,28 @@ tableextension 50067 "E3 Purchase & Payable Setup" extends "Purchases & Payables
             Caption = 'Lot Nos.';
             TableRelation = "No. Series";
         }
-
-
+        field(50008; "RC Nos"; Code[20])
+        {
+            Caption = 'RC Nos';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
+        field(50009; "RC Disc Nos."; Code[20])
+        {
+            Caption = 'RC Disc Nos.';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
+        field(50010; "Allowed Expiry Date"; Text[10])
+        {
+            Caption = 'Allowed Expiry Date';
+            DataClassification = CustomerContent;
+        }
+        field(50011; "Enable Advance Settlement"; Boolean)
+        {
+            Caption = 'Enable Advance Settlement';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
