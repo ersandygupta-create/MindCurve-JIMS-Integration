@@ -14,4 +14,8 @@ enum 50018 "E3 Nature Type"
     {
         Caption = 'InterUnit';
     }
+    value(3; "Direct Purchase")
+    {
+        Caption = 'Direct Purchase';
+    }
 }

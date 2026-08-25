@@ -108,6 +108,37 @@ table 50083 "E3 Organization Receipt"
             Caption = 'Instrument Date';
             DataClassification = CustomerContent;
         }
+        field(12; IsCreated; Boolean)
+        {
+            Caption = 'IsCreated';
+            DataClassification = CustomerContent;
+        }
+        field(13; "Shortcut Dimension 1 Code"; Code[20])
+        {
+            CaptionClass = '1,1,1';
+            Caption = 'Shortcut Dimension 1 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            ValidateTableRelation = false;
+            DataClassification = CustomerContent;
+        }
+        field(14; "Shortcut Dimension 2 Code"; Code[20])
+        {
+            CaptionClass = '1,1,2';
+            Caption = 'Shortcut Dimension 2 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
+            ValidateTableRelation = false;
+            DataClassification = CustomerContent;
+        }
+        field(15; "Created By"; Code[50])
+        {
+            Caption = 'Created By';
+            DataClassification = CustomerContent;
+        }
+        field(16; "Created Date Time"; DateTime)
+        {
+            Caption = 'Created Date Time';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

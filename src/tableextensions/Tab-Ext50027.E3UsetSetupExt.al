@@ -203,5 +203,25 @@ tableextension 50027 "E3 Uset Setup Ext" extends "User Setup"
             Caption = 'Sales Invoice';
             DataClassification = CustomerContent;
         }
+        field(50038; "Customer Ledger View"; Boolean)
+        {
+            Caption = 'Customer Ledger View';
+            DataClassification = CustomerContent;
+        }
+        field(50039; "Item Ledger View"; Boolean)
+        {
+            Caption = 'Item Ledger View';
+            DataClassification = CustomerContent;
+        }
+        field(50040; "Bank Ledger View"; Boolean)
+        {
+            Caption = 'Bank Account Ledger View';
+            DataClassification = CustomerContent;
+        }
+        field(50041; "G/L Entry View"; Boolean)
+        {
+            Caption = 'G/L Entry View';
+            DataClassification = CustomerContent;
+        }
     }
 }

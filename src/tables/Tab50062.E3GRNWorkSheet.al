@@ -468,6 +468,14 @@ table 50062 "E3 GRN Work Sheet"
             Caption = 'Split';
             DataClassification = CustomerContent;
         }
+        field(71; "Shortcut Dimension 1 Code"; Code[20])
+        {
+            CaptionClass = '1,1,1';
+            Caption = 'Shortcut Dimension 1 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            ValidateTableRelation = false;
+            DataClassification = CustomerContent;
+        }
         field(5404; "Qty. per Unit of Measure"; Decimal)
         {
             AutoFormatType = 0;
@@ -552,6 +560,7 @@ table 50062 "E3 GRN Work Sheet"
                 "Item Make Code" := PurchLine."Item Make Code";
                 "Item Make Name" := PurchLine."Item Make Name";
                 "GST Type Code" := Format(PurchLine."GST Vendor Type");
+                "Shortcut Dimension 1 Code" := PurchLine."Shortcut Dimension 1 Code";
                 Validate("Department Code", PurchLine."Shortcut Dimension 2 Code");
                 DepartmentValue.Reset();
                 DepartmentValue.SetRange("Dimension Code", GeneralLedgerSetup."Global Dimension 2 Code");

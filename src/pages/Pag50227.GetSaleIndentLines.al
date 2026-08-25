@@ -1,11 +1,13 @@
-page 50194 "E3 Get Indent Lines"
+page 50227 "E3 Get Sale Indent Lines"
 {
-    Caption = 'Get Indent Lines';
+    Caption = 'Get Store Indent Stock Lines';
     PageType = List;
+    ApplicationArea = All;
     SourceTable = "E3 Indent Line";
     InsertAllowed = false;
     DeleteAllowed = false;
     ModifyAllowed = false;
+    SourceTableView = sorting("Document No.", "Line No.") order(descending) where("Sales Released" = const(true));
 
     layout
     {

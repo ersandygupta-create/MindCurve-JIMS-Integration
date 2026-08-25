@@ -44,7 +44,7 @@ table 50002 "E3 HIS Integration Setup Line"
         field(5; Type; Option)
         {
             Caption = 'Type';
-            OptionMembers = ,Revenue,GRN,Consumption,Payroll,Collection;
+            OptionMembers = ,Revenue,GRN,Consumption,Payroll,Collection,Settlement;
             DataClassification = CustomerContent;
         }
         field(6; "General Journal Template Code"; Code[20])

@@ -445,6 +445,26 @@ table 50052 "E3 Indent Line"
             Caption = 'Margin Fix';
             DataClassification = CustomerContent;
         }
+        field(54; "Indent Status"; Option)
+        {
+            OptionMembers = Open,Store,Purchase;
+            Caption = 'Indent Status';
+        }
+        field(55; "Store Sale"; Boolean)
+        {
+            Caption = 'Store Sale';
+            DataClassification = CustomerContent;
+        }
+        field(56; "Sales Released"; Boolean)
+        {
+            Caption = 'Sales Released';
+            DataClassification = CustomerContent;
+        }
+        field(57; "Purchase Released"; Boolean)
+        {
+            Caption = 'Purchase Released';
+            DataClassification = CustomerContent;
+        }
         field(80285; "Currency Code"; Code[10])
         {
             DataClassification = CustomerContent;
@@ -490,6 +510,11 @@ table 50052 "E3 Indent Line"
         UpdateHeaderValues();
     end;
 
+    trigger OnModify()
+    begin
+        UpdateHeaderValues();
+    end;
+
     local procedure UpdateHeaderValues()
     var
         IndentHeader: Record "E3 Indent Header";
@@ -503,6 +528,11 @@ table 50052 "E3 Indent Line"
             "Location Code" := IndentHeader."Location Code";
             "Shortcut Dimension 1 Code" := IndentHeader."Shortcut Dimension 1 Code";
             "Shortcut Dimension 2 Code" := IndentHeader."Shortcut Dimension 2 Code";
+            Released := IndentHeader.Released;
+            "Store Sale" := IndentHeader."Store Sale";
+            "Sales Released" := IndentHeader."Sales Released";
+            "Purchase Released" := IndentHeader."Purchase Released";
+
         end;
     end;
 

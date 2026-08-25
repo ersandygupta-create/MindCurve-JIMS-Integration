@@ -134,6 +134,21 @@ table 50001 "E3 HIS Integartion Setup"
             Caption = 'Payroll Direct Post';
             DataClassification = CustomerContent;
         }
+        field(25; "Inter Unit Purchase Enabled"; Boolean)
+        {
+            Caption = 'Inter Unit Purchase Enabled';
+            DataClassification = CustomerContent;
+        }
+        field(26; "Inter Unit Sales Enabled"; Boolean)
+        {
+            Caption = 'Inter Unit Sales Enabled';
+            DataClassification = CustomerContent;
+        }
+        field(27; "Settlement Process Enabled"; Boolean)
+        {
+            Caption = 'Settlement Process Enabled';
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

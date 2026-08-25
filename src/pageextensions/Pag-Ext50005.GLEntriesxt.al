@@ -172,9 +172,17 @@ pageextension 50005 "E3 HIS G/L Entries" extends "General Ledger Entries"
 
             }
         }
-
-
     }
     var
         GLEntry: Record "G/L Entry";
+
+    trigger OnOpenPage()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        UserSetup.Get(UserId());
+
+        if not UserSetup."G/L Entry View" then
+            Error('You do not have permission to view G/L Entries.');
+    end;
 }

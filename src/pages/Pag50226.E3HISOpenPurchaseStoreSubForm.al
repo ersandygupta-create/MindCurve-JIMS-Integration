@@ -1,9 +1,9 @@
-page 50168 "E3 HIS Indent Line Subform"
+page 50226 "E3 HIS Issue Indent Line"
 {
     PageType = ListPart;
     SourceTable = "E3 Indent Line";
     ApplicationArea = All;
-    Caption = 'Indent Lines';
+    Caption = 'Issue Indent Lines';
     AutoSplitKey = true;
     DelayedInsert = true;
 
@@ -140,6 +140,41 @@ page 50168 "E3 HIS Indent Line Subform"
                     end;
                 end;
             }
+            // action(GetSaleIndentLines)
+            // {
+            //     ApplicationArea = All;
+            //     Caption = 'Get Sale Indent Lines';
+            //     Image = GetLines;
+            //     Promoted = true;
+            //     PromotedCategory = Process;
+            //     ToolTip = 'Select released indent lines and add them to the Sale order.';
+
+            //     trigger OnAction()
+            //     var
+            //         PurchHeader: Record "Purchase Header";
+            //         IndentHeader: Record "E3 Indent Header";
+            //         IndentLine: Record "E3 Indent Line";
+            //         GetIndentLinesPage: Page "E3 Get Sale Indent Lines";
+            //     begin
+            //         IndentHeader.Reset();
+            //         IndentHeader.SetRange(Status, IndentHeader.Status::Approved);
+            //         IndentHeader.SetRange(Released, false);
+            //         // Open filtered page
+            //         GetIndentLinesPage.SetTableView(IndentLine);
+            //         GetIndentLinesPage.LookupMode(true);
+
+            //         if GetIndentLinesPage.RunModal() = Action::LookupOK then begin
+            //             GetIndentLinesPage.SetSelectionFilter(IndentLine);
+
+            //             if IndentLine.FindSet() then
+            //                 repeat
+            //                 //CreatePurchaseLineFromIndent(IndentLine);
+            //                 until IndentLine.Next() = 0;
+            //         end;
+
+            //         CurrPage.Update(false);
+            //     end;
+            // }
 
         }
     }

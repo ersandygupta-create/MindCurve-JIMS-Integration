@@ -1,10 +1,10 @@
-page 50167 "E3 HIS Indent Card"
+page 50232 "HIS Released Sales Indent Card"
 {
     PageType = Card;
     ApplicationArea = All;
     UsageCategory = Documents;
     SourceTable = "E3 Indent Header";
-    Caption = 'Indent Header';
+    Caption = 'Released Sales Indent Header Card';
 
     layout
     {
@@ -163,10 +163,10 @@ page 50167 "E3 HIS Indent Card"
                     Editable = false;
                 }
             }
-            part(IndentLines; "E3 HIS Indent Line Subform")
+            part(IndentLines; "E3 HIS Release Indent Line")
             {
                 ApplicationArea = All;
-                Caption = 'Indent Line Subform';
+                Caption = 'Release Indent Line Subform';
                 Editable = IsEditable;
                 SubPageLink = "Document No." = FIELD("Document No.");
             }
@@ -187,179 +187,71 @@ page 50167 "E3 HIS Indent Card"
     }
     actions
     {
-        area(Processing)
-        {
-            group(RequestApproval)
-            {
-                Caption = 'Request Approval';
-                Image = Approval;
+        // area(Processing)
+        // {
+        //     action(Release)
+        //     {
+        //         ApplicationArea = All;
+        //         Caption = 'Release for Purchase';
+        //         Image = ReleaseDoc;
+        //         Promoted = true;
+        //         PromotedCategory = Process;
+        //         ToolTip = 'Release the approved HIS indent.';
 
-                action(SendApproval)
-                {
-                    Caption = 'Send Approval Request';
-                    ApplicationArea = All;
-                    Image = SendApprovalRequest;
-                    Promoted = true;
-                    PromotedCategory = Process;
-                    Visible = ShowApprovalActions;
+        //         trigger OnAction()
+        //         begin
+        //             Rec.TestField(Status, Rec.Status::Approved);
 
-                    trigger OnAction()
-                    var
-                        IndentApproval: Codeunit "E3 Indent Approval Mgmt.";
-                        IndentLine: Record "E3 Indent Line";
-                    begin
-                        IndentLine.SetRange("Document No.", Rec."Document No.");
+        //             Rec."Indent Status" := Rec."Indent Status"::Released;
+        //             Rec.Modify(true);
 
-                        if IndentLine.FindSet() then
-                            repeat
-                                if IndentLine."Requested Qty" <= 0 then
-                                    Error(
-                                      'Requested Qty must be greater than 0 for Line No. %1.',
-                                      IndentLine."Line No.");
+        //             Message(
+        //                 'Indent %1 has been marked as Released.',
+        //                 Rec."Document No.");
 
-                                if IndentLine."Approved Qty" <= 0 then
-                                    Error(
-                                      'Approved Qty must be greater than 0 for Line No. %1.',
-                                      IndentLine."Line No.");
-                            until IndentLine.Next() = 0;
+        //             CurrPage.Update(false);
+        //         end;
+        //     }
+        //     action(Issue)
+        //     {
+        //         ApplicationArea = All;
+        //         Caption = 'Issue';
+        //         Image = Issue;
+        //         Promoted = true;
+        //         PromotedCategory = Process;
+        //         ToolTip = 'Issue the approved HIS indent.';
 
-                        IndentApproval.OnSendIndentDocForApproval(Rec);
+        //         trigger OnAction()
+        //         begin
+        //             Rec.TestField(Status, Rec.Status::Approved);
 
-                        CurrPage.Update(true);
-                    end;
-                }
+        //             Rec."Indent Status" := Rec."Indent Status"::Issued;
+        //             Rec.Modify(true);
 
-                action(CancelApproval)
-                {
-                    Caption = 'Cancel Approval Request';
-                    ApplicationArea = All;
-                    Image = CancelApprovalRequest;
-                    Promoted = true;
-                    PromotedCategory = Process;
-                    Visible = ShowApprovalActions;
+        //             Message(
+        //                 'Indent %1 has been marked as Issued.',
+        //                 Rec."Document No.");
 
-                    trigger OnAction()
-                    var
-                        IndentApproval: Codeunit "E3 Indent Approval Mgmt.";
-                    begin
-                        IndentApproval.OnCancelIndentApprovalRequest(Rec);
-                        CurrPage.Update(true);
-                    end;
-                }
-            }
-            action(ReopenIndent)
-            {
-                Caption = 'Reopen Indent';
-                ApplicationArea = All;
-                Image = ReOpen;
-                Promoted = true;
-                PromotedCategory = Process;
-                Visible = Rec.Status = Rec.Status::Approved;
-                ToolTip = 'Reopens the approved indent for modification.';
-
-                trigger OnAction()
-                begin
-                    if not Confirm('Do you want to reopen this approved indent?', false) then
-                        exit;
-
-                    Rec.Status := Rec.Status::Open; // Change to your initial status if different
-                    Rec."Approved By" := '';
-                    Rec."Approval Date Time" := 0DT;
-                    Rec.Modify(true);
-
-                    CurrPage.Update(true);
-
-                    Message('Indent %1 has been reopened successfully.', Rec."Document No.");
-                end;
-            }
-            action(ApprovalEntries)
-            {
-                Caption = 'Approval Entries';
-                ApplicationArea = All;
-                Image = ApprovalEntries;
-                RunObject = Page "Approval Entries";
-                RunPageLink = "Document No." = FIELD("Document No.");
-                RunPageView = sorting("Document No.")
-                          order(Ascending)
-                          where("Table ID" = const(50051));
-            }
-            action(Release)
-            {
-                ApplicationArea = All;
-                Caption = 'Release for Store Purchase';
-                Image = ReleaseDoc;
-                Promoted = true;
-                PromotedCategory = Process;
-                Visible = ShowReleaseActions;
-                ToolTip = 'Release the approved HIS indent.';
-
-                trigger OnAction()
-                var
-                    IndentLine: Record "E3 Indent Line";
-                begin
-                    Rec.TestField(Status, Rec.Status::Approved);
-
-                    Rec."Indent Status" := Rec."Indent Status"::Purchase;
-                    Rec.Modify(true);
-
-                    IndentLine.Reset();
-                    IndentLine.SetRange("Document No.", Rec."Document No.");
-
-                    if IndentLine.FindSet() then
-                        repeat
-                            Rec."Indent Status" := Rec."Indent Status"::Purchase;
-                            IndentLine.Modify(true);
-                        until IndentLine.Next() = 0;
-
-                    Message(
-                        'Indent %1 has been marked as Released.',
-                        Rec."Document No.");
-
-                    CurrPage.Update(false);
-                end;
-            }
-            action(ReleaseSale)
-            {
-                ApplicationArea = All;
-                Caption = 'Release for Store Sale';
-                Image = ReleaseDoc;
-                Promoted = true;
-                PromotedCategory = Process;
-                Visible = ShowReleaseActions;
-                ToolTip = 'Release the approved HIS indent.';
-
-                trigger OnAction()
-                var
-                    IndentLine: Record "E3 Indent Line";
-                begin
-                    Rec.TestField(Status, Rec.Status::Approved);
-
-                    Rec."Indent Status" := Rec."Indent Status"::Store;
-                    Rec.Modify(true);
-
-                    IndentLine.Reset();
-                    IndentLine.SetRange("Document No.", Rec."Document No.");
-
-                    if IndentLine.FindSet() then
-                        repeat
-                            Rec."Indent Status" := Rec."Indent Status"::Store;
-                            IndentLine.Modify(true);
-                        until IndentLine.Next() = 0;
-
-                    Message(
-                        'Indent %1 has been marked as Released.',
-                        Rec."Document No.");
-
-                    CurrPage.Update(false);
-                end;
-            }
-        }
+        //             CurrPage.Update(false);
+        //         end;
+        //     }
+        //     action(ApprovalEntries)
+        //     {
+        //         Caption = 'Approval Entries';
+        //         ApplicationArea = All;
+        //         Image = ApprovalEntries;
+        //         RunObject = Page "Approval Entries";
+        //         RunPageLink = "Document No." = FIELD("Document No.");
+        //         RunPageView = sorting("Document No.")
+        //                   order(Ascending)
+        //                   where("Table ID" = const(50051));
+        //     }
+        // }
     }
     var
         IsPageEditable: Boolean;
         IsEditable: Boolean;
         ShowApprovalActions: Boolean;
-        ShowReleaseActions: Boolean;
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
@@ -390,7 +282,6 @@ page 50167 "E3 HIS Indent Card"
         IsEditable := IsPageEditable;
 
         ShowApprovalActions := Rec.Status <> Rec.Status::Approved;
-        ShowReleaseActions := Rec.Status = Rec.Status::Approved;
     end;
 
 

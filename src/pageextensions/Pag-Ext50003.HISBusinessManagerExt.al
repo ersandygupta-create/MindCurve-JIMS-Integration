@@ -821,31 +821,6 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         }
                     }
                 }
-                group(StockConsumption)
-                {
-                    Caption = 'Stock Consumption';
-                    action("Stock Consumption")
-                    {
-                        AccessByPermission = TableData "E3 Stock Consumption Header" = IMD;
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Stock Consumption Creation';
-                        Image = Archive;
-                        RunObject = Page "E3 Stock Consumption List";
-                        RunPageMode = Create;
-                        ToolTip = 'Create a new Stock Consumption.';
-                    }
-                    action("Posted Stock Consumption")
-                    {
-                        AccessByPermission = TableData "E3 Stock Consumption Header" = IMD;
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Posted Stock Consumption';
-                        Image = Archive;
-                        RunObject = Page "E3 Posted Stock Cons. List";
-                        RunPageMode = View;
-                        ToolTip = 'Specifies a view Stock Consumption.';
-                    }
-
-                }
                 group(UnBilledRevenue)
                 {
                     Caption = 'UnBilled Revenue Services';
@@ -868,20 +843,6 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         RunObject = Page "E3 Posted UnBilled Service";
                         RunPageMode = Create;
                         ToolTip = 'View a Posted UnBilled Revenue Services.';
-                    }
-                }
-                group("IndentSales&Purchase")
-                {
-                    Caption = 'Indent Sale/Purchase Entries';
-                    action("Indent Sale/Purchase Entry")
-                    {
-                        AccessByPermission = TableData "E3 Indent Sale/Purchase Header" = IMD;
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Indent Sale/Purchase Entries';
-                        Image = Archive;
-                        RunObject = Page "E3 Indent Sale/Purchase List";
-                        RunPageMode = Create;
-                        ToolTip = 'Create a Indent Sale/Purchase List';
                     }
                 }
                 group("Settlement Data Process")
@@ -1179,35 +1140,127 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         ToolTip = 'Specify a value Short Closed Indent';
                     }
                 }
-                group(Quotation)
+                group("StoreSalesIndents")
                 {
-                    Caption = 'Purchase Indent';
-                    Image = Quote;
-                    action(VendorQuotation)
+                    Caption = 'Store Indents';
+                    action("Released Purchase")
                     {
-                        Caption = 'Purchase Indent Creation';
-                        ApplicationArea = All;
-                        RunObject = Page "E3 Quotation List";
-                        ToolTip = 'Executes the Vendor Quotation action.';
+                        AccessByPermission = TableData "E3 Indent Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Open Store Indents';
+                        Image = Archive;
+                        RunObject = Page "E3 HIS Release Indent List";
+                        RunPageMode = View;
+                        ToolTip = 'Specifies a view Release Indent List';
                     }
-                    action(PurchaseReleased)
+                    action("Released Store Indents Stock Issue")
                     {
-                        Caption = 'Purchase Released';
-                        ApplicationArea = All;
-                        RunObject = Page "E3 Indent Purchase Processing";
-                        ToolTip = 'Executes the Released Quotation List action.';
+                        AccessByPermission = TableData "E3 Indent Sale/Purchase Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Released Store Stock for Issue';
+                        Image = Archive;
+                        RunObject = Page "HIS Released Sales Indent List";
+                        RunPageMode = Create;
+                        ToolTip = 'Create a Indents Store List';
+                    }
+                    action("Stock Issue")
+                    {
+                        AccessByPermission = TableData "E3 Indent Sale/Purchase Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Stock Issue';
+                        Image = Archive;
+                        RunObject = Page "E3 Indent Sale/Purchase List";
+                        RunPageMode = Create;
+                        ToolTip = 'Closed a Closed Indents Store List';
                     }
                 }
-                action("E3 Indenter Master")
+                group(ReleasedPurchaseIndent)
                 {
-                    AccessByPermission = TableData "E3 Indenter Master" = IMD;
-                    ApplicationArea = Basic, Suite;
-                    Caption = 'Indenter Master';
-                    Image = Archive;
-                    RunObject = Page "E3 Indenter Master List";
-                    RunPageMode = Create;
-                    ToolTip = 'Executes the Create Indenter Entries action.';
+                    Caption = 'Purchase Indents';
+                    action("ReleasedPurchaseIssue")
+                    {
+                        AccessByPermission = TableData "E3 Indent Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Open Purchase Indents';
+                        Image = Archive;
+                        RunObject = Page "E3 HIS Issue Indent List";
+                        RunPageMode = View;
+                        ToolTip = 'Specifies a view Issue Indent List';
+                    }
+                    action("Released Purchase Indent")
+                    {
+                        AccessByPermission = TableData "E3 Indent Sale/Purchase Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Released Purchase Stock for Process';
+                        Image = Archive;
+                        RunObject = Page "HIS Released Purch Indent List";
+                        RunPageMode = Create;
+                        ToolTip = 'Create a Purchase Indents List';
+                    }
+                    action("Stock Receipt")
+                    {
+                        AccessByPermission = TableData "E3 Indent Sale/Purchase Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Stock Receipt';
+                        Image = Archive;
+                        RunObject = Page "E3 Indent Stock Receipt List";
+                        RunPageMode = Create;
+                        ToolTip = 'Closed a Purchase Indents List';
+                    }
                 }
+                group(StockConsumption)
+                {
+                    Caption = 'Stock Consumption';
+                    action("Stock Consumption")
+                    {
+                        AccessByPermission = TableData "E3 Stock Consumption Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Stock Consumption Creation';
+                        Image = Archive;
+                        RunObject = Page "E3 Stock Consumption List";
+                        RunPageMode = Create;
+                        ToolTip = 'Create a new Stock Consumption.';
+                    }
+                    action("Posted Stock Consumption")
+                    {
+                        AccessByPermission = TableData "E3 Stock Consumption Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Posted Stock Consumption';
+                        Image = Archive;
+                        RunObject = Page "E3 Posted Stock Cons. List";
+                        RunPageMode = View;
+                        ToolTip = 'Specifies a view Stock Consumption.';
+                    }
+                }
+                // group(Quotation)
+                // {
+                //     Caption = 'Purchase Indent';
+                //     Image = Quote;
+                //     action(VendorQuotation)
+                //     {
+                //         Caption = 'Purchase Indent Creation';
+                //         ApplicationArea = All;
+                //         RunObject = Page "E3 Quotation List";
+                //         ToolTip = 'Executes the Vendor Quotation action.';
+                //     }
+                //     action(PurchaseReleased)
+                //     {
+                //         Caption = 'Purchase Released';
+                //         ApplicationArea = All;
+                //         RunObject = Page "E3 Indent Purchase Processing";
+                //         ToolTip = 'Executes the Released Quotation List action.';
+                //     }
+                // }
+                // action("E3 Indenter Master")
+                // {
+                //     AccessByPermission = TableData "E3 Indenter Master" = IMD;
+                //     ApplicationArea = Basic, Suite;
+                //     Caption = 'Indenter Master';
+                //     Image = Archive;
+                //     RunObject = Page "E3 Indenter Master List";
+                //     RunPageMode = Create;
+                //     ToolTip = 'Executes the Create Indenter Entries action.';
+                // }
                 action("E3 GRN Work Sheet")
                 {
                     AccessByPermission = TableData "E3 GRN Work Sheet Header" = IMD;
@@ -1282,7 +1335,7 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         Image = List;
                         RunObject = Page "E3 Stock Transfer List";
                         RunPageMode = View;
-                        ToolTip = 'Executes the Stock Transfer List.';
+                        ToolTip = 'Executes the Stock Transfer Setup.';
                     }
                 }
                 group(Scheme)

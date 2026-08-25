@@ -1,12 +1,12 @@
-page 50166 "E3 HIS Indent List"
+page 50231 "HIS Released Sales Indent List"
 {
     PageType = List;
     SourceTable = "E3 Indent Header";
     ApplicationArea = All;
     UsageCategory = Lists;
-    Caption = 'HIS Indent List';
-    CardPageId = "E3 HIS Indent Card";
-    SourceTableView = sorting("Document No.") order(descending) WHERE(Status = FILTER(Open | "Pending Approval"), "Source Type" = filter(HIS));
+    Caption = 'Released Sales Indents List';
+    CardPageId = "HIS Released Sales Indent Card";
+    SourceTableView = sorting("Document No.") order(descending) WHERE("Sales Released" = const(true), "Source Type" = filter(HIS));
 
     layout
     {

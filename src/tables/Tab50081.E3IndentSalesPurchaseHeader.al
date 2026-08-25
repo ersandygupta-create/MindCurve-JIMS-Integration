@@ -76,7 +76,6 @@ table 50081 "E3 Indent Sale/Purchase Header"
         field(14; "No. of Lines"; Integer)
         {
             Caption = 'No. of Lines';
-            Editable = false;
             DataClassification = CustomerContent;
         }
         field(15; Amount; Decimal)

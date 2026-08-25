@@ -237,7 +237,7 @@ report 50003 "Vendor Ledger Report"
                     column(txtChequeNo; txtChequeNo)
                     {
                     }
-                    column(dtChequeDate; dtChequeDate)
+                    column(dtChequeDate; Format(dtChequeDate, 0, '<Day,2>-<Month,2>-<Year4>'))
                     {
                     }
                     column(decTDSAmount; decTDSAmount) { }

@@ -1,23 +1,22 @@
-page 50213 "E3 Indent Sale/Purchase Card"
+page 50212 "E3 Indent Sale/Purchase List"
 {
-    Caption = 'Indent Sale/Purchase Card';
-    PageType = Card;
+    Caption = 'Stock Issues';
+    PageType = List;
     SourceTable = "E3 Indent Sale/Purchase Header";
     ApplicationArea = All;
-    UsageCategory = Documents;
+    UsageCategory = Lists;
+    CardPageId = "E3 Indent Sale/Purchase Card";
+    SourceTableView = sorting("Entry No.") order(descending) where("Entry Type" = filter(sale));
 
     layout
     {
         area(Content)
         {
-            group(General)
+            repeater(General)
             {
-                Caption = 'General';
-
                 field("Entry No."; Rec."Entry No.")
                 {
                     ApplicationArea = All;
-                    Editable = false;
                     ToolTip = 'Specifies the entry number.';
                 }
                 field("Nature Type"; Rec."Nature Type")
@@ -34,11 +33,6 @@ page 50213 "E3 Indent Sale/Purchase Card"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the document number.';
-                    trigger OnAssistEdit()
-                    begin
-                        if Rec.AssistEdit(xRec) then
-                            CurrPage.Update();
-                    end;
                 }
                 field("Document Date"; Rec."Document Date")
                 {
@@ -85,18 +79,11 @@ page 50213 "E3 Indent Sale/Purchase Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the posting date.';
                 }
-            }
-            group(AmountDetails)
-            {
-                Caption = 'Amount Details';
-
                 field("No. of Lines"; Rec."No. of Lines")
                 {
                     ApplicationArea = All;
-                    Editable = false;
                     ToolTip = 'Specifies the number of lines.';
                 }
-
                 field(Amount; Rec.Amount)
                 {
                     ApplicationArea = All;
@@ -122,11 +109,6 @@ page 50213 "E3 Indent Sale/Purchase Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies whether a purchase order should be created.';
                 }
-            }
-            group(ErrorDetails)
-            {
-                Caption = 'Error Details';
-
                 field("Error 1"; Rec."Error 1")
                 {
                     ApplicationArea = All;
@@ -150,24 +132,13 @@ page 50213 "E3 Indent Sale/Purchase Card"
                 field("Error Description"; Rec."Error Description")
                 {
                     ApplicationArea = All;
-                    MultiLine = true;
                     ToolTip = 'Specifies the error description.';
                 }
                 field(Remarks; Rec.Remarks)
                 {
                     ApplicationArea = All;
-                    MultiLine = true;
                     ToolTip = 'Specifies remarks for the document.';
                 }
-            }
-            part(Lines; "E3 Indent Sale/Purchase Lines")
-            {
-                ApplicationArea = All;
-                SubPageLink =
-                    "Entry No." = FIELD("Entry No."),
-                    "Nature Type" = FIELD("Nature Type"),
-                    "Entry Type" = FIELD("Entry Type"),
-                    "Document No." = FIELD("Document No.");
             }
         }
     }

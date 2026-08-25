@@ -37,6 +37,16 @@ table 50082 "E3 Indent Sale/Purchase Line"
             Caption = 'Item ID';
             DataClassification = CustomerContent;
             TableRelation = Item;
+            trigger OnValidate()
+            var
+                Item: Record Item;
+            begin
+                if "Item ID" <> '' then begin
+                    Item.Get("Item ID");
+                    "Item Name" := Item.Description;
+                end else
+                    "Item Name" := '';
+            end;
         }
         field(7; "Item Name"; Text[100])
         {
@@ -58,15 +68,18 @@ table 50082 "E3 Indent Sale/Purchase Line"
             Caption = 'Gross Amount';
             DataClassification = CustomerContent;
         }
-        field(11; "GST Per"; Decimal)
+        field(11; "GST Per"; Code[10])
         {
             Caption = 'GST Per';
             DataClassification = CustomerContent;
+            TableRelation = "GST Group";
         }
         field(12; "HSN/SAC Code"; Code[20])
         {
             Caption = 'HSN/SAC Code';
-            DataClassification = CustomerContent;
+            TableRelation = "HSN/SAC".Code where("GST Group Code" = field("GST Per"));
+            ValidateTableRelation = false;
+
         }
         field(13; Amount; Decimal)
         {

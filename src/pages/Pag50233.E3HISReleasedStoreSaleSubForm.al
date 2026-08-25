@@ -1,9 +1,9 @@
-page 50168 "E3 HIS Indent Line Subform"
+page 50233 "HIS Released Sales Indent Line"
 {
     PageType = ListPart;
     SourceTable = "E3 Indent Line";
     ApplicationArea = All;
-    Caption = 'Indent Lines';
+    Caption = 'Released Sales Indents Lines';
     AutoSplitKey = true;
     DelayedInsert = true;
 
@@ -140,7 +140,6 @@ page 50168 "E3 HIS Indent Line Subform"
                     end;
                 end;
             }
-
         }
     }
     var

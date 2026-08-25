@@ -440,6 +440,11 @@ page 50169 "E3 GRN Work Sheet"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the vendor code.';
                 }
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies a value Shortcut Dimension 1 Code.';
+                }
             }
         }
     }

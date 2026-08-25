@@ -29,6 +29,11 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 ApplicationArea = All;
                 ToolTip = 'Specifies The Value MRP';
             }
+            field("Qty. per Unit of Measure"; Rec."Qty. per Unit of Measure")
+            {
+                ApplicationArea = All;
+                Editable = false;
+            }
             field(Scheme; Rec.Scheme)
             {
                 ApplicationArea = All;
@@ -55,6 +60,12 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 ApplicationArea = All;
                 Editable = false;
                 ToolTip = 'Specify a value SNo.';
+            }
+            field("Margin Fix"; Rec."Margin Fix")
+            {
+                ApplicationArea = All;
+                Caption = 'Type of RC';
+                ToolTip = 'Specifies the margin fixing method for the item.';
             }
         }
     }
@@ -121,6 +132,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 begin
                     IndentHeader.Reset();
                     IndentHeader.SetRange(Status, IndentHeader.Status::Approved);
+                    IndentHeader.SetRange(Released, true);
                     // Open filtered page
                     GetIndentLinesPage.SetTableView(IndentLine);
                     GetIndentLinesPage.LookupMode(true);

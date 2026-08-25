@@ -13,4 +13,12 @@ enum 50017 "E3 Entry Type"
     {
         Caption = 'Sale Return';
     }
+    value(3; Purchase)
+    {
+        Caption = 'Purchase';
+    }
+    value(4; "Purchase Return")
+    {
+        Caption = 'Purchase Return';
+    }
 }

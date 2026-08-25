@@ -93,6 +93,40 @@ page 50206 "E3 Advanced User Control Setup"
                     ToolTip = 'Specifies whether the user is allowed to delete item records.';
                 }
             }
+            group(LedgerView)
+            {
+                Caption = 'Ledger View';
+                field("Vendor Ledger View"; Rec."Vendor Ledger View")
+                {
+                    ApplicationArea = All;
+                    Visible = true;
+                    ToolTip = 'Specifies the value of the Vendor Ledger View field.';
+                }
+                field("Customer Ledger View"; Rec."Customer Ledger View")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Customer Ledger View';
+                    ToolTip = 'Specifies whether the user can view Customer Ledger Entries.';
+                }
+                field("Item Ledger View"; Rec."Item Ledger View")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Item Ledger View';
+                    ToolTip = 'Specifies whether the user can view Item Ledger Entries.';
+                }
+                field("Bank Ledger View"; Rec."Bank Ledger View")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Bank Account Ledger View';
+                    ToolTip = 'Specifies whether the user can view Bank Account Ledger Entries.';
+                }
+                field("G/L Entry View"; Rec."G/L Entry View")
+                {
+                    ApplicationArea = All;
+                    Caption = 'G/L Entry View';
+                    ToolTip = 'Specifies whether the user can view G/L Entries.';
+                }
+            }
             group(TransactionControls)
             {
                 Caption = 'Transaction Controls';

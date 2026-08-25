@@ -142,6 +142,46 @@ page 50154 "E3 Indent Line Subform"
             }
         }
     }
+    actions
+    {
+        area(Processing)
+        {
+            action("Split Qty")
+            {
+                Caption = 'Split Qty';
+                ApplicationArea = All;
+                Image = Split;
+
+                trigger OnAction()
+                var
+                    SplitQtyPage: Page "E3 Split Qty";
+                    SplitQty: Integer;
+                begin
+                    // Only allow approved quantity
+                    if Rec."Approved Qty" <= 0 then
+                        Error('Approved Qty must be greater than zero.');
+
+                    // Open popup
+                    if SplitQtyPage.RunModal() = Action::OK then begin
+                        SplitQty := SplitQtyPage.GetSplitQty();
+
+                        if SplitQty <= 0 then
+                            Error('Split Qty must be greater than zero.');
+
+                        if SplitQty > Rec."Approved Qty" then
+                            Error(
+                              'Split Qty cannot be greater than Approved Qty (%1).',
+                              Rec."Approved Qty");
+
+                        // Create copied lines
+                        CreateSplitLines(Rec, SplitQty);
+
+                        CurrPage.Update(false);
+                    end;
+                end;
+            }
+        }
+    }
     var
         IsLineEditable: Boolean;
         IsApprovedQtyEditable: Boolean;
@@ -184,4 +224,72 @@ page 50154 "E3 Indent Line Subform"
             end;
         end;
     end;
+
+    local procedure CreateSplitLines(var SelectedLine: Record "E3 Indent Line"; SplitQty: Decimal)
+    var
+        NewLine: Record "E3 Indent Line";
+        LastLine: Record "E3 Indent Line";
+        NextLineNo: Integer;
+        UnitAmount: Decimal;
+        QuoteAmt: Decimal;
+    begin
+        // Validation
+        if SplitQty <= 0 then
+            Error('Split Qty must be greater than zero.');
+
+        if SplitQty > SelectedLine."Approved Qty" then
+            Error(
+                'Split Qty (%1) cannot be greater than Approved Qty (%2).',
+                SplitQty,
+                SelectedLine."Approved Qty");
+
+        // if SelectedLine."Ordered Qty" <= 0 then
+        //     Error('Ordered Qty must be greater than 0 before splitting.');
+
+        // if SplitQty > SelectedLine."Ordered Qty" then
+        //     Error(
+        //         'Split Qty (%1) cannot be greater than Ordered Qty (%2).',
+        //         SplitQty,
+        //         SelectedLine."Approved Qty");
+        if SelectedLine."Approved Qty" <> 0 then
+            UnitAmount := SelectedLine.Amount / SelectedLine."Approved Qty";
+
+        if SelectedLine."Approved Qty" <> 0 then
+            QuoteAmt := SelectedLine."Quotation Amount" / SelectedLine."Approved Qty";
+
+        // Get Next Line No.
+        LastLine.Reset();
+        LastLine.SetRange("Document No.", SelectedLine."Document No.");
+        if LastLine.FindLast() then
+            NextLineNo := LastLine."Line No." + 10000
+        else
+            NextLineNo := 10000;
+
+        // Create New Split Line
+        NewLine.Init();
+        NewLine.TransferFields(SelectedLine);
+
+        NewLine."Line No." := NextLineNo;
+        NewLine.Validate("Requested Qty", SplitQty);
+        NewLine.Validate("Approved Qty", SplitQty);
+        //NewLine.Validate("Ordered Qty", SplitQty);
+
+        NewLine."Split Line" := false;
+        NewLine."SplitedLines" := true;
+
+        NewLine.Insert(true);
+
+        // Update Original Line
+        SelectedLine.Validate("Requested Qty", SelectedLine."Requested Qty" - SplitQty);
+        SelectedLine.Validate("Approved Qty", SelectedLine."Approved Qty" - SplitQty);
+        //SelectedLine.Validate("Ordered Qty", SelectedLine."Approved Qty" - SplitQty);
+
+        SelectedLine."Split Line" := true;
+        SelectedLine."SplitedLines" := false;
+
+        SelectedLine.Modify(true);
+
+        Message('Split line created successfully.');
+    end;
+
 }

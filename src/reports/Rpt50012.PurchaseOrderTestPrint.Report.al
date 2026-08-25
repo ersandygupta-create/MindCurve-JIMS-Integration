@@ -170,7 +170,7 @@ report 50012 "Purchase Order Print"
             {
 
             }
-            column(CompInfoPicture; CompInfo.Picture)
+            column(CompInfoPictures; CompInfo.Picture)
             {
             }
             column(DraftPicture; CompInfo.DraftImage)
@@ -363,17 +363,17 @@ report 50012 "Purchase Order Print"
                 if PurchCommentLine.FindSet() then
                     repeat
 
-                        if DelChr(PurchCommentLine.Comment, '=', ' ') <> '' then begin
+                        //if DelChr(PurchCommentLine.Comment, '=', ' ') <> '' then begin
 
-                            if txtTermName = '' then begin
-                                txtTermName := PurchCommentLine."Order Terms";
-                                txtCommentNote := PurchCommentLine.Comment;
-                            end else begin
-                                txtTermName += '\n' + PurchCommentLine."Order Terms";
-                                txtCommentNote += '\n' + PurchCommentLine.Comment;
-                            end;
-
+                        if txtTermName = '' then begin
+                            txtTermName := PurchCommentLine."Order Terms";
+                            txtCommentNote := PurchCommentLine.Comment;
+                        end else begin
+                            txtTermName += '\n' + PurchCommentLine."Order Terms";
+                            txtCommentNote += '\n' + PurchCommentLine.Comment;
                         end;
+
+                    //end;
 
                     until PurchCommentLine.Next() = 0;
 

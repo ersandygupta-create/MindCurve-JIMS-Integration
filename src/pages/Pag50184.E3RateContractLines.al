@@ -78,6 +78,13 @@ page 50184 "E3 Rate Contract Subpage"
                     ApplicationArea = All;
                     ToolTip = 'Specifies remarks for the rate contract line.';
                 }
+                field("Margin %"; Rec."Margin %")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies remarks for the Margin % line.';
+
+                }
             }
         }
     }

@@ -362,7 +362,31 @@ table 50051 "E3 Indent Header"
             Editable = false;
             DataClassification = CustomerContent;
         }
-
+        field(34; "Indent Status"; Option)
+        {
+            OptionMembers = Open,Store,Purchase;
+            Caption = 'Indent Status';
+        }
+        field(35; Released; Boolean)
+        {
+            Caption = 'Released';
+            DataClassification = CustomerContent;
+        }
+        field(36; "Store Sale"; Boolean)
+        {
+            Caption = 'Store Sale';
+            DataClassification = CustomerContent;
+        }
+        field(37; "Sales Released"; Boolean)
+        {
+            Caption = 'Sales Released';
+            DataClassification = CustomerContent;
+        }
+        field(38; "Purchase Released"; Boolean)
+        {
+            Caption = 'Purchase Released';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

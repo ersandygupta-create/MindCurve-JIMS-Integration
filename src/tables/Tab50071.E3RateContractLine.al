@@ -97,6 +97,10 @@ table 50071 "E3 Rate Contract Line"
         {
             Caption = 'Price';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalculateMargin();
+            end;
         }
         field(9; "Type Of RC"; Enum "E3 Margin Fix")
         {
@@ -125,6 +129,10 @@ table 50071 "E3 Rate Contract Line"
         {
             Caption = 'MRP';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                CalculateMargin();
+            end;
         }
         field(14; Scheme; Text[30])
         {
@@ -143,7 +151,11 @@ table 50071 "E3 Rate Contract Line"
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Make Master".Code where("Make Type" = filter("Medicine/Marketing"));
         }
-
+        field(17; "Margin %"; Decimal)
+        {
+            Caption = 'Margin %';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
@@ -161,5 +173,13 @@ table 50071 "E3 Rate Contract Line"
             exit;
         if RCHdr.Get("Document No.") then
             "Type Of RC" := "Type Of RC";
+    end;
+
+    local procedure CalculateMargin()
+    begin
+        if MRP = 0 then
+            "Margin %" := 0
+        else
+            "Margin %" := ((MRP - Price) / MRP) * 100;
     end;
 }

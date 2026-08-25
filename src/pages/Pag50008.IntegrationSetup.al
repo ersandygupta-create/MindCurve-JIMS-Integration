@@ -119,6 +119,16 @@ page 50008 "E3 Integration Setup"
                     Caption = 'Payroll Direct Post';
                     ToolTip = 'Specifies the value of the Payroll Direct Post';
                 }
+                field("Inter Unit Purchase Enabled"; Rec."Inter Unit Purchase Enabled")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Inter Unit Purchase Enabled';
+                }
+                field("Inter Unit Sales Enabled"; Rec."Inter Unit Sales Enabled")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Inter Unit Sales Enabled';
+                }
             }
             group("Log Details")
             {

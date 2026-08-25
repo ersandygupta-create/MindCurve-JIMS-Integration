@@ -87,4 +87,44 @@ page 50216 "E3 Organization Receipt"
             }
         }
     }
+    actions
+    {
+        area(Processing)
+        {
+            action("Create Orgnization Entries")
+            {
+                ApplicationArea = All;
+                Image = CreateLedgerBudget;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                ToolTip = 'Executes the Create Orgnization Entries action.';
+                Caption = 'Create Orgnization Entries';
+                trigger OnAction();
+                var
+                    OrgnizationReceiptMgmt: Codeunit "E3 Settlement Process Mgmt.";
+                begin
+                    OrgnizationReceiptMgmt.InitGenJnlLineSettlementProcess();
+
+                end;
+            }
+            action("Post Revenue Entries")
+            {
+                ApplicationArea = All;
+                Image = PostBatch;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                ToolTip = 'Executes the Post OrgnizationReceiptMgmt Entries action.';
+                Caption = 'Post OrgnizationReceiptMgmt Entries';
+                trigger OnAction();
+                var
+                    OrgnizationReceiptMgmt: Codeunit "E3 Settlement Process Mgmt.";
+                begin
+
+                    OrgnizationReceiptMgmt.PostGenJnlLineEntries();
+                end;
+            }
+        }
+    }
 }

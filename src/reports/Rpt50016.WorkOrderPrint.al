@@ -1,10 +1,10 @@
 report 50016 "Work Order Print"
 {
     ApplicationArea = All;
-    Caption = 'Work Order Print';
+    Caption = 'Purchase Order';
     UsageCategory = ReportsAndAnalysis;
     DefaultLayout = RDLC;
-    RDLCLayout = './src/reports/Rpt50016.WorkOrder.rdl';
+    RDLCLayout = './src/reports/Rpt50016.WorkOrderPrint.rdl';
     PreviewMode = PrintLayout;
 
     dataset
@@ -12,6 +12,7 @@ report 50016 "Work Order Print"
         dataitem(PurchaseHeader; "Purchase Header")
         {
             DataItemTableView = SORTING("Document Type", "No.");
+
             RequestFilterFields = "No.", "Buy-from Vendor No.";
             RequestFilterHeading = 'Work Order Print';
 
@@ -60,6 +61,9 @@ report 50016 "Work Order Print"
             column(LocationAdd; LocationAdd)
             {
             }
+            column(LocationAdd2; LocationAdd2)
+            {
+            }
             column(LocationEmail; LocationEmail)
             {
             }
@@ -83,6 +87,12 @@ report 50016 "Work Order Print"
             {
             }
             column(Order_Date; "Order Date")
+            {
+            }
+            column(W_S_DL_No_; "W/S DL No.")
+            {
+            }
+            column(Retail_DL_No_; "Retail DL No.")
             {
             }
             column(Status; Status)
@@ -112,6 +122,7 @@ report 50016 "Work Order Print"
             column(SupplierName; SupplierName)
             {
             }
+
             column(IGSTRsAmount_Var; IGSTRsAmount_Var)
             {
             }
@@ -147,26 +158,30 @@ report 50016 "Work Order Print"
             }
             column(txtPurchaseHeader; txtPurchaseHeader)
             {
-
             }
             column(TotalTDS; TotalTDS)
             {
             }
             column(TotalGSTAmount; TotalInclTaxAmount)
             {
-
             }
             column(Currency_Code; CdCurrencyCode)
             {
 
             }
-            column(CompInfoPicture; CompanyInformation.Picture)
+            column(CompInfoPicture; CompInfo.Picture)
             {
             }
             column(DraftPicture; CompInfo.DraftImage)
             {
             }
             column(LastAEdt; LastAEdt)
+            {
+            }
+            column(TermName; txtTermName)
+            {
+            }
+            column(CommentNote; txtcommentNote)
             {
             }
             trigger OnAfterGetRecord()
@@ -208,6 +223,7 @@ report 50016 "Work Order Print"
                 end;
 
                 LocationAdd := '';
+                LocationAdd2 := '';
                 LocationEmail := '';
                 LocationPhoneNo := '';
                 LocationGSTIN := '';
@@ -219,7 +235,8 @@ report 50016 "Work Order Print"
                         recState.Get(Location."State Code");
                         CountryRegion.Get(Location."Country/Region Code");
                         LocationName := Location.Name;
-                        LocationAdd := Location.Address + ', ' + Location."Address 2" + ', ' + Location.City + ', ' + FORMAT(Location."Post Code") + ', ' + FORMAT(recState.Description) + ', ' + CountryRegion.Name;
+                        LocationAdd := Location.Address;//+ ', ';
+                        LocationAdd2 := Location."Address 2"; //+ ', ' + Location.City + ', ' + FORMAT(Location."Post Code") + ', ' + FORMAT(recState.Description) + ', ' + CountryRegion.Name;
                         LocationEmail := Location."E-Mail";
                         LocationPhoneNo := Location."Phone No.";
                         LocationGSTIN := Location."GST Registration No.";
@@ -263,6 +280,7 @@ report 50016 "Work Order Print"
 
                 PostedVoucher.InitTextVariable;
                 PostedVoucher.FormatNoText(AmtWords, Round(TotalAmttoVendor, 1), PurchaseHeader."Currency Code");
+                AmtWords[1] := AmtWords[1].Replace(' AND ZERO PAISA ONLY', ' ONLY');
 
                 if userc.Get(SystemCreatedBy) then;
                 if userm.Get(SystemModifiedBy) then;
@@ -332,9 +350,38 @@ report 50016 "Work Order Print"
                 PreparedBy := ApprovalEntry."Sender ID";
                 LastAEdt := ApprovalEntry."Last Date-Time Modified";
 
-            end;
+                //comment
+                txtTermName := '';
+                txtCommentNote := '';
 
+                PurchCommentLine.Reset();
+                PurchCommentLine.SetRange("Document Type", "Document Type");
+                PurchCommentLine.SetRange("No.", "No.");
+                PurchCommentLine.SetRange("Document Line No.", 0);
+
+                if PurchCommentLine.FindSet() then
+                    repeat
+
+                        if DelChr(PurchCommentLine.Comment, '=', ' ') <> '' then begin
+
+                            if txtTermName = '' then begin
+                                txtTermName := PurchCommentLine."Order Terms";
+                                txtCommentNote := PurchCommentLine.Comment;
+                            end else begin
+                                txtTermName += '\n' + PurchCommentLine."Order Terms";
+                                txtCommentNote += '\n' + PurchCommentLine.Comment;
+                            end;
+
+                        end;
+
+                    until PurchCommentLine.Next() = 0;
+
+            end;
         }
+
+
+
+
         dataitem(PurchaseLine; "Purchase Line")
         {
             DataItemLink = "Document Type" = FIELD("Document Type"), "Document No." = FIELD("No.");
@@ -365,9 +412,13 @@ report 50016 "Work Order Print"
             "Direct Unit Cost")
             {
             }
+            column(PlannedReceiptDate; "Planned Receipt Date")
+            {
+            }
             column(freeQty; freeQty)
             {
             }
+            column(MRP; MRP) { }
             column(Line_Amount; "Line Amount")
             {
             }
@@ -408,6 +459,10 @@ report 50016 "Work Order Print"
             column(ItemCode;
             PurchaseLine."No.")
             {
+            }
+            column(Item_Make_Name; "Item Make Name")
+            {
+
             }
             column(LineGSTAmount;
             LineGSTAmount)
@@ -454,10 +509,11 @@ report 50016 "Work Order Print"
                     until TaxTransactionValue.Next() = 0;
                 LineGSTAmount := PurchaseLine."Line Amount" * decGSTPer / 100;
 
-
-
-            End;
+            end;
         }
+
+
+
     }
     requestpage
     {
@@ -509,6 +565,7 @@ report 50016 "Work Order Print"
         LocationGSTIN: Code[15];
         LocationWebsite: Text[200];
         LocationAdd: Code[200];
+        LocationAdd2: Code[100];
         SupplierName: Text[300];
         SupplierAdd: Text[500];
         SupplierEmail: Text[100];
@@ -545,6 +602,8 @@ report 50016 "Work Order Print"
         VendorComment: Record "Comment Line";
         txtcommentNote: Text;
         txtcomment: Text;
+        txtTermName: Text;
+
         txtVendorComment: Text;
         txtPurchaseHeader: Text[150];
         userc: Record User;

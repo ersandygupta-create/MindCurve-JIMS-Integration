@@ -1,9 +1,9 @@
 report 50002 "GST Sales Invoice Print"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './src/reports/Rpt50002.GST Sales Invoice.rdl';
+    RDLCLayout = './src/reports/Rpt50002.GSTSalesInvoice.rdl';
     Permissions = tabledata "Sales Invoice Header" = RM;
-    Caption = 'GST Sales Invoice Print';
+    Caption = 'Sales Invocie - GST';
     UsageCategory = ReportsAndAnalysis;
     dataset
     {
@@ -17,6 +17,10 @@ report 50002 "GST Sales Invoice Print"
             {
 
             }
+            column(PreparedBy; UserId)
+            {
+            }
+
             column(External_Document_No_; "External Document No.")
             {
 
@@ -66,6 +70,7 @@ report 50002 "GST Sales Invoice Print"
             {
 
             }
+            column(LocAddress; LocAddress) { }
             column(GSTCodeBill; GSTCodeBill)
             {
 
@@ -90,6 +95,9 @@ report 50002 "GST Sales Invoice Print"
             column(amounttoCustomer; amounttoCustomer)
             {
 
+            }
+            column(amountinwords; AmountText)
+            {
             }
             column(GST_Bill_to_State_Code; "GST Bill-to State Code")
             {
@@ -331,15 +339,15 @@ report 50002 "GST Sales Invoice Print"
             column(BilltoContact_SalesHeader; "Sales Header"."Bill-to Contact")
             {
             }
-            column(PostingDate; FORMAT("Sales Header"."Posting Date"))
+            column(PostingDate; "Sales Header"."Document Date")
             {
             }
             column(SalespersonCode; "Sales Header"."Salesperson Code")
             {
             }
-            column(ROUNDValue; ROUNDValue)
-            {
-            }
+            // column(ROUNDValue; ROUNDValue)
+            // {
+            // }
             column(SalesPerson_Name; SalesPersonRec.Name)
             {
             }
@@ -411,6 +419,7 @@ report 50002 "GST Sales Invoice Print"
             column(GSTRegistrationNo_SalesHeader; "Sales Header"."Customer GST Reg. No.")
             {
             }
+            column(Doc_Date; "Sales Header"."Document Date") { }
 
             dataitem(CopyLoop; Integer)
             {
@@ -482,11 +491,6 @@ report 50002 "GST Sales Invoice Print"
                         {
                         }
 
-
-                        column(amountinwords; amountinwords)
-                        {
-
-                        }
                         column(taxableAmt; taxableAmt)
                         {
 
@@ -523,6 +527,11 @@ report 50002 "GST Sales Invoice Print"
                         {
 
                         }
+                        column(BankAccName; BankName) { }
+                        column(BankAccountNo; BankAccountNo) { }
+                        column(BankIFSCCode; IFSCCode) { }
+                        column(Branch; Branch) { }
+
                         trigger OnAfterGetRecord()
                         begin
 
@@ -543,35 +552,52 @@ report 50002 "GST Sales Invoice Print"
                             IF ItemRec.GET("Sales invoice Line"."No.") THEN
                                 HSNCode := ItemRec."HSN/SAC Code";
                             TotalLineAmt := 0;
+                            //ak
+                            Salesheadrec.Reset();
+                            Salesheadrec.SetRange("No.", "Sales Invoice Line"."Document No.");
+                            if Salesheadrec.FindFirst() then begin
+                                if LocationRec.Get(Salesheadrec."Location Code") then begin
+                                    if LocationRec."Invoice Bank" <> '' then begin
+
+                                        if BankAccRec.Get(LocationRec."Invoice Bank") then begin
+                                            // Example fields – use as per your requirement
+                                            BankName := BankAccRec.Name;
+                                            BankAccountNo := BankAccRec."Bank Account No.";
+                                            IFSCCode := BankAccRec."IFSC Code";
+                                            Branch := BankAccRec.City;
+                                        end;
+                                    end;
+                                    //end;
 
 
+                                    SRNo += 1;
 
-                            SRNo += 1;
+                                    DTGSTEntry.RESET;
+                                    DTGSTEntry.SetRange(DTGSTEntry."Entry Type", DTGSTEntry."Entry Type"::"Initial Entry");
+                                    DTGSTEntry.SetRange(DTGSTEntry."Document Type", DTGSTEntry."Document Type"::Invoice);
+                                    DTGSTEntry.SetRange(DTGSTEntry."Transaction Type", DTGSTEntry."Transaction Type"::Sales);
+                                    DTGSTEntry.SETRANGE("Document No.", "Sales Invoice Line"."Document No.");
+                                    DTGSTEntry.SETRANGE("Document Line No.", "Sales Invoice Line"."Line No.");
+                                    IF DTGSTEntry.FINDSET THEN
+                                        REPEAT
+                                            IF DTGSTEntry."GST Component Code" = 'IGST' THEN BEGIN
+                                                IGSTRate := ABS(DTGSTEntry."GST %");
+                                                IGSTAmt := ABS(DTGSTEntry."GST Amount");
+                                            END;
+                                            IF (DTGSTEntry."GST Component Code" = 'SGST') OR (DTGSTEntry."GST Component Code" = 'UTGST') THEN BEGIN
+                                                SGSTRate := ABS(DTGSTEntry."GST %");
+                                                SGSTAmt := ABS(DTGSTEntry."GST Amount");
+                                            END;
 
-                            DTGSTEntry.RESET;
-                            DTGSTEntry.SetRange(DTGSTEntry."Entry Type", DTGSTEntry."Entry Type"::"Initial Entry");
-                            DTGSTEntry.SetRange(DTGSTEntry."Document Type", DTGSTEntry."Document Type"::Invoice);
-                            DTGSTEntry.SetRange(DTGSTEntry."Transaction Type", DTGSTEntry."Transaction Type"::Sales);
-                            DTGSTEntry.SETRANGE("Document No.", "Sales Invoice Line"."Document No.");
-                            DTGSTEntry.SETRANGE("Document Line No.", "Sales Invoice Line"."Line No.");
-                            IF DTGSTEntry.FINDSET THEN
-                                REPEAT
-                                    IF DTGSTEntry."GST Component Code" = 'IGST' THEN BEGIN
-                                        IGSTRate := ABS(DTGSTEntry."GST %");
-                                        IGSTAmt := ABS(DTGSTEntry."GST Amount");
-                                    END;
-                                    IF (DTGSTEntry."GST Component Code" = 'SGST') OR (DTGSTEntry."GST Component Code" = 'UTGST') THEN BEGIN
-                                        SGSTRate := ABS(DTGSTEntry."GST %");
-                                        SGSTAmt := ABS(DTGSTEntry."GST Amount");
-                                    END;
+                                            IF DTGSTEntry."GST Component Code" = 'CGST' THEN BEGIN
+                                                CGSTRate := ABS(DTGSTEntry."GST %");
+                                                CGSTAmt := ABS(DTGSTEntry."GST Amount");
+                                            END;
+                                        UNTIL DTGSTEntry.NEXT = 0;
 
-                                    IF DTGSTEntry."GST Component Code" = 'CGST' THEN BEGIN
-                                        CGSTRate := ABS(DTGSTEntry."GST %");
-                                        CGSTAmt := ABS(DTGSTEntry."GST Amount");
-                                    END;
-                                UNTIL DTGSTEntry.NEXT = 0;
-
-                            P_LineCount += 1;
+                                    P_LineCount += 1;
+                                end;
+                            end;
                         end;
 
                         trigger OnPreDataItem()
@@ -709,6 +735,7 @@ report 50002 "GST Sales Invoice Print"
                 LocationRec.Reset();
                 if LocationRec.GET("Sales Header"."Location Code") then
                     LocationGSTNo := LocationRec."GST Registration No.";
+                LocAddress := LocationRec.Address + ',' + LocationRec."Address 2" + ',' + LocationRec.City + ' ,' + LocationRec."Post Code";
                 Clear(ShipStateName);
                 Clear(BillStateName);
                 Clear(GSTCodeBill);
@@ -723,7 +750,16 @@ report 50002 "GST Sales Invoice Print"
 
 
                 amounttoCustomer := 0;
-                //CalculateStructure.GetPostedSalesInvStatisticsAmount("Sales Header", amounttoCustomer);
+                CalculateStructure.GetPostedSalesInvStatisticsAmount("Sales Header", amounttoCustomer);
+
+                CheckReport.InitTextVariable();
+                CheckReport.FormatNoText(amountinwords, amounttoCustomer, "Sales Header"."Currency Code");
+                if StrPos(amountinwords[1], '**** ') = 1 then
+                    amountinwords[1] := CopyStr(amountinwords[1], 6);
+
+                AmountText := amountinwords[1];
+                if amountinwords[2] <> '' then
+                    AmountText += ' ' + amountinwords[2];
 
 
 
@@ -887,29 +923,21 @@ report 50002 "GST Sales Invoice Print"
         PrintNo: Integer;
         NeedNo: Integer;
         adhaarship2: Text;
-
         DetailGstLedger: Record "Detailed GST Ledger Entry";
         GSTEINV: Decimal;
-
         adhaarshipbill: Text;
-
         GSTNoCust: Text;
-
         ShipGSTNo: Text;
-
         Stream_qr: InStream;
         AwardText: Label 'NATIONAL AWARD WINNER FROM GOVT. OF INDIA';
         DeclarationText: Label 'We certify that food/foods is/are warranted by the manufacturer to the nature substance and quality which it/these purport/purports to be.';
         TermsText: Label 'In case of any dispute the matter shall be refer to the Arbitator. Subject To Ludhiana Jurdiction.';
         CustomerRec: Record "cUSTOMER";
-
         kyutangkrrhahai: Integer;
-
         SalesPersonRec: Record "Salesperson/Purchaser";
         SalesPost: Codeunit "Sales-Post";
         ROUNDValue: Decimal;
         GLEntry: Record "G/L Entry";
-
         Base64: Codeunit "Base64 Convert";
         LocationRec: Record "LOCATION";
         ReplaceValue: Decimal;
@@ -936,14 +964,11 @@ report 50002 "GST Sales Invoice Print"
         HSNCode: Text;
         CGSTRate: Decimal;
         CGSTAmt: Decimal;
-
         SGSTRate: Decimal;
         SGSTAmt: Decimal;
         IGSTRate: Decimal;
         IGSTAmt: Decimal;
         SalesOtherState: Boolean;
-
-
         reportr2: Report 116;
         VarDetailGstLegEntry1: Record "Detailed GST Ledger Entry";
         CGSTName: Text;
@@ -957,14 +982,11 @@ report 50002 "GST Sales Invoice Print"
         CGST25: Decimal;
         CGST6: Decimal;
         CGST9: Decimal;
-
         streamout1: OutStream;
         CGST14: Decimal;
         SGST0: Decimal;
         SGST25: Decimal;
         SGST6: Decimal;
-
-
         SGST9: Decimal;
         Salesheadrec: Record "Sales Invoice Header";
         SGST14: Decimal;
@@ -982,8 +1004,8 @@ report 50002 "GST Sales Invoice Print"
         // SMTPMailSetup: Record "SMTP Mail Setup";
         SalesInvoiceHeaderEway: Record "Sales Invoice Header";
         WUOM: Text;
-
         LocationGSTNo: Code[20];
+        LocAddress: Text[250];
         TCSAmount: Decimal;
         // TCSEntry: Record "tcs entry";
         TCSPer: Decimal;
@@ -1011,11 +1033,10 @@ report 50002 "GST Sales Invoice Print"
 
         NoText: array[100] of Text;
 
-        amountinwords: Text;
-
+        amountinwords: array[2] of Text;
         netamt: Decimal;
-
-
+        CheckReport: Report "Check Report";
+        AmountText: Text[250];
         saleinvline: Record "Sales Invoice Line";
         GSTCodeBill: Code[30];
         GSTCOdeShip: Code[30];
@@ -1050,6 +1071,7 @@ report 50002 "GST Sales Invoice Print"
         tcsamount_rec: Decimal;
 
         CustPostRec: Record "Customer Posting Group";
+        CalculateStructure: Codeunit "Calculate Statistics";
         Cust_rec: Record Customer;
         glaccno: Code[30];
         Customer_Rec_12: Record Customer;
@@ -1060,7 +1082,11 @@ report 50002 "GST Sales Invoice Print"
         amounttoCustomer: Decimal;
         decAmount: Decimal;
         RecCompanyName: Code[100];
-
+        BankAccRec: Record "Bank Account";
+        BankName: Text[100];
+        BankAccountNo: Code[50];
+        IFSCCode: Code[20];
+        Branch: Text[50];
 
     procedure SetType(LocalSalesType: Text)
     begin
@@ -1074,11 +1100,5 @@ report 50002 "GST Sales Invoice Print"
         Salestype := SalesTypePara;
         fromFunction := TRUE;
     end;
-
-
-
-
-
-
 
 }

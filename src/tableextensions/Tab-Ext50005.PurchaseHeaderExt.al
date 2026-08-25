@@ -104,6 +104,11 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Caption = 'Exp. CN Value';
             DataClassification = CustomerContent;
         }
+        field(50012; "Integration PO"; Boolean)
+        {
+            Caption = 'Integration PO';
+            DataClassification = CustomerContent;
+        }
 
     }
     local procedure ValidateDocumentDate()
