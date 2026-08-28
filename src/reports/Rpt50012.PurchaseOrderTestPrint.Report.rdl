@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-08-24T10:07:53.0799870Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-08-26T11:05:02.3818281Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -2897,23 +2897,16 @@ Sum(Fields!LineGSTAmount.Value),
                     <Value>=First(Fields!LocationName.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
+                      <FontSize>8pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value xml:space="preserve"> </Value>
-                    <Style>
-                      <FontFamily>Segoe UI</FontFamily>
-                      <FontSize>14pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value xml:space="preserve">
+                    <Value xml:space="preserve"> 
 </Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
-                      <FontSize>9pt</FontSize>
+                      <FontSize>8pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -3064,9 +3057,9 @@ GSTIN / PAN : </Value>
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>0in</Top>
+            <Top>0.14583in</Top>
             <Left>3.26058in</Left>
-            <Height>1.18973in</Height>
+            <Height>1.0439in</Height>
             <Width>5.04718in</Width>
             <ZIndex>2</ZIndex>
             <Style>
@@ -3447,6 +3440,41 @@ GSTIN / PAN : </Value>
               </Border>
             </Style>
           </Image>
+          <Textbox Name="Textbox7">
+            <rd:DefaultName>Textbox7</rd:DefaultName>
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!CopyText.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>0in</Top>
+            <Left>6.29813in</Left>
+            <Height>0.14583in</Height>
+            <Width>2.00962in</Width>
+            <ZIndex>5</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
         <Height>8.24306in</Height>
         <Style>
@@ -4582,6 +4610,9 @@ r+BAheT+Dtr5SnQSB0EQBMHcdOz9zUxV7d+dnY6Lv91vUW4LOukd9fug+JVr6XXhexh9odxyux6Y/lsi
         </Field>
         <Field Name="CommentNote">
           <DataField>CommentNote</DataField>
+        </Field>
+        <Field Name="CopyText">
+          <DataField>CopyText</DataField>
         </Field>
         <Field Name="Description">
           <DataField>Description</DataField>

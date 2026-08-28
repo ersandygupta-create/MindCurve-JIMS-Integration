@@ -1122,12 +1122,13 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                     {
                         Caption = 'System Approved Indent List';
                         ApplicationArea = All;
+                        Visible = false;
                         RunObject = Page "E3 Approved Indent List";
                         ToolTip = 'Specify a value System Approved Indent List field.';
                     }
                     action(HISApprovedIndents)
                     {
-                        Caption = 'HIS Approved Indent List';
+                        Caption = 'Approved Indent List';
                         ApplicationArea = All;
                         RunObject = Page "E3 Approved HIS Indent List";
                         ToolTip = 'Executes the Vendor Quotation action.';
@@ -1149,6 +1150,7 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         ApplicationArea = Basic, Suite;
                         Caption = 'Open Store Indents';
                         Image = Archive;
+                        //Visible = false;
                         RunObject = Page "E3 HIS Release Indent List";
                         RunPageMode = View;
                         ToolTip = 'Specifies a view Release Indent List';
@@ -1157,7 +1159,7 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                     {
                         AccessByPermission = TableData "E3 Indent Sale/Purchase Header" = IMD;
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Released Store Stock for Issue';
+                        Caption = 'Released Indents for Stock Issue';
                         Image = Archive;
                         RunObject = Page "HIS Released Sales Indent List";
                         RunPageMode = Create;
@@ -1181,7 +1183,7 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                     {
                         AccessByPermission = TableData "E3 Indent Header" = IMD;
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Open Purchase Indents';
+                        Caption = 'Purchase Indents';
                         Image = Archive;
                         RunObject = Page "E3 HIS Issue Indent List";
                         RunPageMode = View;
@@ -1191,7 +1193,7 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                     {
                         AccessByPermission = TableData "E3 Indent Sale/Purchase Header" = IMD;
                         ApplicationArea = Basic, Suite;
-                        Caption = 'Released Purchase Stock for Process';
+                        Caption = 'Purchase Indents (In Process)';
                         Image = Archive;
                         RunObject = Page "HIS Released Purch Indent List";
                         RunPageMode = Create;
@@ -1202,8 +1204,20 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         AccessByPermission = TableData "E3 Indent Sale/Purchase Header" = IMD;
                         ApplicationArea = Basic, Suite;
                         Caption = 'Stock Receipt';
+                        //Visible = false;
                         Image = Archive;
                         RunObject = Page "E3 Indent Stock Receipt List";
+                        RunPageMode = Create;
+                        ToolTip = 'Closed a Purchase Indents List';
+                    }
+                    action("Closed Purchase Indents")
+                    {
+                        AccessByPermission = TableData "E3 Indent Sale/Purchase Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Closed Purchase Indents';
+                        //Visible = false;
+                        Image = Archive;
+                        RunObject = Page "E3 Closed Indent List";
                         RunPageMode = Create;
                         ToolTip = 'Closed a Purchase Indents List';
                     }

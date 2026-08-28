@@ -82,7 +82,7 @@ page 50078 "E3 VLE Ready for Payment"
                 {
                     ApplicationArea = Basic, Suite;
                     Editable = false;
-                    Visible = VendNameVisible;
+                    //Visible = VendNameVisible;
                 }
                 field("Message to Recipient"; Rec."Message to Recipient")
                 {

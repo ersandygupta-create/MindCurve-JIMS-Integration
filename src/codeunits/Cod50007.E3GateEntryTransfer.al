@@ -28,7 +28,8 @@ codeunit 50007 "E3 Gate Entry Transfer"
         PostedHeader."Posting Date" := Today;
         PostedHeader.Status := PostedHeader.Status::Posted;//ak
         PurchasesPayablesSetup.Get();
-        PostedHeader."Outward Document No." := NoSeries.GetNextNo(PurchasesPayablesSetup."Posted Gate Entry Outward No.", WorkDate(), true);
+        ShipmentNo := NoSeries.GetNextNo(PurchasesPayablesSetup."Posted Gate Entry Outward No.", WorkDate(), true);
+        PostedHeader."Outward Document No." := ShipmentNo;
 
         PostedHeader.Insert(true);
 
@@ -83,19 +84,12 @@ codeunit 50007 "E3 Gate Entry Transfer"
         PurchasesPayablesSetup: Record "Purchases & Payables Setup";
         NoSeries: Codeunit "No. Series";
     begin
-        //-----------------------------------------
-        // Validate Quantity
-        //-----------------------------------------
         OutwardLine.Reset();
         OutwardLine.SetRange("Document No.", OutwardHeader."Document No.");
         OutwardLine.SetFilter(Quantity, '>%1', 0);
 
         if not OutwardLine.FindFirst() then
             Error('No quantity available.');
-
-        //-----------------------------------------
-        // Create Inward Header
-        //-----------------------------------------
         PurchasesPayablesSetup.Get();
         PurchasesPayablesSetup.TestField("Posted Gate Entry Inward No.");
 
@@ -104,10 +98,8 @@ codeunit 50007 "E3 Gate Entry Transfer"
         InwardHeader."Entry Type" := InwardHeader."Entry Type"::Inward;
 
         InwardHeader."Document No." :=
-            NoSeries.GetNextNo(
-                PurchasesPayablesSetup."Posted Gate Entry Inward No.",
-                WorkDate(),
-                true);
+            NoSeries.GetNextNo(PurchasesPayablesSetup."Posted Gate Entry Inward No.", WorkDate(), true);
+        InwardHeader."Outward Document No." := ShipmentNo;
         InwardHeader."Gate Pass Type" := OutwardHeader."Gate Pass Type";
         InwardHeader."Purpose Code" := OutwardHeader."Purpose Code";
         InwardHeader.Mode := OutwardHeader.Mode;
@@ -144,6 +136,7 @@ codeunit 50007 "E3 Gate Entry Transfer"
                 InwardLine.Init();
                 InwardLine."Entry No." := LastEntryNo;
                 InwardLine."Document No." := InwardHeader."Document No.";
+                InwardLine."Outward Document No." := InwardHeader."Outward Document No.";
                 InwardLine."Line No." := OutwardLine."Line No.";
                 InwardLine."Item No." := OutwardLine."Item No.";
                 InwardLine."Item Name" := OutwardLine."Item Name";

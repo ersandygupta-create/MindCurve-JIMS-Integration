@@ -6,7 +6,7 @@ page 50221 "E3 HIS Release Indent List"
     UsageCategory = Lists;
     Caption = 'HIS Open Store List';
     CardPageId = "E3 HIS Release Indent Card";
-    SourceTableView = sorting("Document No.") order(descending) WHERE("Indent Status" = filter(Store), "Source Type" = filter(HIS));
+    SourceTableView = sorting("Document No.") order(descending) WHERE("Relese for Store" = const(true), "Source Type" = filter(HIS), "Closed Stock Issue" = const(false));
 
     layout
     {

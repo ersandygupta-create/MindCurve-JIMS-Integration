@@ -6,7 +6,7 @@ page 50224 "E3 HIS Issue Indent List"
     UsageCategory = Lists;
     Caption = 'HIS Purchase Person List';
     CardPageId = "E3 HIS Receipt Indent Card";
-    SourceTableView = sorting("Document No.") order(descending) WHERE("Indent Status" = FILTER(Purchase), "Source Type" = filter(HIS));
+    SourceTableView = sorting("Document No.") order(descending) WHERE("Relese for Purchase" = const(true), "Source Type" = filter(HIS), "Closed Purchase Receipt" = const(false));
 
     layout
     {
@@ -14,6 +14,26 @@ page 50224 "E3 HIS Issue Indent List"
         {
             repeater(General)
             {
+                field("Voucher Type Code"; Rec."Voucher Type Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the voucher type associated with the indent.';
+                }
+                field("Voucher Type Name"; Rec."Voucher Type Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the voucher type Name associated with the indent.';
+                }
+                field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the department for which the indent is created.';
+                }
+                field("Department Name"; Rec."Department Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the department for which the indent is created.';
+                }
                 field("Source Type"; Rec."Source Type")
                 {
                     ApplicationArea = All;
@@ -44,30 +64,10 @@ page 50224 "E3 HIS Issue Indent List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the user who prepared the indent.';
                 }
-                field("To Department"; Rec."To Department Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the department for which the indent is created.';
-                }
-                field("To Department Name"; Rec."To Department Name")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the department for which the indent is created.';
-                }
                 field(Status; Rec.Status)
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the current status of the indent.';
-                }
-                field("Voucher Type Code"; Rec."Voucher Type Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the voucher type associated with the indent.';
-                }
-                field("Voucher Type Name"; Rec."Voucher Type Name")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the voucher type Name associated with the indent.';
                 }
                 field("Approved By"; Rec."Approved By")
                 {

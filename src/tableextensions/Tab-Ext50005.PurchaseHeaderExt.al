@@ -109,6 +109,22 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Caption = 'Integration PO';
             DataClassification = CustomerContent;
         }
+        field(50013; "Original Printed"; Boolean)
+        {
+            Caption = 'Original Printed';
+            DataClassification = CustomerContent;
+        }
+        field(50014; "E3 Send E-Mail"; Boolean)
+        {
+            Caption = 'E3 Send E-Mail';
+            DataClassification = CustomerContent;
+        }
+        field(50015; "Item Make Code"; Code[20])
+        {
+            Caption = 'Item Make Code';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Make Master".Code;
+        }
 
     }
     local procedure ValidateDocumentDate()

@@ -42,7 +42,7 @@ page 50103 "E3 Posted Gate Ent Inward List"
                     Caption = 'Posted Inward Document No.';
                     ApplicationArea = All;
                 }
-                field("Posted Gate Entry Outward No."; Rec."Posted Gate Entry Outward No.")
+                field("Outward Document No."; Rec."Outward Document No.")
                 {
                     ToolTip = 'Specifies the value of the Posted Outward Document No. field';
                 }

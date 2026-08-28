@@ -11,6 +11,36 @@ pageextension 50057 "E3 HIS Purchase Order List" extends "Purchase Order List"
             }
         }
     }
+    actions
+    {
+        addlast(Processing)
+        {
+            action("Send Order E-Mail")
+            {
+                ApplicationArea = All;
+                Caption = 'Send Order E-Mail';
+                Image = Email;
+                ToolTip = 'Sends the selected purchase orders by email.';
+
+                trigger OnAction()
+                var
+                    PurchaseHeader: Record "Purchase Header";
+                    OrderAutoEmail: Codeunit "E3 Purchase Order Auto E-Mail";
+                begin
+                    CurrPage.SetSelectionFilter(PurchaseHeader);
+
+                    if PurchaseHeader.FindSet() then
+                        repeat
+                            OrderAutoEmail.SendMailforPurchaseOrderJob(
+                                PurchaseHeader);
+                        until PurchaseHeader.Next() = 0;
+
+                    CurrPage.Update(false);
+                end;
+            }
+        }
+    }
+
     trigger OnOpenPage()
     var
         UserSetup: Record "User Setup";
@@ -18,6 +48,7 @@ pageextension 50057 "E3 HIS Purchase Order List" extends "Purchase Order List"
         UserSetup.Get(UserId());
 
         if not UserSetup."Purchase Order" then
-            Error('You do not have permission to open Purchase Order.');
+            Error(
+                'You do not have permission to open Purchase Order.');
     end;
 }

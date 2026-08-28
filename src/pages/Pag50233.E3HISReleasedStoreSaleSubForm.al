@@ -6,6 +6,8 @@ page 50233 "HIS Released Sales Indent Line"
     Caption = 'Released Sales Indents Lines';
     AutoSplitKey = true;
     DelayedInsert = true;
+    SourceTableView = where("Released Stock Issue" = const(true));
+
 
     layout
     {

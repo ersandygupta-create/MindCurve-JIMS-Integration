@@ -65,6 +65,30 @@ page 50143 "E3 Item Make Master"
                     ApplicationArea = All;
                     Editable = false;
                 }
+                field(LocalEmail; Rec.LocalEmail)
+                {
+                    ApplicationArea = All;
+                    Caption = 'localEmail';
+                    ToolTip = 'Specifies the local email address.';
+                }
+                field(RegEmail; Rec.RegEmail)
+                {
+                    ApplicationArea = All;
+                    Caption = 'regEmail';
+                    ToolTip = 'Specifies the regional email address.';
+                }
+                field(NatEmail; Rec.NatEmail)
+                {
+                    ApplicationArea = All;
+                    Caption = 'natEmail';
+                    ToolTip = 'Specifies the national email address.';
+                }
+                field(Email; Rec.Email)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Email';
+                    ToolTip = 'Specifies the email address.';
+                }
             }
         }
     }

@@ -58,7 +58,7 @@ page 50213 "E3 Indent Sale/Purchase Card"
                 field(Type; Rec.Type)
                 {
                     ApplicationArea = All;
-                    Visible = false;
+                    //Visible = false;
                     ToolTip = 'Specifies whether the transaction is for a vendor or customer.';
                 }
                 field("Vendor/Customer No."; Rec."Vendor/Customer No.")
@@ -166,10 +166,7 @@ page 50213 "E3 Indent Sale/Purchase Card"
             {
                 ApplicationArea = All;
                 SubPageLink =
-                    "Entry No." = FIELD("Entry No."),
-                    "Nature Type" = FIELD("Nature Type"),
-                    "Entry Type" = FIELD("Entry Type"),
-                    "Document No." = FIELD("Document No.");
+                    "Document No." = FIELD("Document No."), "Entry Type" = field("Entry Type"), "Nature Type" = field("Nature Type");
             }
         }
     }
@@ -177,31 +174,6 @@ page 50213 "E3 Indent Sale/Purchase Card"
     {
         area(Processing)
         {
-            action("Create Purchase Order")
-            {
-                Caption = 'Stock Receipt';
-                ApplicationArea = All;
-                Image = CreateDocument;
-                Promoted = true;
-                PromotedCategory = Process;
-                ToolTip = 'Create a purchase order for the selected document.';
-
-                trigger OnAction()
-                var
-                    InterUnitSalePurchMgt: Codeunit "E3 InterUnit Sale/Purch Mgt.";
-                begin
-                    if Rec."Document No." = '' then
-                        Error('Document No. must not be blank.');
-
-                    if Rec.Type <> Rec.Type::Vendor then
-                        Error('Type must be Vendor to create a Purchase Order.');
-
-                    InterUnitSalePurchMgt.InitPurchaseOrder(Rec."Entry Type", Rec."Nature Type", Rec."Document No.");
-
-                    CurrPage.Update(false);
-                end;
-            }
-
             action("Create Sales Order")
             {
                 Caption = 'Stock Issue';
@@ -218,8 +190,8 @@ page 50213 "E3 Indent Sale/Purchase Card"
                     if Rec."Document No." = '' then
                         Error('Document No. must not be blank.');
 
-                    if Rec.Type <> Rec.Type::Customer then
-                        Error('Type must be Customer to create a Sales Order.');
+                    // if Rec.Type <> Rec.Type::Customer then
+                    //     Error('Type must be Customer to create a Sales Order.');
 
                     InterUnitSalePurchMgt.InitSalesOrder(Rec."Entry Type", Rec."Nature Type", Rec."Document No.");
 

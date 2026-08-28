@@ -22,7 +22,7 @@ table 50082 "E3 Indent Sale/Purchase Line"
             Caption = 'Entry Type';
             DataClassification = CustomerContent;
         }
-        field(4; "Document No."; Code[50])
+        field(4; "Document No."; Code[20])
         {
             Caption = 'Document No.';
             DataClassification = CustomerContent;
@@ -41,6 +41,7 @@ table 50082 "E3 Indent Sale/Purchase Line"
             var
                 Item: Record Item;
             begin
+                GetHISIntegrationSalesHdr();
                 if "Item ID" <> '' then begin
                     Item.Get("Item ID");
                     "Item Name" := Item.Description;
@@ -135,4 +136,26 @@ table 50082 "E3 Indent Sale/Purchase Line"
             Clustered = true;
         }
     }
+    local procedure GetHISIntegrationSalesHdr()
+    begin
+        TestField("Nature Type");
+        TestField("Entry Type");
+        TestField("Document No.");
+        IF ("Nature Type" <> IndentSalePurchHdr."Nature Type") OR ("Entry Type" <> IndentSalePurchHdr."Entry Type") OR
+            ("Document No." <> IndentSalePurchHdr."Document No.") THEN BEGIN
+            IndentSalePurchHdr.Reset();
+            IndentSalePurchHdr.SetRange("Nature Type", "Nature Type");
+            IndentSalePurchHdr.SetRange("Entry Type", "Entry Type");
+            IndentSalePurchHdr.SetRange("Document No.", "Document No.");
+            IndentSalePurchHdr.FindFirst();
+        END;
+    end;
+
+    trigger OnInsert()
+    BEGIN
+        GetHISIntegrationSalesHdr();
+    END;
+
+    var
+        IndentSalePurchHdr: Record "E3 Indent Sale/Purchase Header";
 }

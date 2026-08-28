@@ -21,6 +21,11 @@ page 50029 "E3 HIS E-Mail Setup"
                         ToolTip = 'Specifies the value of the Report ID field';
                         ApplicationArea = All;
                     }
+                    field("Order Report ID:"; Rec."Order Report ID")
+                    {
+                        ToolTip = 'Specifies the value of the Order Report ID field';
+                        ApplicationArea = All;
+                    }
                 }
                 group("CC E-Mail")
                 {
@@ -54,8 +59,16 @@ page 50029 "E3 HIS E-Mail Setup"
                     MultiLine = true;
                 }
             }
+            group("Order E-Mail Boody")
+            {
+                field("Order E-Mail Body"; Rec."Order E-Mail Body")
+                {
+                    ApplicationArea = Basic, Suite;
+                    ShowCaption = false;
+                    Editable = true;
+                    MultiLine = true;
+                }
+            }
         }
-
     }
-
 }

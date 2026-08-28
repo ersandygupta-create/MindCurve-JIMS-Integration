@@ -131,6 +131,11 @@ table 50045 "E3 Posted Gate Entry Line"
         {
             Caption = 'Posted Outward Document No.';
         }
+        field(203; "Pre OutWard Document No."; Code[20])
+        {
+            Caption = 'Document No.';
+            DataClassification = CustomerContent;
+        }
 
     }
     keys

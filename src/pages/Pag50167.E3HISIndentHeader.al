@@ -296,32 +296,74 @@ page 50167 "E3 HIS Indent Card"
                 trigger OnAction()
                 var
                     IndentLine: Record "E3 Indent Line";
+                    IndentLineToUpdate: Record "E3 Indent Line";
+                    AllLinesCreated: Boolean;
                 begin
                     Rec.TestField(Status, Rec.Status::Approved);
 
-                    Rec."Indent Status" := Rec."Indent Status"::Purchase;
-                    Rec.Modify(true);
+                    Rec."Relese for Purchase" := true;
+
+                    // Selected pending lines
+                    IndentLine.Reset();
+                    IndentLine.SetRange("Document No.", Rec."Document No.");
+                    IndentLine.SetRange(Select, true);
+                    IndentLine.SetRange("Stock Receipt Created", false);
+
+                    if IndentLine.IsEmpty() then
+                        Error(
+                            'Please select at least one pending line for Stock Receipt.');
+
+                    // Create Stock Receipt for selected lines
+                    if IndentLine.FindSet(true) then
+                        repeat
+                            IndentLineToUpdate.Reset();
+                            IndentLineToUpdate.SetRange("Document No.", IndentLine."Document No.");
+                            IndentLineToUpdate.SetRange("Line No.", IndentLine."Line No.");
+
+                            if IndentLineToUpdate.FindFirst() then begin
+                                IndentLineToUpdate."Stock Receipt Created" := true;
+                                IndentLineToUpdate.Select := false;
+                                IndentLineToUpdate.Modify(false);
+                            end;
+
+                        until IndentLine.Next() = 0;
+                    AllLinesCreated := true;
 
                     IndentLine.Reset();
                     IndentLine.SetRange("Document No.", Rec."Document No.");
 
                     if IndentLine.FindSet() then
                         repeat
-                            Rec."Indent Status" := Rec."Indent Status"::Purchase;
-                            IndentLine.Modify(true);
+                            if not IndentLine."Stock Receipt Created" then
+                                AllLinesCreated := false;
                         until IndentLine.Next() = 0;
 
-                    Message(
-                        'Indent %1 has been marked as Released.',
-                        Rec."Document No.");
+                    if AllLinesCreated then begin
+                        Rec."HIS Approved Indent Closed" := true;
+                        Rec.Modify(true);
+
+                        Message(
+                            'All lines are completed. Indent %1 is now closed.',
+                            Rec."Document No.");
+                    end
+                    else begin
+                        Rec."HIS Approved Indent Closed" := false;
+                        Rec.Modify(true);
+
+                        Message(
+                            'Stock Receipt created for the selected lines of Indent %1. ' +
+                            'Some lines are still pending.',
+                            Rec."Document No.");
+                    end;
 
                     CurrPage.Update(false);
                 end;
+
             }
-            action(ReleaseSale)
+            action(ReleaseStockIssue)
             {
                 ApplicationArea = All;
-                Caption = 'Release for Store Sale';
+                Caption = 'Release for Stock Issue';
                 Image = ReleaseDoc;
                 Promoted = true;
                 PromotedCategory = Process;
@@ -331,27 +373,64 @@ page 50167 "E3 HIS Indent Card"
                 trigger OnAction()
                 var
                     IndentLine: Record "E3 Indent Line";
+                    IndentLineToUpdate: Record "E3 Indent Line";
+                    AllLinesCreated: Boolean;
                 begin
                     Rec.TestField(Status, Rec.Status::Approved);
 
-                    Rec."Indent Status" := Rec."Indent Status"::Store;
-                    Rec.Modify(true);
+                    Rec."Relese for Store" := true;
+
+                    IndentLine.Reset();
+                    IndentLine.SetRange("Document No.", Rec."Document No.");
+                    IndentLine.SetRange(Select, true);
+                    IndentLine.SetRange("Stock Issue Created", false);
+
+                    if IndentLine.IsEmpty() then
+                        Error(
+                            'Please select at least one pending line for Stock Issue.');
+
+                    if IndentLine.FindSet(true) then
+                        repeat
+                            IndentLineToUpdate.Reset();
+                            IndentLineToUpdate.SetRange("Document No.", IndentLine."Document No.");
+                            IndentLineToUpdate.SetRange("Line No.", IndentLine."Line No.");
+
+                            if IndentLineToUpdate.FindFirst() then begin
+                                IndentLineToUpdate."Stock Issue Created" := true;
+                                IndentLineToUpdate.Select := false;
+
+                                // Use false if OnModify is resetting the Boolean
+                                IndentLineToUpdate.Modify(false);
+                            end;
+
+                        until IndentLine.Next() = 0;
+
+                    AllLinesCreated := true;
 
                     IndentLine.Reset();
                     IndentLine.SetRange("Document No.", Rec."Document No.");
 
                     if IndentLine.FindSet() then
                         repeat
-                            Rec."Indent Status" := Rec."Indent Status"::Store;
-                            IndentLine.Modify(true);
+                            if not IndentLine."Stock Issue Created" then begin
+                                AllLinesCreated := false;
+                                exit;
+                            end;
                         until IndentLine.Next() = 0;
 
+
+                    Rec."HIS Approved Indent Closed" := AllLinesCreated;
+
+                    Rec.Modify(true);
+
                     Message(
-                        'Indent %1 has been marked as Released.',
+                        'Stock Issue created for the selected lines of Indent %1.',
                         Rec."Document No.");
 
                     CurrPage.Update(false);
                 end;
+
+
             }
         }
     }

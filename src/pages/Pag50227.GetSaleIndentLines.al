@@ -7,7 +7,8 @@ page 50227 "E3 Get Sale Indent Lines"
     InsertAllowed = false;
     DeleteAllowed = false;
     ModifyAllowed = false;
-    SourceTableView = sorting("Document No.", "Line No.") order(descending) where("Sales Released" = const(true));
+    MultipleNewLines = true;
+    SourceTableView = sorting("Document No.", "Line No.") order(descending) where("Stock Issue Created" = const(true));
 
     layout
     {

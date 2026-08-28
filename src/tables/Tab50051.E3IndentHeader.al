@@ -362,10 +362,10 @@ table 50051 "E3 Indent Header"
             Editable = false;
             DataClassification = CustomerContent;
         }
-        field(34; "Indent Status"; Option)
+        field(34; "Relese for Store"; Boolean)
         {
-            OptionMembers = Open,Store,Purchase;
-            Caption = 'Indent Status';
+            Caption = 'Relese for Store';
+            DataClassification = CustomerContent;
         }
         field(35; Released; Boolean)
         {
@@ -385,6 +385,26 @@ table 50051 "E3 Indent Header"
         field(38; "Purchase Released"; Boolean)
         {
             Caption = 'Purchase Released';
+            DataClassification = CustomerContent;
+        }
+        field(39; "HIS Approved Indent Closed"; Boolean)
+        {
+            Caption = 'HIS Approved Indent Closed';
+            DataClassification = CustomerContent;
+        }
+        field(40; "Closed Stock Issue"; Boolean)
+        {
+            Caption = 'Closed Stock Issue';
+            DataClassification = CustomerContent;
+        }
+        field(41; "Closed Purchase Receipt"; Boolean)
+        {
+            Caption = 'Closed Purchase Receipt';
+            DataClassification = CustomerContent;
+        }
+        field(42; "Relese for Purchase"; Boolean)
+        {
+            Caption = 'Relese for Purchase';
             DataClassification = CustomerContent;
         }
     }

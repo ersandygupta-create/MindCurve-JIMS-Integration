@@ -61,6 +61,18 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
                 Caption = 'Cc Payment Advice Email';
                 ToolTip = 'Specifies the value of the Payment Advice E-mail field';
             }
+            field("Order Email"; Rec."Order Email")
+            {
+                Caption = 'Order Email';
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Order E-mail field';
+            }
+            field("Send Order Email"; Rec."Send Order Email")
+            {
+                Caption = 'Send Order Email';
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Send Order E-mail field';
+            }
         }
     }
     actions

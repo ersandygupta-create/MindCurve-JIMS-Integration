@@ -44,6 +44,8 @@ codeunit 50006 "E3 Post Gate Entry"
             PostedGateEntryHeader.TRANSFERFIELDS(GateEntryHeader);
             PostedGateEntryHeader.PostedNo := NoSeries.GetNextNo(PurchPayble."Gate Entry Receipt Series", WorkDate(), true);
             postedGateEntryHeader."Outward Document No." := postedoutwardheader."Outward Document No.";
+            PostedGateEntryHeader."Posted Gate Entry Outward No." := GateEntryHeader."Posted Gate Entry Outward No.";
+            PostedGateEntryHeader."Inward Document No." := GateEntryHeader."Document No.";
 
             IF GUIALLOWED THEN
                 Window.UPDATE(1, STRSUBSTNO(Text16503, "Document No.", PostedGateEntryHeader."Document No."));
@@ -64,6 +66,8 @@ codeunit 50006 "E3 Post Gate Entry"
                     IF GUIALLOWED THEN
                         Window.UPDATE(2, LineCount);
                     PostedGateEntryLine.INIT();
+                    PostedGateEntryLine."Outward Document No." := GateEntryHeader."Outward Document No.";
+                    PostedGateEntryLine."Pre OutWard Document No." := GateEntryHeader."Posted Gate Entry Outward No.";
                     PostedGateEntryLine."Item No." := GateEntryLine."Item No.";
                     PostedGateEntryLine."Item Name" := GateEntryLine."Item Name";
                     PostedGateEntryLine."Line No." := GateEntryLine."Line No.";
@@ -78,6 +82,7 @@ codeunit 50006 "E3 Post Gate Entry"
                     PostedGateEntryLine.Specification := GateEntryLine.Specification;
                     PostedGateEntryLine."Lot No." := GateEntryLine."Lot No.";
                     PostedGateEntryLine.PostedNo := PostedGateEntryHeader.PostedNo;
+                    PostedGateEntryLine."Inward Document No." := PostedGateEntryHeader."Document No.";
                     PostedGateEntryLine."Posted Entry No." := LastEntryno;
                     PostedGateEntryLine."Estimated Value Receive" := GateEntryLine."Estimated Value Receive";
                     PostedGateEntryLine.INSERT();

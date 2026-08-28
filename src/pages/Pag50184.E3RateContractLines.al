@@ -58,6 +58,18 @@ page 50184 "E3 Rate Contract Subpage"
                     ApplicationArea = All;
                     ToolTip = 'Specifies The Value Incl Free Qty in Sale Rate';
                 }
+                field("Free Qty"; Rec."Free Qty")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Free Qty';
+                    ToolTip = 'Specifies the free quantity.';
+                }
+                field("PO Qty"; Rec."PO Qty")
+                {
+                    ApplicationArea = All;
+                    Caption = 'PO Qty';
+                    ToolTip = 'Specifies the purchase order quantity.';
+                }
                 field("Type Of RC"; Rec."Type Of RC")
                 {
                     ApplicationArea = All;

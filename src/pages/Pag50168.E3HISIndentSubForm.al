@@ -6,6 +6,7 @@ page 50168 "E3 HIS Indent Line Subform"
     Caption = 'Indent Lines';
     AutoSplitKey = true;
     DelayedInsert = true;
+    SourceTableView = where("Stock Issue Created" = const(false), "Stock Receipt Created" = const(false));
 
     layout
     {
@@ -13,6 +14,11 @@ page 50168 "E3 HIS Indent Line Subform"
         {
             repeater(Lines)
             {
+                field(Select; Rec.Select)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Select';
+                }
                 field("Line No."; Rec."Line No.")
                 {
                     ApplicationArea = All;
@@ -138,6 +144,57 @@ page 50168 "E3 HIS Indent Line Subform"
 
                         CurrPage.Update(false);
                     end;
+                end;
+            }
+            action(SelectAll)
+            {
+                ApplicationArea = All;
+                Caption = 'Select All';
+                Image = SelectLineToApply;
+
+                trigger OnAction()
+                var
+                    IndentLine: Record "E3 Indent Line";
+                begin
+                    IndentLine.Reset();
+
+                    // Select only lines belonging to the current document
+                    IndentLine.SetRange("Document No.", Rec."Document No.");
+                    IndentLine.SetRange("Line No.", Rec."Line No.");
+
+                    if IndentLine.FindSet(true) then
+                        repeat
+                            IndentLine."Select" := true;
+                            IndentLine.Modify();
+                        until IndentLine.Next() = 0;
+
+                    CurrPage.Update(false);
+                end;
+            }
+
+            action(ClearAll)
+            {
+                ApplicationArea = All;
+                Caption = 'Clear All';
+                Image = ClearLog;
+
+                trigger OnAction()
+                var
+                    IndentLine: Record "E3 Indent Line";
+                begin
+                    IndentLine.Reset();
+
+                    // Clear only lines belonging to the current document
+                    IndentLine.SetRange("Document No.", Rec."Document No.");
+                    IndentLine.SetRange("Line No.", Rec."Line No.");
+
+                    if IndentLine.FindSet(true) then
+                        repeat
+                            IndentLine."Select" := false;
+                            IndentLine.Modify();
+                        until IndentLine.Next() = 0;
+
+                    CurrPage.Update(false);
                 end;
             }
 

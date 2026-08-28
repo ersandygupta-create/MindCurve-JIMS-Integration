@@ -10,14 +10,12 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 Caption = 'Item Make Code';
                 ToolTip = 'Specifies the unique code of the item make.';
             }
-
             field("Item Make Name"; Rec."Item Make Name")
             {
                 ApplicationArea = All;
                 Caption = 'Item Make Name';
                 ToolTip = 'Specifies the name of the item make.';
             }
-
             field(Critical; Rec.Critical)
             {
                 ApplicationArea = All;
@@ -125,26 +123,64 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
 
                 trigger OnAction()
                 var
-                    PurchHeader: Record "Purchase Header";
                     IndentHeader: Record "E3 Indent Header";
                     IndentLine: Record "E3 Indent Line";
                     GetIndentLinesPage: Page "E3 Get Indent Lines";
+                    SelectedMakeCode: Code[20];
+                    DocumentNo: Code[20];
+                    LineNo: Integer;
+                    SelectedLines: Record "E3 Indent Line";
                 begin
                     IndentHeader.Reset();
                     IndentHeader.SetRange(Status, IndentHeader.Status::Approved);
                     IndentHeader.SetRange(Released, true);
-                    // Open filtered page
+
                     GetIndentLinesPage.SetTableView(IndentLine);
                     GetIndentLinesPage.LookupMode(true);
 
-                    if GetIndentLinesPage.RunModal() = Action::LookupOK then begin
-                        GetIndentLinesPage.SetSelectionFilter(IndentLine);
+                    if GetIndentLinesPage.RunModal() <> Action::LookupOK then
+                        exit;
 
-                        if IndentLine.FindSet() then
-                            repeat
-                                CreatePurchaseLineFromIndent(IndentLine);
-                            until IndentLine.Next() = 0;
-                    end;
+                    GetIndentLinesPage.SetSelectionFilter(IndentLine);
+
+                    if not IndentLine.FindSet() then
+                        exit;
+
+                    SelectedMakeCode := IndentLine."Item Make Code";
+
+                    repeat
+                        if IndentLine."Item Make Code" <> SelectedMakeCode then begin
+                            Message(
+                                'You have selected a different Make Code.\' +
+                                'First Selected Make Code: %1\' +
+                                'Selected Make Code: %2\' +
+                                'Item No.: %3',
+                                SelectedMakeCode,
+                                IndentLine."Item Make Code",
+                                IndentLine."No.");
+
+                            exit;
+                        end;
+
+                    until IndentLine.Next() = 0;
+                    GetIndentLinesPage.SetSelectionFilter(SelectedLines);
+
+                    if not SelectedLines.FindSet() then
+                        exit;
+
+                    repeat
+                        DocumentNo := SelectedLines."Document No.";
+                        LineNo := SelectedLines."Line No.";
+
+                        CreatePurchaseLineFromIndent(SelectedLines);
+
+                        // Always get the latest database version
+                        if IndentLine.Get(DocumentNo, LineNo) then begin
+                            IndentLine."Closed Indent" := true;
+                            IndentLine.Modify(true);
+                        end;
+
+                    until SelectedLines.Next() = 0;
 
                     CurrPage.Update(false);
                 end;
@@ -221,7 +257,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         PurchLine.Validate("No.", IndentLine."No.");
         PurchLine.Description := IndentLine.Description;
         PurchLine.Validate(Quantity, IndentLine."Approved Qty");
-        PurchLine.Validate("Direct Unit Cost", IndentLine."Quotation Price");
+        PurchLine.Validate("Direct Unit Cost", IndentLine."Unit Cost");
         if IndentLine."Location Code" <> '' then
             PurchLine.Validate("Location Code", IndentLine."Location Code");
         if IndentLine."Purch. Unit of Measure" <> '' then
@@ -232,9 +268,10 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         PurchLine."Item Make Code" := IndentLine."Item Make Code";
         PurchLine."Item Make Name" := IndentLine."Item Make Name";
         PurchLine.Critical := IndentLine."Critical Item";
-        //PurchLine.MRP := IndentLine.MRP;
-        //PurchLine.Scheme := IndentLine.Scheme;
+        PurchLine.MRP := IndentLine.MRP;
+        PurchLine.Scheme := IndentLine.Scheme;
         PurchLine."SNo." := IndentLine."SNo.";
+        PurchLine."Incl Free Qty in Sale Rate" := IndentLine."Incl Free Qty in Sale Rate";
         PurchLine.Insert(true);
         UpdateIndentLine(
             IndentLine);

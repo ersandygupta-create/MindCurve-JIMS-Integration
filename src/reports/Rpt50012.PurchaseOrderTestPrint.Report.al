@@ -10,511 +10,520 @@ report 50012 "Purchase Order Print"
 
     dataset
     {
-        dataitem(PurchaseHeader; "Purchase Header")
+        dataitem(CopyLoop; Integer)
         {
-            DataItemTableView = SORTING("Document Type", "No.");
+            DataItemTableView = sorting(Number) where(Number = filter(1 .. 2));
+            dataitem(PurchaseHeader; "Purchase Header")
+            {
+                DataItemTableView = SORTING("Document Type", "No.");
 
-            RequestFilterFields = "No.", "Buy-from Vendor No.";
-            RequestFilterHeading = 'Purchase Order Print';
+                RequestFilterFields = "No.", "Buy-from Vendor No.";
+                RequestFilterHeading = 'Purchase Order Print';
 
-            column(CompanyName; ReccompanyName)//compinfo.Name)
-            {
-            }
-            column(CompanyName2;
-            CompInfo."Name 2")
-            {
-            }
-            column(CompanyAddress; CompAdd)
-            {
-            }
-            column(ComPANNo; compinfo."P.A.N. No.")
-            {
-            }
-            column(ComWebSite; compinfo."Home Page")
-            {
-            }
-            column(Email; Email)
-            {
-            }
-            column(PhoneNo; PhoneNo)
-            {
-            }
-            column(GSTIN; GSTIN)
-            {
-            }
-            column(txtcomment; txtcomment)
-            {
+                column(CompanyName; ReccompanyName)//compinfo.Name)
+                {
+                }
+                column(CompanyName2;
+                CompInfo."Name 2")
+                {
+                }
+                column(CompanyAddress; CompAdd)
+                {
+                }
+                column(ComPANNo; compinfo."P.A.N. No.")
+                {
+                }
+                column(ComWebSite; compinfo."Home Page")
+                {
+                }
+                column(Email; Email)
+                {
+                }
+                column(PhoneNo; PhoneNo)
+                {
+                }
+                column(GSTIN; GSTIN)
+                {
+                }
+                column(txtcomment; txtcomment)
+                {
 
-            }
-            column(txtcommentNote; txtcommentNote)
-            {
+                }
+                column(txtcommentNote; txtcommentNote)
+                {
 
-            }
-            column(txtVendorComment; txtVendorComment)
-            {
-            }
-            column(PayTerms; PayTerms)
-            {
-            }
-            column(DrugLigNo; DrugLigNo)
-            {
-            }
-            column(LocationAdd; LocationAdd)
-            {
-            }
-            column(LocationAdd2; LocationAdd2)
-            {
-            }
-            column(LocationEmail; LocationEmail)
-            {
-            }
-            column(LocationPhoneNo; LocationPhoneNo)
-            {
-            }
-            column(LocationGSTIN; LocationGSTIN)
-            {
-            }
-            column(LocationWebsite; LocationWebsite)
-            {
+                }
+                column(txtVendorComment; txtVendorComment)
+                {
+                }
+                column(PayTerms; PayTerms)
+                {
+                }
+                column(DrugLigNo; DrugLigNo)
+                {
+                }
+                column(LocationAdd; LocationAdd)
+                {
+                }
+                column(LocationAdd2; LocationAdd2)
+                {
+                }
+                column(LocationEmail; LocationEmail)
+                {
+                }
+                column(LocationPhoneNo; LocationPhoneNo)
+                {
+                }
+                column(LocationGSTIN; LocationGSTIN)
+                {
+                }
+                column(LocationWebsite; LocationWebsite)
+                {
 
-            }
-            column(Document_Type; "Document Type")
-            {
-            }
-            column(PurchInvNo; "No.")
-            {
-            }
-            column(PurchInvPostingDate; Format("Posting Date", 0, '<Day,2>/<Month,2>/<Year4>'))
-            {
-            }
-            column(Order_Date; "Order Date")
-            {
-            }
-            column(W_S_DL_No_; "W/S DL No.")
-            {
-            }
-            column(Retail_DL_No_; "Retail DL No.")
-            {
-            }
-            column(Status; Status)
-            {
-            }
-            column(SystemCreatedBy; userc."User Name")
-            {
-            }
-            column(SystemModifiedBy; userm."User Name")
-            {
-            }
-            column(ApprovedBy; userId)
-            {
-            }
-            column(CreatedBy; PreparedBy)
-            {
-            }
-            column(SelltoCustomerNo; "Sell-to Customer No.")
-            {
-            }
-            column(SupplierAdd; PurchaseHeader."Buy-from Address" + ', ' + PurchaseHeader."Buy-from Address 2" + ', ' + PurchaseHeader."Buy-from City" + ', ' + PurchaseHeader."Buy-from Post Code")
-            {
-            }
-            column(SupplierPhoneNo; SupplierPhoneNo)
-            {
-            }
-            column(SupplierName; SupplierName)
-            {
-            }
+                }
+                column(Document_Type; "Document Type")
+                {
+                }
+                column(PurchInvNo; "No.")
+                {
+                }
+                column(PurchInvPostingDate; Format("Posting Date", 0, '<Day,2>/<Month,2>/<Year4>'))
+                {
+                }
+                column(Order_Date; "Order Date")
+                {
+                }
+                column(W_S_DL_No_; "W/S DL No.")
+                {
+                }
+                column(Retail_DL_No_; "Retail DL No.")
+                {
+                }
+                column(Status; Status)
+                {
+                }
+                column(SystemCreatedBy; userc."Full Name")
+                {
+                }
+                column(SystemModifiedBy; userm."User Name")
+                {
+                }
+                column(ApprovedBy; userId)
+                {
+                }
+                column(CreatedBy; PreparedBy)
+                {
+                }
+                column(SelltoCustomerNo; "Sell-to Customer No.")
+                {
+                }
+                column(SupplierAdd; PurchaseHeader."Buy-from Address" + ', ' + PurchaseHeader."Buy-from Address 2" + ', ' + PurchaseHeader."Buy-from City" + ', ' + PurchaseHeader."Buy-from Post Code")
+                {
+                }
+                column(SupplierPhoneNo; SupplierPhoneNo)
+                {
+                }
+                column(SupplierName; SupplierName)
+                {
+                }
 
-            column(IGSTRsAmount_Var; IGSTRsAmount_Var)
-            {
-            }
-            column(CGSTRsAmount_Var; CGSTRsAmount_Var)
-            {
-            }
-            column(SGSTRsAmount_Var; SGSTRsAmount_Var)
-            {
-            }
-            column(SupplierEmail; SupplierEmail)
-            {
-            }
-            column(SupplierGSTIN; PurchaseHeader."Vendor GST Reg. No.")
-            {
-            }
-            column(OrderaddGSTIN; PurchaseHeader."Order Address GST Reg. No.")
-            {
-            }
-            column(DelTerms; PurchaseHeader."E3 Delivery Terms")
-            {
-            }
-            column(SupplierPANNo; SupplierPANNo)
-            {
-            }
-            column(LocationName; LocationName)
-            {
-            }
-            column(AmtWords; AmtWords[1])
-            {
-            }
-            column(TotalAmttoVendor; TotalAmttoVendor)
-            {
-            }
-            column(txtPurchaseHeader; txtPurchaseHeader)
-            {
-            }
-            column(TotalTDS; TotalTDS)
-            {
-            }
-            column(TotalGSTAmount; TotalInclTaxAmount)
-            {
-            }
-            column(Currency_Code; CdCurrencyCode)
-            {
+                column(IGSTRsAmount_Var; IGSTRsAmount_Var)
+                {
+                }
+                column(CGSTRsAmount_Var; CGSTRsAmount_Var)
+                {
+                }
+                column(SGSTRsAmount_Var; SGSTRsAmount_Var)
+                {
+                }
+                column(SupplierEmail; SupplierEmail)
+                {
+                }
+                column(SupplierGSTIN; PurchaseHeader."Vendor GST Reg. No.")
+                {
+                }
+                column(OrderaddGSTIN; PurchaseHeader."Order Address GST Reg. No.")
+                {
+                }
+                column(DelTerms; PurchaseHeader."E3 Delivery Terms")
+                {
+                }
+                column(SupplierPANNo; SupplierPANNo)
+                {
+                }
+                column(LocationName; LocationName)
+                {
+                }
+                column(AmtWords; AmtWords[1])
+                {
+                }
+                column(TotalAmttoVendor; TotalAmttoVendor)
+                {
+                }
+                column(txtPurchaseHeader; txtPurchaseHeader)
+                {
+                }
+                column(TotalTDS; TotalTDS)
+                {
+                }
+                column(TotalGSTAmount; TotalInclTaxAmount)
+                {
+                }
+                column(Currency_Code; CdCurrencyCode)
+                {
 
-            }
-            column(CompInfoPictures; CompInfo.Picture)
-            {
-            }
-            column(DraftPicture; CompInfo.DraftImage)
-            {
-            }
-            column(LastAEdt; LastAEdt)
-            {
-            }
-            column(TermName; txtTermName)
-            {
-            }
-            column(CommentNote; txtcommentNote)
-            {
-            }
-            trigger OnAfterGetRecord()
-            begin
-                IF Status = Status::Open then begin
-                    txtPurchaseHeader := 'Approval Pending'
-                end else
-                    if status = status::"Pending Approval" then begin
-                        txtPurchaseHeader := 'Approval Pending '
+                }
+                column(CompInfoPictures; CompInfo.Picture)
+                {
+                }
+                column(DraftPicture; CompInfo.DraftImage)
+                {
+                }
+                column(LastAEdt; LastAEdt)
+                {
+                }
+                column(TermName; txtTermName)
+                {
+                }
+                column(CommentNote; txtcommentNote)
+                {
+                }
+                column(CopyText; CopyText)
+                {
+                }
+                trigger OnAfterGetRecord()
+                begin
+                    OriginalPrint := false;
+
+                    if not PurchaseHeader."Original Printed" then begin
+                        CopyText := 'ORIGINAL';
+                        OriginalPrint := true;
                     end else
-                        if status = status::Released then begin
-                            txtPurchaseHeader := 'Approved'
-                        end;
-                if NOT (Status = status::Released) then begin
-                    CompInfo.GET();
-                    CompInfo.CalcFields(DraftImage);
+                        CopyText := 'DUPLICATE';
+
+                    IF Status = Status::Open then begin
+                        txtPurchaseHeader := 'Approval Pending'
+                    end else
+                        if status = status::"Pending Approval" then begin
+                            txtPurchaseHeader := 'Approval Pending '
+                        end else
+                            if status = status::Released then begin
+                                txtPurchaseHeader := 'Approved'
+                            end;
+                    if NOT (Status = status::Released) then begin
+                        CompInfo.GET();
+                        CompInfo.CalcFields(DraftImage);
+                    end;
+
+
+                    SupplierName := '';
+                    SupplierAdd := '';
+                    SupplierEmail := '';
+                    SupplierPhoneNo := '';
+                    SupplierGSTIN := '';
+                    if (PurchaseHeader."Posting Date" < CompInfo."Transaction Date") then
+                        RecCompanyName := compinfo."Old Comapany Name"
+                    else
+                        RecCompanyName := CompInfo.Name;
+
+                    IF Customer.Get("Buy-from Vendor No.") THEN begin
+                        SupplierName := Customer.Name + '' + Customer."Name 2";
+                        IF recState.Get(Customer."State Code") THEN;
+                        IF CountryRegion.Get(Customer."Country/Region Code") THEN;
+                        SupplierAdd := Customer.Address + ', ' + Customer."Address 2" + ', ' + Customer.City + ', ' + FORMAT(Customer."Post Code") + ', ' + FORMAT(recState.Description) + ', ' + CountryRegion.Name;
+                        SupplierEmail := Customer."E-Mail";
+                        SupplierPhoneNo := Customer."Phone No.";
+                        SupplierGSTIN := Customer."GST Registration No.";
+                        SupplierPANNo := Customer."P.A.N. No.";
+                    end;
+
+                    LocationAdd := '';
+                    LocationAdd2 := '';
+                    LocationEmail := '';
+                    LocationPhoneNo := '';
+                    LocationGSTIN := '';
+                    LocationName := '';
+                    IF PurchaseHeader."Location Code" <> '' THEN BEGIN
+                        Location.RESET;
+                        Location.SETRANGE(Code, PurchaseHeader."Location Code");
+                        IF Location.FINDFIRST THEN BEGIN
+                            recState.Get(Location."State Code");
+                            CountryRegion.Get(Location."Country/Region Code");
+                            LocationName := Location.Name;
+                            LocationAdd := Location.Address;//+ ', ';
+                            LocationAdd2 := Location."Address 2"; //+ ', ' + Location.City + ', ' + FORMAT(Location."Post Code") + ', ' + FORMAT(recState.Description) + ', ' + CountryRegion.Name;
+                            LocationEmail := Location."E-Mail";
+                            LocationPhoneNo := Location."Phone No.";
+                            LocationGSTIN := Location."GST Registration No.";
+                            LocationWebsite := Location."Home Page";
+                        END;
+                    end;
+
+
+                    decAmountoVendor := 0;
+                    recPurchaseLine.Reset();
+                    recPurchaseLine.SetRange("Document Type", "Document Type");
+                    recPurchaseLine.SetRange("Document No.", "No.");
+                    IF recPurchaseLine.FindFirst() then begin
+                        repeat
+                            decAmountoVendor += recPurchaseLine.Amount;
+                        until recPurchaseLine.Next() = 0;
+                    end;
+
+                    IF PurchaseHeader."Currency Code" <> '' then
+                        CdCurrencyCode := PurchaseHeader."Currency Code"
+                    else
+                        CdCurrencyCode := 'INR';
+
+                    CalcStatistics.GetPurchaseStatisticsAmount(PurchaseHeader, TotalAmttoVendor);
+                    CalcStatistics.OnGetPurchaseHeaderGSTAmount(PurchaseHeader, TotalInclTaxAmount);
+                    CalcStatistics.OnGetPurchaseHeaderTDSAmount(PurchaseHeader, TotalTDS);
+
+                    if TotalInclTaxAmount = 0 then begin
+                        GetGSTAmounts(PurchaseHeader);
+                        TotalInclTaxAmount := CGST_Amt + SGST_Amt + IGST_Amt;
+                        if TotalInclTaxAmount <> 0 then
+                            TotalAmttoVendor += TotalInclTaxAmount;
+                    end;
+
+                    Customer.get("Buy-from Vendor No.");
+                    IF (Customer."State Code" = "Location State Code") and (TotalInclTaxAmount <> 0) then begin
+                        CGSTRsAmount_Var := (TotalInclTaxAmount / 2);
+                        SGSTRsAmount_Var := (TotalInclTaxAmount / 2);
+                    END ELSE
+                        IGSTRsAmount_Var := TotalInclTaxAmount;
+
+                    PostedVoucher.InitTextVariable;
+                    PostedVoucher.FormatNoText(AmtWords, Round(TotalAmttoVendor, 1), PurchaseHeader."Currency Code");
+                    AmtWords[1] := AmtWords[1].Replace(' AND ZERO PAISA ONLY', ' ONLY');
+
+                    if userc.Get(SystemCreatedBy) then;
+                    if userm.Get(SystemModifiedBy) then;
+
+                    txtcomment := '';
+                    PurchCommentLine.Reset();
+                    PurchCommentLine.SetRange("Document Type", "Document Type");
+                    //PurchCommentLine.SetRange(Type, PurchCommentLine.Type::"Term & Condition");
+                    PurchCommentLine.SetRange("No.", "No.");
+                    IF PurchCommentLine.FindSet() then begin
+                        repeat
+                            txtcomment += PurchCommentLine.Comment;
+                        until PurchCommentLine.Next() = 0;
+                    end;
+
+                    txtcommentNote := '';
+                    PurchCommentLine.Reset();
+                    PurchCommentLine.SetRange("Document Type", "Document Type");
+                    PurchCommentLine.SetRange("Document Line No.", PurchCommentLine."Document Line No.");
+                    PurchCommentLine.SetRange("No.", "No.");
+                    IF PurchCommentLine.FindSet() then begin
+                        repeat
+                            txtcommentNote += PurchCommentLine.Comment;
+                        until PurchCommentLine.Next() = 0;
+
+                    end;
+                    txtDescription := '';
+                    ExtendedTextLine.Reset();
+                    ExtendedTextLine.SetRange("Table Name", ExtendedTextLine."Table Name"::Item);
+                    ExtendedTextLine.SetRange("No.", PurchaseLine."Vendor Item No.");
+                    IF ExtendedTextLine.FINDFIRST THEN BEGIN
+                        repeat
+                            txtDescription += ExtendedTextLine.Text;
+                        UNTIL ExtendedTextLine.NEXT() = 0;
+
+                        // END ELSE
+                        //txtDescription := "Purchase Line".Description + '' + "Purchase Line"."Description 2";
+                    end;
+                    // PayTerms := '';
+                    // PaymentTerms.SetRange(Code, PurchaseHeader."Payment Terms Code");
+                    // if PaymentTerms.FindFirst() then begin
+                    //     repeat
+                    //         PayTerms += PaymentTerms.Description;
+                    //     until PaymentTerms.Next() = 0;
+                    // end;
+
+                    txtVendorComment := '';
+                    VendorComment.Reset();
+                    VendorComment.SetRange("Table Name", VendorComment."Table Name"::Vendor);
+                    //VendorComment.SetRange(Type, VendorComment.Type::"Term & Condition");
+                    VendorComment.SetRange("No.", "Buy-from Vendor No.");
+                    IF VendorComment.FindFirst() then begin
+                        repeat
+                            txtVendorComment += VendorComment.Comment;
+                        until VendorComment.Next() = 0;
+
+                    end;
+
+                    userId := '';
+                    PreparedBy := '';
+                    ApprovalEntry.RESET;
+                    ApprovalEntry.SETRANGE("Table ID", 38);
+                    ApprovalEntry.SETRANGE("Document No.", "No.");
+                    ApprovalEntry.SETRANGE(Status, ApprovalEntry.Status::Approved);
+                    IF ApprovalEntry.FINDLAST THEN
+                        userId := ApprovalEntry."Last Modified By User ID";
+                    PreparedBy := ApprovalEntry."Sender ID";
+                    LastAEdt := ApprovalEntry."Last Date-Time Modified";
+
+                    //comment
+                    txtTermName := '';
+                    txtCommentNote := '';
+
+                    PurchCommentLine.Reset();
+                    PurchCommentLine.SetRange("Document Type", "Document Type");
+                    PurchCommentLine.SetRange("No.", "No.");
+                    PurchCommentLine.SetRange("Document Line No.", 0);
+
+                    if PurchCommentLine.FindSet() then
+                        repeat
+
+                            //if DelChr(PurchCommentLine.Comment, '=', ' ') <> '' then begin
+
+                            if txtTermName = '' then begin
+                                txtTermName := PurchCommentLine."Order Terms";
+                                txtCommentNote := PurchCommentLine.Comment;
+                            end else begin
+                                txtTermName += '\n' + PurchCommentLine."Order Terms";
+                                txtCommentNote += '\n' + PurchCommentLine.Comment;
+                            end;
+
+                        //end;
+
+                        until PurchCommentLine.Next() = 0;
+
+                end;
+            }
+
+            dataitem(PurchaseLine; "Purchase Line")
+            {
+                DataItemLink = "Document Type" = FIELD("Document Type"), "Document No." = FIELD("No.");
+                DataItemLinkReference = purchaseHeader;
+                DataItemTableView = SORTING("Document Type", "Document No.", "Line No.");
+
+                column(Description; Description + ', ' + PurchaseLine."Description 2")
+                {
+                }
+                column(ExttxtDesc; txtDescription)
+                {
+                }
+                column(Line_No_; PurchaseLine."Line No.")
+                {
+                }
+                column(UOM; PurchaseLine."Unit of Measure Code")
+                {
+                }
+                column(HSN_SAC_Code;
+                "HSN/SAC Code")
+                {
+                }
+                column(Quantity;
+                Quantity)
+                {
+                }
+                column(Direct_Unit_Cost;
+                "Direct Unit Cost")
+                {
+                }
+                column(PlannedReceiptDate; "Planned Receipt Date")
+                {
+                }
+                column(freeQty; freeQty)
+                {
+                }
+                column(MRP; MRP) { }
+                column(Line_Amount; "Line Amount")
+                {
+                }
+                column(Line_Discount__; "Line Discount %")
+                {
+                }
+                column(IGSTRatePercnt_Var;
+                IGSTRatePercnt_Var)
+                {
+                }
+
+                column(CGSTRatePercnt_Var;
+                CGSTRatePercnt_Var)
+                {
+                }
+                column(SGSTRatePercnt_Var;
+                SGSTRatePercnt_Var)
+                {
+                }
+                column(Line_Discount_Amount;
+                "Line Discount Amount")
+                {
+                }
+                column(Inv__Discount_Amount;
+                "Inv. Discount Amount" + "Line Discount Amount")
+                {
+                }
+                column(Amount; Amount)
+                {
+                }
+                column(SNo; SNo)
+                {
+                }
+                column(decGSTPer;
+                decGSTPer)
+                {
+                }
+                column(ItemCode;
+                PurchaseLine."No.")
+                {
+                }
+                column(Item_Make_Name; "Item Make Name")
+                {
+
+                }
+                column(LineGSTAmount;
+                LineGSTAmount)
+                {
+                }
+                column(Warrnty; Warrnty)
+                {
+                }
+                column(Parts; Parts)
+                {
+                }
+                column(YOY_Amount; YOYPer)
+                {
+                }
+                column(ModelName; Model)
+                {
+                }
+                column(DeliveryTerms; DeliveryTerms)
+                {
+                }
+                column(PaymentTerm; PaymentTerm)
+                {
+                }
+                trigger OnPreDataItem()
+                begin
+                    SNo := 0;
                 end;
 
-
-                SupplierName := '';
-                SupplierAdd := '';
-                SupplierEmail := '';
-                SupplierPhoneNo := '';
-                SupplierGSTIN := '';
-                if (PurchaseHeader."Posting Date" < CompInfo."Transaction Date") then
-                    RecCompanyName := compinfo."Old Comapany Name"
-                else
-                    RecCompanyName := CompInfo.Name;
-
-                IF Customer.Get("Buy-from Vendor No.") THEN begin
-                    SupplierName := Customer.Name + '' + Customer."Name 2";
-                    IF recState.Get(Customer."State Code") THEN;
-                    IF CountryRegion.Get(Customer."Country/Region Code") THEN;
-                    SupplierAdd := Customer.Address + ', ' + Customer."Address 2" + ', ' + Customer.City + ', ' + FORMAT(Customer."Post Code") + ', ' + FORMAT(recState.Description) + ', ' + CountryRegion.Name;
-                    SupplierEmail := Customer."E-Mail";
-                    SupplierPhoneNo := Customer."Phone No.";
-                    SupplierGSTIN := Customer."GST Registration No.";
-                    SupplierPANNo := Customer."P.A.N. No.";
-                end;
-
-                LocationAdd := '';
-                LocationAdd2 := '';
-                LocationEmail := '';
-                LocationPhoneNo := '';
-                LocationGSTIN := '';
-                LocationName := '';
-                IF PurchaseHeader."Location Code" <> '' THEN BEGIN
-                    Location.RESET;
-                    Location.SETRANGE(Code, PurchaseHeader."Location Code");
-                    IF Location.FINDFIRST THEN BEGIN
-                        recState.Get(Location."State Code");
-                        CountryRegion.Get(Location."Country/Region Code");
-                        LocationName := Location.Name;
-                        LocationAdd := Location.Address;//+ ', ';
-                        LocationAdd2 := Location."Address 2"; //+ ', ' + Location.City + ', ' + FORMAT(Location."Post Code") + ', ' + FORMAT(recState.Description) + ', ' + CountryRegion.Name;
-                        LocationEmail := Location."E-Mail";
-                        LocationPhoneNo := Location."Phone No.";
-                        LocationGSTIN := Location."GST Registration No.";
-                        LocationWebsite := Location."Home Page";
-                    END;
-                end;
-
-
-                decAmountoVendor := 0;
-                recPurchaseLine.Reset();
-                recPurchaseLine.SetRange("Document Type", "Document Type");
-                recPurchaseLine.SetRange("Document No.", "No.");
-                IF recPurchaseLine.FindFirst() then begin
-                    repeat
-                        decAmountoVendor += recPurchaseLine.Amount;
-                    until recPurchaseLine.Next() = 0;
-                end;
-
-                IF PurchaseHeader."Currency Code" <> '' then
-                    CdCurrencyCode := PurchaseHeader."Currency Code"
-                else
-                    CdCurrencyCode := 'INR';
-
-                CalcStatistics.GetPurchaseStatisticsAmount(PurchaseHeader, TotalAmttoVendor);
-                CalcStatistics.OnGetPurchaseHeaderGSTAmount(PurchaseHeader, TotalInclTaxAmount);
-                CalcStatistics.OnGetPurchaseHeaderTDSAmount(PurchaseHeader, TotalTDS);
-
-                if TotalInclTaxAmount = 0 then begin
-                    GetGSTAmounts(PurchaseHeader);
-                    TotalInclTaxAmount := CGST_Amt + SGST_Amt + IGST_Amt;
-                    if TotalInclTaxAmount <> 0 then
-                        TotalAmttoVendor += TotalInclTaxAmount;
-                end;
-
-                Customer.get("Buy-from Vendor No.");
-                IF (Customer."State Code" = "Location State Code") and (TotalInclTaxAmount <> 0) then begin
-                    CGSTRsAmount_Var := (TotalInclTaxAmount / 2);
-                    SGSTRsAmount_Var := (TotalInclTaxAmount / 2);
-                END ELSE
-                    IGSTRsAmount_Var := TotalInclTaxAmount;
-
-                PostedVoucher.InitTextVariable;
-                PostedVoucher.FormatNoText(AmtWords, Round(TotalAmttoVendor, 1), PurchaseHeader."Currency Code");
-                AmtWords[1] := AmtWords[1].Replace(' AND ZERO PAISA ONLY', ' ONLY');
-
-                if userc.Get(SystemCreatedBy) then;
-                if userm.Get(SystemModifiedBy) then;
-
-                txtcomment := '';
-                PurchCommentLine.Reset();
-                PurchCommentLine.SetRange("Document Type", "Document Type");
-                //PurchCommentLine.SetRange(Type, PurchCommentLine.Type::"Term & Condition");
-                PurchCommentLine.SetRange("No.", "No.");
-                IF PurchCommentLine.FindSet() then begin
-                    repeat
-                        txtcomment += PurchCommentLine.Comment;
-                    until PurchCommentLine.Next() = 0;
-                end;
-
-                txtcommentNote := '';
-                PurchCommentLine.Reset();
-                PurchCommentLine.SetRange("Document Type", "Document Type");
-                PurchCommentLine.SetRange("Document Line No.", PurchCommentLine."Document Line No.");
-                PurchCommentLine.SetRange("No.", "No.");
-                IF PurchCommentLine.FindSet() then begin
-                    repeat
-                        txtcommentNote += PurchCommentLine.Comment;
-                    until PurchCommentLine.Next() = 0;
+                trigger OnAfterGetRecord()
+                begin
+                    SNo += 1;
+                    decGSTPer := 0;
+                    LineGSTAmount := 0;
+                    TaxTransactionValue.Reset();
+                    TaxTransactionValue.SetFilter("Tax Record ID", '%1', PurchaseLine.RecordId);
+                    TaxTransactionValue.SetFilter("Value Type", '%1', TaxTransactionValue."Value Type"::Component);
+                    TaxTransactionValue.SetFilter("Tax Type", '%1', 'GST');
+                    TaxTransactionValue.SetRange("Visible on Interface", TRUE);
+                    if TaxTransactionValue.FindSet() then
+                        repeat
+                            IF TaxTransactionValue.Percent <> 0 then begin
+                                decGSTPer += TaxTransactionValue.Percent;
+                            end;
+                        until TaxTransactionValue.Next() = 0;
+                    LineGSTAmount := PurchaseLine."Line Amount" * decGSTPer / 100;
 
                 end;
-                txtDescription := '';
-                ExtendedTextLine.Reset();
-                ExtendedTextLine.SetRange("Table Name", ExtendedTextLine."Table Name"::Item);
-                ExtendedTextLine.SetRange("No.", PurchaseLine."Vendor Item No.");
-                IF ExtendedTextLine.FINDFIRST THEN BEGIN
-                    repeat
-                        txtDescription += ExtendedTextLine.Text;
-                    UNTIL ExtendedTextLine.NEXT() = 0;
-
-                    // END ELSE
-                    //txtDescription := "Purchase Line".Description + '' + "Purchase Line"."Description 2";
-                end;
-                // PayTerms := '';
-                // PaymentTerms.SetRange(Code, PurchaseHeader."Payment Terms Code");
-                // if PaymentTerms.FindFirst() then begin
-                //     repeat
-                //         PayTerms += PaymentTerms.Description;
-                //     until PaymentTerms.Next() = 0;
-                // end;
-
-                txtVendorComment := '';
-                VendorComment.Reset();
-                VendorComment.SetRange("Table Name", VendorComment."Table Name"::Vendor);
-                //VendorComment.SetRange(Type, VendorComment.Type::"Term & Condition");
-                VendorComment.SetRange("No.", "Buy-from Vendor No.");
-                IF VendorComment.FindFirst() then begin
-                    repeat
-                        txtVendorComment += VendorComment.Comment;
-                    until VendorComment.Next() = 0;
-
-                end;
-
-                userId := '';
-                PreparedBy := '';
-                ApprovalEntry.RESET;
-                ApprovalEntry.SETRANGE("Table ID", 38);
-                ApprovalEntry.SETRANGE("Document No.", "No.");
-                ApprovalEntry.SETRANGE(Status, ApprovalEntry.Status::Approved);
-                IF ApprovalEntry.FINDLAST THEN
-                    userId := ApprovalEntry."Last Modified By User ID";
-                PreparedBy := ApprovalEntry."Sender ID";
-                LastAEdt := ApprovalEntry."Last Date-Time Modified";
-
-                //comment
-                txtTermName := '';
-                txtCommentNote := '';
-
-                PurchCommentLine.Reset();
-                PurchCommentLine.SetRange("Document Type", "Document Type");
-                PurchCommentLine.SetRange("No.", "No.");
-                PurchCommentLine.SetRange("Document Line No.", 0);
-
-                if PurchCommentLine.FindSet() then
-                    repeat
-
-                        //if DelChr(PurchCommentLine.Comment, '=', ' ') <> '' then begin
-
-                        if txtTermName = '' then begin
-                            txtTermName := PurchCommentLine."Order Terms";
-                            txtCommentNote := PurchCommentLine.Comment;
-                        end else begin
-                            txtTermName += '\n' + PurchCommentLine."Order Terms";
-                            txtCommentNote += '\n' + PurchCommentLine.Comment;
-                        end;
-
-                    //end;
-
-                    until PurchCommentLine.Next() = 0;
-
-            end;
+            }
         }
-
-
-
-
-        dataitem(PurchaseLine; "Purchase Line")
-        {
-            DataItemLink = "Document Type" = FIELD("Document Type"), "Document No." = FIELD("No.");
-            DataItemLinkReference = purchaseHeader;
-            DataItemTableView = SORTING("Document Type", "Document No.", "Line No.");
-
-            column(Description; Description + ', ' + PurchaseLine."Description 2")
-            {
-            }
-            column(ExttxtDesc; txtDescription)
-            {
-            }
-            column(Line_No_; PurchaseLine."Line No.")
-            {
-            }
-            column(UOM; PurchaseLine."Unit of Measure Code")
-            {
-            }
-            column(HSN_SAC_Code;
-            "HSN/SAC Code")
-            {
-            }
-            column(Quantity;
-            Quantity)
-            {
-            }
-            column(Direct_Unit_Cost;
-            "Direct Unit Cost")
-            {
-            }
-            column(PlannedReceiptDate; "Planned Receipt Date")
-            {
-            }
-            column(freeQty; freeQty)
-            {
-            }
-            column(MRP; MRP) { }
-            column(Line_Amount; "Line Amount")
-            {
-            }
-            column(Line_Discount__; "Line Discount %")
-            {
-            }
-            column(IGSTRatePercnt_Var;
-            IGSTRatePercnt_Var)
-            {
-            }
-
-            column(CGSTRatePercnt_Var;
-            CGSTRatePercnt_Var)
-            {
-            }
-            column(SGSTRatePercnt_Var;
-            SGSTRatePercnt_Var)
-            {
-            }
-            column(Line_Discount_Amount;
-            "Line Discount Amount")
-            {
-            }
-            column(Inv__Discount_Amount;
-            "Inv. Discount Amount" + "Line Discount Amount")
-            {
-            }
-            column(Amount; Amount)
-            {
-            }
-            column(SNo; SNo)
-            {
-            }
-            column(decGSTPer;
-            decGSTPer)
-            {
-            }
-            column(ItemCode;
-            PurchaseLine."No.")
-            {
-            }
-            column(Item_Make_Name; "Item Make Name")
-            {
-
-            }
-            column(LineGSTAmount;
-            LineGSTAmount)
-            {
-            }
-            column(Warrnty; Warrnty)
-            {
-            }
-            column(Parts; Parts)
-            {
-            }
-            column(YOY_Amount; YOYPer)
-            {
-            }
-            column(ModelName; Model)
-            {
-            }
-            column(DeliveryTerms; DeliveryTerms)
-            {
-            }
-            column(PaymentTerm; PaymentTerm)
-            {
-            }
-            trigger OnPreDataItem()
-            begin
-                SNo := 0;
-            end;
-
-            trigger OnAfterGetRecord()
-            begin
-                SNo += 1;
-                decGSTPer := 0;
-                LineGSTAmount := 0;
-                TaxTransactionValue.Reset();
-                TaxTransactionValue.SetFilter("Tax Record ID", '%1', PurchaseLine.RecordId);
-                TaxTransactionValue.SetFilter("Value Type", '%1', TaxTransactionValue."Value Type"::Component);
-                TaxTransactionValue.SetFilter("Tax Type", '%1', 'GST');
-                TaxTransactionValue.SetRange("Visible on Interface", TRUE);
-                if TaxTransactionValue.FindSet() then
-                    repeat
-                        IF TaxTransactionValue.Percent <> 0 then begin
-                            decGSTPer += TaxTransactionValue.Percent;
-                        end;
-                    until TaxTransactionValue.Next() = 0;
-                LineGSTAmount := PurchaseLine."Line Amount" * decGSTPer / 100;
-
-            end;
-        }
-
-
-
     }
     requestpage
     {
@@ -545,6 +554,22 @@ report 50012 "Purchase Order Print"
         PhoneNo := CompInfo."Phone No.";
         GSTIN := CompInfo."GST Registration No.";
         DrugLigNo := CompInfo."CIN No.";
+    end;
+
+    trigger OnPostReport()
+    var
+        PurchHeader: Record "Purchase Header";
+    begin
+        if OriginalPrint then begin
+            PurchHeader.Reset();
+            PurchHeader.SetRange("Document Type", PurchHeader."Document Type"::Order);
+            PurchHeader.SetRange("No.", PurchaseHeader."No.");
+
+            if PurchHeader.FindFirst() then begin
+                PurchHeader."Original Printed" := true;
+                PurchHeader.Modify(false);
+            end;
+        end;
     end;
 
     var
@@ -655,6 +680,8 @@ report 50012 "Purchase Order Print"
         Parts: Text[100];
         ModelName: Text;
         LastAEdt: DateTime;
+        CopyText: Text[30];
+        OriginalPrint: Boolean;
 
 
     local procedure GetGSTAmounts(PurchHeader: Record "Purchase Header")

@@ -7,7 +7,7 @@ page 50194 "E3 Get Indent Lines"
     InsertAllowed = false;
     DeleteAllowed = false;
     ModifyAllowed = false;
-    SourceTableView = sorting("Document No.", "Line No.") order(descending) where("Purchase Released" = const(true));
+    SourceTableView = sorting("Document No.", "Line No.") order(descending) where("Released Stock Issue Purchase" = const(true));
 
     layout
     {

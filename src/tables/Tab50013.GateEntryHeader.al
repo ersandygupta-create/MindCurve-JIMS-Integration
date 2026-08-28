@@ -199,6 +199,15 @@ table 50013 "E3 Gate Entry Header"
             Caption = 'Posted Gate Entry Outward No.';
             DataClassification = CustomerContent;
         }
+        field(201; "Inward Document No."; COde[20])
+        {
+            Caption = 'Posted Inward Document No.';
+            DataClassification = CustomerContent;
+        }
+        field(202; "Outward Document No."; Code[20])
+        {
+            Caption = 'Posted Outward Document No.';
+        }
     }
 
     keys

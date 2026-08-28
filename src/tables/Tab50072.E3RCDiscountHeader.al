@@ -2,6 +2,7 @@ table 50072 "E3 RC Discount Header"
 {
     Caption = 'RC Discount Header';
     DataClassification = CustomerContent;
+    DataPerCompany = false;
 
     fields
     {

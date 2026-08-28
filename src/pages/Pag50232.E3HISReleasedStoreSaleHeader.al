@@ -163,7 +163,7 @@ page 50232 "HIS Released Sales Indent Card"
                     Editable = false;
                 }
             }
-            part(IndentLines; "E3 HIS Release Indent Line")
+            part(IndentLines; "HIS Released Sales Indent Line")
             {
                 ApplicationArea = All;
                 Caption = 'Release Indent Line Subform';

@@ -6,7 +6,7 @@
             "request": "launch",
             "type": "al",
             "environmentType": "Sandbox",
-            "environmentName": "ReportDev",
+            "environmentName": "UAT",
             "startupObjectId": 22,
             "startupObjectType": "Page",
             "tenant": "03698fc9-f9f4-4b50-a08a-e35a65aaa8b8",

@@ -131,19 +131,19 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Staff Sale Rate';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                CalculateLandedValue();
-            end;
+            // trigger OnValidate()
+            // begin
+            //     CalculateLandedValue();
+            // end;
         }
         field(21; "SKU Staff Sale Rate"; Decimal)
         {
             Caption = 'SKU Staff Sale Rate';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                CalculateLandedValue();
-            end;
+            // trigger OnValidate()
+            // begin
+            //     CalculateLandedValue();
+            // end;
         }
         field(22; "Item Make Name"; Text[60])
         {
@@ -174,19 +174,19 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Taxable Amount';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                CalculateLandedValue();
-            end;
+            // trigger OnValidate()
+            // begin
+            //     CalculateLandedValue();
+            // end;
         }
         field(28; "CGST %"; Decimal)
         {
             Caption = 'CGST %';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                CalculateLandedValue();
-            end;
+            // trigger OnValidate()
+            // begin
+            //     CalculateLandedValue();
+            // end;
         }
         field(29; "CGST Amount"; Decimal)
         {
@@ -198,10 +198,10 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'SGST %';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                CalculateLandedValue();
-            end;
+            // trigger OnValidate()
+            // begin
+            //     CalculateLandedValue();
+            // end;
         }
         field(31; "SGST Amount"; Decimal)
         {
@@ -212,10 +212,10 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'IGST %';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                CalculateLandedValue();
-            end;
+            // trigger OnValidate()
+            // begin
+            //     CalculateLandedValue();
+            // end;
         }
         field(33; "IGST Amount"; Decimal)
         {
@@ -330,28 +330,28 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Line Net Amount';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                CalculateLandedValue();
-            end;
+            // trigger OnValidate()
+            // begin
+            //     CalculateLandedValue();
+            // end;
         }
         field(48; "Landed SKU Value"; Decimal)
         {
             Caption = 'Line Landed SKU Value';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                CalculateLandedValue();
-            end;
+            // trigger OnValidate()
+            // begin
+            //     CalculateLandedValue();
+            // end;
         }
         field(49; "Landed SKU Rate"; Decimal)
         {
             Caption = 'Line Landed SKU Rate';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                CalculateLandedValue();
-            end;
+            // trigger OnValidate()
+            // begin
+            //     CalculateLandedValue();
+            // end;
         }
         field(50; Remark; Text[250])
         {

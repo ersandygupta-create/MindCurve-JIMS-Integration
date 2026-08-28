@@ -119,21 +119,43 @@ page 50214 "E3 Indent Sale/Purchase Lines"
                     PurchHeader: Record "E3 Indent Sale/Purchase Header";
                     IndentHeader: Record "E3 Indent Header";
                     IndentLine: Record "E3 Indent Line";
-                    GetIndentLinesPage: Page "E3 Get Indent Lines";
+                    GetIndentLinesPage: Page "E3 Get Sale Indent Lines";
+                    SelectedMakeCode: Code[20];
                 begin
                     IndentHeader.Reset();
                     IndentHeader.SetRange(Status, IndentHeader.Status::Approved);
                     IndentHeader.SetRange(Released, false);
-                    // Open filtered page
+
                     GetIndentLinesPage.SetTableView(IndentLine);
                     GetIndentLinesPage.LookupMode(true);
 
                     if GetIndentLinesPage.RunModal() = Action::LookupOK then begin
                         GetIndentLinesPage.SetSelectionFilter(IndentLine);
+                        if not IndentLine.FindSet() then
+                            exit;
+                        SelectedMakeCode := IndentLine."Item Make Code";
+                        repeat
+                            if IndentLine."Item Make Code" <> SelectedMakeCode then begin
+                                Message(
+                                    'You cannot select different Item Make Codes.\' +
+                                    'First Item Make Code: %1\' +
+                                    'Selected Item Make Code: %2\' +
+                                    'Item No.: %3',
+                                    SelectedMakeCode,
+                                    IndentLine."Item Make Code",
+                                    IndentLine."No.");
+
+                                exit;
+                            end;
+                        until IndentLine.Next() = 0;
+                        GetIndentLinesPage.SetSelectionFilter(IndentLine);
+
 
                         if IndentLine.FindSet() then
                             repeat
-                                CreateSalePurchaseLineFromIndent(IndentLine);
+                                if not PurchaseLineAlreadyExists(IndentLine) then
+                                    CreateSalePurchaseLineFromIndent(IndentLine);
+
                             until IndentLine.Next() = 0;
                     end;
 
@@ -142,18 +164,19 @@ page 50214 "E3 Indent Sale/Purchase Lines"
             }
         }
     }
-    local procedure CreateSalePurchaseLineFromIndent(IndentLine: Record "E3 Indent Line")
+    local procedure CreateSalePurchaseLineFromIndent(
+    IndentLine: Record "E3 Indent Line")
     var
         SalePurchLine: Record "E3 Indent Sale/Purchase Line";
     begin
         if PurchaseLineAlreadyExists(IndentLine) then
             exit;
-        SaleSalePurchLine.Init();
+
+        SalePurchLine.Init();
 
         SalePurchLine."Nature Type" := Rec."Nature Type";
         SalePurchLine."Entry Type" := Rec."Entry Type";
         SalePurchLine."Document No." := Rec."Document No.";
-
         SalePurchLine."Line No." := GetNextPurchaseLineNo();
         SalePurchLine.Validate("Item Type", 'Item');
         SalePurchLine.Validate("Item ID", IndentLine."No.");
@@ -161,11 +184,13 @@ page 50214 "E3 Indent Sale/Purchase Lines"
         SalePurchLine.Validate("Shipped Qty", IndentLine."Approved Qty");
         SalePurchLine.Validate("Unit Cost", IndentLine."Unit Cost");
         // if IndentLine."Location Code" <> '' then
-        //     SalePurchLine.Validate("Location Code", IndentLine."Location Code");       
+        //     SalePurchLine.Validate("Location Code", IndentLine."Location Code");
+
         SalePurchLine."Indent No." := IndentLine."Document No.";
+        SalePurchLine."Indent Line No." := IndentLine."Line No.";
         SalePurchLine.Insert(true);
-        UpdateIndentLine(
-            IndentLine);
+
+        UpdateIndentLine(IndentLine);
     end;
 
     local procedure UpdateIndentLine(

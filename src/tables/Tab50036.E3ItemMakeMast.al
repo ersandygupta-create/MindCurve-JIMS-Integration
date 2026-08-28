@@ -62,6 +62,30 @@ table 50036 "E3 Item Make Master"
             Caption = 'First Sent';
             DataClassification = CustomerContent;
         }
+        field(11; LocalEmail; Text[80])
+        {
+            Caption = 'localEmail';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                ValidateEmail();
+            end;
+        }
+        field(12; RegEmail; Text[80])
+        {
+            Caption = 'regEmail';
+            DataClassification = CustomerContent;
+        }
+        field(13; NatEmail; Text[80])
+        {
+            Caption = 'natEmail';
+            DataClassification = CustomerContent;
+        }
+        field(14; Email; Text[80])
+        {
+            Caption = 'Email';
+            DataClassification = CustomerContent;
+        }
 
     }
     keys
@@ -104,6 +128,26 @@ table 50036 "E3 Item Make Master"
         end;
 
         exit(false);
+    end;
+
+    local procedure ValidateEmail()
+    var
+        MailManagement: Codeunit "Mail Management";
+        IsHandled: Boolean;
+    begin
+        IsHandled := false;
+        OnBeforeValidateEmail(Rec, IsHandled, xRec);
+        if IsHandled then
+            exit;
+
+        if Email = '' then
+            exit;
+        MailManagement.CheckValidEmailAddresses(Email);
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnBeforeValidateEmail(var ItemMakeMaster: Record "E3 Item Make Master"; var IsHandled: Boolean; xItemMakeMaster: Record "E3 Item Make Master")
+    begin
     end;
 
 }

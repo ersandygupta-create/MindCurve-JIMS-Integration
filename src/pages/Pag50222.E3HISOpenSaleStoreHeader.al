@@ -201,63 +201,174 @@ page 50222 "E3 HIS Release Indent Card"
                 trigger OnAction()
                 var
                     IndentLine: Record "E3 Indent Line";
+                    CheckIndentLine: Record "E3 Indent Line";
+                    TotalLines: Integer;
+                    CompletedLines: Integer;
+                    ReleasedSalesLines: Integer;
                 begin
                     Rec.TestField(Status, Rec.Status::Approved);
-
-                    Rec."Sales Released" := true;
-                    Rec.Modify(true);
                     IndentLine.Reset();
-                    IndentLine.SetRange("Document No.", Rec."Document No.");
-
-                    if IndentLine.FindSet() then
-                        repeat
-                            IndentLine."Sales Released" := Rec."Sales Released";
-                            IndentLine.Modify(true);
-                        until IndentLine.Next() = 0;
-
-                    Message(
-                        'Indent %1 has been marked as Released.',
+                    IndentLine.SetRange(
+                        "Document No.",
                         Rec."Document No.");
+                    IndentLine.SetRange("Select", true);
+
+                    if not IndentLine.FindSet() then begin
+                        Message('Please select at least one line.');
+                        exit;
+                    end;
+
+                    repeat
+                        if IndentLine."Released Stock Issue" and IndentLine."Released Stock Issue Purchase" then begin
+                            Message(
+                                'Stock Issue is already released for this line. Both Stock Issue and Purchase are already released.');
+                            exit;
+                        end;
+
+                        if not IndentLine."Released Stock Issue Purchase" then begin
+                            IndentLine."Released Stock Issue" := true;
+
+                            IndentLine."Sales Released" := true;
+
+                            ReleasedSalesLines += 1;
+                        end;
+
+                        IndentLine."Select" := false;
+
+                        IndentLine.Modify(true);
+
+                    until IndentLine.Next() = 0;
+
+                    CheckIndentLine.Reset();
+                    CheckIndentLine.SetRange("Document No.", Rec."Document No.");
+
+                    TotalLines := 0;
+                    CompletedLines := 0;
+
+                    if CheckIndentLine.FindSet() then
+                        repeat
+                            TotalLines += 1;
+
+                            if CheckIndentLine."Released Stock Issue" and
+                               CheckIndentLine."Released Stock Issue Purchase"
+                            then
+                                CompletedLines += 1;
+
+                        until CheckIndentLine.Next() = 0;
+                    if ReleasedSalesLines > 0 then
+                        Rec."Sales Released" := true;
+                    if (TotalLines > 0) and
+                       (CompletedLines = TotalLines)
+                    then
+                        Rec."Closed Stock Issue" := true
+                    else
+                        Rec."Closed Stock Issue" := false;
+
+
+                    Rec.Modify(true);
+                    if CompletedLines < TotalLines then
+                        Message(
+                            '%1 Stock Sale line(s) released. %2 line(s) are still pending. Indent is not closed.',
+                            ReleasedSalesLines,
+                            TotalLines - CompletedLines)
+                    else
+                        Message(
+                            'All Stock Issue lines have both Stock Issue and Purchase releases. Indent %1 has been closed.',
+                            Rec."Document No.");
+
+
+                    CurrPage.Update(false);
+                end;
+            }
+
+
+            action(ReleaseForIndentsPurchase)
+            {
+                ApplicationArea = All;
+                Caption = 'Release for Indents Purchase';
+                Image = ReleaseDoc;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Release the indent for purchase processing.';
+
+                trigger OnAction()
+                var
+                    IndentLine: Record "E3 Indent Line";
+                    CheckIndentLine: Record "E3 Indent Line";
+                    SelectedLines: Integer;
+                    TotalLines: Integer;
+                    CompletedLines: Integer;
+                begin
+                    Rec.TestField(Status, Rec.Status::Approved);
+                    IndentLine.Reset();
+                    IndentLine.SetRange(
+                        "Document No.",
+                        Rec."Document No.");
+                    IndentLine.SetRange("Select", true);
+
+                    if not IndentLine.FindSet() then begin
+                        Message(
+                            'Please select at least one indent line for Purchase.');
+                        exit;
+                    end;
+
+                    repeat
+                        if IndentLine."Released Stock Issue" and IndentLine."Released Stock Issue Purchase" then begin
+                            Message(
+                                'Stock Issue is already released for this line. Both Stock Issue and Purchase are already released.');
+                            exit;
+                        end;
+                        IndentLine."Released Stock Issue Purchase" := true;
+                        IndentLine."Select" := false;
+
+                        IndentLine.Modify(true);
+
+                        SelectedLines += 1;
+
+                    until IndentLine.Next() = 0;
+                    Rec."Relese for Purchase" := true;
+                    CheckIndentLine.Reset();
+                    CheckIndentLine.SetRange("Document No.", Rec."Document No.");
+
+                    TotalLines := 0;
+                    CompletedLines := 0;
+
+                    if CheckIndentLine.FindSet() then
+                        repeat
+                            TotalLines += 1;
+
+                            if CheckIndentLine."Released Stock Issue" and
+                               CheckIndentLine."Released Stock Issue Purchase"
+                            then
+                                CompletedLines += 1;
+
+                        until CheckIndentLine.Next() = 0;
+
+                    if (TotalLines > 0) and
+                       (CompletedLines = TotalLines)
+                    then
+                        Rec."Closed Stock Issue" := true
+                    else
+                        Rec."Closed Stock Issue" := false;
+
+
+                    Rec.Modify(true);
+
+                    if CompletedLines < TotalLines then
+                        Message(
+                            '%1 selected indent line(s) have been released for Purchase. %2 line(s) are still pending. Indent is not closed.',
+                            SelectedLines,
+                            TotalLines - CompletedLines)
+                    else
+                        Message(
+                            '%1 selected indent line(s) have been released for Purchase. All Stock Issue lines are now completed and the indent is closed.',
+                            SelectedLines);
+
 
                     CurrPage.Update(false);
                 end;
             }
         }
-        //     action(Issue)
-        //     {
-        //         ApplicationArea = All;
-        //         Caption = 'Issue';
-        //         Image = Issue;
-        //         Promoted = true;
-        //         PromotedCategory = Process;
-        //         ToolTip = 'Issue the approved HIS indent.';
-
-        //         trigger OnAction()
-        //         begin
-        //             Rec.TestField(Status, Rec.Status::Approved);
-
-        //             Rec."Indent Status" := Rec."Indent Status"::Issued;
-        //             Rec.Modify(true);
-
-        //             Message(
-        //                 'Indent %1 has been marked as Issued.',
-        //                 Rec."Document No.");
-
-        //             CurrPage.Update(false);
-        //         end;
-        //     }
-        //     action(ApprovalEntries)
-        //     {
-        //         Caption = 'Approval Entries';
-        //         ApplicationArea = All;
-        //         Image = ApprovalEntries;
-        //         RunObject = Page "Approval Entries";
-        //         RunPageLink = "Document No." = FIELD("Document No.");
-        //         RunPageView = sorting("Document No.")
-        //                   order(Ascending)
-        //                   where("Table ID" = const(50051));
-        //     }
-        // }
     }
     var
         IsPageEditable: Boolean;

@@ -2,6 +2,7 @@ table 50073 "E3 RC Discount Line"
 {
     Caption = 'RC Discount Line';
     DataClassification = CustomerContent;
+    DataPerCompany = false;
 
     fields
     {

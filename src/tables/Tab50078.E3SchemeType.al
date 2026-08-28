@@ -4,6 +4,7 @@ table 50078 "E3 Scheme Type"
     Caption = 'Scheme Type';
     DrillDownPageId = "E3 Scheme Type";
     LookupPageId = "E3 Scheme Type";
+    DataPerCompany = false;
     fields
     {
         field(1; Scheme; Text[10])
@@ -15,6 +16,11 @@ table 50078 "E3 Scheme Type"
         {
             DataClassification = CustomerContent;
             Caption = 'Free Qty';
+        }
+        field(3; "PO Qty"; Decimal)
+        {
+            Caption = 'PO Qty';
+            DataClassification = CustomerContent;
         }
     }
 

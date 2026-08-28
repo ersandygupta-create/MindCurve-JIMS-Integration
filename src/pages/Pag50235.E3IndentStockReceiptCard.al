@@ -58,7 +58,7 @@ page 50235 "E3 Indent Stock Receipt Card"
                 field(Type; Rec.Type)
                 {
                     ApplicationArea = All;
-                    Visible = false;
+                    //Visible = false;
                     ToolTip = 'Specifies whether the transaction is for a vendor or customer.';
                 }
                 field("Vendor/Customer No."; Rec."Vendor/Customer No.")
@@ -162,14 +162,10 @@ page 50235 "E3 Indent Stock Receipt Card"
                     ToolTip = 'Specifies remarks for the document.';
                 }
             }
-            part(Lines; "E3 Indent Sale/Purchase Lines")
+            part(Lines; "E3 Indent Stock Receipt Lines")
             {
                 ApplicationArea = All;
-                SubPageLink =
-                    "Entry No." = FIELD("Entry No."),
-                    "Nature Type" = FIELD("Nature Type"),
-                    "Entry Type" = FIELD("Entry Type"),
-                    "Document No." = FIELD("Document No.");
+                SubPageLink = "Document No." = FIELD("Document No."), "Entry Type" = field("Entry Type"), "Nature Type" = field("Nature Type");
             }
         }
     }
@@ -199,52 +195,6 @@ page 50235 "E3 Indent Stock Receipt Card"
                     InterUnitSalePurchMgt.InitPurchaseOrder(Rec."Entry Type", Rec."Nature Type", Rec."Document No.");
 
                     CurrPage.Update(false);
-                end;
-            }
-
-            action("Create Sales Order")
-            {
-                Caption = 'Stock Issue';
-                ApplicationArea = All;
-                Image = CreateDocument;
-                Promoted = true;
-                PromotedCategory = Process;
-                ToolTip = 'Create a sales order for the selected document.';
-
-                trigger OnAction()
-                var
-                    InterUnitSalePurchMgt: Codeunit "E3 InterUnit Sale/Purch Mgt.";
-                begin
-                    if Rec."Document No." = '' then
-                        Error('Document No. must not be blank.');
-
-                    if Rec.Type <> Rec.Type::Customer then
-                        Error('Type must be Customer to create a Sales Order.');
-
-                    InterUnitSalePurchMgt.InitSalesOrder(Rec."Entry Type", Rec."Nature Type", Rec."Document No.");
-
-                    CurrPage.Update(false);
-                end;
-            }
-            action(InterUnit)
-            {
-                ApplicationArea = All;
-                Caption = 'Stock Issue/Receipt';
-                Image = CreateDocument;
-                Promoted = true;
-                PromotedCategory = Process;
-                ToolTip = 'Create an inter unit sales or purchase order for the selected document.';
-
-                trigger OnAction()
-                var
-                    E3InterUnitMgt: Codeunit "E3 InterUnit Sale/Purch Mgt.";
-                begin
-                    Rec.TESTFIELD("Document No.");
-
-                    E3InterUnitMgt.InitInterUnitSalePurchase(
-                        Rec."Entry Type",
-                        Rec."Nature Type",
-                        Rec."Document No.");
                 end;
             }
         }

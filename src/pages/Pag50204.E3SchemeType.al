@@ -1,8 +1,8 @@
 page 50204 "E3 Scheme Type"
 {
-    PageType = Card;
+    PageType = List;
     ApplicationArea = All;
-    UsageCategory = Administration;
+    UsageCategory = Lists;
     SourceTable = "E3 Scheme Type";
 
     layout
@@ -16,6 +16,10 @@ page 50204 "E3 Scheme Type"
                     ApplicationArea = All;
                 }
                 field("Free Qty"; Rec."Free Qty")
+                {
+                    ApplicationArea = All;
+                }
+                field("PO Qty"; Rec."PO Qty")
                 {
                     ApplicationArea = All;
                 }

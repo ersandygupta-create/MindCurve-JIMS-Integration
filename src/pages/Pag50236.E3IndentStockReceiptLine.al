@@ -119,7 +119,8 @@ page 50236 "E3 Indent Stock Receipt Lines"
                     PurchHeader: Record "E3 Indent Sale/Purchase Header";
                     IndentHeader: Record "E3 Indent Header";
                     IndentLine: Record "E3 Indent Line";
-                    GetIndentLinesPage: Page "E3 Get Sale Indent Lines";
+                    GetIndentLinesPage: Page "E3 Get Indent Lines";
+                    SelectedMakeCode: Code[20];
                 begin
                     IndentHeader.Reset();
                     IndentHeader.SetRange(Status, IndentHeader.Status::Approved);
@@ -130,6 +131,28 @@ page 50236 "E3 Indent Stock Receipt Lines"
 
                     if GetIndentLinesPage.RunModal() = Action::LookupOK then begin
                         GetIndentLinesPage.SetSelectionFilter(IndentLine);
+                        if not IndentLine.FindSet() then
+                            exit;
+                        SelectedMakeCode := IndentLine."Item Make Code";
+
+                        repeat
+                            if IndentLine."Item Make Code" <> SelectedMakeCode then begin
+                                Message(
+                                    'You cannot select different Item Make Codes.\' +
+                                    'First Item Make Code: %1\' +
+                                    'Selected Item Make Code: %2\' +
+                                    'Item No.: %3',
+                                    SelectedMakeCode,
+                                    IndentLine."Item Make Code",
+                                    IndentLine."No.");
+
+                                exit;
+                            end;
+                        until IndentLine.Next() = 0;
+
+                        // Get selected lines again
+                        GetIndentLinesPage.SetSelectionFilter(IndentLine);
+
 
                         if IndentLine.FindSet() then
                             repeat

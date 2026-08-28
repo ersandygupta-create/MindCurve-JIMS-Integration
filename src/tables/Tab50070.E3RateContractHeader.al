@@ -2,6 +2,7 @@ table 50070 "E3 Rate Contract Header"
 {
     Caption = 'Rate Contract Header';
     DataClassification = CustomerContent;
+    DataPerCompany = false;
 
     fields
     {

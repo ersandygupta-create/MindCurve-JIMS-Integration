@@ -189,6 +189,20 @@ page 50225 "E3 HIS Receipt Indent Card"
     {
         area(Processing)
         {
+            action(Prepare)
+            {
+                ApplicationArea = All;
+                Caption = 'Prepare';
+                Image = Approve;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Prepares the selected indent lines for creating a purchase order.';
+
+                trigger OnAction()
+                begin
+                    //PrepareIndent();
+                end;
+            }
             action(Release)
             {
                 ApplicationArea = All;
@@ -205,6 +219,7 @@ page 50225 "E3 HIS Receipt Indent Card"
                     Rec.TestField(Status, Rec.Status::Approved);
 
                     Rec."Purchase Released" := true;
+                    Rec."Closed Purchase Receipt" := true;
                     Rec.Modify(true);
 
                     IndentLine.Reset();
@@ -239,7 +254,8 @@ page 50225 "E3 HIS Receipt Indent Card"
                     if not Confirm('Do you want to reopen this approved indent?', false) then
                         exit;
 
-                    Rec."Indent Status" := Rec."Indent Status"::Open;
+                    Rec."Relese for Store" := false;
+                    Rec."Relese for Purchase" := false;
                     Rec.Released := false;
                     Rec.Modify(true);
 

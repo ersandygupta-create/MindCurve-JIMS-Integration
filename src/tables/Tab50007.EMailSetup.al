@@ -32,6 +32,17 @@ table 50007 "E3 HIS E-Mail Setup"
             Caption = 'Folder Path';
             DataClassification = CustomerContent;
         }
+        field(6; "Order Report ID"; Integer)
+        {
+            Caption = 'Order Report ID';
+            TableRelation = AllObjWithCaption."Object ID" WHERE("Object Type" = CONST(Report));
+            DataClassification = CustomerContent;
+        }
+        field(7; "Order E-Mail Body"; Text[1000])
+        {
+            Caption = 'Order E-Mail Body';
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

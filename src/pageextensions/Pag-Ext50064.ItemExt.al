@@ -36,6 +36,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
             {
                 ApplicationArea = All;
                 ToolTip = 'Specifies the Composition Name for the item.';
+                Editable = false;
             }
         }
         addlast(content)

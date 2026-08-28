@@ -78,8 +78,20 @@ tableextension 50000 "E3 HIS Vendor Ext" extends Vendor
                 ValidateEmail();
             end;
         }
-
-
+        field(50055; "Order Email"; Text[80])
+        {
+            Caption = 'Order Email';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                ValidateEmail();
+            end;
+        }
+        field(50056; "Send Order Email"; Boolean)
+        {
+            Caption = 'Send Order Email';
+            DataClassification = CustomerContent;
+        }
         modify("Date Filter")
         {
             trigger OnAfterValidate()

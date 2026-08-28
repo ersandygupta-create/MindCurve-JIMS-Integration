@@ -6,6 +6,7 @@ page 50223 "E3 HIS Release Indent Line"
     Caption = 'Release Indent Lines';
     AutoSplitKey = true;
     DelayedInsert = true;
+    //SourceTableView = where("Stock Issue Created" = const(true), "Released Stock Issue" = const(true));
 
     layout
     {
@@ -13,6 +14,20 @@ page 50223 "E3 HIS Release Indent Line"
         {
             repeater(Lines)
             {
+                field(Select; Rec.Select)
+                {
+                    ApplicationArea = All;
+                }
+                field("Released Stock Issue"; Rec."Released Stock Issue")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field("Released Stock Issue Purchase"; Rec."Released Stock Issue Purchase")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
                 field("Line No."; Rec."Line No.")
                 {
                     ApplicationArea = All;
@@ -138,6 +153,57 @@ page 50223 "E3 HIS Release Indent Line"
 
                         CurrPage.Update(false);
                     end;
+                end;
+            }
+            action(SelectAll)
+            {
+                ApplicationArea = All;
+                Caption = 'Select All';
+                Image = SelectMore;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Select all eligible indent lines.';
+
+                trigger OnAction()
+                var
+                    IndentLine: Record "E3 Indent Line";
+                begin
+                    IndentLine.Reset();
+                    IndentLine.SetRange("Document No.", Rec."Document No.");
+                    IndentLine.SetRange("Line No.", Rec."Line No.");
+
+                    if IndentLine.FindSet() then
+                        repeat
+                            IndentLine.Select := true;
+                            IndentLine.Modify(true);
+                        until IndentLine.Next() = 0;
+
+                    CurrPage.Update(false);
+                end;
+            }
+            action(ClearAll)
+            {
+                ApplicationArea = All;
+                Caption = 'Clear All';
+                Image = ClearFilter;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Clear the selection from all indent lines.';
+
+                trigger OnAction()
+                var
+                    IndentLine: Record "E3 Indent Line";
+                begin
+                    IndentLine.Reset();
+                    IndentLine.SetRange("Document No.", Rec."Document No.");
+
+                    if IndentLine.FindSet() then
+                        repeat
+                            IndentLine.Select := false;
+                            IndentLine.Modify(true);
+                        until IndentLine.Next() = 0;
+
+                    CurrPage.Update(false);
                 end;
             }
         }

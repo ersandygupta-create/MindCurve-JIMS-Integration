@@ -465,6 +465,49 @@ table 50052 "E3 Indent Line"
             Caption = 'Purchase Released';
             DataClassification = CustomerContent;
         }
+        field(58; "Closed Indent"; Boolean)
+        {
+            Caption = 'Closed Indent';
+            DataClassification = CustomerContent;
+        }
+        field(59; "Stock Issue Created"; Boolean)
+        {
+            Caption = 'Stock Issue Created';
+        }
+        field(60; "Stock Receipt Created"; Boolean)
+        {
+            Caption = 'Stock Receipt Created';
+        }
+        field(61; Select; Boolean)
+        {
+            Caption = 'Select';
+            DataClassification = CustomerContent;
+        }
+        field(62; "Released Stock Issue Purchase"; Boolean)
+        {
+            Caption = 'Released Stock Issue Purchase';
+            DataClassification = CustomerContent;
+        }
+        field(63; "Released Stock Issue"; Boolean)
+        {
+            Caption = 'Released Stock Issue';
+            DataClassification = CustomerContent;
+        }
+        field(64; "Free Qty"; Decimal)
+        {
+            Caption = 'Free Qty';
+            DataClassification = CustomerContent;
+        }
+        field(65; "PO Qty"; Decimal)
+        {
+            Caption = 'PO Qty';
+            DataClassification = CustomerContent;
+        }
+        field(66; "Incl Free Qty in Sale Rate"; Boolean)
+        {
+            Caption = 'Include Free Qty in Sale Rate';
+            DataClassification = CustomerContent;
+        }
         field(80285; "Currency Code"; Code[10])
         {
             DataClassification = CustomerContent;

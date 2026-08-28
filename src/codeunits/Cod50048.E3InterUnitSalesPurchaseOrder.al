@@ -14,7 +14,7 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
         IF NOT IntegrationSetup."Integration Enabled" THEN
             EXIT;
 
-        OrderValidation(EntryType, NatureType, DocumentNo);
+        //OrderValidation(EntryType, NatureType, DocumentNo);
 
         HISPurchaseSaleHeader.RESET();
         HISPurchaseSaleHeader.SETRANGE("Document No.", DocumentNo);
@@ -118,7 +118,7 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
         IF NOT IntegrationSetup."Integration Enabled" THEN
             EXIT;
 
-        OrderValidation(EntryType, NatureType, DocumentNo);
+        //OrderValidation(EntryType, NatureType, DocumentNo);
 
         HISPurchaseSaleHeader.RESET();
         HISPurchaseSaleHeader.SETRANGE("Document No.", DocumentNo);
@@ -253,12 +253,14 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
         IF NOT Header.FINDFIRST() THEN
             ERROR('Header not found for Document No. %1.', DocumentNo);
 
-        Header.TESTFIELD("Vendor/Customer No.");
+        //Header.TESTFIELD("Vendor/Customer No.");
         Header.TESTFIELD("Location Code");
         Header.TESTFIELD("No. of Lines");
 
         Line.RESET();
         Line.SETRANGE("Entry No.", Header."Entry No.");
+        Line.SetRange("Nature Type", NatureType);
+        Line.SetRange("Entry Type", EntryType);
         Line.SETRANGE("Document No.", Header."Document No.");
 
         IF NOT Line.FINDSET() THEN

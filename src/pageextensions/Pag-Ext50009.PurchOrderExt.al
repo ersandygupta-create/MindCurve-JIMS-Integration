@@ -50,6 +50,12 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 ApplicationArea = All;
                 ToolTip = 'Exp. CN Value';
             }
+            field("Item Make Code"; Rec."Item Make Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Item Make Code';
+                ToolTip = 'Specifies the unique code of the item make.';
+            }
         }
         addafter("No.")
         {
