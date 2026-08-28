@@ -219,12 +219,6 @@ page 50222 "E3 HIS Release Indent Card"
                     end;
 
                     repeat
-                        if IndentLine."Released Stock Issue" and IndentLine."Released Stock Issue Purchase" then begin
-                            Message(
-                                'Stock Issue is already released for this line. Both Stock Issue and Purchase are already released.');
-                            exit;
-                        end;
-
                         if not IndentLine."Released Stock Issue Purchase" then begin
                             IndentLine."Released Stock Issue" := true;
 
@@ -313,12 +307,9 @@ page 50222 "E3 HIS Release Indent Card"
                     end;
 
                     repeat
-                        if IndentLine."Released Stock Issue" and IndentLine."Released Stock Issue Purchase" then begin
-                            Message(
-                                'Stock Issue is already released for this line. Both Stock Issue and Purchase are already released.');
-                            exit;
-                        end;
                         IndentLine."Released Stock Issue Purchase" := true;
+
+                        // Clear selection after processing
                         IndentLine."Select" := false;
 
                         IndentLine.Modify(true);
