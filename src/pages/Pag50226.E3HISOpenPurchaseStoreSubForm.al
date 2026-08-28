@@ -346,10 +346,10 @@ page 50226 "E3 HIS Issue Indent Line"
         ApprovedQty: Decimal;
         FreeQty: Decimal;
         POQty: Decimal;
-        BaseQty: Decimal;
-        LastLineQty: Decimal;
+        POQtyLine: Decimal;
+        FreeQtyLine: Decimal;
+        RejectQtyLine: Decimal;
         NextLineNo: Integer;
-        i: Integer;
     begin
         ApprovedQty := IndentLine."Approved Qty";
         FreeQty := IndentLine."Free Qty";
@@ -357,13 +357,24 @@ page 50226 "E3 HIS Issue Indent Line"
 
         if ApprovedQty <= 0 then
             Error('Approved Qty must be greater than zero.');
+
         if (FreeQty + POQty) <= 0 then
             Error('Free Qty + PO Qty must be greater than zero.');
-        SplitFactor := Round(ApprovedQty / (FreeQty + POQty), 1, '<');
+
+        SplitFactor := Round(
+            ApprovedQty / (POQty + FreeQty),
+            1,
+            '=');
+
         if SplitFactor <= 3 then
             Error(
-                'Split Factor is %1. Split is allowed only when Split Factor is greater than 3.', SplitFactor);
-        BaseQty := FreeQty + POQty;
+                'Split Factor is %1. Split is allowed only when Split Factor is greater than 3.',
+                SplitFactor);
+
+        POQtyLine := SplitFactor * POQty;
+        FreeQtyLine := SplitFactor * FreeQty;
+        RejectQtyLine := ApprovedQty - POQtyLine - FreeQtyLine;
+
         NewLine.Reset();
         NewLine.SetRange(
             "Document No.",
@@ -373,26 +384,45 @@ page 50226 "E3 HIS Issue Indent Line"
             NextLineNo := NewLine."Line No." + 10000
         else
             NextLineNo := 10000;
-        for i := 1 to SplitFactor do begin
-            if i < SplitFactor then
-                LastLineQty := BaseQty
-            else
-                LastLineQty := ApprovedQty - (BaseQty * (SplitFactor - 1));
+        NewLine.Init();
+        NewLine.TransferFields(IndentLine, false);
+        NewLine."Line No." := NextLineNo;
 
-            NewLine.Init();
-            NewLine.TransferFields(IndentLine, false);
-            NewLine."Line No." := NextLineNo;
-            NewLine.Validate("Requested Qty", LastLineQty);
-            NewLine.Validate("Approved Qty", LastLineQty);
-            NewLine.Insert(true);
-            NextLineNo := NextLineNo + 10000;
-        end;
+        NewLine.Validate("Requested Qty", POQtyLine);
+        NewLine.Validate("Approved Qty", POQtyLine);
+        NewLine.Remarks := 'PO Qty';
+
+        NewLine.Insert(true);
+
+        NextLineNo += 10000;
+        NewLine.Init();
+        NewLine.TransferFields(IndentLine, false);
+        NewLine."Line No." := NextLineNo;
+
+        NewLine.Validate("Requested Qty", FreeQtyLine);
+        NewLine.Validate("Approved Qty", FreeQtyLine);
+        NewLine.Remarks := 'Free Qty';
+
+        NewLine.Insert(true);
+
+        NextLineNo += 10000;
+
+        NewLine.Init();
+        NewLine.TransferFields(IndentLine, false);
+        NewLine."Line No." := NextLineNo;
+
+        NewLine.Validate("Requested Qty", RejectQtyLine);
+        NewLine.Validate("Approved Qty", RejectQtyLine);
+        NewLine.Remarks := 'Reject Qty';
+
+        NewLine.Insert(true);
 
         Message(
-            '%1 new lines created.\Split Factor: %2\Approved Qty: %3',
+            '3 new lines created.\Split Factor: %1\PO Qty: %2\Free Qty: %3\Reject Qty: %4',
             SplitFactor,
-            SplitFactor,
-            ApprovedQty);
+            POQtyLine,
+            FreeQtyLine,
+            RejectQtyLine);
     end;
 
 
