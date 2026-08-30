@@ -140,10 +140,10 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'SKU Staff Sale Rate';
             DataClassification = CustomerContent;
-            // trigger OnValidate()
-            // begin
-            //     CalculateLandedValue();
-            // end;
+            trigger OnValidate()
+            begin
+                CalculateLandedValue();
+            end;
         }
         field(22; "Item Make Name"; Text[60])
         {
@@ -545,8 +545,8 @@ table 50062 "E3 GRN Work Sheet"
                 "Unit of Measure" := PurchLine."Unit of Measure";
                 "Qty. per Unit of Measure" := PurchLine."Qty. per Unit of Measure";
                 "PO Qty" := PurchLine.Quantity;
-                "Receipt Qty" := PurchLine."Qty. to Receive";
-                "Invoice Qty" := PurchLine."Qty. to Invoice";
+                Validate("Receipt Qty", PurchLine."Qty. to Receive");
+                Validate("Invoice Qty", PurchLine."Qty. to Invoice");
                 "Line Gross" := PurchLine."Line Amount";
                 "Outstanding Qty" := PurchLine."Quantity";
                 "Quantity Received" := PurchLine."Quantity Received";

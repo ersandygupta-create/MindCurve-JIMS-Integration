@@ -574,6 +574,46 @@ page 50035 "E3 API Item Update Log"
                     CurrPage.Update(false);
                 end;
             }
+            action(AllSync)
+            {
+                Caption = 'Sync To ALL';
+                ApplicationArea = All;
+                Image = Link;
+                ToolTip = 'Sync selected items to HIS.';
+
+                trigger OnAction()
+                var
+                    ItemRec: Record "E3 API Item Update Log";
+                    E3AkhilMgmt: Codeunit "E3 Item Integration Mgmt.";
+                    SyncedCount: Integer;
+                begin
+                    // Get the records selected by the user
+                    CurrPage.SetSelectionFilter(ItemRec);
+
+                    if not ItemRec.FindSet() then
+                        Error('Please select at least one item to sync.');
+
+                    repeat
+                        if ItemRec."Sync Status" = ItemRec."Sync Status"::Synced then
+                            Error(
+                                'Item %1 has already been synced to D365. Re-sync is not allowed.',
+                                ItemRec."No.");
+
+                        Clear(E3AkhilMgmt);
+
+                        E3AkhilMgmt.SendItemDetails(ItemRec);
+                        SyncedCount += 1;
+
+                    until ItemRec.Next() = 0;
+
+                    CurrPage.Update(false);
+
+                    Message(
+                        '%1 item(s) successfully synced to HIS.',
+                        SyncedCount);
+                end;
+            }
+
         }
     }
 }

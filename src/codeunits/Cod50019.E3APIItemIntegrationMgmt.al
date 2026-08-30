@@ -14,44 +14,12 @@ codeunit 50019 "E3 Item Integration Mgmt."
         case Rec."Parameter String" of
             'Item', 'item', 'ITEM':
                 if E3APISetup."Item Master API Enabled" then
-                    ProcessItemsForJIMS();
+                    SyncItem(Rec);
             'FailOverItem', 'failoveritem', 'FAILOVERITEM':
                 if E3APISetup."Item Master API Enabled" then
                     ItemUpdateToHIS();
         end;
     end;
-
-    procedure ProcessItemsForJIMS()
-    var
-        E3Item: Record Item;
-        ItemLog: Record "E3 API Item Update Log";
-        ItemCount: Integer;
-    begin
-        E3Item.Reset();
-        E3Item.SetCurrentKey("No.");
-
-        ItemCount := 0;
-
-        if E3Item.FindSet() then
-            repeat
-                ItemLog.Reset();
-                ItemLog.SetRange("No.", E3Item."No.");
-                ItemLog.SetRange("Sync Status", ItemLog."Sync Status"::" ");
-
-                if not ItemLog.FindFirst() then begin
-
-                    CreateItemLog(E3Item);
-
-                    ItemCount += 1;
-                end;
-
-                if ItemCount >= 50 then
-                    break;
-
-            until E3Item.Next() = 0;
-    end;
-
-
 
     procedure ManualSendToJIMS(var E3Item: Record Item)
     var

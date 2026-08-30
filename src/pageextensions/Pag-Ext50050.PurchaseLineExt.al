@@ -137,17 +137,12 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
 
                     GetIndentLinesPage.SetTableView(IndentLine);
                     GetIndentLinesPage.LookupMode(true);
-
                     if GetIndentLinesPage.RunModal() <> Action::LookupOK then
                         exit;
-
                     GetIndentLinesPage.SetSelectionFilter(IndentLine);
-
                     if not IndentLine.FindSet() then
                         exit;
-
                     SelectedMakeCode := IndentLine."Item Make Code";
-
                     repeat
                         if IndentLine."Item Make Code" <> SelectedMakeCode then begin
                             Message(
@@ -164,24 +159,17 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
 
                     until IndentLine.Next() = 0;
                     GetIndentLinesPage.SetSelectionFilter(SelectedLines);
-
                     if not SelectedLines.FindSet() then
                         exit;
-
                     repeat
                         DocumentNo := SelectedLines."Document No.";
                         LineNo := SelectedLines."Line No.";
-
                         CreatePurchaseLineFromIndent(SelectedLines);
-
-                        // Always get the latest database version
                         if IndentLine.Get(DocumentNo, LineNo) then begin
                             IndentLine."Closed Indent" := true;
                             IndentLine.Modify(true);
                         end;
-
                     until SelectedLines.Next() = 0;
-
                     CurrPage.Update(false);
                 end;
             }
@@ -272,9 +260,10 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         PurchLine.Scheme := IndentLine.Scheme;
         PurchLine."SNo." := IndentLine."SNo.";
         PurchLine."Incl Free Qty in Sale Rate" := IndentLine."Incl Free Qty in Sale Rate";
+        if IndentLine.Remarks = 'Free Qty' then
+            PurchLine.FOC := true;
         PurchLine.Insert(true);
-        UpdateIndentLine(
-            IndentLine);
+        UpdateIndentLine(IndentLine);
     end;
 
     local procedure UpdateIndentLine(

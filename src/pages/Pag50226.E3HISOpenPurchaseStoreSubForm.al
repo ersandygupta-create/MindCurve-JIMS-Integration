@@ -166,9 +166,17 @@ page 50226 "E3 HIS Issue Indent Line"
 
                 trigger OnAction()
                 begin
+                    if Rec."Split Line" then
+                        Error('This indent line has already been split.');
+
                     SplitIndentLine(Rec);
+
+                    Rec.Validate("Split Line", true);
+                    Rec.Modify(true);
+
                     CurrPage.Update(false);
                 end;
+
             }
             action("Validate Purch Price")
             {
@@ -384,17 +392,23 @@ page 50226 "E3 HIS Issue Indent Line"
             NextLineNo := NewLine."Line No." + 10000
         else
             NextLineNo := 10000;
+
         NewLine.Init();
         NewLine.TransferFields(IndentLine, false);
         NewLine."Line No." := NextLineNo;
 
         NewLine.Validate("Requested Qty", POQtyLine);
         NewLine.Validate("Approved Qty", POQtyLine);
-        NewLine.Remarks := 'PO Qty';
+
+        if (NewLine."Scheme" = '') or (NewLine."Scheme" = '0') then
+            NewLine.Remarks := 'PO Qty'
+        else
+            NewLine.Remarks := 'PO Qty';
 
         NewLine.Insert(true);
 
         NextLineNo += 10000;
+
         NewLine.Init();
         NewLine.TransferFields(IndentLine, false);
         NewLine."Line No." := NextLineNo;
@@ -402,6 +416,9 @@ page 50226 "E3 HIS Issue Indent Line"
         NewLine.Validate("Requested Qty", FreeQtyLine);
         NewLine.Validate("Approved Qty", FreeQtyLine);
         NewLine.Remarks := 'Free Qty';
+
+        if (FreeQtyLine > 0) and (RejectQtyLine > 0) then
+            NewLine."Unit Cost" := 0;
 
         NewLine.Insert(true);
 
@@ -414,6 +431,9 @@ page 50226 "E3 HIS Issue Indent Line"
         NewLine.Validate("Requested Qty", RejectQtyLine);
         NewLine.Validate("Approved Qty", RejectQtyLine);
         NewLine.Remarks := 'Reject Qty';
+
+        if (FreeQtyLine > 0) and (RejectQtyLine > 0) then
+            NewLine."Unit Cost" := 0;
 
         NewLine.Insert(true);
 

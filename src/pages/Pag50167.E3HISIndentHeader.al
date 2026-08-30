@@ -323,6 +323,7 @@ page 50167 "E3 HIS Indent Card"
                             if IndentLineToUpdate.FindFirst() then begin
                                 IndentLineToUpdate."Stock Receipt Created" := true;
                                 IndentLineToUpdate.Select := false;
+                                IndentLineToUpdate."Released Stock Issue Purchase" := true;
                                 IndentLineToUpdate.Modify(false);
                             end;
 

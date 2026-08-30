@@ -1,4 +1,4 @@
-codeunit 50051 "E3 Purchase Order Auto E-Mail"
+codeunit 50050 "E3 Purchase Order Auto E-Mail"
 {
     Permissions = tabledata "Purchase Header" = rm;
 
