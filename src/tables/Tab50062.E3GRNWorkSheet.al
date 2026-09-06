@@ -611,6 +611,11 @@ table 50062 "E3 GRN Work Sheet"
                 CalculateLandedValue();
             end;
         }
+        field(18084; "Orig. Line No."; Integer)
+        {
+            Caption = 'Original Line No.';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
@@ -711,6 +716,7 @@ table 50062 "E3 GRN Work Sheet"
                 "OH Amt Net" := PurchLine."Line Amount";
                 "Indent SKU Qty" := PurchLine.Quantity;
                 "Margin Code" := PurchLine."Margin Code";
+                "Orig. Line No." := PurchLine."Line No.";
                 "Company Value" := PurchLine."Company Value";
                 "Patient Value" := PurchLine."Patient Value";
                 PurchaseHeader.Get(PurchLine."Document Type", PurchLine."Document No.");
@@ -1046,6 +1052,7 @@ table 50062 "E3 GRN Work Sheet"
         NewLine."Invoice Qty" := 0;
         NewLine."Net Qty Received" := NewLine."Receipt Qty" - NewLine."Rejected Qty";
         NewLine."Shortage Qty" := NewLine."Invoice Qty" - NewLine."Receipt Qty";
+        NewLine."Orig. Line No." := SelectedLine."Orig. Line No.";
         NewLine.Split := true;
         NewLine.Insert(true);
         SelectedLine."Receipt Qty" := RemainingQty;
@@ -1292,5 +1299,152 @@ table 50062 "E3 GRN Work Sheet"
         //     BatchCount,
         //     "PO No.",
         //     "Line No.");
+    end;
+    /// <summary>
+    /// Processes and creates Item Tracking (Reservation Entries) and Lot No. Information
+    /// for the current Purchase Line using all assigned lots in this table.
+    /// </summary>
+    procedure CreateItemTrackingForPurchLine()
+    var
+        PurchLine: Record "Purchase Line";
+        Item: Record Item;
+        ReservationEntry: Record "Reservation Entry";
+        LotInformation: Record "Lot No. Information";
+        Vendor: Record Vendor;
+        LotLines: Record "E3 GRN Work Sheet";
+        CreateReservEntry: Codeunit "Create Reserv. Entry";
+        QtyToHandle: Decimal;
+        QtyToHandleBase: Decimal;
+        TotalLotQty: Decimal;
+    begin
+        TestField("PO No.");
+        TestField("Orig. Line No.");
+
+        // 1. Fetch & Validate Purchase Line
+        PurchLine.Reset();
+        PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+        PurchLine.SetRange("Document No.", Rec."PO No.");
+        PurchLine.SetRange("Line No.", Rec."Orig. Line No.");
+
+        if not PurchLine.FindFirst() then
+            Error('Purchase Line not found for PO %1, Line %2.', Rec."PO No.", Rec."Orig. Line No.");
+
+        PurchLine.TestField(Type, PurchLine.Type::Item);
+        PurchLine.TestField("No.");
+
+        Item.Get(PurchLine."No.");
+        if Item."Item Tracking Code" = '' then
+            Error('Item %1 does not have an Item Tracking Code assigned.', Item."No.");
+
+        // 2. Fetch all Lot entries for this PO No. and Line No. from this table
+        LotLines.Reset();
+        LotLines.SetRange("PO No.", Rec."PO No.");
+        LotLines.SetRange("Orig. Line No.", Rec."Orig. Line No.");
+
+        if LotLines.IsEmpty() then
+            Error('No lot records found for PO %1, Line %2.', Rec."PO No.", Rec."Orig. Line No.");
+
+        // Calculate total quantity across all lots for this PO line
+        LotLines.CalcSums("Receipt Qty");
+        TotalLotQty := LotLines."Receipt Qty";
+
+        //if TotalLotQty <= 0 then
+        //  Error('Total Receipt Qty must be greater than zero for Item %1.', Item."No.");
+
+        //if TotalLotQty > PurchLine."Qty. to Receive" then
+        //  Error('Total Lot Qty (%1) cannot exceed Purchase Line Qty. to Receive (%2).', TotalLotQty, PurchLine."Qty. to Receive");
+
+        // 3. Update Purchase Line Qty. to Receive to match the total lot quantity
+        // if (PurchLine."Qty. to Receive" = PurchLine.Quantity) then
+        //     PurchLine."Qty. to Receive" := "Receipt Qty"
+        // else
+        //     PurchLine."Qty. to Receive" := PurchLine."Qty. to Receive" + "Receipt Qty";
+        PurchLine.Validate("Qty. to Receive");
+        PurchLine.Modify(true);
+
+        // 4. Delete existing reservation entries for this purchase line to prevent duplicates
+        ReservationEntry.Reset();
+        ReservationEntry.SetRange("Source Type", Database::"Purchase Line");
+        ReservationEntry.SetRange("Source Subtype", PurchLine."Document Type");
+        ReservationEntry.SetRange("Source ID", PurchLine."Document No.");
+        ReservationEntry.SetRange("Source Ref. No.", PurchLine."Line No.");
+        //  if not ReservationEntry.IsEmpty() then
+        //    ReservationEntry.DeleteAll(true);
+
+        // 5. Loop through each Lot line and create Reservation Entry & Lot No. Information
+        LotLines.SetRange("Supplier Batch No.", "Supplier Batch No.");
+        if LotLines.FindSet() then
+            repeat
+                LotLines.TestField("Supplier Batch No.");
+
+                if LotLines."Receipt Qty" <= 0 then
+                    Error('Receipt Qty must be greater than zero for Lot %1.', LotLines."Supplier Batch No.");
+
+                QtyToHandle := LotLines."Receipt Qty";
+                QtyToHandleBase := Round(QtyToHandle * PurchLine."Qty. per Unit of Measure", 0.00001);
+
+                // Initialize Reservation Entry
+                Clear(ReservationEntry);
+                ReservationEntry.Init();
+                ReservationEntry."Lot No." := LotLines."Supplier Batch No.";
+                ReservationEntry.Quantity := QtyToHandle;
+                ReservationEntry."Quantity (Base)" := QtyToHandleBase;
+
+                if LotLines."Expiry Date" <> 0D then
+                    ReservationEntry."Expiration Date" := LotLines."Expiry Date";
+
+                CreateReservEntry.SetDates(0D, ReservationEntry."Expiration Date");
+
+                // Create Reservation Entry for Purchase Line
+                CreateReservEntry.CreateReservEntryFor(
+                    Database::"Purchase Line",
+                    PurchLine."Document Type".AsInteger(),
+                    PurchLine."Document No.",
+                    '',
+                    0,
+                    PurchLine."Line No.",
+                    PurchLine."Qty. per Unit of Measure",
+                    QtyToHandle,
+                    QtyToHandleBase,
+                    ReservationEntry);
+
+                CreateReservEntry.SetQtyToHandleAndInvoice(QtyToHandleBase, QtyToHandleBase);
+
+                CreateReservEntry.CreateEntry(
+                    PurchLine."No.",
+                    PurchLine."Variant Code",
+                    PurchLine."Location Code",
+                    PurchLine.Description,
+                    PurchLine."Expected Receipt Date",
+                    0D,
+                    0,
+                    ReservationEntry."Reservation Status"::Surplus);
+
+                // 6. Create or Update Lot No. Information
+                LotInformation.Reset();
+                LotInformation.SetRange("Item No.", PurchLine."No.");
+                LotInformation.SetRange("Lot No.", LotLines."Supplier Batch No.");
+
+                if not LotInformation.FindFirst() then begin
+                    LotInformation.Init();
+                    LotInformation."Item No." := PurchLine."No.";
+                    LotInformation."Lot No." := LotLines."Supplier Batch No.";
+                    LotInformation.Insert(true);
+                end;
+
+                LotInformation."Item Name" := Item.Description;
+                LotInformation."Vendor Code" := PurchLine."Buy-from Vendor No.";
+                if Vendor.Get(PurchLine."Buy-from Vendor No.") then
+                    LotInformation."Vendor Name" := Vendor.Name;
+
+                if LotLines."Manufacturing Date" <> 0D then
+                    LotInformation."Manufacturing Date" := LotLines."Manufacturing Date";
+
+                if LotLines."Expiry Date" <> 0D then
+                    LotInformation."Expairy Date" := LotLines."Expiry Date";
+
+                LotInformation.Modify(true);
+
+            until LotLines.Next() = 0;
     end;
 }
