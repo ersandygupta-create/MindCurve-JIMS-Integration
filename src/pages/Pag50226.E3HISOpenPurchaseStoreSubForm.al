@@ -359,51 +359,59 @@ page 50226 "E3 HIS Issue Indent Line"
         RejectQtyLine: Decimal;
         NextLineNo: Integer;
     begin
+        // Get original quantities
         ApprovedQty := IndentLine."Approved Qty";
         FreeQty := IndentLine."Free Qty";
         POQty := IndentLine."PO Qty";
 
+        // Validate Approved Qty
         if ApprovedQty <= 0 then
             Error('Approved Qty must be greater than zero.');
 
-        if (FreeQty + POQty) <= 0 then
-            Error('Free Qty + PO Qty must be greater than zero.');
+        if (POQty + FreeQty) <= 0 then
+            Error('PO Qty + Free Qty must be greater than zero.');
 
         SplitFactor := Round(
             ApprovedQty / (POQty + FreeQty),
             1,
-            '=');
+            '<');
 
-        if SplitFactor <= 3 then
+        if SplitFactor < 1 then
             Error(
-                'Split Factor is %1. Split is allowed only when Split Factor is greater than 3.',
+                'Split Factor is %1. Split is not possible.',
                 SplitFactor);
 
         POQtyLine := SplitFactor * POQty;
         FreeQtyLine := SplitFactor * FreeQty;
+
         RejectQtyLine := ApprovedQty - POQtyLine - FreeQtyLine;
 
+        if RejectQtyLine < 0 then
+            Error(
+                'Reject Qty cannot be negative.\Approved Qty: %1\PO Qty: %2\Free Qty: %3',
+                ApprovedQty,
+                POQtyLine,
+                FreeQtyLine);
+
         NewLine.Reset();
-        NewLine.SetRange(
-            "Document No.",
-            IndentLine."Document No.");
+        NewLine.SetRange("Document No.", IndentLine."Document No.");
 
         if NewLine.FindLast() then
             NextLineNo := NewLine."Line No." + 10000
         else
             NextLineNo := 10000;
-
         NewLine.Init();
         NewLine.TransferFields(IndentLine, false);
+
         NewLine."Line No." := NextLineNo;
 
         NewLine.Validate("Requested Qty", POQtyLine);
         NewLine.Validate("Approved Qty", POQtyLine);
 
-        if (NewLine."Scheme" = '') or (NewLine."Scheme" = '0') then
-            NewLine.Remarks := 'PO Qty'
-        else
-            NewLine.Remarks := 'PO Qty';
+        NewLine."PO Qty" := POQty;
+        NewLine."Free Qty" := 0;
+
+        NewLine.Remarks := 'PO Qty';
 
         NewLine.Insert(true);
 
@@ -411,39 +419,50 @@ page 50226 "E3 HIS Issue Indent Line"
 
         NewLine.Init();
         NewLine.TransferFields(IndentLine, false);
+
         NewLine."Line No." := NextLineNo;
 
         NewLine.Validate("Requested Qty", FreeQtyLine);
         NewLine.Validate("Approved Qty", FreeQtyLine);
+
+        NewLine."PO Qty" := 0;
+        NewLine."Free Qty" := FreeQty;
+
         NewLine.Remarks := 'Free Qty';
-
-        if (FreeQtyLine > 0) and (RejectQtyLine > 0) then
-            NewLine."Unit Cost" := 0;
+        NewLine."Unit Cost" := 0;
 
         NewLine.Insert(true);
 
-        NextLineNo += 10000;
+        if RejectQtyLine > 0 then begin
 
-        NewLine.Init();
-        NewLine.TransferFields(IndentLine, false);
-        NewLine."Line No." := NextLineNo;
+            NextLineNo += 10000;
 
-        NewLine.Validate("Requested Qty", RejectQtyLine);
-        NewLine.Validate("Approved Qty", RejectQtyLine);
-        NewLine.Remarks := 'Reject Qty';
+            NewLine.Init();
+            NewLine.TransferFields(IndentLine, false);
 
-        if (FreeQtyLine > 0) and (RejectQtyLine > 0) then
+            NewLine."Line No." := NextLineNo;
+
+            NewLine.Validate("Requested Qty", RejectQtyLine);
+            NewLine.Validate("Approved Qty", RejectQtyLine);
+
+            NewLine."PO Qty" := 0;
+            NewLine."Free Qty" := 0;
+
+            NewLine.Remarks := 'Reject Qty';
+
             NewLine."Unit Cost" := 0;
 
-        NewLine.Insert(true);
+            NewLine.Insert(true);
+        end;
 
         Message(
-            '3 new lines created.\Split Factor: %1\PO Qty: %2\Free Qty: %3\Reject Qty: %4',
+            'Split completed.\Split Factor: %1\PO Qty: %2\Free Qty: %3\Reject Qty: %4',
             SplitFactor,
             POQtyLine,
             FreeQtyLine,
             RejectQtyLine);
     end;
+
 
 
 }

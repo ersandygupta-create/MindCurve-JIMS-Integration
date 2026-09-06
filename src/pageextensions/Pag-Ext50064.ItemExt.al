@@ -566,6 +566,8 @@ pageextension 50064 "Item Ext" extends "Item Card"
                         // Get the vendor record for this address
                         if ItemRec.Get(Rec."No.") then
                             E3IntegrationMgmt.ManualSendToJIMS(ItemRec);
+                        ItemRec."Item Sync Status" := true;
+                        ItemRec.Modify(true);
                     end;
                 }
             }

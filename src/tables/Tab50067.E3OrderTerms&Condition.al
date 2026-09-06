@@ -25,6 +25,12 @@ table 50067 "E3 Order Terms & Conditions"
             Caption = 'Active';
             DataClassification = CustomerContent;
         }
+        field(5; "Voucher Type"; Code[20])
+        {
+            Caption = 'Voucher Type';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Voucher Type".Code where("Entry Type" = const(Order));
+        }
     }
 
     keys

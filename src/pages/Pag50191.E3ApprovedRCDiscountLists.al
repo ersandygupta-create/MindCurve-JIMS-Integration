@@ -6,7 +6,7 @@ page 50191 "E3 App. RC Discount List"
     SourceTable = "E3 RC Discount Header";
     SourceTableView = sorting("Document No.") order(descending) where(Status = filter(Active));
     Caption = 'Approved Purchase Discount List';
-    CardPageId = "E3 RC Discount Card";
+    CardPageId = "E3 App. RC Discount Card";
     Editable = false;
     InsertAllowed = false;
     DeleteAllowed = false;
@@ -76,4 +76,16 @@ page 50191 "E3 App. RC Discount List"
             }
         }
     }
+    trigger OnOpenPage()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if not UserSetup.Get(UserId) then
+            Error('User Setup is not defined for user %1.', UserId);
+
+        if not UserSetup."Purchase Disc Agreement" then
+            Error(
+                'You do not have permission to access Purchase Discount Agreement.');
+    end;
+
 }

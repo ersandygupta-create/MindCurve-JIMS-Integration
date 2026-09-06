@@ -12,9 +12,9 @@ codeunit 50019 "E3 Item Integration Mgmt."
             exit;
 
         case Rec."Parameter String" of
-            'Item', 'item', 'ITEM':
-                if E3APISetup."Item Master API Enabled" then
-                    SyncItem(Rec);
+            // 'Item', 'item', 'ITEM':
+            //     if E3APISetup."Item Master API Enabled" then
+            //         SyncItem(Rec);
             'FailOverItem', 'failoveritem', 'FAILOVERITEM':
                 if E3APISetup."Item Master API Enabled" then
                     ItemUpdateToHIS();

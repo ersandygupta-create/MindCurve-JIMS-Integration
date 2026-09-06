@@ -73,4 +73,16 @@ page 50188 "E3 RC Discount List"
             }
         }
     }
+    trigger OnOpenPage()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if not UserSetup.Get(UserId) then
+            Error('User Setup is not defined for user %1.', UserId);
+
+        if not UserSetup."Purchase Disc Agreement" then
+            Error(
+                'You do not have permission to access Purchase Discount Agreement.');
+    end;
+
 }

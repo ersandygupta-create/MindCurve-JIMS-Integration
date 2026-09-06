@@ -324,7 +324,9 @@ permissionset 50000 "E3 HIS Permission"
     page "E3 Bill Application List" = X,
     table "E3 Settlement Process Setup" = X,
     tabledata "E3 Settlement Process Setup" = RIMD,
-    page "E3 Settlement Process Setup" = X;
+    page "E3 Settlement Process Setup" = X,
+    table "E3 PO Order Terms & Conditions" = X,
+    tabledata "E3 PO Order Terms & Conditions" = RIMD;
 
 
 

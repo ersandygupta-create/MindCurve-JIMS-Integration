@@ -76,7 +76,8 @@ page 50197 "E3 Stock Consumption Card"
                     E3PostStockConsumption: Codeunit "E3 Post Stock Consumption";
                 begin
                     E3PostStockConsumption.CreateItemJournal(Rec);
-
+                    Rec.Posted := true;
+                    Rec.Modify(true);
                     Message(
                         'Item Journal has been created for Stock Consumption Document %1.',
                         Rec."Document No.");

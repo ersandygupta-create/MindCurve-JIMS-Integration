@@ -42,5 +42,16 @@ tableextension 50065 "E3 Location" extends Location
             DataClassification = CustomerContent;
             TableRelation = "No. Series";
         }
+        field(50007; "Name 3"; Text[100])
+        {
+            Caption = 'Name 3';
+            DataClassification = CustomerContent;
+        }
+        field(50008; "Gen. Bus. Posting Group"; Code[20])
+        {
+            Caption = 'Gen. Bus. Posting Group';
+            ToolTip = 'Specifies the vendor''s trade type to link transactions made for this vendor with the appropriate general ledger account according to the general posting setup.';
+            TableRelation = "Gen. Business Posting Group";
+        }
     }
 }

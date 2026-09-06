@@ -67,7 +67,7 @@ table 50071 "E3 Rate Contract Line"
 
                 if Item.Get("Product No.") then begin
                     Description := Item.Description;
-                    "Unit of Measure Code" := Item."Base Unit of Measure";
+                    "Unit of Measure Code" := Item."Purch. Unit of Measure";
                     "Type Of RC" := Item."Margin Fix";
                     "GST Group Code" := Item."GST Group Code";
                     "HSN/SAC Code" := Item."HSN/SAC Code";
@@ -84,8 +84,7 @@ table 50071 "E3 Rate Contract Line"
         field(6; "Unit of Measure Code"; Code[10])
         {
             Caption = 'Unit of Measure Code';
-            TableRelation = "Item Unit of Measure".Code
-                where("Item No." = field("Product No."));
+            TableRelation = Item."Purch. Unit of Measure";
             DataClassification = CustomerContent;
         }
         field(7; Quantity; Decimal)

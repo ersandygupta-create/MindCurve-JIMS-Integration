@@ -508,6 +508,11 @@ table 50052 "E3 Indent Line"
             Caption = 'Include Free Qty in Sale Rate';
             DataClassification = CustomerContent;
         }
+        field(67; "Closed Indent Grouped Line"; Boolean)
+        {
+            Caption = 'Closed Indent Grouped Line';
+            DataClassification = CustomerContent;
+        }
         field(80285; "Currency Code"; Code[10])
         {
             DataClassification = CustomerContent;

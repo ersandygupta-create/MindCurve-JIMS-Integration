@@ -96,4 +96,16 @@ page 50185 "E3 App. Rate Contract List"
             }
         }
     }
+    trigger OnOpenPage()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if not UserSetup.Get(UserId) then
+            Error('User Setup is not defined for user %1.', UserId);
+
+        if not UserSetup."Purchase Agreement" then
+            Error(
+                'You do not have permission to access Purchase Agreement.');
+    end;
+
 }

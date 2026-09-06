@@ -70,19 +70,36 @@ page 50137 "E3 Item Model Master"
                 var
                     E3ItemModelMgmt: Codeunit "E3 Item Model Mgmt.";
                     ItemModelMst: Record "E3 Item Model Master";
+                    SentCount: Integer;
+                    FailedCount: Integer;
                 begin
-                    ItemModelMst.Get(Rec.Code);
-                    if ItemModelMst.IsSent then
-                        Error('This record has already been sent.');
+                    // Get all records selected on the list page
+                    CurrPage.SetSelectionFilter(ItemModelMst);
 
-                    if E3ItemModelMgmt.SendItemModelDetails(ItemModelMst) then begin
-                        ItemModelMst.Get(Rec.Code);
-                        ItemModelMst."First Sent" := true;
-                        ItemModelMst.Modify();
-                        Message('Data sent successfully.');
-                    end else
-                        Message('Failed to send data.');
+                    if ItemModelMst.FindSet() then begin
+                        repeat
+                            if not ItemModelMst.IsSent then begin
+                                if E3ItemModelMgmt.SendItemModelDetails(ItemModelMst) then begin
+                                    ItemModelMst."First Sent" := true;
+                                    ItemModelMst.Modify();
+                                    SentCount += 1;
+                                end else begin
+                                    FailedCount += 1;
+                                end;
+                            end;
+                        until ItemModelMst.Next() = 0;
+                    end;
+
+                    if FailedCount = 0 then
+                        Message('%1 record(s) sent successfully.', SentCount)
+                    else
+                        Message(
+                            '%1 record(s) sent successfully.\%2 record(s) failed.',
+                            SentCount,
+                            FailedCount
+                        );
                 end;
+
             }
         }
     }

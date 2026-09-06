@@ -145,6 +145,15 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                             runPageMode = Create;
                             ToolTip = 'Manage the Terms & Conditions for this Purchase Order.';
                         }
+                        action("PO Terms & Conditions")
+                        {
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'PO Order Terms & Conditions';
+                            Image = Setup;
+                            runObject = Page "E3 PO Order Terms & Conditions";
+                            runPageMode = Create;
+                            ToolTip = 'Manage the PO Terms & Conditions for this Purchase Order.';
+                        }
                     }
                     group("E3 HIS Mapping")
                     {
@@ -1335,6 +1344,19 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                             RunObject = Page "E3 App. RC Discount List";
                             RunPageMode = View;
                             ToolTip = 'Executes the App. RC Discount List.';
+                        }
+                    }
+                    group(RCLineList)
+                    {
+                        action("E3 Approved RC Price Details")
+                        {
+                            AccessByPermission = TableData "E3 Rate Contract Line" = RIMD;
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'All Price Aggreement List';
+                            Image = List;
+                            RunObject = Page "E3 Rate Contract Line Lists";
+                            RunPageMode = View;
+                            ToolTip = 'Executes the RC All List.';
                         }
                     }
                 }

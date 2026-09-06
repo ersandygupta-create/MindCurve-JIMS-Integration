@@ -49,7 +49,7 @@ page 50029 "E3 HIS E-Mail Setup"
                 }
 
             }
-            group("E-Mail Boody")
+            group("E-Mails Body")
             {
                 field("E-Mail Body"; Rec."E-Mail Body")
                 {
@@ -59,7 +59,7 @@ page 50029 "E3 HIS E-Mail Setup"
                     MultiLine = true;
                 }
             }
-            group("Order E-Mail Boody")
+            group("Order EMail Body")
             {
                 field("Order E-Mail Body"; Rec."Order E-Mail Body")
                 {

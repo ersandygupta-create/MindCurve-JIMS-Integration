@@ -59,22 +59,19 @@ codeunit 50046 "E3 GRN Work Sheet Mgmt."
                 'Document %1 not found.',
                 DocumentID);
 
-        //========================================================
-        // Create Header Object
-        //========================================================
         Clear(GRNObj);
 
         GRNObj.Add('d365_DocId', GRNWorkSheetHeader."Document ID");
         GRNObj.Add('v_Type', GRNWorkSheetHeader."Voucher Type");
         GRNObj.Add('v_Prefix', GRNWorkSheetHeader.Prefix);
-        GRNObj.Add('v_Date', Format(CurrentDateTime, 0, 9));
+        GRNObj.Add('v_Date', Format(GRNWorkSheetHeader."Voucher Date", 0, '<Year4>-<Month,2>-<Day,2>'));
         GRNObj.Add('d365_departmentCode', GRNWorkSheetHeader."Department Code");
         GRNObj.Add('departmentName', GRNWorkSheetHeader."Department Name");
         GRNObj.Add('d365_Supplier_subCode', GRNWorkSheetHeader."Supplier Code");
         GRNObj.Add('placeOfSupply', GRNWorkSheetHeader."Place of Supply");
         GRNObj.Add('remark', GRNWorkSheetHeader.Remark);
         GRNObj.Add('d365_pChallanNo', GRNWorkSheetHeader."Purchase Challan No.");
-        GRNObj.Add('d365_pChallanDate', Format(CurrentDateTime, 0, 9));
+        GRNObj.Add('d365_pChallanDate', Format(GRNWorkSheetHeader."Purchase Challan Date", 0, '<Year4>-<Month,2>-<Day,2>'));
         GRNObj.Add('oh_Amt_Gross', GRNWorkSheetHeader."OH Amount Gross");
         GRNObj.Add('oh_Amt_Discount', GRNWorkSheetHeader."OH Amount Discount");
         GRNObj.Add('oh_Amt_Taxable', GRNWorkSheetHeader."OH Amount Taxable");
@@ -90,10 +87,11 @@ codeunit 50046 "E3 GRN Work Sheet Mgmt."
         GRNObj.Add('oh_Amt_LandedValue', GRNWorkSheetHeader."OH Landed Value");
         GRNObj.Add('d365_TimeStamp', Format(CurrentDateTime, 0, 9));
         GRNObj.Add('preparedBy', GRNWorkSheetHeader."Prepared By");
-        GRNObj.Add('preparedDate', Format(CurrentDateTime, 0, 9));
+        GRNObj.Add('preparedDate', Format(GRNWorkSheetHeader."Prepared Date", 0, '<Year4>-<Month,2>-<Day,2>'));
         GRNObj.Add('approvedBy', GRNWorkSheetHeader."Approved By");
-        GRNObj.Add('approvalDateTime', Format(CurrentDateTime, 0, 9));
-        GRNObj.Add('businessUnitCode', '');
+        GRNObj.Add('approvalDateTime', Format(GRNWorkSheetHeader."Approval Date Time", 0,
+         '<Year4>-<Month,2>-<Day,2>T<Hours24,2>:<Minutes,2>:<Seconds,2>'));
+        GRNObj.Add('businessUnitCode', GRNWorkSheetHeader."Business Unit Code");
         GRNObj.Add('businessUnitName', GRNWorkSheetHeader."Business Unit Name");
         GRNObj.Add('rcmApplicable', 0);
         GRNObj.Add('partyType', GRNWorkSheetHeader."Party Type");
@@ -102,11 +100,14 @@ codeunit 50046 "E3 GRN Work Sheet Mgmt."
         GRNObj.Add('eWayBillDt', Format(CurrentDateTime, 0, 9));
         GRNObj.Add('lrNo', GRNWorkSheetHeader."LR No.");
         GRNObj.Add('lrDate', Format(CurrentDateTime, 0, 9));
-        GRNObj.Add('gsTlocation', GRNWorkSheetHeader."GST Location");
-        GRNObj.Add('dm_Status', GRNWorkSheetHeader.Status);
+        if GRNWorkSheetHeader."GST Location" = 'Intrastate' then
+            GRNObj.Add('gsTlocation', '1')
+        else
+            GRNObj.Add('gsTlocation', '2');
+        GRNObj.Add('dm_Status', '');
         GRNObj.Add('dm_TimeStamp', Format(CurrentDateTime, 0, 9));
         GRNObj.Add('dm_docid', 0);
-        GRNObj.Add('legalEntity', GRNWorkSheetHeader."Legal Entity");
+        GRNObj.Add('legalEntity', CompanyName);
 
         // Line
 
@@ -133,7 +134,7 @@ codeunit 50046 "E3 GRN Work Sheet Mgmt."
                     LineObj.Add('d365_departmentCode', GRNWorkSheetLine."Department Code");
                     LineObj.Add('dm_departmentCode', 0);
                     LineObj.Add('departmentName', GRNWorkSheetLine."Department Name");
-                    LineObj.Add('d365_unitCode', '');
+                    LineObj.Add('d365_unitCode', GRNWorkSheetLine."Unit Code");
                     LineObj.Add('dm_unitCode', 0);
                     LineObj.Add('d365_hsnCode', GRNWorkSheetLine."HSN Code");
                     LineObj.Add('dm_hsnCode', 0);
@@ -152,7 +153,7 @@ codeunit 50046 "E3 GRN Work Sheet Mgmt."
                     LineObj.Add('oh_Amt_IGST', GRNWorkSheetLine."IGST Amount");
                     LineObj.Add('oh_at_UGST', GRNWorkSheetLine."UGST %");
                     LineObj.Add('oh_Amt_UGST', GRNWorkSheetLine."UGST Amount");
-                    LineObj.Add('oh_at_FinalDiscount', GRNWorkSheetLine."Final Discount %");
+                    LineObj.Add('oh_at_FinalDiscount', GRNWorkSheetLine."Discount %");
                     LineObj.Add('oh_Amt_FinalDiscount', GRNWorkSheetLine."Final Discount Amount");
                     LineObj.Add('oh_Amt_Net', GRNWorkSheetLine."Net Amount");
                     LineObj.Add('landedSkuValue', GRNWorkSheetLine."Landed SKU Value");
@@ -162,16 +163,16 @@ codeunit 50046 "E3 GRN Work Sheet Mgmt."
                     LineObj.Add('skuMrp', GRNWorkSheetLine."SKU MRP");
                     LineObj.Add('saleRate', GRNWorkSheetLine."Sale Rate");
                     LineObj.Add('skuSaleRate', GRNWorkSheetLine."SKU Sale Rate");
-                    LineObj.Add('staffSaleRate', GRNWorkSheetLine."SKU Sale Rate");
+                    LineObj.Add('staffSaleRate', GRNWorkSheetLine."Staff Sale Rate");
                     LineObj.Add('skuStaffSaleRate', GRNWorkSheetLine."SKU Staff Sale Rate");
                     LineObj.Add('barcode', GRNWorkSheetLine.Barcode);
                     LineObj.Add('batchNo', GRNWorkSheetLine."Batch No.");
                     LineObj.Add('manufacturingDate', Format(CurrentDateTime, 0, 9));
-                    LineObj.Add('expiryDate', Format(CurrentDateTime, 0, 9));
+                    LineObj.Add('expiryDate', Format(GRNWorkSheetLine."Expiry Date", 0, '<Year4>-<Month,2>-<Day,2>'));
                     LineObj.Add('itemMakeCode', GRNWorkSheetLine."Item Make Code");
                     LineObj.Add('gstTypeCode', GRNWorkSheetLine."GST Type Code");
                     LineObj.Add('itemGSTNature', GRNWorkSheetLine."Item GST Nature");
-                    LineObj.Add('dm_Status', 'New');
+                    LineObj.Add('dm_Status', '');
                     LineObj.Add('dm_TimeStamp', Format(CurrentDateTime, 0, 9));
                     LineObj.Add('dm_docid', 0);
                     LineObj.Add('d365_DateTime', Format(CurrentDateTime, 0, 9));

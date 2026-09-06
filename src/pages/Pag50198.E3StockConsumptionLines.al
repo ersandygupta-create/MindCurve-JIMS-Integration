@@ -55,15 +55,20 @@ page 50198 "E3 Stock Consumption Line"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the item type.';
                 }
+                field(Quantity; Rec.Quantity)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the consumed quantity.';
+                }
                 field("Batch No."; Rec."Batch No.")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the batch number.';
                 }
-                field(Quantity; Rec.Quantity)
+                field("Expiry Date"; Rec."Expiry Date")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the consumed quantity.';
+                    ToolTip = 'Specifies the Expiry Date.';
                 }
                 field("D365 Unit Code"; Rec."D365 Unit Code")
                 {
@@ -74,6 +79,11 @@ page 50198 "E3 Stock Consumption Line"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the unit name.';
+                }
+                field("Gen. Bus. Posting Group"; Rec."Gen. Bus. Posting Group")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies a value Gen. Bus. Posting Group';
                 }
             }
         }

@@ -66,6 +66,7 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
     var
         SwissQRHelper: Codeunit "Swiss QR Code Helper";
         TempBlob: Codeunit "Temp Blob";
+        SourceText: Text;
         InS: InStream;
         FileName: Text;
     begin

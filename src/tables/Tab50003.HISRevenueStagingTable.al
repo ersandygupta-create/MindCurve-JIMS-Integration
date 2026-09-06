@@ -27,7 +27,7 @@ table 50003 "E3 HIS Revenue Staging Table"
             Caption = 'HIS Document Type';
             DataClassification = CustomerContent;
         }
-        field(5; "HIS Bill Type"; Text[3])
+        field(5; "HIS Bill Type"; Text[10])
         {
             Caption = 'HIS Bill Type';
             DataClassification = CustomerContent;

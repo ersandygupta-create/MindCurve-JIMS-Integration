@@ -862,6 +862,11 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Composition Name';
             DataClassification = CustomerContent;
         }
+        field(50112; "Item Sync Status"; Boolean)
+        {
+            Caption = 'Item Sync Status';
+            DataClassification = CustomerContent;
+        }
 
     }
     trigger OnBeforeRename()

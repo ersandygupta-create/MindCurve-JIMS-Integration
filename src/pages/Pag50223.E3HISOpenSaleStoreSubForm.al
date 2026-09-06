@@ -6,7 +6,7 @@ page 50223 "E3 HIS Release Indent Line"
     Caption = 'Release Indent Lines';
     AutoSplitKey = true;
     DelayedInsert = true;
-    //SourceTableView = where("Stock Issue Created" = const(true), "Released Stock Issue" = const(true));
+    SourceTableView = where("Released Stock Issue" = const(false), "Released Stock Issue Purchase" = const(false));
 
     layout
     {
@@ -158,7 +158,7 @@ page 50223 "E3 HIS Release Indent Line"
             action(SelectAll)
             {
                 ApplicationArea = All;
-                Caption = 'Select All';
+                Caption = 'Select';
                 Image = SelectMore;
                 Promoted = true;
                 PromotedCategory = Process;
@@ -168,14 +168,14 @@ page 50223 "E3 HIS Release Indent Line"
                 var
                     IndentLine: Record "E3 Indent Line";
                 begin
-                    IndentLine.Reset();
-                    IndentLine.SetRange("Document No.", Rec."Document No.");
-                    IndentLine.SetRange("Line No.", Rec."Line No.");
+                    CurrPage.SetSelectionFilter(IndentLine);
 
                     if IndentLine.FindSet() then
                         repeat
-                            IndentLine.Select := true;
-                            IndentLine.Modify(true);
+                            if not IndentLine.Select then begin
+                                IndentLine.Select := true;
+                                IndentLine.Modify(true);
+                            end;
                         until IndentLine.Next() = 0;
 
                     CurrPage.Update(false);
