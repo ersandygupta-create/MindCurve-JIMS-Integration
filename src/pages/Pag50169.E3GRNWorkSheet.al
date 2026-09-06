@@ -513,9 +513,11 @@ page 50169 "E3 GRN Work Sheet"
                                 //         'Purchase Challan No. %1 already exists in Posted GRN %2. Cannot receive this Purchase Order.',
                                 //         PurchHeader."Vendor Invoice No.",
                                 //         PostedGRNHeader."Document ID");
-                                if not PurchLine.Get(PurchHeader."Document Type", PurchHeader."No.", SelectedGRNWorksheet."Line No.") then
-                                    Error('Purchase Order Line %1 does not exist for PO %2.', SelectedGRNWorksheet."Line No.", PurchHeader."No.");
-                                PurchLine.Validate("Qty. to Receive", SelectedGRNWorksheet."Receipt Qty");
+                                if not PurchLine.Get(PurchHeader."Document Type", PurchHeader."No.", SelectedGRNWorksheet."Orig. Line No.") then
+                                    Error('Purchase Order Line %1 does not exist for PO %2.', SelectedGRNWorksheet."Orig. Line No.", PurchHeader."No.");
+                                PurchLine."Qty. to Receive" := SelectedGRNWorksheet."Receipt Qty";
+                                // PurchLine.Validate("Qty. to Receive", SelectedGRNWorksheet."Receipt Qty");
+                                PurchLine.Validate("Qty. to Receive");
                                 PurchLine.Modify(true);
                             end;
 
@@ -589,7 +591,8 @@ page 50169 "E3 GRN Work Sheet"
 
                 trigger OnAction()
                 begin
-                    Rec.AssignLotNoToPurchaseLine();
+                    // Rec.AssignLotNoToPurchaseLine();
+                    Rec.CreateItemTrackingForPurchLine();
 
                     Message(
                         'Lot No. %1 assigned successfully to Purchase Order %2, Line %3.',
@@ -622,7 +625,7 @@ page 50169 "E3 GRN Work Sheet"
                                 continue;
                             end;
 
-                            SelectedGRNLine.AssignBatchNoToPurchaseLine();
+                            SelectedGRNLine.CreateItemTrackingForPurchLine();
                             SelectedCount += 1;
                         until SelectedGRNLine.Next() = 0;
 
