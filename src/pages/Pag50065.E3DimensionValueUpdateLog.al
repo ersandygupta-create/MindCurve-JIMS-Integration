@@ -57,19 +57,41 @@ page 50065 "E3 Dimension Value List"
                 trigger OnAction()
                 var
                     DimensionValueLog: Record "E3 Dimension Value Log";
-                    E3DimenionMgmt: Codeunit "E3 Dimension Value Mgmt.";
+                    E3DimensionMgmt: Codeunit "E3 Dimension Value Mgmt.";
+                    SyncCount: Integer;
                 begin
-                    DimensionValueLog.Get(Rec."Dimension Code", Rec.Code);
-                    if Rec."Sync Status" = Rec."Sync Status"::Synced then
-                        Error('This Department record is already synced.');
+                    // Get only selected records from the list
+                    CurrPage.SetSelectionFilter(DimensionValueLog);
 
-                    if E3DimenionMgmt.SendDimensionValueDetails(Rec) then begin
-                        DimensionValueLog.Get(Rec."Dimension Code", Rec.Code);
-                        DimensionValueLog."First Sent" := true;
-                        DimensionValueLog.Modify();
-                        Message('Department data sent successfully.');
-                    end else
-                        Message('Failed to send department data.');
+                    if not DimensionValueLog.FindSet() then begin
+                        Message('Please select at least one Department record.');
+                        exit;
+                    end;
+
+                    repeat
+                        if DimensionValueLog."Sync Status" =
+                           DimensionValueLog."Sync Status"::Synced then
+                            Error(
+                                'Department %1 is already synced.',
+                                DimensionValueLog.Code);
+
+                        if E3DimensionMgmt.SendDimensionValueDetails(DimensionValueLog) then begin
+                            DimensionValueLog."First Sent" := true;
+                            DimensionValueLog.Modify();
+
+                            SyncCount += 1;
+                        end else
+                            Error(
+                                'Failed to send Department %1.',
+                                DimensionValueLog.Code);
+
+                    until DimensionValueLog.Next() = 0;
+
+                    CurrPage.Update(false);
+
+                    Message(
+                        '%1 selected Department record(s) sent successfully.',
+                        SyncCount);
                 end;
             }
         }

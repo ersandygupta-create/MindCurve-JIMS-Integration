@@ -79,102 +79,102 @@ table 50066 "E3 GRN Work Sheet Line"
         field(15; "Indent SKU Qty"; Decimal)
         {
             Caption = 'Indent SKU Qty';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(16; "Received SKU Qty"; Decimal)
         {
             Caption = 'Received SKU Qty';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(17; Rate; Decimal)
         {
             Caption = 'Rate';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(18; "Gross Amount"; Decimal)
         {
             Caption = 'Gross Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(19; "Discount Amount"; Decimal)
         {
             Caption = 'Discount Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(20; "Discount %"; Decimal)
         {
             Caption = 'Discount %';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(21; "Taxable Amount"; Decimal)
         {
             Caption = 'Taxable Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(22; "CGST %"; Decimal)
         {
             Caption = 'CGST %';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(23; "CGST Amount"; Decimal)
         {
             Caption = 'CGST Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(24; "SGST %"; Decimal)
         {
             Caption = 'SGST %';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(25; "SGST Amount"; Decimal)
         {
             Caption = 'SGST Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(26; "IGST %"; Decimal)
         {
             Caption = 'IGST %';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(27; "IGST Amount"; Decimal)
         {
             Caption = 'IGST Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(28; "UGST %"; Decimal)
         {
             Caption = 'UGST %';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(29; "UGST Amount"; Decimal)
         {
             Caption = 'UGST Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(30; "Final Discount %"; Decimal)
         {
             Caption = 'Final Discount %';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(31; "Final Discount Amount"; Decimal)
         {
             Caption = 'Final Discount Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(32; "Net Amount"; Decimal)
         {
             Caption = 'Net Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(33; "Landed SKU Value"; Decimal)
         {
             Caption = 'Landed SKU Value';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(34; "Landed SKU Rate"; Decimal)
         {
             Caption = 'Landed SKU Rate';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(35; Remark; Text[250])
         {
@@ -183,32 +183,32 @@ table 50066 "E3 GRN Work Sheet Line"
         field(36; MRP; Decimal)
         {
             Caption = 'MRP';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(37; "SKU MRP"; Decimal)
         {
             Caption = 'SKU MRP';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(38; "Sale Rate"; Decimal)
         {
             Caption = 'Sale Rate';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(39; "SKU Sale Rate"; Decimal)
         {
             Caption = 'SKU Sale Rate';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(40; "Staff Sale Rate"; Decimal)
         {
             Caption = 'Staff Sale Rate';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(41; "SKU Staff Sale Rate"; Decimal)
         {
             Caption = 'SKU Staff Sale Rate';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(42; Barcode; Code[50])
         {

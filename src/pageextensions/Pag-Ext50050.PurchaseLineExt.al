@@ -575,6 +575,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
     TotalQty: Decimal)
     var
         PurchLine: Record "Purchase Line";
+        Location: Record Location;
     begin
         if FirstIndentLine."No." = '' then
             exit;
@@ -599,12 +600,14 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
 
         // if FirstIndentLine."Location Code" <> '' then
         //     PurchLine.Validate("Location Code",FirstIndentLine."Location Code");
+        if Location.Get(FirstIndentLine."Location Code") then
+            PurchLine.Validate("GST Credit", Location."GST Credit");
 
         if FirstIndentLine."Purch. Unit of Measure" <> '' then
             PurchLine.Validate("Unit of Measure Code", FirstIndentLine."Purch. Unit of Measure");
 
-        PurchLine."Indent No." := FirstIndentLine."Document No.";
-        PurchLine."Indent Line No." := FirstIndentLine."Line No.";
+        // PurchLine."Indent No." := FirstIndentLine."Document No.";
+        // PurchLine."Indent Line No." := FirstIndentLine."Line No.";
         PurchLine."Item Make Code" := FirstIndentLine."Item Make Code";
         PurchLine."Item Make Name" := FirstIndentLine."Item Make Name";
         PurchLine.Critical := FirstIndentLine."Critical Item";

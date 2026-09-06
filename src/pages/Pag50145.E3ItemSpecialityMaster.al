@@ -69,18 +69,37 @@ page 50145 "E3 Item Speciality Master"
                 var
                     ItemSpecialityMgmt: Codeunit "E3 Item Speciality Mgmt.";
                     ItemSpecialityMast: Record "E3 Item Speciality Master";
+                    SentCount: Integer;
                 begin
-                    ItemSpecialityMast.Get(Rec.Code);
-                    if ItemSpecialityMast.IsSent then
-                        Error('This record has already been sent.');
+                    // Get only selected records from the list
+                    CurrPage.SetSelectionFilter(ItemSpecialityMast);
 
-                    if ItemSpecialityMgmt.SendItemSpecialityDetails(ItemSpecialityMast) then begin
-                        ItemSpecialityMast.Get(Rec.Code);
-                        ItemSpecialityMast."First Sent" := true;
-                        ItemSpecialityMast.Modify();
-                        Message('Data sent successfully.')
-                    end else
-                        Message('Failed to send data.');
+                    if not ItemSpecialityMast.FindSet() then begin
+                        Message('Please select at least one record.');
+                        exit;
+                    end;
+
+                    repeat
+                        if ItemSpecialityMast.IsSent then
+                            Error(
+                                'Item Speciality %1 has already been sent.',
+                                ItemSpecialityMast.Code);
+
+                        if ItemSpecialityMgmt.SendItemSpecialityDetails(ItemSpecialityMast) then begin
+                            ItemSpecialityMast."First Sent" := true;
+                            ItemSpecialityMast.Modify();
+
+                            SentCount += 1;
+                        end else
+                            Error(
+                                'Failed to send Item Speciality %1.',
+                                ItemSpecialityMast.Code);
+
+                    until ItemSpecialityMast.Next() = 0;
+
+                    Message(
+                        '%1 selected record(s) sent successfully.',
+                        SentCount);
                 end;
             }
         }

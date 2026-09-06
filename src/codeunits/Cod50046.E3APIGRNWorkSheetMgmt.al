@@ -140,7 +140,7 @@ codeunit 50046 "E3 GRN Work Sheet Mgmt."
                     LineObj.Add('dm_hsnCode', 0);
                     LineObj.Add('indentSKUQty', GRNWorkSheetLine."Indent SKU Qty");
                     LineObj.Add('recSKUQty', GRNWorkSheetLine."Received SKU Qty");
-                    LineObj.Add('rate', GRNWorkSheetLine.Rate);
+                    LineObj.Add('rate', Round(GRNWorkSheetLine.Rate, 0.01));
                     LineObj.Add('oh_Amt_Gross', GRNWorkSheetLine."Gross Amount");
                     LineObj.Add('oh_Amt_Discount', GRNWorkSheetLine."Discount Amount");
                     LineObj.Add('oh_at_Discount', GRNWorkSheetLine."Discount %");

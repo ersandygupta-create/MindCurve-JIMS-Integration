@@ -59,12 +59,14 @@ page 50169 "E3 GRN Work Sheet"
                     ApplicationArea = All;
                     Editable = true;
                     ToolTip = 'Specifies the invoice quantity.';
+                    ShowMandatory = true;
                 }
                 field("Receipt Qty"; Rec."Receipt Qty")
                 {
                     ApplicationArea = All;
                     Caption = 'Qty. to Receive';
                     ToolTip = 'Specifies the receipt quantity.';
+                    ShowMandatory = true;
                 }
                 field("Quantity Received"; Rec."Quantity Received")
                 {
@@ -81,6 +83,7 @@ page 50169 "E3 GRN Work Sheet"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the rejected quantity.';
+                    ShowMandatory = true;
                 }
                 field("Net Qty Received"; Rec."Net Qty Received")
                 {
@@ -125,6 +128,7 @@ page 50169 "E3 GRN Work Sheet"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the expiry date.';
                     Editable = true;
+                    ShowMandatory = true;
 
                     trigger OnValidate()
                     var
@@ -215,6 +219,7 @@ page 50169 "E3 GRN Work Sheet"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the supplier batch number.';
+                    ShowMandatory = true;
                 }
                 field("Line Gross"; Rec."Line Gross")
                 {
@@ -226,13 +231,7 @@ page 50169 "E3 GRN Work Sheet"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the maximum retail price.';
-                    trigger OnValidate()
-                    begin
-                        if (Rec."PO MRP" <> 0) and (Rec.MRP < Rec."PO MRP") then
-                            Error(
-                                'MRP cannot be less than PO MRP. MRP must be greater than or equal to PO MRP. PO MRP: %1.',
-                                Rec."PO MRP");
-                    end;
+                    ShowMandatory = true;
                 }
                 field("PO MRP"; Rec."PO MRP")
                 {

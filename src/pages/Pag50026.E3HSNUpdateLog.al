@@ -73,17 +73,39 @@ page 50026 "E3 HSN/SAC Update Log"
                 trigger OnAction()
                 var
                     HSNSACMgmt: Codeunit "E3 HSN/SAC Mgmt.";
+                    HSNSAC: Record "E3 HSN/SAC Log";
+                    SyncCount: Integer;
                 begin
-                    if Rec."Sync Status" = Rec."Sync Status"::Synced then
-                        Error('This HSN/SAC record is already synced.');
+                    // Get only selected records
+                    CurrPage.SetSelectionFilter(HSNSAC);
 
-                    if HSNSACMgmt.SendHSNSACDetails(Rec) then begin
-                        CurrPage.Update(false);
-                        Message('HSN/SAC Code sent successfully');
-                    end else begin
-                        CurrPage.Update(false);
-                        Error(Rec."Error Message");
+                    if not HSNSAC.FindSet() then begin
+                        Message('Please select at least one HSN/SAC record.');
+                        exit;
                     end;
+
+                    repeat
+                        if HSNSAC."Sync Status" = HSNSAC."Sync Status"::Synced then
+                            Error(
+                                'HSN/SAC Code %1 is already synced.',
+                                HSNSAC.Code);
+
+                        if HSNSACMgmt.SendHSNSACDetails(HSNSAC) then begin
+                            SyncCount += 1;
+                        end else begin
+                            Error(
+                                'Failed to sync HSN/SAC Code %1. %2',
+                                HSNSAC.Code,
+                                HSNSAC."Error Message");
+                        end;
+
+                    until HSNSAC.Next() = 0;
+
+                    CurrPage.Update(false);
+
+                    Message(
+                        '%1 selected HSN/SAC record(s) synced successfully.',
+                        SyncCount);
                 end;
             }
         }

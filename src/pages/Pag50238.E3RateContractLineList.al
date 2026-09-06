@@ -1,11 +1,15 @@
 page 50238 "E3 Rate Contract Line Lists"
 {
-    PageType = ListPart;
+    PageType = List;
     ApplicationArea = All;
-    UsageCategory = None;
+    UsageCategory = Lists;
     SourceTable = "E3 Rate Contract Line";
     Caption = 'Purchase Price Line';
-    AutoSplitKey = true;
+    //AutoSplitKey = true;
+    DeleteAllowed = false;
+    InsertAllowed = false;
+    ModifyAllowed = false;
+
 
     layout
     {

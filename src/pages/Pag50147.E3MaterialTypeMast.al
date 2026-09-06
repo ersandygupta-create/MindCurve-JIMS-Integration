@@ -69,18 +69,37 @@ page 50147 "E3 material Type Master"
                 var
                     MaterialTypeMgmt: Codeunit "E3 Material Type Mgmt.";
                     MaterialTypeMast: Record "E3 Material Type Master";
+                    SentCount: Integer;
                 begin
-                    MaterialTypeMast.Get(Rec.Code);
-                    if MaterialTypeMast.IsSent then
-                        Error('This record has already been sent.');
+                    // Get only selected records from the list
+                    CurrPage.SetSelectionFilter(MaterialTypeMast);
 
-                    if MaterialTypeMgmt.SendMaterialTypeDetails(MaterialTypeMast) then begin
-                        MaterialTypeMast.Get(Rec.Code);
-                        MaterialTypeMast."First Sent" := true;
-                        MaterialTypeMast.Modify();
-                        Message('Data sent successfully.')
-                    end else
-                        Message('Failed to send data.');
+                    if not MaterialTypeMast.FindSet() then begin
+                        Message('Please select at least one record.');
+                        exit;
+                    end;
+
+                    repeat
+                        if MaterialTypeMast.IsSent then
+                            Error(
+                                'Material Type %1 has already been sent.',
+                                MaterialTypeMast.Code);
+
+                        if MaterialTypeMgmt.SendMaterialTypeDetails(MaterialTypeMast) then begin
+                            MaterialTypeMast."First Sent" := true;
+                            MaterialTypeMast.Modify();
+
+                            SentCount += 1;
+                        end else
+                            Error(
+                                'Failed to send Material Type %1.',
+                                MaterialTypeMast.Code);
+
+                    until MaterialTypeMast.Next() = 0;
+
+                    Message(
+                        '%1 selected record(s) sent successfully.',
+                        SentCount);
                 end;
             }
         }

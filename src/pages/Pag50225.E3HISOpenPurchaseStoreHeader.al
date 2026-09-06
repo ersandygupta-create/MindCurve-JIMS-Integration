@@ -392,9 +392,12 @@ page 50225 "E3 HIS Receipt Indent Card"
                 IndentLine."No.");
 
         SplitFactor := Round(ApprovedQty / (POQty + FreeQty), 1, '<');
-
-        if SplitFactor < 1 then
-            Error('Split Factor is %1 for Item %2. Split is not possible.', SplitFactor, IndentLine."No.");
+        //ak
+        if SplitFactor < 1 then begin
+            IndentLine.Remarks := 'Reject Qty';
+            IndentLine.Modify(true);
+            exit;
+        end;//ak
 
         POQtyLine := SplitFactor * POQty;
         FreeQtyLine := SplitFactor * FreeQty;

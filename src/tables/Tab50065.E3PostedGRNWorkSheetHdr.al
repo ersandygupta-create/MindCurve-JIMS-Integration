@@ -63,67 +63,67 @@ table 50065 "E3 GRN Work Sheet Header"
         field(12; "OH Amount Gross"; Decimal)
         {
             Caption = 'Gross Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(13; "OH Amount Discount"; Decimal)
         {
             Caption = 'Discount Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(14; "OH Amount Taxable"; Decimal)
         {
             Caption = 'Taxable Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(15; "OH Amount CGST"; Decimal)
         {
             Caption = 'CGST Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(16; "OH Amount SGST"; Decimal)
         {
             Caption = 'SGST Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(17; "OH Amount IGST"; Decimal)
         {
             Caption = 'IGST Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(18; "OH Amount UGST"; Decimal)
         {
             Caption = 'UGST Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(19; "OH Amount Total"; Decimal)
         {
             Caption = 'Total Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(20; "OH Final Discount %"; Decimal)
         {
             Caption = 'Final Discount %';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(21; "OH Final Discount Amount"; Decimal)
         {
             Caption = 'Final Discount Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(22; "OH Round Off"; Decimal)
         {
             Caption = 'Round Off';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(23; "OH Net Amount"; Decimal)
         {
             Caption = 'Net Amount';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(24; "OH Landed Value"; Decimal)
         {
             Caption = 'Landed Value';
-            DecimalPlaces = 0 : 5;
+            DecimalPlaces = 2 : 2;
         }
         field(25; "Prepared By"; Code[50])
         {

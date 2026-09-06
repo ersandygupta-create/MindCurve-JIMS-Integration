@@ -109,18 +109,37 @@ page 50143 "E3 Item Make Master"
                 var
                     ItemMakeMastMgmt: Codeunit "E3 Item Make Master Mgmt.";
                     ItemMakeMast: Record "E3 Item Make Master";
+                    SentCount: Integer;
+                    SkippedCount: Integer;
                 begin
-                    ItemMakeMast.Get(Rec.Code, Rec."Company Name");
-                    if ItemMakeMast.IsSent then
-                        Error('This record has already been sent.');
+                    CurrPage.SetSelectionFilter(ItemMakeMast);
 
-                    if ItemMakeMastMgmt.SendItemMakeMastDetails(ItemMakeMast) then begin
-                        ItemMakeMast.Get(Rec.Code, Rec."Company Name");
-                        ItemMakeMast."First Sent" := true;
-                        ItemMakeMast.Modify();
-                        Message('Data sent successfully.')
+                    if ItemMakeMast.FindSet() then begin
+                        repeat
+                            if ItemMakeMast.IsSent then begin
+                                SkippedCount += 1;
+                                continue;
+                            end;
+
+                            if ItemMakeMastMgmt.SendItemMakeMastDetails(ItemMakeMast) then begin
+                                ItemMakeMast."First Sent" := true;
+                                ItemMakeMast.Modify();
+
+                                SentCount += 1;
+                            end else begin
+                                Error(
+                                    'Failed to send Item Make Master %1.',
+                                    ItemMakeMast.Code);
+                            end;
+
+                        until ItemMakeMast.Next() = 0;
+
+                        Message(
+                            '%1 record(s) sent successfully. %2 record(s) skipped because they were already sent.',
+                            SentCount,
+                            SkippedCount);
                     end else
-                        Message('Failed to send data.');
+                        Message('Please select at least one record.');
                 end;
             }
         }
