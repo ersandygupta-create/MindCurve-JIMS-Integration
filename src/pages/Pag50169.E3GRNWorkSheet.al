@@ -479,6 +479,10 @@ page 50169 "E3 GRN Work Sheet"
                     PurchRcptHeader: Record "Purch. Rcpt. Header";
                     PurchRcptLine: Record "Purch. Rcpt. Line";
                     SelectedGRNWorksheet: Record "E3 GRN Work Sheet";
+                    TempPostedSelectedGRNWorksheet: Record "E3 GRN Work Sheet" temporary;
+                    GRNToReceive: Record "E3 GRN Work Sheet";
+                    ConsolidateLine: Record "E3 GRN Work Sheet";
+                    PrevLine: Integer;
                     POList: Record "Purchase Header";
                     LastReceiptNo: Code[20];
                     POListNo: Code[20];
@@ -488,10 +492,15 @@ page 50169 "E3 GRN Work Sheet"
 
                     if SelectedGRNWorksheet.IsEmpty() then
                         Error('Please select at least one GRN Worksheet line.');
-
-                    if SelectedGRNWorksheet.FindSet() then
+                    if SelectedGRNWorksheet.FindFirst() then;
+                    //GRNWorksheet := SelectedGRNWorksheet;
+                    GRNToReceive.Reset();
+                    GRNToReceive.SetRange("PO No.", SelectedGRNWorksheet."PO No.");
+                    GRNToReceive.SetFilter("Receipt Created", '%1', false);
+                    GRNToReceive.SetCurrentKey("PO No.", "Line No.");
+                    if GRNToReceive.FindSet() then
                         repeat
-                            if SelectedGRNWorksheet."Receipt Qty" > 0 then begin
+                            if GRNToReceive."Receipt Qty" > 0 then begin
 
                                 if not PurchHeader.Get(
                                     PurchHeader."Document Type"::Order,
@@ -504,27 +513,32 @@ page 50169 "E3 GRN Work Sheet"
                                 if PurchHeader."Vendor Invoice No." = '' then
                                     Error('Vendor Invoice No. cannot be blank for Purchase Order %1.', PurchHeader."No.");
 
-                                // PostedGRNHeader.Reset();
-                                // PostedGRNHeader.SetRange("Purchase Challan No.", PurchHeader."Vendor Invoice No.");
+                                ConsolidateLine.Reset();
+                                ConsolidateLine.SetRange("PO No.", GRNToReceive."PO No.");
+                                ConsolidateLine.SetRange("Orig. Line No.", GRNToReceive."Orig. Line No.");
+                                ConsolidateLine.SetFilter("Lot Assigned", '%1', True);
+                                ConsolidateLine.SetFilter("Receipt Created", '%1', false);
+                                ConsolidateLine.CalcSums("Receipt Qty");
 
-                                // if PostedGRNHeader.FindFirst() then
-                                //     Error(
-                                //         'Purchase Challan No. %1 already exists in Posted GRN %2. Cannot receive this Purchase Order.',
-                                //         PurchHeader."Vendor Invoice No.",
-                                //         PostedGRNHeader."Document ID");
-                                if not PurchLine.Get(PurchHeader."Document Type", PurchHeader."No.", SelectedGRNWorksheet."Orig. Line No.") then
-                                    Error('Purchase Order Line %1 does not exist for PO %2.', SelectedGRNWorksheet."Orig. Line No.", PurchHeader."No.");
-                                PurchLine."Qty. to Receive" := SelectedGRNWorksheet."Receipt Qty";
-                                // PurchLine.Validate("Qty. to Receive", SelectedGRNWorksheet."Receipt Qty");
-                                PurchLine.Validate("Qty. to Receive");
-                                PurchLine.Modify(true);
+
+
+                                if (PrevLine <> GRNToReceive."Orig. Line No.") then
+                                    if PurchLine.Get(PurchHeader."Document Type", PurchHeader."No.", GRNToReceive."Orig. Line No.") then begin
+                                        PurchLine."Qty. to Receive" := SelectedGRNWorksheet."Receipt Qty";
+                                        PurchLine.Validate("Qty. to Receive", ConsolidateLine."Receipt Qty");
+                                        PurchLine.Modify(true);
+                                        if ConsolidateLine."Receipt Qty" > 0 then begin
+                                            GRNToReceive."Receipt Created" := true;
+                                            GRNToReceive.Modify();
+
+                                        end;
+                                    end;
+                                PrevLine := GRNToReceive."Orig. Line No.";
                             end;
+                            TempPostedSelectedGRNWorksheet := GRNToReceive;
+                            TempPostedSelectedGRNWorksheet.Insert();
+                        until GRNToReceive.Next() = 0;
 
-                        until SelectedGRNWorksheet.Next() = 0;
-
-                    /*
-                    Post Purchase Receipt
-                    */
                     POList.Reset();
                     POList.SetRange("Document Type", POList."Document Type"::Order);
 
@@ -545,7 +559,7 @@ page 50169 "E3 GRN Work Sheet"
 
                         until SelectedGRNWorksheet.Next() = 0;
 
-                    CopyPostedReceiptToGRN(SelectedGRNWorksheet);
+                    CopyPostedReceiptToGRN(TempPostedSelectedGRNWorksheet);
                     CurrPage.Update(false);
 
                     Message('Purchase Receipt posted successfully and GRN data has been created.');
@@ -623,6 +637,10 @@ page 50169 "E3 GRN Work Sheet"
                                 SkippedCount += 1;
                                 continue;
                             end;
+                            if SelectedGRNLine."Lot Assigned" = true then begin
+                                SkippedCount += 1;
+                                continue;
+                            end;
 
                             SelectedGRNLine.CreateItemTrackingForPurchLine();
                             SelectedCount += 1;
@@ -630,7 +648,7 @@ page 50169 "E3 GRN Work Sheet"
 
                     if SkippedCount > 0 then
                         Message(
-                            '%1 GRN line(s) processed successfully.\%2 GRN line(s) skipped because Receipt Qty is 0.',
+                            '%1 GRN line(s) processed successfully.\%2 GRN line(s) skipped because Receipt Qty is 0 or Lot alreadt assigned.',
                             SelectedCount,
                             SkippedCount)
                     else
@@ -654,6 +672,7 @@ page 50169 "E3 GRN Work Sheet"
         DimensionValue: Record "Dimension Value";
         Location: Record Location;
     begin
+        LineNo := 10000;
         if SelectedGRNWorksheet.FindSet() then
             repeat
                 if not POHeader.Get(
@@ -666,6 +685,7 @@ page 50169 "E3 GRN Work Sheet"
                 if PurchRcptHeader.FindLast() then begin
 
                     NewDocumentID := PurchRcptHeader."No.";
+
 
                     // Check Purchase Challan already exists
                     // if POHeader."Vendor Invoice No." <> '' then begin
@@ -726,90 +746,88 @@ page 50169 "E3 GRN Work Sheet"
                     // Find posted receipt lines
                     PurchRcptLine.Reset();
                     PurchRcptLine.SetRange("Document No.", PurchRcptHeader."No.");
-                    if PurchRcptLine.FindSet() then begin
+                    PurchRcptLine.SetRange("Order Line No.", SelectedGRNWorksheet."Line No.");
+                    if PurchRcptLine.FindFirst() then;
 
-                        LineNo := 10000;
 
-                        repeat
-                            if PurchRcptLine.Type = PurchRcptLine.Type::Item then begin
-                                Clear(GRNWorksheet);
 
-                                if not GRNWorksheet.Get(SelectedGRNWorksheet."PO No.", PurchRcptLine."Order Line No.")
-                                then begin
-                                    LineNo += 10000;
-                                    continue;
-                                end;
+                    // if PurchRcptLine.Type = PurchRcptLine.Type::Item then begin
+                    Clear(GRNWorksheet);
 
-                                //Prevent duplicate GRN lines
-
-                                GRNLine.Reset();
-                                GRNLine.SetRange("Document ID", NewDocumentID);
-                                GRNLine.SetRange("Line No.", LineNo);
-
-                                if not GRNLine.FindFirst() then begin
-
-                                    GRNLine.Init();
-                                    GRNLine."Document ID" := NewDocumentID;
-                                    GRNLine."Line No." := LineNo;
-                                    GRNLine."Indent Document ID" := PurchRcptLine."Indent No.";
-                                    GRNLine."Indent Line No." := PurchRcptLine."Indent Line No.";
-                                    GRNLine."Item Code" := PurchRcptLine."No.";
-                                    GRNLine."Item Name" := PurchRcptLine.Description;
-                                    GRNLine."Department Code" := PurchRcptLine."Location Code";
-                                    if Location.Get(PurchRcptLine."Location Code") then
-                                        GRNLine."Department Name" := Location.Name
-                                    else
-                                        GRNLine."Department Name" := '';
-                                    GRNLine."Unit Code" := PurchRcptLine."Unit of Measure Code";
-                                    GRNLine."Received SKU Qty" := PurchRcptLine.Quantity;
-                                    GRNLine."Indent SKU Qty" := GRNWorksheet."Indent SKU Qty";
-                                    GRNLine."Received SKU Qty" := GRNWorksheet."Rec SKU QTY";
-                                    GRNLine.Rate := GRNWorksheet.Rate;
-                                    GRNLine."Gross Amount" := GRNWorksheet."Line Gross";
-                                    GRNLine."Discount Amount" := GRNWorksheet."Line Discount Amount";
-                                    GRNLine."Discount %" := GRNWorksheet."Line Discount Percentage";
-                                    GRNLine."Taxable Amount" := GRNWorksheet."Taxable Amount";
-                                    GRNLine."CGST %" := GRNWorksheet."CGST %";
-                                    GRNLine."CGST Amount" := GRNWorksheet."CGST Amount";
-                                    GRNLine."SGST %" := GRNWorksheet."SGST %";
-                                    GRNLine."SGST Amount" := GRNWorksheet."SGST Amount";
-                                    GRNLine."IGST %" := GRNWorksheet."IGST %";
-                                    GRNLine."IGST Amount" := GRNWorksheet."IGST Amount";
-                                    GRNLine."UGST %" := GRNWorksheet."UGST %";
-                                    GRNLine."UGST Amount" := GRNWorksheet."UGST Amount";
-                                    GRNLine."Final Discount %" := GRNWorksheet."Final Discount %";
-                                    GRNLine."Final Discount Amount" := GRNWorksheet."Final Discount Amount";
-                                    GRNLine."Net Amount" := GRNWorksheet."OH Amt Net";
-                                    GRNLine."Landed SKU Value" := GRNWorksheet."Landed SKU Value";
-                                    GRNLine."Landed SKU Rate" := GRNWorksheet."Landed SKU Rate";
-                                    GRNLine.Remark := GRNWorksheet.Remark;
-                                    GRNLine.MRP := GRNWorksheet.MRP;
-                                    GRNLine."SKU MRP" := GRNWorksheet."SKU MRP";
-                                    GRNLine."Sale Rate" := GRNWorksheet."Sale Rate";
-                                    GRNLine."SKU Sale Rate" := GRNWorksheet."SKU Sale Rate";
-                                    GRNLine."Staff Sale Rate" := GRNWorksheet."Staff Sale Rate";
-                                    GRNLine."SKU Staff Sale Rate" := GRNWorksheet."SKU Staff Sale Rate";
-                                    GRNLine.Barcode := GRNWorksheet."Supplier Batch No.";
-                                    GRNLine."Batch No." := GRNWorksheet."Supplier Batch No.";
-                                    GRNLine."Manufacturing Date" := GRNWorksheet."Manufacturing Date";
-                                    GRNLine."Expiry Date" := GRNWorksheet."Expiry Date";
-                                    GRNLine."Item Make Code" := GRNWorksheet."Item Make Code";
-                                    GRNLine."GST Type Code" := GRNWorksheet."GST Type Code";
-                                    GRNLine."Item GST Nature" := Format(GRNWorksheet."Item GST Nature");
-                                    GRNLine."HSN Code" := GRNWorksheet."HSN Code";
-
-                                    GRNLine.Status := 'Posted';
-
-                                    GRNLine.Insert(true);
-                                end;
-
-                                LineNo += 10000;
-                            end;
-
-                        until PurchRcptLine.Next() = 0;
+                    if not GRNWorksheet.Get(SelectedGRNWorksheet."PO No.", PurchRcptLine."Order Line No.", SelectedGRNWorksheet."Orig. Line No.")
+                    then begin
+                        LineNo += 10000;
+                        continue;
                     end;
-                end;
 
+                    //Prevent duplicate GRN lines
+
+                    GRNLine.Reset();
+                    GRNLine.SetRange("Document ID", NewDocumentID);
+                    GRNLine.SetRange("Line No.", LineNo);
+
+                    if not GRNLine.FindFirst() then begin
+
+                        GRNLine.Init();
+                        GRNLine."Document ID" := NewDocumentID;
+                        GRNLine."Line No." := LineNo;
+                        GRNLine."Indent Document ID" := PurchRcptLine."Indent No.";
+                        GRNLine."Indent Line No." := PurchRcptLine."Indent Line No.";
+                        GRNLine."Item Code" := PurchRcptLine."No.";
+                        GRNLine."Item Name" := PurchRcptLine.Description;
+                        GRNLine."Department Code" := PurchRcptLine."Location Code";
+                        if Location.Get(PurchRcptLine."Location Code") then
+                            GRNLine."Department Name" := Location.Name
+                        else
+                            GRNLine."Department Name" := '';
+                        GRNLine."Unit Code" := PurchRcptLine."Unit of Measure Code";
+                        GRNLine."Received SKU Qty" := PurchRcptLine.Quantity;
+                        GRNLine."Indent SKU Qty" := GRNWorksheet."Indent SKU Qty";
+                        GRNLine."Received SKU Qty" := GRNWorksheet."Rec SKU QTY";
+                        GRNLine.Rate := GRNWorksheet.Rate;
+                        GRNLine."Gross Amount" := GRNWorksheet."Line Gross";
+                        GRNLine."Discount Amount" := GRNWorksheet."Line Discount Amount";
+                        GRNLine."Discount %" := GRNWorksheet."Line Discount Percentage";
+                        GRNLine."Taxable Amount" := GRNWorksheet."Taxable Amount";
+                        GRNLine."CGST %" := GRNWorksheet."CGST %";
+                        GRNLine."CGST Amount" := GRNWorksheet."CGST Amount";
+                        GRNLine."SGST %" := GRNWorksheet."SGST %";
+                        GRNLine."SGST Amount" := GRNWorksheet."SGST Amount";
+                        GRNLine."IGST %" := GRNWorksheet."IGST %";
+                        GRNLine."IGST Amount" := GRNWorksheet."IGST Amount";
+                        GRNLine."UGST %" := GRNWorksheet."UGST %";
+                        GRNLine."UGST Amount" := GRNWorksheet."UGST Amount";
+                        GRNLine."Final Discount %" := GRNWorksheet."Final Discount %";
+                        GRNLine."Final Discount Amount" := GRNWorksheet."Final Discount Amount";
+                        GRNLine."Net Amount" := GRNWorksheet."OH Amt Net";
+                        GRNLine."Landed SKU Value" := GRNWorksheet."Landed SKU Value";
+                        GRNLine."Landed SKU Rate" := GRNWorksheet."Landed SKU Rate";
+                        GRNLine.Remark := GRNWorksheet.Remark;
+                        GRNLine.MRP := GRNWorksheet.MRP;
+                        GRNLine."SKU MRP" := GRNWorksheet."SKU MRP";
+                        GRNLine."Sale Rate" := GRNWorksheet."Sale Rate";
+                        GRNLine."SKU Sale Rate" := GRNWorksheet."SKU Sale Rate";
+                        GRNLine."Staff Sale Rate" := GRNWorksheet."Staff Sale Rate";
+                        GRNLine."SKU Staff Sale Rate" := GRNWorksheet."SKU Staff Sale Rate";
+                        GRNLine.Barcode := GRNWorksheet."Supplier Batch No.";
+                        GRNLine."Batch No." := GRNWorksheet."Supplier Batch No.";
+                        GRNLine."Manufacturing Date" := GRNWorksheet."Manufacturing Date";
+                        GRNLine."Expiry Date" := GRNWorksheet."Expiry Date";
+                        GRNLine."Item Make Code" := GRNWorksheet."Item Make Code";
+                        GRNLine."GST Type Code" := GRNWorksheet."GST Type Code";
+                        GRNLine."Item GST Nature" := Format(GRNWorksheet."Item GST Nature");
+                        GRNLine."HSN Code" := GRNWorksheet."HSN Code";
+
+                        GRNLine.Status := 'Posted';
+
+                        GRNLine.Insert(true);
+                    end;
+
+                    //end;
+
+
+                end;
+                LineNo += 10000;
                 UpdateGRNHeaderAmounts(NewDocumentID);
 
             until SelectedGRNWorksheet.Next() = 0;
