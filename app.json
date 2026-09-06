@@ -2,7 +2,7 @@
   "id": "ede53059-43d1-450d-a3f6-7136a9649af5",
   "name": "JIMS Integration",
   "publisher": "MindCurve",
-  "version": "1.0.0.1",
+  "version": "1.0.0.2",
   "brief": "JIMS Integration",
   "description": "HIS Integration with JIMS",
   "privacyStatement": "https://MindCurve.in",
@@ -51,6 +51,12 @@
                 "name": "India TCS",
                 "publisher":"Microsoft",
                 "version": "1.0.0.0"
+            },
+            {
+                "id": "dcff6726-726d-4af1-92a6-0c0fee598296",
+                "name": "Responsibility Management",
+                "publisher":"Edhate",
+                "version": "1.0.0.3"
             }
 
   ],

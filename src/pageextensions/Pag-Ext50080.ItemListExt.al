@@ -74,23 +74,21 @@ pageextension 50080 "E3 Item List Ext" extends "Item List"
                 var
                     ItemIntegrationMgmt: Codeunit "E3 Item Integration Mgmt.";
                     E3Item: Record Item;
-                    TotalItems: Integer;
                     ProcessedItems: Integer;
                 begin
-                    // Get all Item records
-                    if E3Item.FindSet() then begin
-                        TotalItems := E3Item.Count();
-
+                    CurrPage.SetSelectionFilter(E3Item);
+                    if E3Item.FindSet() then
                         repeat
                             ItemIntegrationMgmt.MultipleSendToJIMS(E3Item);
+                            E3Item."Item Sync Status" := true;
+                            E3Item.Modify(true);
                             ProcessedItems += 1;
                         until E3Item.Next() = 0;
-                    end;
+                    CurrPage.Update(false);
 
-                    Message(
-                        '%1 Item records have been created/updated in the Item Integration Log.',
-                        ProcessedItems);
+                    Message('%1 Item records have been processed.', ProcessedItems);
                 end;
+
             }
 
         }

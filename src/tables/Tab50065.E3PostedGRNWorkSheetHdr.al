@@ -10,7 +10,7 @@ table 50065 "E3 GRN Work Sheet Header"
             Caption = 'Document ID';
             DataClassification = CustomerContent;
         }
-        field(2; "Voucher Type"; Code[20])
+        field(2; "Voucher Type"; Text[60])
         {
             Caption = 'Voucher Type';
             DataClassification = CustomerContent;
@@ -50,7 +50,7 @@ table 50065 "E3 GRN Work Sheet Header"
             Caption = 'Remark';
             DataClassification = CustomerContent;
         }
-        field(10; "Purchase Challan No."; Code[30])
+        field(10; "Purchase Challan No."; Code[35])
         {
             Caption = 'Purchase Challan No.';
             DataClassification = CustomerContent;
@@ -177,7 +177,7 @@ table 50065 "E3 GRN Work Sheet Header"
         {
             Caption = 'LR Date';
         }
-        field(38; "GST Location"; Text[100])
+        field(38; "GST Location"; Text[20])
         {
             Caption = 'GST Location';
         }

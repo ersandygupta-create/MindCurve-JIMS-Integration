@@ -274,8 +274,6 @@ page 50222 "E3 HIS Release Indent Card"
                     CurrPage.Update(false);
                 end;
             }
-
-
             action(ReleaseForIndentsPurchase)
             {
                 ApplicationArea = All;
@@ -283,7 +281,7 @@ page 50222 "E3 HIS Release Indent Card"
                 Image = ReleaseDoc;
                 Promoted = true;
                 PromotedCategory = Process;
-                ToolTip = 'Release the indent for purchase processing.';
+                ToolTip = 'Release the selected indent lines for purchase processing.';
 
                 trigger OnAction()
                 var
@@ -294,35 +292,33 @@ page 50222 "E3 HIS Release Indent Card"
                     CompletedLines: Integer;
                 begin
                     Rec.TestField(Status, Rec.Status::Approved);
-                    IndentLine.Reset();
-                    IndentLine.SetRange(
-                        "Document No.",
-                        Rec."Document No.");
-                    IndentLine.SetRange("Select", true);
 
-                    if not IndentLine.FindSet() then begin
+                    // Get only lines manually selected by the user
+                    IndentLine.Reset();
+                    IndentLine.SetRange("Document No.", Rec."Document No.");
+                    IndentLine.SetRange("Select", true);
+                    IndentLine.SetRange("Released Stock Issue Purchase", false);
+
+                    if not IndentLine.FindSet(true) then begin
                         Message(
                             'Please select at least one indent line for Purchase.');
                         exit;
                     end;
 
+                    // Release only selected lines
                     repeat
                         IndentLine."Released Stock Issue Purchase" := true;
-
-                        // Clear selection after processing
                         IndentLine."Select" := false;
-
                         IndentLine.Modify(true);
 
                         SelectedLines += 1;
-
                     until IndentLine.Next() = 0;
                     Rec."Relese for Purchase" := true;
+
+
+                    // Check all lines of current indent
                     CheckIndentLine.Reset();
                     CheckIndentLine.SetRange("Document No.", Rec."Document No.");
-
-                    TotalLines := 0;
-                    CompletedLines := 0;
 
                     if CheckIndentLine.FindSet() then
                         repeat
@@ -332,7 +328,6 @@ page 50222 "E3 HIS Release Indent Card"
                                CheckIndentLine."Released Stock Issue Purchase"
                             then
                                 CompletedLines += 1;
-
                         until CheckIndentLine.Next() = 0;
 
                     if (TotalLines > 0) and
@@ -341,7 +336,6 @@ page 50222 "E3 HIS Release Indent Card"
                         Rec."Closed Stock Issue" := true
                     else
                         Rec."Closed Stock Issue" := false;
-
 
                     Rec.Modify(true);
 
@@ -352,12 +346,13 @@ page 50222 "E3 HIS Release Indent Card"
                             TotalLines - CompletedLines)
                     else
                         Message(
-                            '%1 selected indent line(s) have been released for Purchase. All Stock Issue lines are now completed and the indent is closed.',
+                            '%1 selected indent line(s) have been released for Purchase. All lines are completed and the indent is closed.',
                             SelectedLines);
-
 
                     CurrPage.Update(false);
                 end;
+
+
             }
         }
     }

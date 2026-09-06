@@ -1,6 +1,6 @@
 pageextension 50024 "E3 Purch. Comment Line Ext" extends "Purch. Comment Sheet"
 {
-    DeleteAllowed = false;
+    DeleteAllowed = true;
     layout
     {
         modify(Date)

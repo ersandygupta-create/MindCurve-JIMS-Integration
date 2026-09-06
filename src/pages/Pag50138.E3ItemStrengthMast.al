@@ -69,18 +69,36 @@ page 50138 "E3 Item Strength Master"
                 var
                     E3StrengthMgmt: Codeunit "E3 Item Strength Mgmt.";
                     Strength: Record "E3 Item Strength Master";
+                    SelectedStrength: Record "E3 Item Strength Master";
+                    SentCount: Integer;
                 begin
-                    Strength.Get(Rec.Code);
-                    if Strength.IsSent then
-                        Error('This record has already been sent.');
-                    if E3StrengthMgmt.SendItemStrengthDetails(Strength) then begin
-                        Strength.Get(Rec.Code);
-                        Strength."First Sent" := true;
-                        Strength.Modify();
-                        Message('Data sent successfully.')
-                    end else
-                        Message('Failed to send data.');
+                    CurrPage.SetSelectionFilter(SelectedStrength);
+
+                    if SelectedStrength.FindSet() then begin
+                        repeat
+                            if SelectedStrength.IsSent then
+                                Error(
+                                    'Record %1 has already been sent.',
+                                    SelectedStrength.Code
+                                );
+
+                            Strength := SelectedStrength;
+
+                            if E3StrengthMgmt.SendItemStrengthDetails(Strength) then begin
+                                Strength."First Sent" := true;
+                                Strength.Modify();
+                                SentCount += 1;
+                            end else
+                                Error(
+                                    'Failed to send record %1.',
+                                    Strength.Code
+                                );
+                        until SelectedStrength.Next() = 0;
+                    end;
+
+                    Message('%1 record(s) sent successfully.', SentCount);
                 end;
+
             }
         }
     }

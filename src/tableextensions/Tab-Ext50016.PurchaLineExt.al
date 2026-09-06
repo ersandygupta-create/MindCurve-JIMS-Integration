@@ -63,12 +63,46 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Caption = 'Include Free Qty in Sale Rate';
             DataClassification = CustomerContent;
         }
+        field(50014; "Entry No."; Code[50])
+        {
+            Caption = 'Entry No.';
+            DataClassification = CustomerContent;
+        }
+        field(50015; "Margin Code"; Code[20])
+        {
+            Caption = 'Margin Code';
+            DataClassification = CustomerContent;
+            tableRelation = "E3 Item Margin"."Margin Code";
+        }
+        field(50016; "Company Value"; Decimal)
+        {
+            Caption = 'Company Value';
+            DataClassification = CustomerContent;
+        }
+        field(50017; "Patient Value"; Decimal)
+        {
+            Caption = 'Patient Value';
+            DataClassification = CustomerContent;
+        }
+        field(50018; "Indent Line Remarks"; Text[200])
+        {
+            Caption = 'Indent Line Remarks';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(50019; "Line Remarks"; Text[200])
+        {
+            Caption = 'Line Remarks';
+            DataClassification = CustomerContent;
+        }
         modify("No.")
         {
             trigger OnAfterValidate()
             var
                 Item: Record Item;
                 PurchHeader: Record "Purchase Header";
+                E3ItemMargin: Record "E3 Item Margin";
+                Location: Record Location;
             begin
                 IF Rec.Type = Rec.Type::Item then begin
                     Item.Get("No.");
@@ -83,16 +117,68 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
 
                     Clear("Item Make Code");
                     Clear("Item Make Name");
+                    Clear(Rec."Margin Code");
+                    Clear(Rec."Company Value");
+                    Clear(Rec."Patient Value");
+
 
                     if Item.Get("No.") then begin
                         "Item Make Code" := Item."Item Make Code";
                         "Item Make Name" := Item."Make Name";
+                        "Margin Code" := Item."E3 Margin Code";
+                        if (Rec."Margin Code" <> '') and
+                       (PurchHeader."Shortcut Dimension 1 Code" <> '')
+                    then begin
+
+                            E3ItemMargin.Reset();
+
+                            E3ItemMargin.SetRange(
+                                "Margin Code",
+                                Rec."Margin Code"
+                            );
+
+                            E3ItemMargin.SetRange(
+                                "Business Unit Code",
+                                PurchHeader."Shortcut Dimension 1 Code"
+                            );
+
+                            if E3ItemMargin.FindFirst() then begin
+
+                                // Company Value
+                                Rec."Company Value" :=
+                                    E3ItemMargin."Company Value";
+
+                                // Patient Value
+                                Rec."Patient Value" :=
+                                    E3ItemMargin."Patient Value";
+
+                                if PurchHeader.Get("Document Type", "Document No.") then begin
+                                    if PurchHeader."Location Code" <> '' then begin
+                                        if Location.Get(PurchHeader."Location Code") then
+                                            "GST Credit" := Location."GST Credit";
+                                    end;
+                                end;
+                            end;
+                        end;
                     end;
                 end;
             end;
         }
-
-
+        modify("Direct Unit Cost")
+        {
+            trigger OnBeforeValidate()
+            begin
+                if Rec.FOC then
+                    Rec."Direct Unit Cost" := 0;
+            end;
+        }
+        modify(FOC)
+        {
+            trigger OnAfterValidate()
+            begin
+                if Rec.FOC then
+                    Rec."Direct Unit Cost" := 0;
+            end;
+        }
     }
-
 }

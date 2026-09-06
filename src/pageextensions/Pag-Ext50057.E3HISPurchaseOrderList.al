@@ -10,6 +10,14 @@ pageextension 50057 "E3 HIS Purchase Order List" extends "Purchase Order List"
                 ToolTip = 'Specifies the transaction type of the document.';
             }
         }
+        addafter("Buy-from Vendor Name")
+        {
+            field("Responsibility Center"; Rec."Responsibility Center")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the Responsibility Center of the document.';
+            }
+        }
     }
     actions
     {

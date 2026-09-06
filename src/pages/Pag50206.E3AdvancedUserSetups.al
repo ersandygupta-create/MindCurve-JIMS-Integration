@@ -174,6 +174,11 @@ page 50206 "E3 Advanced User Control Setup"
                         ApplicationArea = All;
                         ToolTip = 'Specifies whether the user is allowed to open the Purchase Order page.';
                     }
+                    field("PO Delete"; Rec."PO Delete")
+                    {
+                        ApplicationArea = All;
+                        ToolTip = 'You do not have permission to delete Purchase Order';
+                    }
                 }
                 group(PurchaseInvoice)
                 {
@@ -207,6 +212,30 @@ page 50206 "E3 Advanced User Control Setup"
                     {
                         ApplicationArea = All;
                         ToolTip = 'Specifies whether the user is allowed to access Sales Invoice.';
+                    }
+                }
+                group(Series)
+                {
+                    Caption = 'Series & Agreement';
+                    field("No. Series Line Delete"; Rec."No. Series Line Delete")
+                    {
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies whether the No. Series Line Delete option is enabled.';
+                    }
+                    field("No. Series Delete"; Rec."No. Series Delete")
+                    {
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies whether the No. Series Delete option is enabled.';
+                    }
+                    field("Purchase Agreement"; Rec."Purchase Agreement")
+                    {
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies whether Purchase Agreement is enabled.';
+                    }
+                    field("Purchase Disc Agreement"; Rec."Purchase Disc Agreement")
+                    {
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies whether Purchase Disc Agreement is enabled.';
                     }
                 }
             }

@@ -21,12 +21,21 @@ pageextension 50077 "E3 Location Extension" extends "Location Card"
                 ApplicationArea = All;
                 Caption = 'Name 2';
             }
+            field("Name 3"; Rec."Name 3")
+            {
+                ApplicationArea = All;
+                Caption = 'Name 3';
+            }
             field("W/S DL No."; Rec."W/S DL No.")
             {
                 ApplicationArea = All;
             }
 
             field("Retail DL No."; Rec."Retail DL No.")
+            {
+                ApplicationArea = All;
+            }
+            field("Gen. Bus. Posting Group"; Rec."Gen. Bus. Posting Group")
             {
                 ApplicationArea = All;
             }

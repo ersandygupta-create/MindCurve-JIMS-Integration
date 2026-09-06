@@ -57,12 +57,18 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 ToolTip = 'Specifies the unique code of the item make.';
             }
         }
-        addafter("No.")
+        addbefore("No.")
         {
-            field("TransactionType"; Rec."Transaction Type")
+            field("Voucher Type"; Rec."Voucher Type")
             {
                 ApplicationArea = All;
-                Caption = 'Transaction Type';
+                Caption = 'Voucher Type';
+                Editable = Rec."Voucher Type" = '';
+
+                trigger OnValidate()
+                begin
+                    CurrPage.Update(false);
+                end;
             }
         }
     }
@@ -76,6 +82,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 Caption = 'Order Terms & Conditions';
                 Image = ViewDetails;
                 Promoted = true;
+                Visible = false;
                 PromotedCategory = Process;
                 ToolTip = 'Manage the Terms & Conditions for this Purchase Order.';
 
@@ -91,6 +98,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
 
     var
         recPurchHdr: Record "Purchase Header";
+        VoucherTypeEditable: Boolean;
 
     trigger OnOpenPage()
     var

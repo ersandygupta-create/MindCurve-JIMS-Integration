@@ -11,7 +11,6 @@ table 50075 "E3 Stock Consumption Header"
             AutoIncrement = true;
             BlankZero = true;
             MinValue = 1;
-
             Editable = false;
             DataClassification = ToBeClassified;
         }
@@ -20,7 +19,7 @@ table 50075 "E3 Stock Consumption Header"
             Caption = 'Document No.';
             DataClassification = CustomerContent;
         }
-        field(3; "Entry Type"; Enum "E3 Entry Type")
+        field(3; "Entry Type"; Enum "Item Journal Entry Type")
         {
             Caption = 'Entry Type';
             DataClassification = CustomerContent;
@@ -44,6 +43,8 @@ table 50075 "E3 Stock Consumption Header"
         {
             Caption = 'Business Unit';
             DataClassification = CustomerContent;
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            ValidateTableRelation = false;
         }
         field(8; "Legal Entity"; Text[100])
         {
@@ -64,4 +65,13 @@ table 50075 "E3 Stock Consumption Header"
             Clustered = true;
         }
     }
+    trigger OnDelete()
+    var
+        StockLine: Record "E3 Stock Consumption Line";
+    begin
+        StockLine.SetRange("Entry Type", "Entry Type");
+        StockLine.SetRange("Document No.", Rec."Document No.");
+        StockLine.DeleteAll();
+    end;
+
 }

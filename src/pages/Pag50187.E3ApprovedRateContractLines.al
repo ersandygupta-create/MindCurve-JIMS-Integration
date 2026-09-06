@@ -35,6 +35,7 @@ page 50187 "E3 App. Rate Contract Subpage"
                 field("Unit of Measure Code"; Rec."Unit of Measure Code")
                 {
                     ApplicationArea = All;
+                    Caption = 'Purch. unit of Measure';
                     ToolTip = 'Specifies the unit of measure code.';
                 }
                 field(Quantity; Rec.Quantity)

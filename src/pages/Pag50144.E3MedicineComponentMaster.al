@@ -79,19 +79,42 @@ page 50144 "E3 Medicine Component Master"
                 var
                     MedicineCompMastMgmt: Codeunit "E3 Medicine Comp Master Mgmt.";
                     MedicineCompMast: Record "E3 Medicine Component Master";
+                    SelectedRecords: Integer;
+                    SentRecords: Integer;
                 begin
-                    MedicineCompMast.Get(Rec.Code);
-                    if MedicineCompMast.IsSent then
-                        Error('This record has already been sent.');
+                    // Get all records selected by the user
+                    CurrPage.SetSelectionFilter(MedicineCompMast);
 
-                    if MedicineCompMastMgmt.SendMedicineCompMastDetails(MedicineCompMast) then begin
-                        MedicineCompMast.Get(Rec.Code);
-                        MedicineCompMast."First Sent" := true;
-                        MedicineCompMast.Modify(false);
-                        Message('Data sent successfully.')
-                    end else
-                        Message('Failed to send data.');
+                    if MedicineCompMast.IsEmpty() then
+                        Error('Please select at least one record.');
+
+                    SelectedRecords := MedicineCompMast.Count();
+
+                    if MedicineCompMast.FindSet() then begin
+                        repeat
+                            // Check if already sent
+                            if MedicineCompMast.IsSent then
+                                Error(
+                                    'Record %1 has already been sent.',
+                                    MedicineCompMast.Code);
+
+                            // Send the current record
+                            if MedicineCompMastMgmt.SendMedicineCompMastDetails(MedicineCompMast) then begin
+                                MedicineCompMast."First Sent" := true;
+                                MedicineCompMast.Modify(false);
+                                SentRecords += 1;
+                            end
+                            else
+                                Error(
+                                    'Failed to send record %1.',
+                                    MedicineCompMast.Code);
+
+                        until MedicineCompMast.Next() = 0;
+                    end;
+
+                    Message('%1 record(s) sent successfully.', SentRecords);
                 end;
+
             }
         }
     }

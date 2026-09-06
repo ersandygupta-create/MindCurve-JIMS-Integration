@@ -213,23 +213,15 @@ page 50225 "E3 HIS Receipt Indent Card"
                 ToolTip = 'Release the approved HIS indent.';
 
                 trigger OnAction()
-                var
-                    IndentLine: Record "E3 Indent Line";
                 begin
                     Rec.TestField(Status, Rec.Status::Approved);
-
+                    SelectAllIndentLines();
+                    ValidateIndentPurchasePrice();
+                    SplitIndentSchemeLines();
                     Rec."Purchase Released" := true;
                     Rec."Closed Purchase Receipt" := true;
                     Rec.Modify(true);
-
-                    IndentLine.Reset();
-                    IndentLine.SetRange("Document No.", Rec."Document No.");
-
-                    if IndentLine.FindSet() then
-                        repeat
-                            IndentLine."Purchase Released" := Rec."Purchase Released";
-                            IndentLine.Modify(true);
-                        until IndentLine.Next() = 0;
+                    UpdateIndentLinesAfterRelease();
 
                     Message(
                         'Indent %1 has been marked as Released.',
@@ -237,6 +229,7 @@ page 50225 "E3 HIS Receipt Indent Card"
 
                     CurrPage.Update(false);
                 end;
+
             }
 
             action(ReopenIndent)
@@ -302,5 +295,183 @@ page 50225 "E3 HIS Receipt Indent Card"
         ShowApprovalActions := Rec.Status <> Rec.Status::Approved;
     end;
 
+    local procedure SelectAllIndentLines()
+    var
+        IndentLine: Record "E3 Indent Line";
+    begin
+        IndentLine.Reset();
+        IndentLine.SetRange("Document No.", Rec."Document No.");
+        if IndentLine.FindSet() then
+            repeat
+                if not IndentLine.Select then begin
+                    IndentLine.Select := true;
+                    IndentLine.Modify(true);
+                end;
+            until IndentLine.Next() = 0;
+    end;
 
+    local procedure ValidateIndentPurchasePrice()
+    var
+        RCLine: Record "E3 Rate Contract Line";
+        IndentLine: Record "E3 Indent Line";
+    begin
+        RCLine.Reset();
+
+        if RCLine.FindSet() then
+            repeat
+                if RCLine."Product No." <> '' then begin
+
+                    IndentLine.Reset();
+                    IndentLine.SetRange("Document No.", Rec."Document No.");
+                    IndentLine.SetRange(Type, IndentLine.Type::Item);
+                    IndentLine.SetRange("No.", RCLine."Product No.");
+                    IndentLine.SetRange("Item Make Code", RCLine."Make Code");
+                    if IndentLine.FindFirst() then begin
+
+                        IndentLine.Validate("Unit Cost", RCLine.Price);
+                        IndentLine.Validate(MRP, RCLine.MRP);
+                        IndentLine.Validate(Scheme, RCLine.Scheme);
+                        IndentLine.Validate("Created PO Qty", RCLine.Quantity);
+                        IndentLine.Validate("Free Qty", RCLine."Free Qty");
+                        IndentLine.Validate("PO Qty", RCLine."PO Qty");
+                        IndentLine."Incl Free Qty in Sale Rate" := RCLine."Incl Free Qty in Sale Rate";
+
+                        IndentLine.Modify(true);
+                    end;
+                end;
+            until RCLine.Next() = 0;
+    end;
+
+    local procedure SplitIndentSchemeLines()
+    var
+        IndentLine: Record "E3 Indent Line";
+        LineToSplit: Record "E3 Indent Line";
+    begin
+        IndentLine.Reset();
+        IndentLine.SetRange("Document No.", Rec."Document No.");
+        IndentLine.SetRange(Select, true);
+        IndentLine.SetRange("Split Line", false);
+
+        if IndentLine.FindSet() then
+            repeat
+                if IndentLine.Scheme <> '' then begin
+                    LineToSplit := IndentLine;
+                    SplitOneIndentLine(LineToSplit);
+
+                    IndentLine.Get(IndentLine."Document No.", IndentLine."Line No.");
+                    IndentLine."Split Line" := true;
+                    IndentLine.Modify(true);
+                end;
+
+            until IndentLine.Next() = 0;
+    end;
+
+    local procedure SplitOneIndentLine(
+    var IndentLine: Record "E3 Indent Line")
+    var
+        NewLine: Record "E3 Indent Line";
+        SplitFactor: Integer;
+        ApprovedQty: Decimal;
+        FreeQty: Decimal;
+        POQty: Decimal;
+        POQtyLine: Decimal;
+        FreeQtyLine: Decimal;
+        RejectQtyLine: Decimal;
+        NextLineNo: Integer;
+    begin
+        ApprovedQty := IndentLine."Approved Qty";
+        FreeQty := IndentLine."Free Qty";
+        POQty := IndentLine."PO Qty";
+
+        if ApprovedQty <= 0 then
+            Error('Approved Qty must be greater than zero for Item %1.',
+                IndentLine."No.");
+
+        if (POQty + FreeQty) <= 0 then
+            Error('PO Qty + Free Qty must be greater than zero for Item %1.',
+                IndentLine."No.");
+
+        SplitFactor := Round(ApprovedQty / (POQty + FreeQty), 1, '<');
+
+        if SplitFactor < 1 then
+            Error('Split Factor is %1 for Item %2. Split is not possible.', SplitFactor, IndentLine."No.");
+
+        POQtyLine := SplitFactor * POQty;
+        FreeQtyLine := SplitFactor * FreeQty;
+        RejectQtyLine := ApprovedQty - POQtyLine - FreeQtyLine;
+
+        if RejectQtyLine < 0 then
+            Error('Reject Qty cannot be negative.\' + 'Approved Qty: %1\' + 'PO Qty: %2\' + 'Free Qty: %3',
+                ApprovedQty,
+                POQtyLine,
+                FreeQtyLine);
+
+        NewLine.Reset();
+        NewLine.SetRange("Document No.", IndentLine."Document No.");
+
+        if NewLine.FindLast() then
+            NextLineNo := NewLine."Line No." + 10000
+        else
+            NextLineNo := 10000;
+        NewLine.Init();
+        NewLine.TransferFields(IndentLine, false);
+
+        NewLine."Line No." := NextLineNo;
+        NewLine.Select := false;
+        NewLine.Validate("Requested Qty", POQtyLine);
+
+        NewLine.Validate("Approved Qty", POQtyLine);
+        NewLine."PO Qty" := POQty;
+        NewLine."Free Qty" := 0;
+        NewLine.Remarks := 'PO Qty';
+
+        NewLine.Insert(true);
+        NextLineNo += 10000;
+
+        NewLine.Init();
+        NewLine.TransferFields(IndentLine, false);
+        NewLine."Line No." := NextLineNo;
+        NewLine.Select := false;
+
+        NewLine.Validate("Requested Qty", FreeQtyLine);
+        NewLine.Validate("Approved Qty", FreeQtyLine);
+        NewLine."PO Qty" := 0;
+        NewLine."Free Qty" := FreeQty;
+        NewLine.Remarks := 'Free Qty';
+        NewLine."Unit Cost" := 0;
+        NewLine.Insert(true);
+
+        if RejectQtyLine > 0 then begin
+
+            NextLineNo += 10000;
+            NewLine.Init();
+            NewLine.TransferFields(IndentLine, false);
+
+            NewLine."Line No." := NextLineNo;
+            NewLine.Select := false;
+            NewLine.Validate("Requested Qty", RejectQtyLine);
+            NewLine.Validate("Approved Qty", RejectQtyLine);
+            NewLine."PO Qty" := 0;
+            NewLine."Free Qty" := 0;
+            NewLine.Remarks := 'Reject Qty';
+            NewLine."Unit Cost" := 0;
+
+            NewLine.Insert(true);
+        end;
+    end;
+
+    local procedure UpdateIndentLinesAfterRelease()
+    var
+        IndentLine: Record "E3 Indent Line";
+    begin
+        IndentLine.Reset();
+        IndentLine.SetRange("Document No.", Rec."Document No.");
+        if IndentLine.FindSet() then
+            repeat
+                IndentLine."Purchase Released" := Rec."Purchase Released";
+                if IndentLine.Scheme = '' then
+                    IndentLine.Remarks := 'PO Qty';
+                IndentLine.Modify(true);
+            until IndentLine.Next() = 0;
+    end;
 }

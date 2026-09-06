@@ -32,6 +32,11 @@ page 50178 "E3 Order Terms & Conditions"
                     ApplicationArea = All;
                     ToolTip = 'Specifies whether this order term is available for selection.';
                 }
+                field("Voucher Type"; Rec."Voucher Type")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether this Voucher Type term is available for selection.';
+                }
             }
         }
     }

@@ -48,6 +48,15 @@ page 50194 "E3 Get Indent Lines"
                     Caption = 'Description';
                     ToolTip = 'Specifies the description of the item.';
                 }
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Shortcut Dimension 1 Code';
+                }
+                field("Location Code"; Rec."Location Code")
+                {
+                    ToolTip = 'Specifies the description of the item.';
+                }
                 field(Quantity; Rec."Requested Qty")
                 {
                     ApplicationArea = All;

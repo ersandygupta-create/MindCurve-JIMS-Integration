@@ -116,6 +116,7 @@ page 50168 "E3 HIS Indent Line Subform"
             {
                 Caption = 'Split Qty';
                 ApplicationArea = All;
+                visible = false;
                 Image = Split;
 
                 trigger OnAction()
@@ -151,21 +152,19 @@ page 50168 "E3 HIS Indent Line Subform"
                 ApplicationArea = All;
                 Caption = 'Select All';
                 Image = SelectLineToApply;
+                visible = false;
 
                 trigger OnAction()
                 var
                     IndentLine: Record "E3 Indent Line";
                 begin
-                    IndentLine.Reset();
-
-                    // Select only lines belonging to the current document
-                    IndentLine.SetRange("Document No.", Rec."Document No.");
-                    IndentLine.SetRange("Line No.", Rec."Line No.");
+                    // Get only the records selected by the user
+                    CurrPage.SetSelectionFilter(IndentLine);
 
                     if IndentLine.FindSet(true) then
                         repeat
                             IndentLine."Select" := true;
-                            IndentLine.Modify();
+                            IndentLine.Modify(true);
                         until IndentLine.Next() = 0;
 
                     CurrPage.Update(false);
@@ -176,22 +175,19 @@ page 50168 "E3 HIS Indent Line Subform"
             {
                 ApplicationArea = All;
                 Caption = 'Clear All';
+                visible = false;
                 Image = ClearLog;
 
                 trigger OnAction()
                 var
                     IndentLine: Record "E3 Indent Line";
                 begin
-                    IndentLine.Reset();
-
-                    // Clear only lines belonging to the current document
-                    IndentLine.SetRange("Document No.", Rec."Document No.");
-                    IndentLine.SetRange("Line No.", Rec."Line No.");
+                    CurrPage.SetSelectionFilter(IndentLine);
 
                     if IndentLine.FindSet(true) then
                         repeat
                             IndentLine."Select" := false;
-                            IndentLine.Modify();
+                            IndentLine.Modify(true);
                         until IndentLine.Next() = 0;
 
                     CurrPage.Update(false);
@@ -199,6 +195,7 @@ page 50168 "E3 HIS Indent Line Subform"
             }
 
         }
+
     }
     var
         IsLineEditable: Boolean;
