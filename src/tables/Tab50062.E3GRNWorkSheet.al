@@ -616,11 +616,21 @@ table 50062 "E3 GRN Work Sheet"
             Caption = 'Original Line No.';
             DataClassification = CustomerContent;
         }
+        field(18085; "Lot Assigned"; Boolean)
+        {
+            Caption = 'Lot Assigned';
+            DataClassification = CustomerContent;
+        }
+        field(18086; "Receipt Created"; Boolean)
+        {
+            Caption = 'Receipt Created';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
     {
-        key(PK; "PO No.", "Line No.")
+        key(PK; "PO No.", "Line No.", "Orig. Line No.")
         {
             Clustered = true;
         }
@@ -1446,5 +1456,7 @@ table 50062 "E3 GRN Work Sheet"
                 LotInformation.Modify(true);
 
             until LotLines.Next() = 0;
+        rec."Lot Assigned" := true;
+        rec.Modify();
     end;
 }
