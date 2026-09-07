@@ -732,7 +732,7 @@ page 50169 "E3 GRN Work Sheet"
 
                         GRNHeader."Party Type" := Format(PurchRcptHeader."GST Vendor Type");
                         GRNHeader.GSTIN := PurchRcptHeader."Vendor GST Reg. No.";
-                        GRNHeader."E-Way Bill No." := PurchRcptHeader."E-Way Bill No.";
+                        GRNHeader."E-Way Bill No." := PurchRcptHeader."Order No.";
                         GRNHeader."E-Way Bill Date" := PurchRcptHeader."Bill of Entry Date";
                         //GRNHeader."GST Location" := PurchRcptHeader."Location GST Reg. No.";
                         GRNHeader."RCM Applicable" := PurchRcptHeader."RCM Exempt";
