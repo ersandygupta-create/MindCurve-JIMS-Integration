@@ -1055,19 +1055,39 @@ table 50062 "E3 GRN Work Sheet"
             NextLineNo := LastLine."Line No." + 10000
         else
             NextLineNo := 10000;
-        RemainingQty := SelectedLine."Receipt Qty" - SplitQty;
+        RemainingQty := SelectedLine."Receipt Qty" - SplitQty - SelectedLine."Quantity Received";
         NewLine := SelectedLine;
         NewLine."Line No." := NextLineNo;
         NewLine."Receipt Qty" := SplitQty;
         NewLine."Invoice Qty" := 0;
+        NewLine."Quantity Received" := 0;
         NewLine."Net Qty Received" := NewLine."Receipt Qty" - NewLine."Rejected Qty";
         NewLine."Shortage Qty" := NewLine."Invoice Qty" - NewLine."Receipt Qty";
         NewLine."Orig. Line No." := SelectedLine."Orig. Line No.";
+        NewLine."Receipt Created" := false;
+        NewLine."Lot Assigned" := false;
         NewLine.Split := true;
         NewLine.Insert(true);
-        SelectedLine."Receipt Qty" := RemainingQty;
-        SelectedLine."Net Qty Received" := SelectedLine."Receipt Qty" - SelectedLine."Rejected Qty";
-        SelectedLine."Shortage Qty" := SelectedLine."Invoice Qty" - SelectedLine."Receipt Qty";
+        if not SelectedLine."Receipt Created" then begin
+            SelectedLine."Receipt Qty" := RemainingQty;
+            SelectedLine."Net Qty Received" := SelectedLine."Receipt Qty" - SelectedLine."Rejected Qty";
+            SelectedLine."Shortage Qty" := SelectedLine."Invoice Qty" - SelectedLine."Receipt Qty";
+        end else begin
+            NextLineNo += 10000;
+            NewLine := SelectedLine;
+            NewLine."Line No." := NextLineNo;
+            NewLine."Receipt Qty" := SplitQty;
+            NewLine."Invoice Qty" := 0;
+            NewLine."Quantity Received" := 0;
+            NewLine."Net Qty Received" := NewLine."Receipt Qty" - NewLine."Rejected Qty";
+            NewLine."Shortage Qty" := NewLine."Invoice Qty" - NewLine."Receipt Qty";
+            NewLine."Orig. Line No." := SelectedLine."Orig. Line No.";
+            NewLine.Split := true;
+            NewLine."Receipt Created" := false;
+            NewLine."Lot Assigned" := false;
+            NewLine.Insert(true);
+
+        end;
 
         SelectedLine.Split := true;
         SelectedLine.Modify(true);
