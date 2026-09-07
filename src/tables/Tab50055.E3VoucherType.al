@@ -110,13 +110,31 @@ table 50055 "E3 Voucher Type"
     end;
 
     trigger OnModify()
+    var
+        UserSetup: Record "User Setup";
     begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
 
+        if not UserSetup."Voucher Type Master Editable" then
+            Error(
+                'You do not have permission to modify Voucher Type %1. ' +
+                'Please contact your administrator.',
+                Rec.Code);
     end;
 
     trigger OnDelete()
+    var
+        UserSetup: Record "User Setup";
     begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
 
+        if not UserSetup."Voucher Type Master Editable" then
+            Error(
+                'You do not have permission to delete Voucher %1. ' +
+                'Please contact your administrator.',
+                Rec.Code);
     end;
 
     trigger OnRename()

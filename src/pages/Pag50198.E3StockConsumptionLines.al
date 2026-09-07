@@ -60,6 +60,11 @@ page 50198 "E3 Stock Consumption Line"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the consumed quantity.';
                 }
+                field("Unit Cost"; Rec."Unit Cost")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Unit Cost.';
+                }
                 field("Batch No."; Rec."Batch No.")
                 {
                     ApplicationArea = All;

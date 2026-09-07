@@ -232,6 +232,13 @@ page 50169 "E3 GRN Work Sheet"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the maximum retail price.';
                     ShowMandatory = true;
+                    trigger OnValidate()
+                    begin
+                        if (Rec."PO MRP" <> 0) and (Rec.MRP < Rec."PO MRP") then
+                            Error(
+                                'MRP cannot be less than PO MRP. MRP must be greater than or equal to PO MRP. PO MRP: %1.',
+                                Rec."PO MRP");
+                    end;
                 }
                 field("PO MRP"; Rec."PO MRP")
                 {

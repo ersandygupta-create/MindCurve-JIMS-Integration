@@ -248,5 +248,10 @@ tableextension 50027 "E3 Uset Setup Ext" extends "User Setup"
             Caption = 'PO Delete';
             DataClassification = CustomerContent;
         }
+        field(50047; "Voucher Type Master Editable"; Boolean)
+        {
+            Caption = 'Voucher Type Master Editable';
+            DataClassification = CustomerContent;
+        }
     }
 }

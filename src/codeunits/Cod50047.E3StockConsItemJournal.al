@@ -65,8 +65,7 @@ codeunit 50047 "E3 Post Stock Consumption"
             if not Item.Get(StockConsumptionLine."D365 Item Code") then
                 Error(
                     'Item %1 does not exist for Line No. %2.',
-                    StockConsumptionLine."D365 Item Code",
-                    StockConsumptionLine."Line No.");
+                    StockConsumptionLine."D365 Item Code", StockConsumptionLine."Line No.");
 
             if StockConsumptionLine.Quantity <= 0 then
                 Error(
@@ -115,6 +114,7 @@ codeunit 50047 "E3 Post Stock Consumption"
 
             ItemJournalLine.Validate("Document No.", StockConsumptionHeader."Document No.");
             ItemJournalLine.Validate(Quantity, StockConsumptionLine.Quantity);
+            ItemJournalLine.Validate("Unit Cost", StockConsumptionLine."Unit Cost");
             if StockConsumptionLine."D365 Unit Code" <> '' then
                 ItemJournalLine.Validate("Shortcut Dimension 1 Code", StockConsumptionLine."D365 Unit Code");
             if StockConsumptionLine."D365 From Department Code" <> '' then

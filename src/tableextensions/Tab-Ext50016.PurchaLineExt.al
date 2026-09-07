@@ -95,6 +95,11 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Caption = 'Line Remarks';
             DataClassification = CustomerContent;
         }
+        field(50020; "PO Qty"; Decimal)
+        {
+            Caption = 'PO Qty';
+            DataClassification = CustomerContent;
+        }
         modify("No.")
         {
             trigger OnAfterValidate()
@@ -132,10 +137,7 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
 
                             E3ItemMargin.Reset();
 
-                            E3ItemMargin.SetRange(
-                                "Margin Code",
-                                Rec."Margin Code"
-                            );
+                            E3ItemMargin.SetRange("Margin Code", Rec."Margin Code");
 
                             E3ItemMargin.SetRange(
                                 "Business Unit Code",

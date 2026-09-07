@@ -1,7 +1,7 @@
 report 50017 "GRN Report Print"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './src/reports/Rpt50017.GRNReportPrint.rdlc';
+    RDLCLayout = './src/reports/Rpt50017.GRNReportPrint.rdl';
     Caption = 'GRN Report Print';
 
     dataset
@@ -81,6 +81,12 @@ report 50017 "GRN Report Print"
             column(Createdby; userc."User Name")
             {
             }
+            column(LotNo; LotNo)
+            {
+            }
+            column(ExpirationDate; ExpirationDate)
+            {
+            }
             dataitem("Purch. Rcpt. Line"; "Purch. Rcpt. Line")
             {
                 DataItemLink = "Document No." = FIELD("No.");
@@ -133,6 +139,8 @@ report 50017 "GRN Report Print"
                     GSTPer := 0;
                     GSTGroupCode := '';
                     EvlDecimal := 0;
+                    LotNo := '';
+                    ExpirationDate := 0D;
 
                     if ("Purch. Rcpt. Header"."Currency Code" = 'INR') or ("Purch. Rcpt. Header"."Currency Code" = '') then begin
                         GSTGroupCode := "Purch. Rcpt. Line"."GST Group Code";
@@ -149,6 +157,16 @@ report 50017 "GRN Report Print"
                     end else begin
                         LineGST := 0;
                         GSTPer := 0;
+                    end;
+
+                    ItemLedgerEntry.Reset();
+                    ItemLedgerEntry.SetRange("Document No.", "Purch. Rcpt. Line"."Document No.");
+                    ItemLedgerEntry.SetRange("Document Line No.", "Purch. Rcpt. Line"."Line No.");
+                    ItemLedgerEntry.SetRange("Item No.", "Purch. Rcpt. Line"."No.");
+
+                    if ItemLedgerEntry.FindFirst() then begin
+                        LotNo := ItemLedgerEntry."Lot No.";
+                        ExpirationDate := ItemLedgerEntry."Expiration Date";
                     end;
                 end;
 
@@ -267,6 +285,10 @@ report 50017 "GRN Report Print"
         LocationWebsite: Text[200];
         LocationAdd: Code[200];
         RecCompanyName: Code[100];
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        LotNo: Code[50];
+        ExpirationDate: Date;
+
 
 }
 

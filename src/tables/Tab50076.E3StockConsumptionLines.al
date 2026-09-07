@@ -184,6 +184,11 @@ table 50076 "E3 Stock Consumption Line"
             ToolTip = 'Specifies the vendor''s trade type to link transactions made for this vendor with the appropriate general ledger account according to the general posting setup.';
             TableRelation = "Gen. Business Posting Group";
         }
+        field(23; "Unit Cost"; Decimal)
+        {
+            Caption = 'Unit Cost';
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

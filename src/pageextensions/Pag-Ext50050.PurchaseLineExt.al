@@ -419,6 +419,8 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                         PurchLine.Validate(MRP, PRC.MRP);
                         PurchLine.Validate(Scheme, PRC.Scheme);
                         PurchLine."Incl Free Qty in Sale Rate" := PRC."Incl Free Qty in Sale Rate";
+                        PurchLine.Validate("Free Qty", PRC."Free Qty");
+                        PurchLine.Validate("PO Qty", PRC."PO Qty");
                         PurchLine.Modify(true);
                     end;
                 end;
