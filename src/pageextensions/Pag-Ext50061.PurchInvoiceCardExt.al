@@ -22,10 +22,11 @@ pageextension 50061 "E3 HIS Purchase Invoice Card" extends "Purchase Invoice"
         }
         addafter("No.")
         {
-            field("TransactionType"; Rec."Transaction Type")
+            field("Voucher Type"; Rec."Voucher Type")
             {
                 ApplicationArea = All;
-                Caption = 'Transaction Type';
+                Caption = 'Voucher Type';
+                ToolTip = 'Specifies a value Voucher Type';
             }
         }
     }
