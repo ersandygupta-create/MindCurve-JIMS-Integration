@@ -107,39 +107,36 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                         Error(
                             'Purchase Order %1 not found.',
                             Rec."Document No.");
+
                     if PurchHdr."Vendor Invoice No." = '' then
                         Error(
                             'Vendor Invoice No. cannot be blank. Please enter the Vendor Invoice No. before creating the GRN Worksheet.');
 
-                    // GRNWorkSheet.Reset();
-                    // GRNWorkSheet.SetRange("Vendor Invoice No.", PurchHdr."Vendor Invoice No.");
-                    // GRNWorkSheet.SetRange("Vendor Code", PurchHdr."Buy-from Vendor No.");
-                    // if GRNWorkSheet.FindFirst() then
-                    //     Error(
-                    //         'Vendor Invoice No. %1 already exists in GRN Work Sheet %2 for Vendor %3.',
-                    //         PurchHdr."Vendor Invoice No.",
-                    //         GRNWorkSheet."Vendor Code",
-                    //         PurchHdr."Buy-from Vendor No.");
-
                     PurchLine.Reset();
                     PurchLine.SetRange("Document Type", Rec."Document Type");
                     PurchLine.SetRange("Document No.", Rec."Document No.");
-
-                    // Only lines having Qty. to Receive
                     PurchLine.SetFilter("Qty. to Receive", '>0');
 
                     if PurchLine.IsEmpty() then
                         Error(
                             'No Purchase Order lines have Qty. to Receive greater than zero.');
-                    // Create worksheet for all PO lines
-                    GRNWorkSheet.InitFromPurchaseLine(Rec."Document No.");
 
-                    // Open worksheet
+                    // Check existing GRN Worksheet
+                    GRNWorkSheet.Reset();
+                    GRNWorkSheet.SetRange("PO No.", Rec."Document No.");
+
+                    if GRNWorkSheet.IsEmpty() then begin
+                        // Create GRN Worksheet only first time
+                        GRNWorkSheet.InitFromPurchaseLine(Rec."Document No.");
+                    end;
+
+                    // Open GRN Worksheet
                     GRNWorkSheet.Reset();
                     GRNWorkSheet.SetRange("PO No.", Rec."Document No.");
 
                     Page.Run(Page::"E3 GRN Work Sheet", GRNWorkSheet);
                 end;
+
             }
             action(GetIndentLines)
             {
