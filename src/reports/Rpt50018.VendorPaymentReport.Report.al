@@ -38,6 +38,10 @@ report 50018 "Vendor Payment Report"
             column(ChequeNo; "Bank Account Ledger Entry"."Cheque No.")
             {
             }
+            column(SNo; SNo)
+            {
+            }
+            column(Document_No_; "Document No.") { }
             // column(StartDate; StartDate)
             // {
             // }
@@ -46,6 +50,7 @@ report 50018 "Vendor Payment Report"
             // }
             trigger OnAfterGetRecord()
             begin
+                SNo += 1;
 
                 ChequeNo := "Bank Account Ledger Entry"."Cheque No.";
 
@@ -91,7 +96,7 @@ report 50018 "Vendor Payment Report"
                 BankLedgerEntry2: Record "Bank Account Ledger Entry";
             begin
                 CompanyInformation.Get();
-
+                Clear(SNo);
                 Clear(TotalVendorAmount);
                 Clear(AmountText);
                 Clear(AmountInWords);
@@ -237,6 +242,8 @@ report 50018 "Vendor Payment Report"
         AmountInWords: array[2] of Text[250];
         AmountText: Text[250];
         CompAddress: Text[150];
+        SNo: Integer;
+
 
 }
 

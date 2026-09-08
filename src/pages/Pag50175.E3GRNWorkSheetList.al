@@ -21,6 +21,12 @@ page 50175 "E3 GRN Work Sheet List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the unique document ID.';
                 }
+                field("E-Way Bill No."; Rec."E-Way Bill No.")
+                {
+                    Caption = 'Order No.';
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Order No.';
+                }
                 field("Voucher Date"; Rec."Voucher Date")
                 {
                     ApplicationArea = All;
@@ -46,6 +52,17 @@ page 50175 "E3 GRN Work Sheet List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the status.';
                 }
+                field(IsSent; Rec.IsSent)
+                {
+                    Caption = 'Is Sent';
+                    ToolTip = 'Specifies whether the document has been sent.';
+                }
+                field(Response; Rec.Response)
+                {
+                    Caption = 'Response';
+                    ToolTip = 'Specifies the response received after sending the document.';
+                }
+
             }
         }
     }

@@ -507,7 +507,9 @@ page 50169 "E3 GRN Work Sheet"
                     GRNToReceive.SetCurrentKey("PO No.", "Line No.");
                     if GRNToReceive.FindSet() then
                         repeat
-                            if GRNToReceive."Receipt Qty" > 0 then begin
+                            if GRNToReceive."Receipt Qty" = 0 then begin
+                                GRNToReceive.Delete();
+                            end else begin
 
                                 if not PurchHeader.Get(
                                     PurchHeader."Document Type"::Order,
@@ -717,6 +719,7 @@ page 50169 "E3 GRN Work Sheet"
                         GRNHeader."Place of Supply" := PurchRcptHeader."Location State Code";
                         GRNHeader."Purchase Challan Date" := PurchRcptHeader."Document Date";
                         GRNHeader."Business Unit Code" := PurchRcptHeader."Shortcut Dimension 1 Code";
+                        GRNHeader.Sync := PurchRcptHeader.Sync;
                         GeneralLedgerSetup.Get();
 
                         if GRNHeader."Business Unit Code" <> '' then begin

@@ -59,6 +59,11 @@ tableextension 50006 "E3 HIS Purch. Rcpt. Header" extends "Purch. Rcpt. Header"
             Caption = 'GRN Voucher Type Name';
             DataClassification = CustomerContent;
         }
+        field(50020; Sync; Boolean)
+        {
+            Caption = 'Sync';
+            DataClassification = CustomerContent;
+        }
 
     }
 }
