@@ -504,7 +504,9 @@ page 50169 "E3 GRN Work Sheet"
                     GRNToReceive.Reset();
                     GRNToReceive.SetRange("PO No.", SelectedGRNWorksheet."PO No.");
                     GRNToReceive.SetFilter("Receipt Created", '%1', false);
-                    GRNToReceive.SetCurrentKey("PO No.", "Line No.");
+                    GRNToReceive.SetFilter("Lot Assigned", '%1', true);
+                    GRNToReceive.SetCurrentKey("PO No.", "Orig. Line No.");
+
                     if GRNToReceive.FindSet() then
                         repeat
                             // if GRNToReceive."Receipt Qty" > 0 then begin
@@ -521,6 +523,7 @@ page 50169 "E3 GRN Work Sheet"
                                 Error('Vendor Invoice No. cannot be blank for Purchase Order %1.', PurchHeader."No.");
 
                             ConsolidateLine.Reset();
+                            //   ConsolidateLine.SetCurrentKey("PO Qty", "Line No.", "Orig. Line No.");
                             ConsolidateLine.SetRange("PO No.", GRNToReceive."PO No.");
                             ConsolidateLine.SetRange("Orig. Line No.", GRNToReceive."Orig. Line No.");
                             ConsolidateLine.SetFilter("Lot Assigned", '%1', True);
@@ -538,12 +541,15 @@ page 50169 "E3 GRN Work Sheet"
                                         GRNToReceive."Receipt Created" := true;
                                         GRNToReceive."Quantity Received" := GRNToReceive."Receipt Qty";
                                         GRNToReceive.Modify();
-                                        TempPostedSelectedGRNWorksheet := GRNToReceive;
-                                        TempPostedSelectedGRNWorksheet.Insert();
+
                                     end;
                                 end;
                             PrevLine := GRNToReceive."Orig. Line No.";
-                        // end;
+                            // end;
+                            if GRNToReceive."Receipt Qty" > 0 then begin
+                                TempPostedSelectedGRNWorksheet := GRNToReceive;
+                                TempPostedSelectedGRNWorksheet.Insert();
+                            end;
 
                         until GRNToReceive.Next() = 0;
 
@@ -585,7 +591,7 @@ page 50169 "E3 GRN Work Sheet"
                 trigger OnAction()
                 var
                     SplitQtyPage: Page "E3 Split Qty";
-                                      SplitQty: Decimal;
+                    SplitQty: Decimal;
                 begin
                     // Open Split Quantity dialog
                     if SplitQtyPage.RunModal() <> Action::OK then
@@ -763,7 +769,7 @@ page 50169 "E3 GRN Work Sheet"
                     // if PurchRcptLine.Type = PurchRcptLine.Type::Item then begin
                     Clear(GRNWorksheet);
 
-                    if not GRNWorksheet.Get(SelectedGRNWorksheet."PO No.", PurchRcptLine."Order Line No.", SelectedGRNWorksheet."Orig. Line No.")
+                    if not GRNWorksheet.Get(SelectedGRNWorksheet."PO No.", SelectedGRNWorksheet."Line No.", SelectedGRNWorksheet."Orig. Line No.")
                     then begin
                         LineNo += 10000;
                         continue;
