@@ -507,44 +507,44 @@ page 50169 "E3 GRN Work Sheet"
                     GRNToReceive.SetCurrentKey("PO No.", "Line No.");
                     if GRNToReceive.FindSet() then
                         repeat
-                            if GRNToReceive."Receipt Qty" > 0 then begin
+                            // if GRNToReceive."Receipt Qty" > 0 then begin
 
-                                if not PurchHeader.Get(
-                                    PurchHeader."Document Type"::Order,
-                                    SelectedGRNWorksheet."PO No.")
-                                then
-                                    Error(
-                                        'Purchase Order %1 does not exist.',
-                                        SelectedGRNWorksheet."PO No.");
+                            if not PurchHeader.Get(
+                                PurchHeader."Document Type"::Order,
+                                SelectedGRNWorksheet."PO No.")
+                            then
+                                Error(
+                                    'Purchase Order %1 does not exist.',
+                                    SelectedGRNWorksheet."PO No.");
 
-                                if PurchHeader."Vendor Invoice No." = '' then
-                                    Error('Vendor Invoice No. cannot be blank for Purchase Order %1.', PurchHeader."No.");
+                            if PurchHeader."Vendor Invoice No." = '' then
+                                Error('Vendor Invoice No. cannot be blank for Purchase Order %1.', PurchHeader."No.");
 
-                                ConsolidateLine.Reset();
-                                ConsolidateLine.SetRange("PO No.", GRNToReceive."PO No.");
-                                ConsolidateLine.SetRange("Orig. Line No.", GRNToReceive."Orig. Line No.");
-                                ConsolidateLine.SetFilter("Lot Assigned", '%1', True);
-                                ConsolidateLine.SetFilter("Receipt Created", '%1', false);
-                                ConsolidateLine.CalcSums("Receipt Qty");
+                            ConsolidateLine.Reset();
+                            ConsolidateLine.SetRange("PO No.", GRNToReceive."PO No.");
+                            ConsolidateLine.SetRange("Orig. Line No.", GRNToReceive."Orig. Line No.");
+                            ConsolidateLine.SetFilter("Lot Assigned", '%1', True);
+                            ConsolidateLine.SetFilter("Receipt Created", '%1', false);
+                            ConsolidateLine.CalcSums("Receipt Qty");
 
 
 
-                                if (PrevLine <> GRNToReceive."Orig. Line No.") then
-                                    if PurchLine.Get(PurchHeader."Document Type", PurchHeader."No.", GRNToReceive."Orig. Line No.") then begin
-                                        PurchLine."Qty. to Receive" := SelectedGRNWorksheet."Receipt Qty";
-                                        PurchLine.Validate("Qty. to Receive", ConsolidateLine."Receipt Qty");
-                                        PurchLine.Modify(true);
-                                        if ConsolidateLine."Receipt Qty" > 0 then begin
-                                            GRNToReceive."Receipt Created" := true;
-                                            GRNToReceive."Quantity Received" := GRNToReceive."Receipt Qty";
-                                            GRNToReceive.Modify();
-
-                                        end;
+                            if (PrevLine <> GRNToReceive."Orig. Line No.") then
+                                if PurchLine.Get(PurchHeader."Document Type", PurchHeader."No.", GRNToReceive."Orig. Line No.") then begin
+                                    PurchLine."Qty. to Receive" := SelectedGRNWorksheet."Receipt Qty";
+                                    PurchLine.Validate("Qty. to Receive", ConsolidateLine."Receipt Qty");
+                                    PurchLine.Modify(true);
+                                    if ConsolidateLine."Receipt Qty" > 0 then begin
+                                        GRNToReceive."Receipt Created" := true;
+                                        GRNToReceive."Quantity Received" := GRNToReceive."Receipt Qty";
+                                        GRNToReceive.Modify();
+                                        TempPostedSelectedGRNWorksheet := GRNToReceive;
+                                        TempPostedSelectedGRNWorksheet.Insert();
                                     end;
-                                PrevLine := GRNToReceive."Orig. Line No.";
-                            end;
-                            TempPostedSelectedGRNWorksheet := GRNToReceive;
-                            TempPostedSelectedGRNWorksheet.Insert();
+                                end;
+                            PrevLine := GRNToReceive."Orig. Line No.";
+                        // end;
+
                         until GRNToReceive.Next() = 0;
 
                     POList.Reset();
