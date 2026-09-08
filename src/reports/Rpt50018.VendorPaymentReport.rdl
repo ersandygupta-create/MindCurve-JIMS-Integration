@@ -24,79 +24,6 @@
       <rd:DataSourceID>5f81d1db-6f8c-475c-acca-299f136be611</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="txtCompanyName">
-          <DataField>txtCompanyName</DataField>
-        </Field>
-        <Field Name="CompAddress">
-          <DataField>CompAddress</DataField>
-        </Field>
-        <Field Name="BankAccountName">
-          <DataField>BankAccountName</DataField>
-        </Field>
-        <Field Name="ComBankAccNo">
-          <DataField>ComBankAccNo</DataField>
-        </Field>
-        <Field Name="CompPhoneNo">
-          <DataField>CompPhoneNo</DataField>
-        </Field>
-        <Field Name="CompEmail">
-          <DataField>CompEmail</DataField>
-        </Field>
-        <Field Name="VendorName">
-          <DataField>VendorName</DataField>
-        </Field>
-        <Field Name="VenBankAccNo">
-          <DataField>VenBankAccNo</DataField>
-        </Field>
-        <Field Name="VenBankName">
-          <DataField>VenBankName</DataField>
-        </Field>
-        <Field Name="VenBranch">
-          <DataField>VenBranch</DataField>
-        </Field>
-        <Field Name="VenIFSCCode">
-          <DataField>VenIFSCCode</DataField>
-        </Field>
-        <Field Name="Amount">
-          <DataField>Amount</DataField>
-        </Field>
-        <Field Name="AmountFormat">
-          <DataField>AmountFormat</DataField>
-        </Field>
-        <Field Name="AmountInWords">
-          <DataField>AmountInWords</DataField>
-        </Field>
-        <Field Name="TotalVendorAmount">
-          <DataField>TotalVendorAmount</DataField>
-        </Field>
-        <Field Name="TotalVendorAmountFormat">
-          <DataField>TotalVendorAmountFormat</DataField>
-        </Field>
-        <Field Name="VendorAmount">
-          <DataField>VendorAmount</DataField>
-        </Field>
-        <Field Name="VendorAmountFormat">
-          <DataField>VendorAmountFormat</DataField>
-        </Field>
-        <Field Name="ChequeNo">
-          <DataField>ChequeNo</DataField>
-        </Field>
-        <Field Name="SNo">
-          <DataField>SNo</DataField>
-        </Field>
-        <Field Name="Document_No_">
-          <DataField>Document_No_</DataField>
-        </Field>
-      </Fields>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -1291,12 +1218,6 @@
       </Page>
     </ReportSection>
   </ReportSections>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <Code>Public Function BlankZero(ByVal Value As Decimal)
     if Value = 0 then
         Return ""
@@ -1334,4 +1255,77 @@ End Function
 </Code>
   <Language>=User!Language</Language>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="txtCompanyName">
+          <DataField>txtCompanyName</DataField>
+        </Field>
+        <Field Name="CompAddress">
+          <DataField>CompAddress</DataField>
+        </Field>
+        <Field Name="BankAccountName">
+          <DataField>BankAccountName</DataField>
+        </Field>
+        <Field Name="ComBankAccNo">
+          <DataField>ComBankAccNo</DataField>
+        </Field>
+        <Field Name="CompPhoneNo">
+          <DataField>CompPhoneNo</DataField>
+        </Field>
+        <Field Name="CompEmail">
+          <DataField>CompEmail</DataField>
+        </Field>
+        <Field Name="VendorName">
+          <DataField>VendorName</DataField>
+        </Field>
+        <Field Name="VenBankAccNo">
+          <DataField>VenBankAccNo</DataField>
+        </Field>
+        <Field Name="VenBankName">
+          <DataField>VenBankName</DataField>
+        </Field>
+        <Field Name="VenBranch">
+          <DataField>VenBranch</DataField>
+        </Field>
+        <Field Name="VenIFSCCode">
+          <DataField>VenIFSCCode</DataField>
+        </Field>
+        <Field Name="Amount">
+          <DataField>Amount</DataField>
+        </Field>
+        <Field Name="AmountFormat">
+          <DataField>AmountFormat</DataField>
+        </Field>
+        <Field Name="AmountInWords">
+          <DataField>AmountInWords</DataField>
+        </Field>
+        <Field Name="TotalVendorAmount">
+          <DataField>TotalVendorAmount</DataField>
+        </Field>
+        <Field Name="TotalVendorAmountFormat">
+          <DataField>TotalVendorAmountFormat</DataField>
+        </Field>
+        <Field Name="VendorAmount">
+          <DataField>VendorAmount</DataField>
+        </Field>
+        <Field Name="VendorAmountFormat">
+          <DataField>VendorAmountFormat</DataField>
+        </Field>
+        <Field Name="ChequeNo">
+          <DataField>ChequeNo</DataField>
+        </Field>
+        <Field Name="SNo">
+          <DataField>SNo</DataField>
+        </Field>
+        <Field Name="Document_No_">
+          <DataField>Document_No_</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>
