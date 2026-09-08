@@ -28,6 +28,17 @@ page 50064 "E3 Voucher Types"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the number series used to automatically assign order numbers for this voucher type.';
                 }
+                field("Purchase Return Order Nos."; Rec."Purchase Return Order Nos.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the number series used for purchase return orders.';
+                }
+
+                field("Purchase Invoice Nos."; Rec."Purchase Invoice Nos.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the number series used for purchase invoices.';
+                }
                 field("Entry Type"; Rec."Entry Type")
                 {
                     ApplicationArea = All;

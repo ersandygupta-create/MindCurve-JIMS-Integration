@@ -93,6 +93,18 @@ table 50055 "E3 Voucher Type"
             Caption = 'Print Caption';
             DataClassification = CustomerContent;
         }
+        field(14; "Purchase Return Order Nos."; Code[20])
+        {
+            Caption = 'Purchase Return Order Nos.';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
+        field(15; "Purchase Invoice Nos."; Code[20])
+        {
+            Caption = 'Purchase Invoice Nos.';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
     }
 
     keys
