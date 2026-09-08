@@ -20,7 +20,7 @@ pageextension 50061 "E3 HIS Purchase Invoice Card" extends "Purchase Invoice"
                 end;
             }
         }
-        addafter("No.")
+        addbefore("No.")
         {
             field("Voucher Type"; Rec."Voucher Type")
             {

@@ -155,15 +155,38 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             begin
                 if "Voucher Type" = '' then
                     exit;
+
                 VoucherType.Get("Voucher Type");
-                // Validate("Responsibility Center", VoucherType."Shortcut Dimension 1 Code");
-                // Validate("Shortcut Dimension 1 Code", VoucherType."Shortcut Dimension 1 Code");
-                // Validate("Location Code", VoucherType."Location Code");
+
                 "GRN Voucher Type Name" := VoucherType."GRN Voucher Type Name";
                 "Print Caption" := VoucherType."Print Caption";
-                VoucherType.TestField("Order Nos.");
-                if "No." = '' then
-                    "No." := NoSeries.GetNextNo(VoucherType."Order Nos.", WorkDate(), true);
+                Sync := VoucherType.Sync;
+
+                case "Document Type" of
+                    "Document Type"::Order:
+                        begin
+                            VoucherType.TestField("Order Nos.");
+                            if "No." = '' then
+                                "No." := NoSeries.GetNextNo(VoucherType."Order Nos.", WorkDate(), true);
+                        end;
+
+                    "Document Type"::Invoice:
+                        begin
+                            VoucherType.TestField("Purchase Invoice Nos.");
+
+                            if "No." = '' then
+                                "No." := NoSeries.GetNextNo(VoucherType."Purchase Invoice Nos.", WorkDate(), true);
+                        end;
+
+                    "Document Type"::"Return Order":
+                        begin
+                            VoucherType.TestField("Purchase Return Order Nos.");
+
+                            if "No." = '' then
+                                "No." := NoSeries.GetNextNo(VoucherType."Purchase Return Order Nos.", WorkDate(), true);
+                        end;
+                end;
+
                 CreateDefaultTerms();
             end;
         }
@@ -180,6 +203,11 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
         field(50019; "Price Check"; Boolean)
         {
             Caption = 'Price Check';
+            DataClassification = CustomerContent;
+        }
+        field(50020; Sync; Boolean)
+        {
+            Caption = 'Sync';
             DataClassification = CustomerContent;
         }
     }

@@ -585,7 +585,7 @@ page 50169 "E3 GRN Work Sheet"
                 trigger OnAction()
                 var
                     SplitQtyPage: Page "E3 Split Qty";
-                    SplitQty: Decimal;
+                                      SplitQty: Decimal;
                 begin
                     // Open Split Quantity dialog
                     if SplitQtyPage.RunModal() <> Action::OK then
@@ -717,6 +717,7 @@ page 50169 "E3 GRN Work Sheet"
                         GRNHeader."Place of Supply" := PurchRcptHeader."Location State Code";
                         GRNHeader."Purchase Challan Date" := PurchRcptHeader."Document Date";
                         GRNHeader."Business Unit Code" := PurchRcptHeader."Shortcut Dimension 1 Code";
+                        GRNHeader.Sync := PurchRcptHeader.Sync;
                         GeneralLedgerSetup.Get();
 
                         if GRNHeader."Business Unit Code" <> '' then begin

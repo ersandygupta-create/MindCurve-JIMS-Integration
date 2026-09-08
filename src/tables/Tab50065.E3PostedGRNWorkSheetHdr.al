@@ -203,6 +203,11 @@ table 50065 "E3 GRN Work Sheet Header"
             Caption = 'Response';
             DataClassification = CustomerContent;
         }
+        field(44; Sync; Boolean)
+        {
+            Caption = 'Sync';
+            DataClassification = CustomerContent;
+        }
 
     }
 

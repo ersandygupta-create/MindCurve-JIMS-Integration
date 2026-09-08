@@ -115,11 +115,11 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     PurchLine.Reset();
                     PurchLine.SetRange("Document Type", Rec."Document Type");
                     PurchLine.SetRange("Document No.", Rec."Document No.");
-                    PurchLine.SetFilter("Qty. to Receive", '>0');
+                    // PurchLine.SetFilter("Qty. to Receive", '>0');
 
-                    if PurchLine.IsEmpty() then
-                        Error(
-                            'No Purchase Order lines have Qty. to Receive greater than zero.');
+                    // if PurchLine.IsEmpty() then
+                    //     Error(
+                    //         'No Purchase Order lines have Qty. to Receive greater than zero.');
 
                     // Check existing GRN Worksheet
                     GRNWorkSheet.Reset();
