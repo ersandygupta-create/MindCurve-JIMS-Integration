@@ -59,6 +59,11 @@ page 50168 "E3 HIS Indent Line Subform"
                 {
                     ApplicationArea = All;
                 }
+                field("Stock Qyt."; Rec."Stock Qyt.")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
                 field("Unit Cost"; Rec."Unit Cost")
                 {
                     ApplicationArea = All;

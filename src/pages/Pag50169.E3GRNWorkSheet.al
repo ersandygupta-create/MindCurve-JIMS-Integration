@@ -491,6 +491,7 @@ page 50169 "E3 GRN Work Sheet"
                     ConsolidateLine: Record "E3 GRN Work Sheet";
                     PrevLine: Integer;
                     POList: Record "Purchase Header";
+                    PostedReceiptNo: Text[30];
                     LastReceiptNo: Code[20];
                     POListNo: Code[20];
                     PostedGRNHeader: Record "E3 GRN Work Sheet Header";
@@ -568,6 +569,7 @@ page 50169 "E3 GRN Work Sheet"
                                     POList.Invoice := false;
 
                                     Codeunit.Run(Codeunit::"Purch.-Post", POList);
+                                    PostedReceiptNo := POList."Last Receiving No.";
 
                                 end;
                             end;
@@ -577,7 +579,7 @@ page 50169 "E3 GRN Work Sheet"
                     CopyPostedReceiptToGRN(TempPostedSelectedGRNWorksheet);
                     CurrPage.Update(false);
 
-                    Message('Purchase Receipt posted successfully and GRN data has been created.');
+                    Message('Purchase Receipt  %1 posted successfully and GRN data has been created.', PostedReceiptNo);
                 end;
             }
             action(Split)

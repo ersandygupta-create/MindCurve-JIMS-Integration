@@ -531,6 +531,17 @@ table 50052 "E3 Indent Line"
             Editable = false;
             MinValue = 0;
         }
+        field(80287; "Stock Qyt."; Decimal)
+        {
+            Caption = 'Stock Qty.';
+            DecimalPlaces = 0 : 15;
+            FieldClass = FlowField;
+            CalcFormula = sum("Item Ledger Entry"."Remaining Quantity" where(
+        "Item No." = field("No."),
+        "Location Code" = field("Location Code")
+    ));
+
+        }
     }
 
     keys
