@@ -788,14 +788,14 @@ page 50169 "E3 GRN Work Sheet"
                         GRNLine."Line No." := LineNo;
                         GRNLine."Indent Document ID" := PurchRcptLine."Indent No.";
                         GRNLine."Indent Line No." := PurchRcptLine."Indent Line No.";
-                        GRNLine."Item Code" := PurchRcptLine."No.";
-                        GRNLine."Item Name" := PurchRcptLine.Description;
+                        GRNLine."Item Code" := SelectedGRNWorksheet."Item No.";
+                        GRNLine."Item Name" := SelectedGRNWorksheet."Item Name";
                         GRNLine."Department Code" := PurchRcptLine."Location Code";
                         if Location.Get(PurchRcptLine."Location Code") then
                             GRNLine."Department Name" := Location.Name
                         else
                             GRNLine."Department Name" := '';
-                        GRNLine."Unit Code" := PurchRcptLine."Unit of Measure Code";
+                        GRNLine."Unit Code" := SelectedGRNWorksheet."Unit of Measure";
                         GRNLine."Received SKU Qty" := PurchRcptLine.Quantity;
                         GRNLine."Indent SKU Qty" := SelectedGRNWorksheet."Indent SKU Qty";
                         GRNLine."Received SKU Qty" := SelectedGRNWorksheet."Receipt Qty";
