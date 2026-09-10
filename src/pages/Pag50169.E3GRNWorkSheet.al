@@ -575,23 +575,6 @@ page 50169 "E3 GRN Work Sheet"
                         until SelectedGRNWorksheet.Next() = 0;
 
                     CopyPostedReceiptToGRN(TempPostedSelectedGRNWorksheet);
-                    //ak
-                    if TempPostedSelectedGRNWorksheet.FindSet() then
-                        repeat
-
-                            DeleteGRNWorksheet.Reset();
-
-                            if DeleteGRNWorksheet.Get(
-                                TempPostedSelectedGRNWorksheet."PO No.",
-                                TempPostedSelectedGRNWorksheet."Line No.",
-                                TempPostedSelectedGRNWorksheet."Orig. Line No.")
-                            then begin
-
-                                DeleteGRNWorksheet.Delete(true);
-
-                            end;
-                        //ak
-                        until TempPostedSelectedGRNWorksheet.Next() = 0;
                     CurrPage.Update(false);
 
                     Message('Purchase Receipt posted successfully and GRN data has been created.');
