@@ -20,40 +20,45 @@ page 50235 "E3 Indent Stock Receipt Card"
                     Editable = false;
                     ToolTip = 'Specifies the entry number.';
                 }
+                field("Voucher Type"; Rec."Voucher Type")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Voucher Type';
+                }
                 field("Nature Type"; Rec."Nature Type")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the nature type.';
+                    trigger OnValidate()
+                    begin
+                        UpdateVendorCustomer();
+                        CurrPage.Update();
+                    end;
                 }
                 field("Entry Type"; Rec."Entry Type")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the entry type.';
+                    trigger OnValidate()
+                    begin
+                        UpdateVendorCustomer();
+                        SetStockTransferSetup();
+                    end;
                 }
                 field("Document No."; Rec."Document No.")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the document number.';
-                    trigger OnAssistEdit()
-                    begin
-                        if Rec.AssistEdit(xRec) then
-                            CurrPage.Update();
-                    end;
+                    // trigger OnAssistEdit()
+                    // begin
+                    //     if Rec.AssistEdit(xRec) then
+                    //         CurrPage.Update();
+                    // end;
                 }
                 field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the document date.';
-                }
-                field("Indent No."; Rec."Indent No.")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the indent number.';
-                }
-                field("Indent Date"; Rec."Indent Date")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the indent date.';
                 }
                 field(Type; Rec.Type)
                 {
@@ -73,6 +78,44 @@ page 50235 "E3 Indent Stock Receipt Card"
                     Visible = false;
                     ToolTip = 'Specifies the vendor or customer name.';
                 }
+                field("From Location Code"; Rec."From Location Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the location code.';
+                    trigger OnValidate()
+                    var
+                        Location: Record Location;
+                        NoSeries: Codeunit "No. Series";
+                    begin
+                        if Rec."From Location Code" = '' then
+                            exit;
+
+                        Location.Get(Rec."From Location Code");
+
+                        if Location."InterCompany Nos." = '' then
+                            Error(
+                                'Stock Receipt Issue No. Series is not configured for Location %1.',
+                                Rec."From Location Code");
+
+                        Rec."Document No." :=
+                            NoSeries.GetNextNo(
+                                Location."InterCompany Nos.",
+                                WorkDate(),
+                                true);
+                        UpdateVendorCustomer();
+                    end;
+                }
+                field("From Shortcut Dimension 1 Code"; Rec."From Shortcut Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the unit code.';
+                }
+                field("From Shortcut Dimension 2 Code"; Rec."From Shortcut Dimension 2 Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the department code.';
+                }
+
                 field("Invoice No."; Rec."Invoice No.")
                 {
                     ApplicationArea = All;
@@ -92,33 +135,6 @@ page 50235 "E3 Indent Stock Receipt Card"
             group(AmountDetails)
             {
                 Caption = 'Amount Details';
-
-                field("No. of Lines"; Rec."No. of Lines")
-                {
-                    ApplicationArea = All;
-                    Editable = true;
-                    ToolTip = 'Specifies the number of lines.';
-                }
-                field(Amount; Rec.Amount)
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the total amount.';
-                }
-                field("Location Code"; Rec."Location Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the location code.';
-                }
-                field("Unit Code"; Rec."Unit Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the unit code.';
-                }
-                field("Dept Code"; Rec."Dept Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the department code.';
-                }
                 field("Create PO"; Rec."Create PO")
                 {
                     ApplicationArea = All;
@@ -128,27 +144,6 @@ page 50235 "E3 Indent Stock Receipt Card"
             group(ErrorDetails)
             {
                 Caption = 'Error Details';
-
-                field("Error 1"; Rec."Error 1")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies whether error 1 exists.';
-                }
-                field("Error 2"; Rec."Error 2")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies whether error 2 exists.';
-                }
-                field("Error 3"; Rec."Error 3")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies whether error 3 exists.';
-                }
-                field("Error 4"; Rec."Error 4")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies whether error 4 exists.';
-                }
                 field("Error Description"; Rec."Error Description")
                 {
                     ApplicationArea = All;
@@ -199,4 +194,55 @@ page 50235 "E3 Indent Stock Receipt Card"
             }
         }
     }
+    trigger OnNewRecord(BelowxRec: Boolean)
+    begin
+        Rec."Nature Type" := Rec."Nature Type"::InterUnit;
+        Rec."Entry Type" := Rec."Entry Type"::Purchase;
+        Rec.Type := Rec.Type::Vendor;
+        Rec."Document Date" := Today();
+        Rec."Invoice Date" := Today();
+        Rec."Posting Date" := Today();
+    end;
+
+    local procedure UpdateVendorCustomer()
+    var
+        StockTransferSetup: Record "E3 Stock Transfer Setup";
+        Vendor: Record Vendor;
+    begin
+        Clear(Rec."Vendor/Customer No.");
+        Clear(Rec."Vendor/Customer Name");
+
+        if (Rec."Nature Type" <> Rec."Nature Type"::InterUnit) or
+           (Rec."Entry Type" <> Rec."Entry Type"::Purchase) or
+           (Rec."From Location Code" = '') then
+            exit;
+
+        StockTransferSetup.Reset();
+        StockTransferSetup.SetRange("Nature Type", Rec."Nature Type");
+        StockTransferSetup.SetRange("Entry Type", Rec."Entry Type");
+        StockTransferSetup.SetRange("From Location", Rec."From Location Code");
+
+        if StockTransferSetup.FindFirst() then begin
+            Rec."Vendor/Customer No." := StockTransferSetup."Vendor Code";
+
+            if Vendor.Get(Rec."Vendor/Customer No.") then
+                Rec."Vendor/Customer Name" := Vendor.Name;
+        end;
+    end;
+
+    local procedure SetStockTransferSetup()
+    var
+        StockTransferSetup: Record "E3 Stock Transfer Setup";
+    begin
+        StockTransferSetup.Reset();
+        StockTransferSetup.SetRange("Nature Type", Rec."Nature Type");
+        StockTransferSetup.SetRange("Entry Type", Rec."Entry Type");
+
+        if StockTransferSetup.FindFirst() then begin
+            Rec."From Location Code" := StockTransferSetup."From Location";
+            Rec."From Shortcut Dimension 1 Code" := StockTransferSetup."From BU";
+            Rec."From Shortcut Dimension 2 Code" := StockTransferSetup."From Dept";
+        end;
+    end;
+
 }

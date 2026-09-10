@@ -175,6 +175,11 @@ page 50177 "E3 GRN Work Sheet Line"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the net amount.';
                 }
+                field("Rec SKU QTY"; Rec."Rec SKU QTY")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Rec SKU Qty';
+                }
                 field("Landed SKU Value"; Rec."Landed SKU Value")
                 {
                     ApplicationArea = All;

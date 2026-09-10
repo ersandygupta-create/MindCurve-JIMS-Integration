@@ -125,9 +125,9 @@ codeunit 50046 "E3 GRN Work Sheet Mgmt."
                     Clear(LineObj);
 
                     LineObj.Add('d365_DocId', GRNWorkSheetLine."Document ID");
-                    LineObj.Add('v_SNo', GRNWorkSheetLine."Line No.");
+                    LineObj.Add('v_SNo', GRNWorkSheetLine."Line No." DIV 10000);
                     LineObj.Add('indentDocId', GRNWorkSheetLine."Indent Document ID");
-                    LineObj.Add('indentV_SNo', GRNWorkSheetLine."Line No.");
+                    LineObj.Add('indentV_SNo', GRNWorkSheetLine."Line No." DIV 10000);
                     LineObj.Add('d365_itemCode', GRNWorkSheetLine."Item Code");
                     LineObj.Add('dm_ItemCode', 0);
                     LineObj.Add('itemName', GRNWorkSheetLine."Item Name");
@@ -139,7 +139,7 @@ codeunit 50046 "E3 GRN Work Sheet Mgmt."
                     LineObj.Add('d365_hsnCode', GRNWorkSheetLine."HSN Code");
                     LineObj.Add('dm_hsnCode', 0);
                     LineObj.Add('indentSKUQty', GRNWorkSheetLine."Indent SKU Qty");
-                    LineObj.Add('recSKUQty', GRNWorkSheetLine."Received SKU Qty");
+                    LineObj.Add('recSKUQty', GRNWorkSheetLine."Rec SKU QTY");
                     LineObj.Add('rate', Round(GRNWorkSheetLine.Rate, 0.01));
                     LineObj.Add('oh_Amt_Gross', GRNWorkSheetLine."Gross Amount");
                     LineObj.Add('oh_Amt_Discount', GRNWorkSheetLine."Discount Amount");

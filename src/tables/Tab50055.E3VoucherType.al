@@ -105,6 +105,30 @@ table 50055 "E3 Voucher Type"
             DataClassification = CustomerContent;
             TableRelation = "No. Series";
         }
+        field(16; "Sale Order Nos."; Code[20])
+        {
+            Caption = 'Sale Order Nos';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
+        field(17; "Sale Return Order"; Code[20])
+        {
+            Caption = 'Sale Return Order';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
+        field(18; "Sale Credit Nos."; Code[20])
+        {
+            Caption = 'Sale Credit Nos.';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
+        field(19; "Sale Invoice Nos."; Code[20])
+        {
+            Caption = 'Sale Invoice Nos.';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
     }
 
     keys

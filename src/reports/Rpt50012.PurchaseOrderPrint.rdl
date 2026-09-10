@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-05T07:01:02.3525368Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-09-09T11:24:49.3232305Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -2230,7 +2230,6 @@
                     <TablixCell />
                     <TablixCell>
                       <CellContents>
-                        <rd:Selected>true</rd:Selected>
                         <Textbox Name="Textbox25">
                           <rd:DefaultName>Textbox25</rd:DefaultName>
                           <CanGrow>true</CanGrow>
@@ -2239,7 +2238,8 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!TotalAmttoVendor.Value</Value>
+                                  <Value>=Fields!TotalAmttoVendor.Value + Round(Sum(Fields!Line_Amount.Value)+Sum(Fields!Line_Discount_Amount.Value)+Sum(Fields!LineGSTAmount.Value),0)
+-(Sum(Fields!Line_Amount.Value)+Sum(Fields!Line_Discount_Amount.Value)+Sum(Fields!LineGSTAmount.Value))</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>7pt</FontSize>

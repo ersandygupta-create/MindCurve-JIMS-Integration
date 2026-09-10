@@ -494,6 +494,7 @@ page 50169 "E3 GRN Work Sheet"
                     LastReceiptNo: Code[20];
                     POListNo: Code[20];
                     PostedGRNHeader: Record "E3 GRN Work Sheet Header";
+                    DeleteGRNWorksheet: Record "E3 GRN Work Sheet";
                 begin
                     CurrPage.SetSelectionFilter(SelectedGRNWorksheet);
 
@@ -574,6 +575,23 @@ page 50169 "E3 GRN Work Sheet"
                         until SelectedGRNWorksheet.Next() = 0;
 
                     CopyPostedReceiptToGRN(TempPostedSelectedGRNWorksheet);
+                    //ak
+                    if TempPostedSelectedGRNWorksheet.FindSet() then
+                        repeat
+
+                            DeleteGRNWorksheet.Reset();
+
+                            if DeleteGRNWorksheet.Get(
+                                TempPostedSelectedGRNWorksheet."PO No.",
+                                TempPostedSelectedGRNWorksheet."Line No.",
+                                TempPostedSelectedGRNWorksheet."Orig. Line No.")
+                            then begin
+
+                                DeleteGRNWorksheet.Delete(true);
+
+                            end;
+                        //ak
+                        until TempPostedSelectedGRNWorksheet.Next() = 0;
                     CurrPage.Update(false);
 
                     Message('Purchase Receipt posted successfully and GRN data has been created.');
@@ -757,15 +775,11 @@ page 50169 "E3 GRN Work Sheet"
                         GRNHeader."OH Final Discount Amount" := SelectedGRNWorksheet."Final Discount Amount";
                         GRNHeader.Insert(true);
                     end;
-
                     // Find posted receipt lines
                     PurchRcptLine.Reset();
                     PurchRcptLine.SetRange("Document No.", PurchRcptHeader."No.");
                     PurchRcptLine.SetRange("Order Line No.", SelectedGRNWorksheet."Line No.");
                     if PurchRcptLine.FindFirst() then;
-
-
-
                     // if PurchRcptLine.Type = PurchRcptLine.Type::Item then begin
                     Clear(GRNWorksheet);
 
@@ -797,6 +811,7 @@ page 50169 "E3 GRN Work Sheet"
                             GRNLine."Department Name" := '';
                         GRNLine."Unit Code" := PurchRcptLine."Unit of Measure Code";
                         GRNLine."Received SKU Qty" := PurchRcptLine.Quantity;
+                        GRNLine."Rec SKU QTY" := SelectedGRNWorksheet."Rec SKU QTY";
                         GRNLine."Indent SKU Qty" := SelectedGRNWorksheet."Indent SKU Qty";
                         GRNLine."Received SKU Qty" := SelectedGRNWorksheet."Receipt Qty";
                         GRNLine.Rate := SelectedGRNWorksheet.Rate;
@@ -838,10 +853,10 @@ page 50169 "E3 GRN Work Sheet"
                         GRNLine.Insert(true);
                     end;
 
-                    //end;
-
-
                 end;
+
+
+                // end;
                 LineNo += 10000;
                 UpdateGRNHeaderAmounts(NewDocumentID);
 

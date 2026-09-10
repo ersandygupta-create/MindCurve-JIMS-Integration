@@ -116,7 +116,7 @@ page 50194 "E3 Get Indent Lines"
                 field(MRP; Rec.MRP)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies The Value MRP';
+                    ToolTip = 'Specifies a The Value MRP';
                 }
                 field(Scheme; Rec.Scheme)
                 {

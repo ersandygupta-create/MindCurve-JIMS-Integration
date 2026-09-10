@@ -39,16 +39,6 @@ page 50234 "E3 Indent Stock Receipt List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the document date.';
                 }
-                field("Indent No."; Rec."Indent No.")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the indent number.';
-                }
-                field("Indent Date"; Rec."Indent Date")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the indent date.';
-                }
                 field(Type; Rec.Type)
                 {
                     ApplicationArea = All;
@@ -79,27 +69,17 @@ page 50234 "E3 Indent Stock Receipt List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the posting date.';
                 }
-                field("No. of Lines"; Rec."No. of Lines")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the number of lines.';
-                }
-                field(Amount; Rec.Amount)
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the total amount.';
-                }
-                field("Location Code"; Rec."Location Code")
+                field("From Location Code"; Rec."From Location Code")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the location code.';
                 }
-                field("Unit Code"; Rec."Unit Code")
+                field("From Shortcut Dimension 1 Code"; Rec."From Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the unit code.';
                 }
-                field("Dept Code"; Rec."Dept Code")
+                field("From Shortcut Dimension 2 Code"; Rec."From Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the department code.';
@@ -108,26 +88,6 @@ page 50234 "E3 Indent Stock Receipt List"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies whether a purchase order should be created.';
-                }
-                field("Error 1"; Rec."Error 1")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies whether error 1 exists.';
-                }
-                field("Error 2"; Rec."Error 2")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies whether error 2 exists.';
-                }
-                field("Error 3"; Rec."Error 3")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies whether error 3 exists.';
-                }
-                field("Error 4"; Rec."Error 4")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies whether error 4 exists.';
                 }
                 field("Error Description"; Rec."Error Description")
                 {

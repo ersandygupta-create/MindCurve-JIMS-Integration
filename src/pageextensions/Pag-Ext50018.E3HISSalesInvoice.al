@@ -11,5 +11,19 @@ pageextension 50018 "E3 HIS Sales Invoice" extends "Sales Invoice"
             }
 
         }
+        addbefore("No.")
+        {
+            field("Voucher Type"; Rec."Voucher Type")
+            {
+                ApplicationArea = All;
+                Caption = 'Voucher Type';
+                Editable = Rec."Voucher Type" = '';
+
+                trigger OnValidate()
+                begin
+                    CurrPage.Update(false);
+                end;
+            }
+        }
     }
 }

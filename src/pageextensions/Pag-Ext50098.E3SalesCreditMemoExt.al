@@ -1,15 +1,7 @@
-pageextension 50017 "E3 HIS Sales Order" extends "Sales Order"
+pageextension 50098 "E3 Sales Credit Memo Ext" extends "Sales Credit Memo"
 {
     layout
     {
-        addlast(General)
-        {
-            field("E3 RCM"; Rec."E3 RCM")
-            {
-                ApplicationArea = All;
-                ToolTip = 'Specifies the value of the RCM field.';
-            }
-        }
         addbefore("No.")
         {
             field("Voucher Type"; Rec."Voucher Type")
@@ -25,4 +17,12 @@ pageextension 50017 "E3 HIS Sales Order" extends "Sales Order"
             }
         }
     }
+
+    actions
+    {
+        // Add changes to page actions here
+    }
+
+    var
+        myInt: Integer;
 }

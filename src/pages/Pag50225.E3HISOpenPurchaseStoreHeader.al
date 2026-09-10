@@ -189,20 +189,6 @@ page 50225 "E3 HIS Receipt Indent Card"
     {
         area(Processing)
         {
-            action(Prepare)
-            {
-                ApplicationArea = All;
-                Caption = 'Prepare';
-                Image = Approve;
-                Promoted = true;
-                PromotedCategory = Process;
-                ToolTip = 'Prepares the selected indent lines for creating a purchase order.';
-
-                trigger OnAction()
-                begin
-                    //PrepareIndent();
-                end;
-            }
             action(Release)
             {
                 ApplicationArea = All;

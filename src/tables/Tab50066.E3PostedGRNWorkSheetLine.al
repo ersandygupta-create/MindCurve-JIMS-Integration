@@ -260,6 +260,12 @@ table 50066 "E3 GRN Work Sheet Line"
             Caption = 'Response';
             DataClassification = CustomerContent;
         }
+        field(54; "Rec SKU QTY"; Decimal)
+        {
+            Caption = 'Rec SKU QTY';
+            DataClassification = CustomerContent;
+            DecimalPlaces = 2 : 2;
+        }
     }
 
     keys
