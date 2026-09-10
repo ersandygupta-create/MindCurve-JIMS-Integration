@@ -254,7 +254,8 @@ page 50167 "E3 HIS Indent Card"
                 Image = ReOpen;
                 Promoted = true;
                 PromotedCategory = Process;
-                Visible = Rec.Status = Rec.Status::Approved;
+                Visible = false;
+                //Visible = Rec.Status = Rec.Status::Approved;
                 ToolTip = 'Reopens the approved indent for modification.';
 
                 trigger OnAction()

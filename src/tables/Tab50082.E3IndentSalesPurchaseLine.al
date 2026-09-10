@@ -26,6 +26,14 @@ table 50082 "E3 Indent Sale/Purchase Line"
         {
             Caption = 'Document No.';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if "Document No." <> '' then begin
+                    GetHISIntegrationSalesHdr();
+                    SetHeaderValues();
+                end;
+            end;
+
         }
         field(5; "Item Type"; Text[50])
         {
@@ -127,6 +135,52 @@ table 50082 "E3 Indent Sale/Purchase Line"
             Caption = 'Indent Line No.';
             DataClassification = CustomerContent;
         }
+        field(22; "From Shortcut Dimension 1 Code"; Code[20])
+        {
+            CaptionClass = '1,1,1';
+            Caption = 'From Shortcut Dimension 1 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            ValidateTableRelation = false;
+            DataClassification = CustomerContent;
+        }
+        field(23; "From Shortcut Dimension 2 Code"; Code[20])
+        {
+            CaptionClass = '1,1,2';
+            Caption = 'From Shortcut Dimension 2 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
+            ValidateTableRelation = false;
+            DataClassification = CustomerContent;
+        }
+        field(24; "From Location Code"; Code[20])
+        {
+            Caption = 'From Location Code';
+            TableRelation = Location;
+            ValidateTableRelation = false;
+            DataClassification = CustomerContent;
+        }
+        field(25; "To Shortcut Dimension 1 Code"; Code[20])
+        {
+            CaptionClass = '1,1,1';
+            Caption = 'To Shortcut Dimension 1 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            ValidateTableRelation = false;
+            DataClassification = CustomerContent;
+        }
+        field(26; "To Shortcut Dimension 2 Code"; Code[20])
+        {
+            CaptionClass = '1,1,2';
+            Caption = 'To Shortcut Dimension 2 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
+            ValidateTableRelation = false;
+            DataClassification = CustomerContent;
+        }
+        field(27; "To Location Code"; Code[20])
+        {
+            Caption = 'To Location Code';
+            TableRelation = Location;
+            ValidateTableRelation = false;
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
@@ -151,10 +205,34 @@ table 50082 "E3 Indent Sale/Purchase Line"
         END;
     end;
 
+    local procedure SetHeaderValues()
+    begin
+        "From Shortcut Dimension 1 Code" :=
+            IndentSalePurchHdr."From Shortcut Dimension 1 Code";
+
+        "From Shortcut Dimension 2 Code" :=
+            IndentSalePurchHdr."From Shortcut Dimension 2 Code";
+
+        "From Location Code" :=
+            IndentSalePurchHdr."From Location Code";
+
+        "To Shortcut Dimension 1 Code" :=
+            IndentSalePurchHdr."To Shortcut Dimension 1 Code";
+
+        "To Shortcut Dimension 2 Code" :=
+            IndentSalePurchHdr."To Shortcut Dimension 2 Code";
+
+        "To Location Code" :=
+            IndentSalePurchHdr."To Location Code";
+    end;
+
+
     trigger OnInsert()
     BEGIN
         GetHISIntegrationSalesHdr();
+        SetHeaderValues();
     END;
+
 
     var
         IndentSalePurchHdr: Record "E3 Indent Sale/Purchase Header";

@@ -84,37 +84,20 @@ codeunit 50047 "E3 Post Stock Consumption"
 
             LineNo :=
                 GetNextJournalLineNo(
-                    ItemJournalTemplate.Name,
-                    ItemJournalBatch.Name);
+                    ItemJournalTemplate.Name, ItemJournalBatch.Name);
 
             Clear(ItemJournalLine);
             ItemJournalLine.Init();
 
-            ItemJournalLine.Validate(
-                "Journal Template Name",
-                ItemJournalTemplate.Name);
-
-            ItemJournalLine.Validate(
-                "Journal Batch Name",
-                ItemJournalBatch.Name);
-
+            ItemJournalLine.Validate("Journal Template Name", ItemJournalTemplate.Name);
+            ItemJournalLine.Validate("Journal Batch Name", ItemJournalBatch.Name);
             ItemJournalLine."Line No." := LineNo;
-
-            ItemJournalLine.Validate(
-                "Entry Type",
-                StockConsumptionLine."Entry Type");
-
-            ItemJournalLine.Validate(
-                "Item No.",
-                StockConsumptionLine."D365 Item Code");
-
-            ItemJournalLine.Validate(
-                "Posting Date",
-                StockConsumptionHeader."Entry Date");
-
-            ItemJournalLine.Validate("Document No.", StockConsumptionHeader."Document No.");
+            ItemJournalLine.Validate("Entry Type", StockConsumptionLine."Entry Type");
+            ItemJournalLine.Validate("Item No.", StockConsumptionLine."D365 Item Code");
             ItemJournalLine.Validate(Quantity, StockConsumptionLine.Quantity);
             ItemJournalLine.Validate("Unit Cost", StockConsumptionLine."Unit Cost");
+            ItemJournalLine.Validate("Posting Date", StockConsumptionHeader."Entry Date");
+            ItemJournalLine.Validate("Document No.", StockConsumptionHeader."Document No.");
             if StockConsumptionLine."D365 Unit Code" <> '' then
                 ItemJournalLine.Validate("Shortcut Dimension 1 Code", StockConsumptionLine."D365 Unit Code");
             if StockConsumptionLine."D365 From Department Code" <> '' then
@@ -122,6 +105,7 @@ codeunit 50047 "E3 Post Stock Consumption"
             if ItemJournalLine."Location Code" <> '' then
                 if Location.Get(ItemJournalLine."Location Code") then
                     ItemJournalLine.Validate("Gen. Bus. Posting Group", Location."Gen. Bus. Posting Group");
+            ItemJournalLine.Validate("Unit Amount", StockConsumptionLine."Unit Cost");
             ItemJournalLine.Validate("External Document No.", StockConsumptionHeader."Entry Number");
             ItemJournalLine.Insert(true);
 

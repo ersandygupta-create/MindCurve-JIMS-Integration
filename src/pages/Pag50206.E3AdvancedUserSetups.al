@@ -184,6 +184,11 @@ page 50206 "E3 Advanced User Control Setup"
                         ApplicationArea = All;
                         ToolTip = 'You do not have permission to delete Purchase Order';
                     }
+                    field("PO Line Modify"; Rec."PO Line Modify")
+                    {
+                        ApplicationArea = All;
+                        ToolTip = 'You do not have permission to Modify Purchase Order Line';
+                    }
                 }
                 group(PurchaseInvoice)
                 {
@@ -222,15 +227,15 @@ page 50206 "E3 Advanced User Control Setup"
                 group(Series)
                 {
                     Caption = 'Series & Agreement';
-                    field("No. Series Line Delete"; Rec."No. Series Line Delete")
+                    field("No. Series Line Delete"; Rec."No. Series Line Edit")
                     {
                         ApplicationArea = All;
-                        ToolTip = 'Specifies whether the No. Series Line Delete option is enabled.';
+                        ToolTip = 'Specifies whether the No. Series Line Edit option is enabled.';
                     }
-                    field("No. Series Delete"; Rec."No. Series Delete")
+                    field("No. Series Delete"; Rec."No. Series Edit")
                     {
                         ApplicationArea = All;
-                        ToolTip = 'Specifies whether the No. Series Delete option is enabled.';
+                        ToolTip = 'Specifies whether the No. Series Edit option is enabled.';
                     }
                     field("Purchase Agreement"; Rec."Purchase Agreement")
                     {

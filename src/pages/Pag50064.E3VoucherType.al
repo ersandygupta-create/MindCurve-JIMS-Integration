@@ -33,11 +33,30 @@ page 50064 "E3 Voucher Types"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the number series used for purchase return orders.';
                 }
-
                 field("Purchase Invoice Nos."; Rec."Purchase Invoice Nos.")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the number series used for purchase invoices.';
+                }
+                field("Sale Order Nos."; Rec."Sale Order Nos.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the Sale Order No. Series can be edited.';
+                }
+                field("Sale Invoice Nos."; Rec."Sale Invoice Nos.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the Sale Invoice No. Series can be edited.';
+                }
+                field("Sale Return Order"; Rec."Sale Return Order")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the Sale Return Order No. Series can be edited.';
+                }
+                field("Sale Credit Nos."; Rec."Sale Credit Nos.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the Sale Credit No. Series can be edited.';
                 }
                 field("Entry Type"; Rec."Entry Type")
                 {

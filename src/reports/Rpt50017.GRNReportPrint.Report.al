@@ -33,6 +33,8 @@ report 50017 "GRN Report Print"
             column(LocationName; LocationName)
             {
             }
+            column(LocName2; LocName2) { }
+            column(LocName3; LocName3) { }
             column(LocationAdd; LocationAdd)
             {
             }
@@ -210,11 +212,15 @@ report 50017 "GRN Report Print"
                 LocationPhoneNo := '';
                 LocationGSTIN := '';
                 LocationName := '';
+                LocName2 := '';
+                LocName3 := '';
                 IF "Purch. Rcpt. Header"."Location Code" <> '' THEN BEGIN
                     Location.RESET;
                     Location.SETRANGE(Code, "Purch. Rcpt. Header"."Location Code");
                     IF Location.FINDFIRST THEN BEGIN
                         LocationName := Location.Name;
+                        LocName2 := Location."Name 2";
+                        LocName3 := Location."Name 3";
                         LocationAdd := Location.Address + ', ' + Location."Address 2" + ', ' + Location.City + ', ' + FORMAT(Location."Post Code");
                         LocationEmail := Location."E-Mail";
                         LocationPhoneNo := Location."Phone No.";
@@ -279,6 +285,8 @@ report 50017 "GRN Report Print"
         userm: Record User;
         Location: Record Location;
         LocationName: Text[100];
+        LocName2: Text[100];
+        LocName3: Text[100];
         LocationEmail: Code[100];
         LocationPhoneNo: Code[50];
         LocationGSTIN: Code[15];

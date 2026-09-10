@@ -4,11 +4,57 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
     {
         modify("Direct Unit Cost")
         {
+            Editable = IsLineEditable;
             trigger OnAfterValidate()
             begin
                 if Rec."FOC" then
                     Rec."Direct Unit Cost" := 0;
             end;
+        }
+        modify("No.")
+        {
+            Editable = IsLineEditable;
+        }
+        modify(Description)
+        {
+            Editable = false;
+        }
+
+        modify(Quantity)
+        {
+            Editable = IsLineEditable;
+        }
+        modify("Gen. Prod. Posting Group")
+        {
+            Editable = IsLineEditable;
+        }
+        modify("Location Code")
+        {
+            Editable = IsLineEditable;
+        }
+        modify("Unit of Measure Code")
+        {
+            Editable = IsLineEditable;
+        }
+        modify("Line Amount")
+        {
+            Editable = IsLineEditable;
+        }
+        modify("Line Discount %")
+        {
+            Editable = IsLineEditable;
+        }
+        modify("Line Discount Amount")
+        {
+            Editable = IsLineEditable;
+        }
+        modify("GST Assessable Value")
+        {
+            Editable = IsLineEditable;
+        }
+        modify("Custom Duty Amount")
+        {
+            Editable = IsLineEditable;
         }
         addafter("TDS Section Code")
         {
@@ -24,6 +70,11 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 Caption = 'Item Make Name';
                 ToolTip = 'Specifies the name of the item make.';
             }
+            field("Free Qty"; Rec."Free Qty")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies a value Free QTY.';
+            }
             field(Critical; Rec.Critical)
             {
                 ApplicationArea = All;
@@ -34,6 +85,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
             {
                 ApplicationArea = All;
                 ToolTip = 'Specifies The Value MRP';
+                Editable = IsLineEditable;
             }
             field("Qty. per Unit of Measure"; Rec."Qty. per Unit of Measure")
             {
@@ -44,6 +96,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
             {
                 ApplicationArea = All;
                 ToolTip = 'Specifies a value Scheme';
+                Editable = IsLineEditable;
             }
             field("Incl Free Qty in Sale Rate"; Rec."Incl Free Qty in Sale Rate")
             {
@@ -53,17 +106,20 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
             field("Indent No."; Rec."Indent No.")
             {
                 ApplicationArea = All;
+                Visible = false;
                 ToolTip = 'Specifies the Indent Number from which the item or requirement is being referenced.';
             }
 
             field("Indent Line No."; Rec."Indent Line No.")
             {
                 ApplicationArea = All;
+                Visible = false;
                 ToolTip = 'Specifies the line number associated with the selected Indent Number.';
             }
             field("SNo."; Rec."SNo.")
             {
                 ApplicationArea = All;
+                Visible = false;
                 Editable = false;
                 ToolTip = 'Specify a value SNo.';
             }
@@ -115,7 +171,6 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     PurchLine.Reset();
                     PurchLine.SetRange("Document Type", Rec."Document Type");
                     PurchLine.SetRange("Document No.", Rec."Document No.");
-                    // PurchLine.SetFilter("Qty. to Receive", '>0');
 
                     // if PurchLine.IsEmpty() then
                     //     Error(
@@ -133,7 +188,6 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     // Open GRN Worksheet
                     GRNWorkSheet.Reset();
                     GRNWorkSheet.SetRange("PO No.", Rec."Document No.");
-
                     Page.Run(Page::"E3 GRN Work Sheet", GRNWorkSheet);
                 end;
 
@@ -224,11 +278,6 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     IndentHeader.Reset();
                     IndentHeader.SetRange(Status, IndentHeader.Status::Approved);
                     IndentHeader.SetRange(Released, true);
-
-                    // if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then begin
-                    //     if PurchHeader."Location Code" <> '' then
-                    //         IndentLine.SetRange("Location Code", PurchHeader."Location Code");
-                    // end;
                     GroupIndentLines();
                 end;
             }
@@ -468,11 +517,11 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         SelectedLines: Record "E3 Indent Line" temporary;
         CurrentLine: Record "E3 Indent Line" temporary;
         GetGroupingIndentLinesPage: Page "E3 Get Groupping Indent Lines";
-
         ProcessedGroups: Dictionary of [Text, Boolean];
         GroupKey: Text;
         TotalQty: Decimal;
         FirstIndentLine: Record "E3 Indent Line";
+        FirstMakeCode: Code[50];
     begin
         IndentLine.Reset();
         IndentLine.SetRange("Released Stock Issue Purchase", true);
@@ -492,7 +541,16 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
 
         if not SelectedIndentLine.FindSet() then
             exit;
+        Clear(FirstMakeCode);
+
         repeat
+            if FirstMakeCode = '' then
+                FirstMakeCode := SelectedIndentLine."Item Make Code"
+            else
+                if FirstMakeCode <> SelectedIndentLine."Item Make Code" then
+                    Error(
+                        'Selected indent lines have different Make Codes. Make Code must be the same for all selected lines.');
+
             SelectedLines := SelectedIndentLine;
             SelectedLines.Insert();
         until SelectedIndentLine.Next() = 0;
@@ -545,6 +603,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
 
                             if IndentLine.Get(SelectedLines."Document No.", SelectedLines."Line No.") then begin
                                 IndentLine."Purchase Order No." := Rec."Document No.";
+                                IndentLine."Order Line No." := Rec."Line No.";
                                 IndentLine."PO Created" := true;
                                 IndentLine."Closed Indent Grouped Line" := true;
                                 IndentLine.Modify(true);
@@ -621,5 +680,21 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
 
         PurchLine.Insert(true);
     end;
+
+    var
+        IsLineEditable: Boolean;
+        UserSetup: Record "User Setup";
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        if Rec."Indent Line Remarks" = '' then begin
+            IsLineEditable := true;
+        end else begin
+            IsLineEditable := false;
+            if UserSetup.Get(UserId) then
+                IsLineEditable := UserSetup."PO Line Modify";
+        end;
+    end;
+
 
 }

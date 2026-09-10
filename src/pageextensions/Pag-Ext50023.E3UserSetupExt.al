@@ -32,11 +32,6 @@ pageextension 50023 "E3 User Setup Ext" extends "User Setup"
                 Visible = false;
                 ToolTip = 'Specifies the value of the Item Approval2 field.';
             }
-            field("PO Line Modify"; Rec."PO Line Modify")
-            {
-                ApplicationArea = All;
-                ToolTip = 'Specifies the value of the PO Line Modify field.';
-            }
             field("Short Close Indent"; Rec."Short Close Indent")
             {
                 ApplicationArea = All;

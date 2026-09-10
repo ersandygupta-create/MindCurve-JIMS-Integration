@@ -255,10 +255,10 @@ report 50012 "Purchase Order Print"
                     until recPurchaseLine.Next() = 0;
                 end;
 
-                IF PurchaseHeader."Currency Code" <> '' then
-                    CdCurrencyCode := PurchaseHeader."Currency Code"
-                else
-                    CdCurrencyCode := 'INR';
+                // IF PurchaseHeader."Currency Code" <> '' then
+                //     CdCurrencyCode := PurchaseHeader."Currency Code"
+                // else
+                //     CdCurrencyCode := 'INR';
 
                 CalcStatistics.GetPurchaseStatisticsAmount(PurchaseHeader, TotalAmttoVendor);
                 CalcStatistics.OnGetPurchaseHeaderGSTAmount(PurchaseHeader, TotalInclTaxAmount);
@@ -557,7 +557,7 @@ report 50012 "Purchase Order Print"
         SupplierName: Text[300];
         SupplierAdd: Text[500];
         SupplierEmail: Text[100];
-        SupplierPhoneNo: Text[20];
+        SupplierPhoneNo: Text[30];
         SupplierGSTIN: Code[20];
         SupplierPANNo: Code[10];
         freeQty: Decimal;

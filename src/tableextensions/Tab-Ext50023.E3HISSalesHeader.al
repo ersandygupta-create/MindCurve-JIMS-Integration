@@ -67,5 +67,59 @@ tableextension 50023 "E3 HIS Sales Header" extends "Sales Header"
             DataClassification = CustomerContent;
             Caption = 'Payer Name';
         }
+        field(50108; "Voucher Type"; Code[20])
+        {
+            Caption = 'Voucher Type';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Voucher Type".Code where("Entry Type" = const(Order));
+            trigger OnValidate()
+            var
+                VoucherType: Record "E3 Voucher Type";
+                NoSeries: Codeunit "No. Series";
+            begin
+                if "Voucher Type" = '' then
+                    exit;
+
+                VoucherType.Get("Voucher Type");
+
+                "GRN Voucher Type Name" := VoucherType."GRN Voucher Type Name";
+                Sync := VoucherType.Sync;
+
+                case "Document Type" of
+                    "Document Type"::Order:
+                        begin
+                            VoucherType.TestField("Sale Order Nos.");
+                            if "No." = '' then
+                                "No." := NoSeries.GetNextNo(VoucherType."Sale Order Nos.", WorkDate(), true);
+                        end;
+
+                    "Document Type"::Invoice:
+                        begin
+                            VoucherType.TestField("Sale Invoice Nos.");
+
+                            if "No." = '' then
+                                "No." := NoSeries.GetNextNo(VoucherType."Sale Invoice Nos.", WorkDate(), true);
+                        end;
+
+                    "Document Type"::"Return Order":
+                        begin
+                            VoucherType.TestField("Sale Return Order");
+
+                            if "No." = '' then
+                                "No." := NoSeries.GetNextNo(VoucherType."Sale Return Order", WorkDate(), true);
+                        end;
+                end;
+            end;
+        }
+        field(50109; "GRN Voucher Type Name"; Text[60])
+        {
+            Caption = 'GRN Voucher Type Name';
+            DataClassification = CustomerContent;
+        }
+        field(50110; Sync; Boolean)
+        {
+            Caption = 'Sync';
+            DataClassification = CustomerContent;
+        }
     }
 }

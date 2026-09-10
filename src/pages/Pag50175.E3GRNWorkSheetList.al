@@ -6,6 +6,7 @@ page 50175 "E3 GRN Work Sheet List"
     ApplicationArea = All;
     UsageCategory = Lists;
     CardPageId = "E3 GRN Work Sheet Header";
+    SourceTableView = where(Sync = const(true));
     InsertAllowed = false;
     ModifyAllowed = false;
     DeleteAllowed = false;

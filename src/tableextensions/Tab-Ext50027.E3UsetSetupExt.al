@@ -223,14 +223,14 @@ tableextension 50027 "E3 Uset Setup Ext" extends "User Setup"
             Caption = 'G/L Entry View';
             DataClassification = CustomerContent;
         }
-        field(50042; "No. Series Line Delete"; Boolean)
+        field(50042; "No. Series Line Edit"; Boolean)
         {
-            Caption = 'No. Series Line Delete';
+            Caption = 'No. Series Line Edit';
             DataClassification = CustomerContent;
         }
-        field(50043; "No. Series Delete"; Boolean)
+        field(50043; "No. Series Edit"; Boolean)
         {
-            Caption = 'No. Series Delete';
+            Caption = 'No. Series Edit';
             DataClassification = CustomerContent;
         }
         field(50044; "Purchase Agreement"; Boolean)

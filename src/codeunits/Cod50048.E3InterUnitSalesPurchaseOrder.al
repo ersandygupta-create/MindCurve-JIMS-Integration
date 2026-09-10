@@ -22,25 +22,25 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
         HISPurchaseSaleHeader.SETRANGE("Nature Type", NatureType);
         HISPurchaseSaleHeader.SETRANGE("Create PO", FALSE);
         HISPurchaseSaleHeader.SETFILTER("Error Description", '%1', '');
-        HISPurchaseSaleHeader.SETFILTER("No. of Lines", '<>%1', 0);
+        //HISPurchaseSaleHeader.SETFILTER("No. of Lines", '<>%1', 0);
 
         IF HISPurchaseSaleHeader.FINDFIRST() THEN BEGIN
 
             StockTransferSetup.RESET();
             StockTransferSetup.SETRANGE("Nature Type", NatureType);
             StockTransferSetup.SETRANGE("Entry Type", EntryType);
-            StockTransferSetup.SETRANGE("From BU", HISPurchaseSaleHeader."Unit Code");
-            StockTransferSetup.SETRANGE("From Dept", HISPurchaseSaleHeader."Dept Code");
-            StockTransferSetup.SETRANGE("From Location", HISPurchaseSaleHeader."Location Code");
+            StockTransferSetup.SETRANGE("From BU", HISPurchaseSaleHeader."From Shortcut Dimension 1 Code");
+            StockTransferSetup.SETRANGE("From Dept", HISPurchaseSaleHeader."From Shortcut Dimension 2 Code");
+            StockTransferSetup.SETRANGE("From Location", HISPurchaseSaleHeader."From Location Code");
 
             IF NOT StockTransferSetup.FINDFIRST() THEN
                 ERROR(
                     'Stock Transfer Setup not found for Nature Type %1, Entry Type %2, From BU %3, From Dept %4 and From Location %5.',
                     NatureType,
                     EntryType,
-                    HISPurchaseSaleHeader."Unit Code",
-                    HISPurchaseSaleHeader."Dept Code",
-                    HISPurchaseSaleHeader."Location Code");
+                    HISPurchaseSaleHeader."From Shortcut Dimension 1 Code",
+                    HISPurchaseSaleHeader."From Shortcut Dimension 2 Code",
+                    HISPurchaseSaleHeader."From Location Code");
 
             StockTransferSetup.TESTFIELD("Vendor Code");
             StockTransferSetup.TESTFIELD("To Location");
@@ -57,8 +57,8 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
 
             PurchHeader.VALIDATE("Location Code", StockTransferSetup."To Location");
 
-            IF HISPurchaseSaleHeader."Unit Code" <> '' THEN
-                PurchHeader.VALIDATE("Shortcut Dimension 1 Code", HISPurchaseSaleHeader."Unit Code");
+            IF HISPurchaseSaleHeader."From Shortcut Dimension 1 Code" <> '' THEN
+                PurchHeader.VALIDATE("Shortcut Dimension 1 Code", HISPurchaseSaleHeader."From Shortcut Dimension 1 Code");
 
             PurchHeader.VALIDATE("Posting No. Series", '');
             PurchHeader."Integration PO" := TRUE;
@@ -88,8 +88,8 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
                     PurchLine.VALIDATE("Direct Unit Cost", HISPurchaseSaleLine."Unit Cost");
                     PurchLine.VALIDATE("Location Code", StockTransferSetup."To Location");
 
-                    IF HISPurchaseSaleHeader."Unit Code" <> '' THEN
-                        PurchLine.VALIDATE("Shortcut Dimension 1 Code", HISPurchaseSaleHeader."Unit Code");
+                    IF HISPurchaseSaleHeader."From Location Code" <> '' THEN
+                        PurchLine.VALIDATE("Shortcut Dimension 1 Code", HISPurchaseSaleHeader."From Shortcut Dimension 1 Code");
 
                     PurchLine.Description := COPYSTR(HISPurchaseSaleLine."Item Name", 1, 100);
                     PurchLine.VALIDATE("Line Discount Amount", HISPurchaseSaleLine.Discount);
@@ -126,25 +126,25 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
         HISPurchaseSaleHeader.SETRANGE("Nature Type", NatureType);
         HISPurchaseSaleHeader.SETRANGE("Create PO", FALSE);
         HISPurchaseSaleHeader.SETFILTER("Error Description", '%1', '');
-        HISPurchaseSaleHeader.SETFILTER("No. of Lines", '<>%1', 0);
+        //HISPurchaseSaleHeader.SETFILTER("No. of Lines", '<>%1', 0);
 
         IF HISPurchaseSaleHeader.FINDFIRST() THEN BEGIN
 
             StockTransferSetup.RESET();
             StockTransferSetup.SETRANGE("Nature Type", NatureType);
             StockTransferSetup.SETRANGE("Entry Type", EntryType);
-            StockTransferSetup.SETRANGE("From BU", HISPurchaseSaleHeader."Unit Code");
-            StockTransferSetup.SETRANGE("From Dept", HISPurchaseSaleHeader."Dept Code");
-            StockTransferSetup.SETRANGE("From Location", HISPurchaseSaleHeader."Location Code");
+            StockTransferSetup.SETRANGE("From BU", HISPurchaseSaleHeader."From Shortcut Dimension 1 Code");
+            StockTransferSetup.SETRANGE("From Dept", HISPurchaseSaleHeader."From Shortcut Dimension 2 Code");
+            StockTransferSetup.SETRANGE("From Location", HISPurchaseSaleHeader."From Location Code");
 
             IF NOT StockTransferSetup.FINDFIRST() THEN
                 ERROR(
                     'Stock Transfer Setup not found for Nature Type %1, Entry Type %2, From BU %3, From Dept %4 and From Location %5.',
                     NatureType,
                     EntryType,
-                    HISPurchaseSaleHeader."Unit Code",
-                    HISPurchaseSaleHeader."Dept Code",
-                    HISPurchaseSaleHeader."Location Code");
+                    HISPurchaseSaleHeader."From Shortcut Dimension 1 Code",
+                    HISPurchaseSaleHeader."From Shortcut Dimension 2 Code",
+                    HISPurchaseSaleHeader."From Location Code");
 
             StockTransferSetup.TESTFIELD("Customer Code");
             StockTransferSetup.TESTFIELD("To Location");
@@ -161,8 +161,8 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
 
             SalesHeader.VALIDATE("Location Code", StockTransferSetup."To Location");
 
-            IF HISPurchaseSaleHeader."Unit Code" <> '' THEN
-                SalesHeader.VALIDATE("Shortcut Dimension 1 Code", HISPurchaseSaleHeader."Unit Code");
+            IF HISPurchaseSaleHeader."From Shortcut Dimension 1 Code" <> '' THEN
+                SalesHeader.VALIDATE("Shortcut Dimension 1 Code", HISPurchaseSaleHeader."From Shortcut Dimension 1 Code");
 
             SalesHeader.MODIFY(TRUE);
 
@@ -190,8 +190,8 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
                     SalesLine.VALIDATE("Unit Price", HISPurchaseSaleLine."Unit Cost");
                     SalesLine.VALIDATE("Location Code", StockTransferSetup."To Location");
 
-                    IF HISPurchaseSaleHeader."Unit Code" <> '' THEN
-                        SalesLine.VALIDATE("Shortcut Dimension 1 Code", HISPurchaseSaleHeader."Unit Code");
+                    IF HISPurchaseSaleHeader."From Shortcut Dimension 1 Code" <> '' THEN
+                        SalesLine.VALIDATE("Shortcut Dimension 1 Code", HISPurchaseSaleHeader."From Shortcut Dimension 1 Code");
 
                     SalesLine.Description := COPYSTR(HISPurchaseSaleLine."Item Name", 1, 100);
                     SalesLine.VALIDATE("Line Discount Amount", HISPurchaseSaleLine.Discount);
@@ -254,8 +254,8 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
             ERROR('Header not found for Document No. %1.', DocumentNo);
 
         //Header.TESTFIELD("Vendor/Customer No.");
-        Header.TESTFIELD("Location Code");
-        Header.TESTFIELD("No. of Lines");
+        Header.TESTFIELD("From Location Code");
+        //Header.TESTFIELD("No. of Lines");
 
         Line.RESET();
         Line.SETRANGE("Entry No.", Header."Entry No.");

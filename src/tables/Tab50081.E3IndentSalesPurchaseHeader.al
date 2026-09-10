@@ -32,92 +32,81 @@ table 50081 "E3 Indent Sale/Purchase Header"
             Caption = 'Document Date';
             DataClassification = CustomerContent;
         }
-        field(6; "Indent No."; Code[50])
-        {
-            Caption = 'Indent No.';
-            DataClassification = CustomerContent;
-        }
-        field(7; "Indent Date"; Date)
-        {
-            Caption = 'Indent Date';
-            DataClassification = CustomerContent;
-        }
-        field(8; "Vendor/Customer No."; Code[20])
+        field(6; "Vendor/Customer No."; Code[20])
         {
             Caption = 'Vendor/Customer No.';
             DataClassification = CustomerContent;
         }
-        field(9; Type; Option)
+        field(7; Type; Option)
         {
             Caption = 'Type';
             OptionMembers = ,Vendor,Customer;
             DataClassification = CustomerContent;
         }
-        field(10; "Vendor/Customer Name"; Text[100])
+        field(8; "Vendor/Customer Name"; Text[100])
         {
             Caption = 'Vendor/Customer Name';
             DataClassification = CustomerContent;
         }
-        field(11; "Invoice No."; Code[50])
+        field(9; "Invoice No."; Code[50])
         {
             Caption = 'Invoice No.';
             DataClassification = CustomerContent;
         }
-        field(12; "Invoice Date"; Date)
+        field(10; "Invoice Date"; Date)
         {
             Caption = 'Invoice Date';
             DataClassification = CustomerContent;
         }
-        field(13; "Posting Date"; Date)
+        field(11; "Posting Date"; Date)
         {
             Caption = 'Posting Date';
             DataClassification = CustomerContent;
         }
-        field(14; "No. of Lines"; Integer)
+        field(12; "From Shortcut Dimension 1 Code"; Code[20])
         {
-            Caption = 'No. of Lines';
+            CaptionClass = '1,1,1';
+            Caption = 'From Shortcut Dimension 1 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            ValidateTableRelation = false;
             DataClassification = CustomerContent;
         }
-        field(15; Amount; Decimal)
+        field(13; "From Shortcut Dimension 2 Code"; Code[20])
         {
-            Caption = 'Amount';
-            DecimalPlaces = 0 : 5;
+            CaptionClass = '1,1,2';
+            Caption = 'From Shortcut Dimension 2 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
+            ValidateTableRelation = false;
             DataClassification = CustomerContent;
         }
-        field(16; "Location Code"; Code[20])
+        field(14; "From Location Code"; Code[20])
         {
-            Caption = 'Location Code';
+            Caption = 'From Location Code';
             TableRelation = Location;
+            ValidateTableRelation = false;
             DataClassification = CustomerContent;
         }
-        field(17; "Error 1"; Boolean)
+        field(15; "To Shortcut Dimension 1 Code"; Code[20])
         {
-            Caption = 'Error 1';
+            CaptionClass = '1,1,1';
+            Caption = 'To Shortcut Dimension 1 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            ValidateTableRelation = false;
             DataClassification = CustomerContent;
         }
-        field(18; "Error 2"; Boolean)
+        field(16; "To Shortcut Dimension 2 Code"; Code[20])
         {
-            Caption = 'Error 2';
+            CaptionClass = '1,1,2';
+            Caption = 'To Shortcut Dimension 2 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
+            ValidateTableRelation = false;
             DataClassification = CustomerContent;
         }
-        field(19; "Error 3"; Boolean)
+        field(17; "To Location Code"; Code[20])
         {
-            Caption = 'Error 3';
-            DataClassification = CustomerContent;
-        }
-        field(20; "Error 4"; Boolean)
-        {
-            Caption = 'Error 4';
-            DataClassification = CustomerContent;
-        }
-        field(21; "Unit Code"; Code[20])
-        {
-            Caption = 'Unit Code';
-            DataClassification = CustomerContent;
-        }
-        field(22; "Dept Code"; Code[20])
-        {
-            Caption = 'Dept Code';
+            Caption = 'To Location Code';
+            TableRelation = Location;
+            ValidateTableRelation = false;
             DataClassification = CustomerContent;
         }
         field(23; "Error Description"; Text[250])
@@ -140,6 +129,12 @@ table 50081 "E3 Indent Sale/Purchase Header"
             Caption = 'No. Series';
             DataClassification = CustomerContent;
         }
+        field(27; "Voucher Type"; Code[20])
+        {
+            Caption = 'Voucher Type';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Voucher Type".Code where("Entry Type" = const(Order));
+        }
     }
 
     keys
@@ -149,25 +144,4 @@ table 50081 "E3 Indent Sale/Purchase Header"
             Clustered = true;
         }
     }
-    procedure AssistEdit(OldIndentSalePurchaseHeader: Record "E3 Indent Sale/Purchase Header"): Boolean
-    var
-        Location: Record Location;
-        NoSeries: Codeunit "No. Series";
-        IndentSalePurchaseHeader: Record "E3 Indent Sale/Purchase Header";
-    begin
-        IndentSalePurchaseHeader := Rec;
-
-        Location.Get();
-        Location.TestField("InterCompany Nos.");
-
-        if NoSeries.LookupRelatedNoSeries(Location."InterCompany Nos.", OldIndentSalePurchaseHeader."No. Series", IndentSalePurchaseHeader."No. Series")
-        then begin
-            IndentSalePurchaseHeader."Document No." := NoSeries.GetNextNo(IndentSalePurchaseHeader."No. Series");
-            Rec := IndentSalePurchaseHeader;
-            exit(true);
-        end;
-
-        exit(false);
-    end;
-
 }

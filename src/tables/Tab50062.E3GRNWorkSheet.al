@@ -36,6 +36,20 @@ table 50062 "E3 GRN Work Sheet"
             Caption = 'Free Qty';
             DataClassification = CustomerContent;
             DecimalPlaces = 2 : 2;
+            trigger OnValidate()
+            begin
+                if "Free Qty" < 0 then
+                    Error('Free Qty cannot be negative.');
+
+                if "Qty. per Unit of Measure" <> 0 then
+                    "Rec SKU QTY" :=
+                        ("Receipt Qty" - "Rejected Qty" + "Free Qty") *
+                        "Qty. per Unit of Measure"
+                else
+                    "Rec SKU QTY" := 0;
+
+                CalculateLandedValue();
+            end;
         }
         field(7; "Outstanding Qty"; Decimal)
         {
@@ -127,14 +141,27 @@ table 50062 "E3 GRN Work Sheet"
                 CalculateLandedValue();
                 if "Sale Rate" > MRP then begin
                     "Sale Rate" := MRP;
+                    Message(
+                        'MRP has been changed. Sale Rate has been updated to MRP %1.',
+                        MRP);
 
                     if "Qty. per Unit of Measure" <> 0 then
                         "SKU Sale Rate" := "Sale Rate" / "Qty. per Unit of Measure"
                     else
                         "SKU Sale Rate" := 0;
 
+
+                end;
+                if "SKU Staff Sale Rate" > MRP then begin
+                    "SKU Staff Sale Rate" := MRP;
                     Message(
-                        'MRP has been changed. Sale Rate has been updated to MRP %1.',
+                        'MRP has been changed. SKU Staff Sale Rate has been updated to MRP %1.',
+                        MRP);
+                end;
+                if "Staff Sale Rate" > MRP then begin
+                    "Staff Sale Rate" := MRP;
+                    Message(
+                        'MRP has been changed. Staff Sale Rate has been updated to MRP %1.',
                         MRP);
                 end;
             end;
@@ -161,6 +188,13 @@ table 50062 "E3 GRN Work Sheet"
 
                     Message(
                         'Sale Rate cannot be greater than MRP. Sale Rate has been updated to MRP %1.',
+                        MRP);
+                end;
+                if "Staff Sale Rate" > MRP then begin
+                    "Staff Sale Rate" := MRP;
+
+                    Message(
+                        'Staff Sale Rate cannot be greater than MRP. Staff Sale Rate has been updated to MRP %1.',
                         MRP);
                 end;
 
@@ -693,6 +727,7 @@ table 50062 "E3 GRN Work Sheet"
                 Validate("Receipt Qty", PurchLine."Qty. to Receive");
                 Validate("Invoice Qty", PurchLine."Qty. to Invoice");
                 //"Line Gross" := PurchLine."Line Amount";
+                Validate("Free Qty", PurchLine."Free Qty");
                 "Outstanding Qty" := PurchLine."Quantity";
                 "Quantity Received" := PurchLine."Quantity Received";
                 //"Rejected Qty" := PurchLine."Qty. to Reject (C.E.)";
@@ -786,9 +821,9 @@ table 50062 "E3 GRN Work Sheet"
 
                 if Item.Get(PurchLine."No.") then
                     if ItemUOM.Get(Item."No.", Item."Purch. Unit of Measure") then
-                        "Rec SKU QTY" := PurchLine.Quantity * ItemUOM."Qty. per Unit of Measure"
+                        Validate("Rec SKU QTY", (PurchLine.Quantity + PurchLine."Free Qty") * ItemUOM."Qty. per Unit of Measure")
                     else
-                        "Rec SKU QTY" := PurchLine.Quantity;
+                        Validate("Rec SKU QTY", PurchLine.Quantity + PurchLine."Free Qty");
                 CalculateLandedValue();
 
                 Insert(true);
@@ -798,7 +833,7 @@ table 50062 "E3 GRN Work Sheet"
     local procedure CalculateNetQtyReceived()
     begin
         "Shortage Qty" := "Invoice Qty" - "Receipt Qty";
-        "Net Qty Received" := "Receipt Qty" - "Rejected Qty";
+        "Net Qty Received" := "Receipt Qty" - "Rejected Qty" + "Free Qty"; //ak
     end;
 
     local procedure CalculateMarginSaleRate()
@@ -821,24 +856,12 @@ table 50062 "E3 GRN Work Sheet"
 
             ItemMargin."Margin Type"::Percentage:
                 begin
-                    "Sale Rate" :=
-                        "Staff Sale Rate"
-                        + (
-                            "Staff Sale Rate"
-                            * ItemMargin."Company Value"
-                            / 100
-                        );
+                    "Sale Rate" := "Staff Sale Rate" + ("Staff Sale Rate" * ItemMargin."Company Value" / 100);
                 end;
 
             ItemMargin."Margin Type"::Markup:
                 begin
-                    "Sale Rate" :=
-                        "Staff Sale Rate"
-                        + (
-                            ("MRP" - "Staff Sale Rate")
-                            * ItemMargin."Company Value"
-                            / 100
-                        );
+                    "Sale Rate" := "Staff Sale Rate" + (("MRP" - "Staff Sale Rate") * ItemMargin."Company Value" / 100);
                 end;
         end;
 
@@ -856,12 +879,12 @@ table 50062 "E3 GRN Work Sheet"
         "Net Qty Received" := "Receipt Qty" - "Rejected Qty";
 
         if "Qty. per Unit of Measure" <> 0 then
-            "Rec SKU QTY" := "Net Qty Received" * "Qty. per Unit of Measure"
+            "Rec SKU QTY" := ("Net Qty Received" + "Free Qty") * "Qty. per Unit of Measure"
         else
-            "Rec SKU QTY" := 0;
+            "Rec SKU QTY" := "Net Qty Received" * "Qty. per Unit of Measure";
 
         if "Net Qty Received" <> 0 then
-            "Line Gross" := Rate * "Net Qty Received"
+            "Line Gross" := Rate * ("Net Qty Received") //ak
         else
             "Line Gross" := 0;
 
@@ -893,10 +916,14 @@ table 50062 "E3 GRN Work Sheet"
         else
             "Landed SKU Rate" := 0;
 
-        if "Indent SKU Qty" <> 0 then
+        if ("Indent SKU Qty" <> 0) and ("Free Qty" = 0) then
             "Staff Sale Rate" := Rate + ((Rate * ("CGST %" + "SGST %" + "IGST %" + "UGST %")) / 100)
         else
-            "Staff Sale Rate" := 0;
+            if "Free Qty" <> 0 then
+                "Staff Sale Rate" := (("Line Gross" / "Rec SKU Qty") * "Qty. per Unit of Measure") * (1 + ("CGST %" + "SGST %" + "IGST %" + "UGST %") / 100)
+            else
+                "Staff Sale Rate" := 0;
+
 
         if "Qty. per Unit of Measure" <> 0 then
             "SKU Staff Sale Rate" := "Staff Sale Rate" / "Qty. per Unit of Measure"
