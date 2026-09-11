@@ -275,10 +275,11 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     IndentHeader: Record "E3 Indent Header";
                     IndentLine: Record "E3 Indent Line";
                 begin
+                    PurchHeader.get(rec."Document No.");
                     IndentHeader.Reset();
                     IndentHeader.SetRange(Status, IndentHeader.Status::Approved);
                     IndentHeader.SetRange(Released, true);
-                    GroupIndentLines();
+                    GroupIndentLines(PurchHeader."Item Make Code");
                 end;
             }
             action("Validate Purch Price")
@@ -510,7 +511,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
             until PurchLine.Next() = 0;
     end;
 
-    local procedure GroupIndentLines()
+    local procedure GroupIndentLines(var ItemMakeCode: code[20])
     var
         IndentLine: Record "E3 Indent Line";
         SelectedIndentLine: Record "E3 Indent Line";
@@ -527,6 +528,8 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         IndentLine.SetRange("Released Stock Issue Purchase", true);
         IndentLine.SetFilter(Remarks, 'PO Qty|Free Qty');
         IndentLine.SetRange("PO Created", false);
+        if ItemMakeCode <> '' then
+            IndentLine.SetFilter("Item Make Code", ItemMakeCode);
 
         if IndentLine.IsEmpty() then
             Error('No indent lines are available for grouping.');
