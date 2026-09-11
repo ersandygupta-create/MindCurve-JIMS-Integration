@@ -579,6 +579,7 @@ page 50035 "E3 API Item Update Log"
                 Caption = 'Sync To ALL';
                 ApplicationArea = All;
                 Image = Link;
+                Visible = false;
                 ToolTip = 'Sync selected items to HIS.';
 
                 trigger OnAction()

@@ -55,6 +55,8 @@ table 50082 "E3 Indent Sale/Purchase Line"
                     "Item Name" := Item.Description;
                 end else
                     "Item Name" := '';
+                Validate("GST Per", Item."GST Group Code");
+                Validate("HSN/SAC Code", Item."HSN/SAC Code");
             end;
         }
         field(7; "Item Name"; Text[100])
@@ -77,7 +79,7 @@ table 50082 "E3 Indent Sale/Purchase Line"
             Caption = 'Gross Amount';
             DataClassification = CustomerContent;
         }
-        field(11; "GST Per"; Code[10])
+        field(11; "GST Per"; Code[20])
         {
             Caption = 'GST Per';
             DataClassification = CustomerContent;
