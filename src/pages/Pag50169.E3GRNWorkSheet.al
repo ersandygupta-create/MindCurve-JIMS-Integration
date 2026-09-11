@@ -756,8 +756,8 @@ page 50169 "E3 GRN Work Sheet"
                         GRNHeader."Voucher Type" := SelectedGRNWorksheet."Voucher Type";
                         GRNHeader.Prefix := SelectedGRNWorksheet."V Prefix";
                         GRNHeader."GST Location" := Format(SelectedGRNWorksheet."GST Jurisdiction Type");
-                        GRNHeader."OH Final Discount %" := SelectedGRNWorksheet."Final Discount %";
-                        GRNHeader."OH Final Discount Amount" := SelectedGRNWorksheet."Final Discount Amount";
+                        //GRNHeader."OH Final Discount %" := SelectedGRNWorksheet."Final Discount %";
+                        //GRNHeader."OH Final Discount Amount" := SelectedGRNWorksheet."Final Discount Amount";
                         GRNHeader.Insert(true);
                     end;
                     // Find posted receipt lines

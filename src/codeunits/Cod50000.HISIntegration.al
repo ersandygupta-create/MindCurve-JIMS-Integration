@@ -1951,63 +1951,6 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                 // GET LAST JOURNAL LINE
                 GenJournalLine.RESET();
 
-                //Akhilesh
-                if HISRevenueHeader.Discount <> 0 then begin
-
-                    RevenueSetup.RESET();
-                    RevenueSetup.GET();
-                    RevenueSetup.TESTFIELD("Discount G/L Account");
-
-                    InvoicePostingBuffer.RESET();
-                    InvoicePostingBuffer.SETRANGE(
-                        "G/L Account",
-                        RevenueSetup."Discount G/L Account");
-                    InvoicePostingBuffer.SETRANGE(
-                        "Global Dimension 1 Code",
-                        HISRevenueHeader."Shortcut Dimension 1 Code");
-                    InvoicePostingBuffer.SETRANGE(
-                        "Global Dimension 2 Code",
-                        HISRevenueHeader."Shortcut Dimension 2 Code");
-
-                    if InvoicePostingBuffer.FINDFIRST() then begin
-
-                        InvoicePostingBuffer.Amount :=
-                            InvoicePostingBuffer.Amount -
-                            HISRevenueHeader.Discount;
-
-                        InvoicePostingBuffer.MODIFY();
-
-                    end else begin
-
-                        InvoicePostingBuffer.INIT();
-
-                        InvoicePostingBuffer."Group ID" :=
-                            RevenueSetup."Discount G/L Account" + ';' +
-                            HISRevenueHeader."Shortcut Dimension 1 Code" + ';' +
-                            HISRevenueHeader."Shortcut Dimension 2 Code" +
-                            ';GeneralDiscount';
-
-                        InvoicePostingBuffer.Type :=
-                            InvoicePostingBuffer.Type::"G/L Account";
-
-                        InvoicePostingBuffer."G/L Account" :=
-                            RevenueSetup."Discount G/L Account";
-
-                        InvoicePostingBuffer."Global Dimension 1 Code" :=
-                            HISRevenueHeader."Shortcut Dimension 1 Code";
-
-                        InvoicePostingBuffer."Global Dimension 2 Code" :=
-                            HISRevenueHeader."Shortcut Dimension 2 Code";
-
-                        InvoicePostingBuffer.Amount :=
-                            -HISRevenueHeader.Discount;
-
-                        InvoicePostingBuffer.INSERT();
-
-                    end;
-                end;
-
-                //akhilesh
 
                 GenJournalLine.SETRANGE("Journal Template Name", IntegrationSetupLine."General Journal Template Code");
 

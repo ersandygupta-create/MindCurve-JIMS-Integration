@@ -121,11 +121,13 @@ page 50176 "E3 GRN Work Sheet Header"
                 field("OH Final Discount %"; Rec."OH Final Discount %")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the final discount percentage.';
                 }
                 field("OH Final Discount Amount"; Rec."OH Final Discount Amount")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the final discount amount.';
                 }
                 field("OH Round Off"; Rec."OH Round Off")
