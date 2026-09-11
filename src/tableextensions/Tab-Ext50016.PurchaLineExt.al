@@ -22,6 +22,15 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Caption = 'Item Make Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Make Master".Code;
+
+            trigger OnValidate()
+            var
+                PurchaseHeader: REcord "Purchase Header";
+            begin
+                PurchaseHeader.get(rec."Document No.");
+                if rec."Indent No." <> '' then
+                    CheckMakeCode(PurchaseHeader, rec."Item Make Code");
+            end;
         }
         field(50006; "Item Make Name"; Text[60])
         {
@@ -183,4 +192,9 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             end;
         }
     }
+    local procedure CheckMakeCode(var PurchaseHeader: Record "Purchase Header"; ItemMakeCode: code[20])
+    begin
+        if ItemMakeCode <> PurchaseHeader."Item Make Code" then
+            Error('Item Make code shoul be similar to %1.', PurchaseHeader."Item Make Code");
+    end;
 }
