@@ -109,6 +109,7 @@ table 50082 "E3 Indent Sale/Purchase Line"
         {
             Caption = 'Batch No.';
             DataClassification = CustomerContent;
+            TableRelation = "Lot No. Information";
         }
         field(17; ExpiryDate; Date)
         {

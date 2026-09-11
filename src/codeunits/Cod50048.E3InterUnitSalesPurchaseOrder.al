@@ -6,6 +6,8 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
         PurchLine: Record "Purchase Line";
         StockTransferSetup: Record "E3 Stock Transfer Setup";
         LineNo: Integer;
+        VoucherType: Record "E3 Voucher Type";
+        NoSeries: Codeunit "No. Series";
     begin
         IntegrationSetup.GET();
         IntegrationSetup.TESTFIELD("Integration Enabled");
@@ -47,7 +49,8 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
 
             PurchHeader.INIT();
             PurchHeader."Document Type" := PurchHeader."Document Type"::Order;
-            PurchHeader."No." := COPYSTR(HISPurchaseSaleHeader."Document No.", 1, 20);
+            PurchHeader."Voucher Type" := HISPurchaseSaleHeader."Voucher Type";
+            PurchHeader."No." := NoSeries.GetNextNo(VoucherType."Order Nos.", WorkDate(), true);
             PurchHeader.SetHideValidationDialog(TRUE);
             PurchHeader.INSERT(TRUE);
 
@@ -200,7 +203,7 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
 
                 UNTIL HISPurchaseSaleLine.NEXT() = 0;
 
-            HISPurchaseSaleHeader."Create PO" := TRUE;
+            //HISPurchaseSaleHeader."Create PO" := TRUE;
             HISPurchaseSaleHeader.MODIFY(TRUE);
         END;
     end;

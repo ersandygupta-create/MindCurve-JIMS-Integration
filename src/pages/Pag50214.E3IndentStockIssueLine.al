@@ -80,21 +80,25 @@ page 50214 "E3 Indent Sale/Purchase Lines"
                 field("Item Category Code"; Rec."Item Category Code")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the item category code.';
                 }
                 field("Product Group Code"; Rec."Product Group Code")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the product group code.';
                 }
                 field("Indent No."; Rec."Indent No.")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the indent number.';
                 }
                 field("Indent Line No."; Rec."Indent Line No.")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the indent line number.';
                 }
             }

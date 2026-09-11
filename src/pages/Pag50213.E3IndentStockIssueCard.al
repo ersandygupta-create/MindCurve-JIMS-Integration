@@ -20,6 +20,11 @@ page 50213 "E3 Indent Sale/Purchase Card"
                     Editable = false;
                     ToolTip = 'Specifies the entry number.';
                 }
+                field("Voucher Type"; Rec."Voucher Type")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies a value Voucher Type';
+                }
                 field("Nature Type"; Rec."Nature Type")
                 {
                     ApplicationArea = All;
@@ -124,6 +129,7 @@ page 50213 "E3 Indent Sale/Purchase Card"
             group(AmountDetails)
             {
                 Caption = 'Amount Details';
+                Visible = false;
                 field("Create PO"; Rec."Create PO")
                 {
                     ApplicationArea = All;
@@ -133,10 +139,12 @@ page 50213 "E3 Indent Sale/Purchase Card"
             group(ErrorDetails)
             {
                 Caption = 'Error Details';
+                Visible = false;
                 field("Error Description"; Rec."Error Description")
                 {
                     ApplicationArea = All;
                     MultiLine = true;
+                    Visible = false;
                     ToolTip = 'Specifies the error description.';
                 }
                 field(Remarks; Rec.Remarks)
@@ -188,6 +196,7 @@ page 50213 "E3 Indent Sale/Purchase Card"
                 ApplicationArea = All;
                 Caption = 'Stock Issue/Receipt';
                 Image = CreateDocument;
+                Visible = false;
                 Promoted = true;
                 PromotedCategory = Process;
                 ToolTip = 'Create an inter unit sales or purchase order for the selected document.';
