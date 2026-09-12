@@ -2027,16 +2027,8 @@ codeunit 50000 "E3 HIS Integration Mgmt."
 
                 //akhilesh
 
-                // GENERAL DISCOUNT - SEPARATE JOURNAL LINE
+                // GENERAL DISCOUNT - SEPARATE LINE
                 if HISRevenueHeader.Discount <> 0 then begin
-
-                    IntegrationSetup.TestField("Account Type");
-                    IntegrationSetup.TestField("Account No.");
-
-                    if IntegrationSetup."Account Type" <>
-                       IntegrationSetup."Account Type"::"G/L Account"
-                    then
-                        Error('General Discount Account Type must be G/L Account.');
 
                     LineNo += 10000;
 
@@ -2053,23 +2045,15 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                     GenJournalLine."Line No." := LineNo;
 
                     // Document Type
-                    IF (HISRevenueHeader."Record Type" =
-                        HISRevenueHeader."Record Type"::Revenue) AND
-                       (HISRevenueHeader."Document Type" =
-                        HISRevenueHeader."Document Type"::Invoice)
-                    THEN
+                    if HISRevenueHeader."Document Type" =
+                       HISRevenueHeader."Document Type"::Invoice then
                         GenJournalLine.VALIDATE(
                             "Document Type",
                             GenJournalLine."Document Type"::Invoice)
-                    ELSE
-                        IF (HISRevenueHeader."Record Type" =
-                            HISRevenueHeader."Record Type"::"Revenue Cancel") AND
-                           (HISRevenueHeader."Document Type" =
-                            HISRevenueHeader."Document Type"::"Credit Memo")
-                        THEN
-                            GenJournalLine.VALIDATE(
-                                "Document Type",
-                                GenJournalLine."Document Type"::"Credit Memo");
+                    else
+                        GenJournalLine.VALIDATE(
+                            "Document Type",
+                            GenJournalLine."Document Type"::"Credit Memo");
 
                     GenJournalLine.VALIDATE(
                         "Document No.",
@@ -2088,7 +2072,7 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                             "Posting Date",
                             HISRevenueHeader."Document Date");
 
-                    // GENERAL DISCOUNT ACCOUNT
+                    // PICK ACCOUNT FROM INTEGRATION SETUP
                     GenJournalLine.VALIDATE(
                         "Account Type",
                         IntegrationSetup."Account Type");
@@ -2097,86 +2081,31 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                         "Account No.",
                         IntegrationSetup."Account No.");
 
-                    GenJournalLine."Location Code" :=
-                        HISRevenueHeader."Location Code";
+                    // GENERAL DISCOUNT
+                    if HISRevenueHeader."Record Type" =
+                       HISRevenueHeader."Record Type"::Revenue then
+                        GenJournalLine.VALIDATE(
+                            Amount,
+                            Abs(HISRevenueHeader.Discount))
+                    else
+                        GenJournalLine.VALIDATE(
+                            Amount,
+                            -Abs(HISRevenueHeader.Discount));
 
                     GenJournalLine."Your Reference" :=
                         HISRevenueHeader."Reference Invoice No.";
-
-                    // Invoice = Debit General Discount
-                    // Credit Memo = Reverse General Discount
-                    IF (HISRevenueHeader."Record Type" =
-                        HISRevenueHeader."Record Type"::Revenue) AND
-                       (HISRevenueHeader."Document Type" =
-                        HISRevenueHeader."Document Type"::Invoice)
-                    THEN
-                        GenJournalLine.VALIDATE(
-                            Amount,
-                            HISRevenueHeader.Discount)
-                    ELSE
-                        GenJournalLine.VALIDATE(
-                            Amount,
-                            -HISRevenueHeader.Discount);
-
-                    // Dimensions
-                    if HISRevenueHeader."Shortcut Dimension 1 Code" <> '' then begin
-                        GenJournalLine.VALIDATE(
-                            "Location Code",
-                            HISRevenueHeader."Shortcut Dimension 1 Code");
-
-                        GenJournalLine.VALIDATE(
-                            "Shortcut Dimension 1 Code",
-                            HISRevenueHeader."Shortcut Dimension 1 Code");
-                    end;
-
-                    if HISRevenueHeader."Shortcut Dimension 2 Code" <> '' then
-                        GenJournalLine.VALIDATE(
-                            "Shortcut Dimension 2 Code",
-                            GetMappedDimension(
-                                HISRevenueHeader."Shortcut Dimension 2 Code"));
 
                     GenJournalLine.VALIDATE(
                         "External Document No.",
                         HISRevenueHeader."External Document No.");
 
-                    // E3 Information
-                    GenJournalLine."E3 HIS Document Type" :=
-                        HISRevenueHeader."HIS Document Type";
-
-                    GenJournalLine."E3 UHID" :=
-                        HISRevenueHeader."UHID";
-
-                    GenJournalLine."E3 Patient Name" :=
-                        HISRevenueHeader."Patient Name";
-
-                    GenJournalLine."E3 Encounter No." :=
-                        HISRevenueHeader."Encounter No.";
-
-                    GenJournalLine."E3 Doctor Name" :=
-                        HISRevenueHeader.Doctor;
-
-                    GenJournalLine."E3 Speciality" :=
-                        HISRevenueHeader."Speciality";
-
-                    GenJournalLine."E3 Sponsor Code" :=
-                        HISRevenueHeader."Sponsor Code";
-
-                    GenJournalLine."E3 Sponsor Name" :=
-                        HISRevenueHeader."Sponsor Name";
-
-                    GenJournalLine."E3 Payer Code" :=
-                        HISRevenueHeader."Payer Code";
-
-                    GenJournalLine."E3 Payer Name" :=
-                        HISRevenueHeader."Payer Name";
-
-                    // POST OR INSERT
                     if IntegrationSetup."Rev./Rev.Cancel Direct Post" then
                         PostGenJnlLine.RunWithCheck(GenJournalLine)
                     else
                         GenJournalLine.INSERT();
 
                 end;
+
 
                 //akhilesh
 
