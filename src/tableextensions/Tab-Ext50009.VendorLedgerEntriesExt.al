@@ -145,5 +145,11 @@ tableextension 50009 "E3 HIS Vendor Ledger Entry" extends "Vendor Ledger Entry"
             FieldClass = FlowField;
             CalcFormula = Lookup(Vendor."Bank Integration" where("No." = FIELD("Vendor No.")));
         }
+        field(50025; "Advance Document No"; Code[20])
+        {
+            Caption = 'Advance Document No.';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
 }

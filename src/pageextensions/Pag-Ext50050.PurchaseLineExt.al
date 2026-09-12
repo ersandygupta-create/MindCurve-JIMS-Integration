@@ -456,6 +456,8 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     PRC.Reset();
                     PRC.SetRange("Product No.", PurchLine."No.");
                     PRC.SetRange("Make Code", PurchLine."Item Make Code");
+                    PRC.SetCurrentKey(SystemCreatedAt);
+                    PRC.SetAscending(SystemCreatedAt, false);
 
                     if PRC.FindFirst() then begin
                         if PurchLine.FOC then begin
@@ -501,6 +503,8 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
 
                 // Make-wise filter
                 RCDiscountLine.SetRange("Make Code", PurchLine."Item Make Code");
+                RCDiscountLine.SetCurrentKey(SystemCreatedAt);
+                RCDiscountLine.SetAscending(SystemCreatedAt, false);
 
                 if RCDiscountLine.FindFirst() then begin
                     PurchLine.Validate("Line Discount %", RCDiscountLine."Line Discount %");

@@ -129,6 +129,12 @@ table 50055 "E3 Voucher Type"
             DataClassification = CustomerContent;
             TableRelation = "No. Series";
         }
+        field(20; "Advance Document Nos."; Code[20])
+        {
+            Caption = 'Advance Document Nos.';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
     }
 
     keys

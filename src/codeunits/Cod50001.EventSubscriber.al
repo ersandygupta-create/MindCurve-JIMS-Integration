@@ -52,6 +52,7 @@ codeunit 50001 "E3 HIS Event Subscriber"
         VendorLedgerEntry."E3 Receipt No." := GenJournalLine."E3 Receipt No.";
         VendorLedgerEntry."E3 UHID" := GenJournalLine."E3 UHID";
         VendorLedgerEntry."E3 Patient Name" := GenJournalLine."E3 Patient Name";
+        VendorLedgerEntry."Advance Document No" := GenJournalLine."Document No";
         IF VendorLedgerEntry."Vendor Name" = '' then begin
             IF GenJournalLine."Account Type" = GenJournalLine."Account Type"::Vendor THEN
                 IF Vendor.Get(GenJournalLine."Account No.") then
@@ -68,6 +69,7 @@ codeunit 50001 "E3 HIS Event Subscriber"
     local procedure InsertPONOFieldDetailedVendorLedgEntry(var DtldCVLedgEntryBuffer: Record "Detailed CV Ledg. Entry Buffer"; GenJnlLine: Record "Gen. Journal Line")
     begin
         DtldCVLedgEntryBuffer."Purchase Order No." := GenJnlLine."Purchase Order No.";
+        DtldCVLedgEntryBuffer."Advance Document No" := GenJnlLine."Document No";
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Bank Account Ledger Entry", 'OnAfterCopyFromGenJnlLine', '', true, true)]
@@ -369,6 +371,19 @@ codeunit 50001 "E3 HIS Event Subscriber"
         ToRecRef.GetTable(PostedGatePass);
 
         DocumentAttachmentMgmt.CopyAttachments(FromRecRef, ToRecRef);
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnBeforeReopenPurchaseDoc', '', false, false)]
+    local procedure OnBeforeReopenPurchaseDoc(var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean)
+    var
+        ArchiveManagement: Codeunit ArchiveManagement;
+    begin
+        // Ensure archiving runs only when running normally (not during posting previews)
+        if PreviewMode then
+            exit;
+
+        // Archive the document silently before the status changes back to Open
+        ArchiveManagement.AutoArchivePurchDocument(PurchaseHeader);
     end;
 
 }

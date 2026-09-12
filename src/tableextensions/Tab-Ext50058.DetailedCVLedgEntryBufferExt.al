@@ -7,5 +7,11 @@ tableextension 50058 DetailedCVLedgEntryBufferExt extends "Detailed CV Ledg. Ent
             Caption = 'Purchase Order No.';
             DataClassification = ToBeClassified;
         }
+        field(50004; "Advance Document No"; Code[20])
+        {
+            Caption = 'Advance Document No.';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
 }

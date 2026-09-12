@@ -62,11 +62,18 @@ pageextension 50007 "E3 Bank Payment Voucher" extends "Bank Payment Voucher"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Vaidation Key field.';
             }
+            field("Document No"; Rec."Document No")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Advance Purchase Order No. field.';
+                Caption = 'Advance Document Number';
+            }
             field("Purchase Order No."; Rec."Purchase Order No.")
             {
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Purchase Order No. field.';
             }
+
             field("Recipient Bank Account"; Rec."Recipient Bank Account")
             {
                 Caption = 'Vendor Bank';

@@ -65,6 +65,7 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
         {
             DataClassification = CustomerContent;
             Caption = 'Advance PO';
+
             TableRelation = "Vendor Adv. Pay. Ag. PO" where("Vendor Code" = field("Buy-from Vendor No."));
             trigger OnLookup()
             var
@@ -210,7 +211,14 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Caption = 'Sync';
             DataClassification = CustomerContent;
         }
+        field(50021; "Advance PO Count"; Integer)
+        {
+            Caption = 'Advance PO Count';
+            FieldClass = FlowField;
+            CalcFormula = count("Vendor Adv. Pay. Ag. PO" where("Purchase Order No." = field("No.")));
+        }
     }
+
 
     procedure CreateDefaultTerms()
     var
