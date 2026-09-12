@@ -67,6 +67,12 @@ tableextension 50023 "E3 HIS Sales Header" extends "Sales Header"
             DataClassification = CustomerContent;
             Caption = 'Payer Name';
         }
+        field(50111; "Stock Order"; Boolean)
+        {
+            Caption = 'Stock Order';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
         field(50108; "Voucher Type"; Code[20])
         {
             Caption = 'Voucher Type';

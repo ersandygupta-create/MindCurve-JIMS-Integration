@@ -18,6 +18,7 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
                 if ("Vendor Invoice No." <> '') then begin
                     purchrcptHeader.Reset();
                     purchrcptHeader.SetRange("Supplier Code", "Buy-from Vendor No.");
+                    purchrcptHeader.SetRange("Purchase Challan No.", "Vendor Invoice No.");
                     purchrcptHeader.SetFilter(IsSent, '%1', true);
                     if purchrcptHeader.FindFirst() then
                         error('Vendor Invoice No. %1 already used', "Vendor Invoice No.");
@@ -239,6 +240,12 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Caption = 'Advance PO Count';
             FieldClass = FlowField;
             CalcFormula = count("Vendor Adv. Pay. Ag. PO" where("Purchase Order No." = field("No.")));
+        }
+        field(50022; "Stock Order"; Boolean)
+        {
+            Caption = 'Stock Order';
+            Editable = false;
+            DataClassification = CustomerContent;
         }
     }
 

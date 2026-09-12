@@ -65,6 +65,7 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
 
             PurchHeader.VALIDATE("Posting No. Series", '');
             PurchHeader."Integration PO" := TRUE;
+            PurchHeader."Stock Order" := true;
             PurchHeader.MODIFY(TRUE);
 
             LineNo := 0;
@@ -98,7 +99,11 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
                     PurchLine.VALIDATE("Line Discount Amount", HISPurchaseSaleLine.Discount);
                     PurchLine.VALIDATE("HSN/SAC Code", HISPurchaseSaleLine."HSN/SAC Code");
                     PurchLine."Vendor Item No." := HISPurchaseSaleLine."Item ID";
+                    PurchLine."Stock No" := HISPurchaseSaleHeader."Document No.";
+                    PurchLine."Stock Line No" := HISPurchaseSaleLine."Line No.";
                     PurchLine.INSERT(TRUE);
+                    if HISPurchaseSaleLine.BatchNo <> '' then
+                        CreatePurchLineItemTracking(HISPurchaseSaleLine, PurchLine);
 
                 UNTIL HISPurchaseSaleLine.NEXT() = 0;
 
@@ -156,6 +161,7 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
             SalesHeader."Document Type" := SalesHeader."Document Type"::Order;
             SalesHeader."No." := COPYSTR(HISPurchaseSaleHeader."Document No.", 1, 20);
             SalesHeader.SetHideValidationDialog(TRUE);
+            SalesHeader."Stock Order" := true;
             SalesHeader.INSERT(TRUE);
 
             SalesHeader.VALIDATE("Sell-to Customer No.", StockTransferSetup."Customer Code");
@@ -199,7 +205,11 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
                     SalesLine.Description := COPYSTR(HISPurchaseSaleLine."Item Name", 1, 100);
                     SalesLine.VALIDATE("Line Discount Amount", HISPurchaseSaleLine.Discount);
                     SalesLine.VALIDATE("HSN/SAC Code", HISPurchaseSaleLine."HSN/SAC Code");
+                    SalesLine."Stock No" := HISPurchaseSaleHeader."Document No.";
+                    SalesLine."Stock Line No" := HISPurchaseSaleLine."Line No.";
                     SalesLine.INSERT(TRUE);
+                    if HISPurchaseSaleLine.BatchNo <> '' then
+                        CreateSalesLineItemTracking(HISPurchaseSaleLine, SalesLine);
 
                 UNTIL HISPurchaseSaleLine.NEXT() = 0;
 
@@ -281,6 +291,102 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
                 ERROR('Shipped Qty must be greater than zero for Item %1 in Document No. %2.', Line."Item ID", DocumentNo);
 
         UNTIL Line.NEXT() = 0;
+    end;
+
+    local procedure CreateSalesLineItemTracking(
+        purchaseSalesLine: Record "E3 Indent Sale/Purchase Line";
+        SalesLine: Record "Sales Line")
+    var
+        ReservationEntry: Record "Reservation Entry";
+        CreateReservEntry: Codeunit "Create Reserv. Entry";
+        ItemTrackingMgt: Codeunit "Item Tracking Management";
+        NextEntryNo: Integer;
+    begin
+        if purchaseSalesLine."Shipped Qty" = 0 then
+            exit;
+        Clear(ReservationEntry);
+        ReservationEntry.Init();
+        ReservationEntry."Lot No." := purchaseSalesLine.BatchNo;
+        ReservationEntry.Quantity := purchaseSalesLine."Shipped Qty";
+        ReservationEntry."Quantity (Base)" := purchaseSalesLine."Shipped Qty";
+
+        if purchaseSalesLine.ExpiryDate <> 0D then
+            ReservationEntry."Expiration Date" := purchaseSalesLine.ExpiryDate;
+
+        CreateReservEntry.SetDates(0D, ReservationEntry."Expiration Date");
+
+        // Create Reservation Entry for Purchase Line
+        CreateReservEntry.CreateReservEntryFor(
+            Database::"Sales Line",
+            SalesLine."Document Type".AsInteger(),
+            SalesLine."Document No.",
+            '',
+            0,
+            SalesLine."Line No.",
+            SalesLine."Qty. per Unit of Measure",
+            SalesLine.Quantity,
+            SalesLine.Quantity,
+            ReservationEntry);
+
+        CreateReservEntry.SetQtyToHandleAndInvoice(SalesLine.Quantity, SalesLine.Quantity);
+
+        CreateReservEntry.CreateEntry(
+            SalesLine."No.",
+            SalesLine."Variant Code",
+            SalesLine."Location Code",
+            SalesLine.Description,
+            SalesLine."Shipment Date",
+            0D,
+            0,
+            ReservationEntry."Reservation Status"::Surplus);
+    end;
+
+    local procedure CreatePurchLineItemTracking(
+            purchaseSalesLine: Record "E3 Indent Sale/Purchase Line";
+            PurchLine: Record "Purchase Line")
+    var
+        ReservationEntry: Record "Reservation Entry";
+        CreateReservEntry: Codeunit "Create Reserv. Entry";
+        ItemTrackingMgt: Codeunit "Item Tracking Management";
+        NextEntryNo: Integer;
+    begin
+        if purchaseSalesLine."Shipped Qty" = 0 then
+            exit;
+        Clear(ReservationEntry);
+        ReservationEntry.Init();
+        ReservationEntry."Lot No." := purchaseSalesLine.BatchNo;
+        ReservationEntry.Quantity := purchaseSalesLine."Shipped Qty";
+        ReservationEntry."Quantity (Base)" := purchaseSalesLine."Shipped Qty";
+
+        if purchaseSalesLine.ExpiryDate <> 0D then
+            ReservationEntry."Expiration Date" := purchaseSalesLine.ExpiryDate;
+
+        CreateReservEntry.SetDates(0D, ReservationEntry."Expiration Date");
+
+        // Create Reservation Entry for Purchase Line
+        CreateReservEntry.CreateReservEntryFor(
+            Database::"Sales Line",
+            PurchLine."Document Type".AsInteger(),
+            PurchLine."Document No.",
+            '',
+            0,
+            PurchLine."Line No.",
+            PurchLine."Qty. per Unit of Measure",
+            PurchLine.Quantity,
+            PurchLine.Quantity,
+            ReservationEntry);
+
+        CreateReservEntry.SetQtyToHandleAndInvoice(PurchLine.Quantity, PurchLine.Quantity);
+
+        CreateReservEntry.CreateEntry(
+            PurchLine."No.",
+            PurchLine."Variant Code",
+            PurchLine."Location Code",
+            PurchLine.Description,
+            PurchLine."Expected Receipt Date",
+            0D,
+            0,
+            ReservationEntry."Reservation Status"::Surplus);
     end;
 
     var
