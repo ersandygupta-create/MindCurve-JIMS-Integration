@@ -1,8 +1,8 @@
-report 50044 "Axis Bank Check_M"
+report 50049 "Induslnd Bank Check Print"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './src/reports/Rpt50044.AxisCheckM.rdl';
-    Caption = 'Axis Check Print Multi Vendor';
+    RDLCLayout = './src/reports/Rpt50049.InduslndBankChequePrint.rdl';
+    Caption = 'Induslnd Check Print';
     Permissions = TableData 270 = m;
 
     dataset
