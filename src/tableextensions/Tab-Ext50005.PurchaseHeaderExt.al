@@ -9,6 +9,22 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
                 ValidateDocumentDate();
             end;
         }
+        modify("Vendor Invoice No.")
+        {
+            trigger OnBeforeValidate()
+            var
+                purchrcptHeader: Record "E3 GRN Work Sheet Header";
+            begin
+                if ("Vendor Invoice No." <> '') then begin
+                    purchrcptHeader.Reset();
+                    purchrcptHeader.SetRange("Supplier Code", "Buy-from Vendor No.");
+                    purchrcptHeader.SetFilter(IsSent, '%1', true);
+                    if purchrcptHeader.FindFirst() then
+                        error('Vendor Invoice No. %1 already used', "Vendor Invoice No.");
+                end;
+
+            end;
+        }
         modify("Order Date")
         {
             trigger OnAfterValidate()

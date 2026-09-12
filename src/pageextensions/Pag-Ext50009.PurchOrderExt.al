@@ -102,6 +102,31 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                     Page.Run(Page::"E3 Order Terms & Conditions", POTerms);
                 end;
             }
+            action("Cancle PO")
+            {
+                ApplicationArea = All;
+                Caption = 'Cancle PO';
+                Image = Cancel;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Cancel Purchase Order from Indent.';
+
+                trigger OnAction()
+                var
+                    IndentLine: Record "E3 Indent Line";
+                    purchaseline: record "Purchase Line";
+                begin
+                    purchaseline.reset();
+                    purchaseline.SetRange("Document Type", rec."Document Type");
+                    purchaseline.SetRange("Document No.", Rec."No.");
+                    if purchaseline.FindSet() then
+                        repeat
+                            cancleIndentLine(purchaseline);
+                        until purchaseline.Next() = 0;
+
+                    Message('Purchase Order has been canceled from indent;');
+                end;
+            }
         }
     }
 
@@ -118,5 +143,33 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
         if not UserSetup."Purchase Order" then
             Error('You do not have permission to open Purchase Order.');
     end;
+
+    local procedure cancleIndentLine(var purchLine: Record "Purchase Line")
+    var
+        IndentLine: Record "E3 Indent Line";
+    begin
+        if purchLine."Qty. Invoiced (Base)" = 0 then begin
+            IndentLine.Reset();
+            //  IndentLine.SetRange("Order Line No.", purchLine."Line No.");
+            IndentLine.SetRange("Purchase Order No.", purchLine."Document No.");
+            IndentLine.SetRange("No.", purchLine."No.");
+            if IndentLine.FindSet() then
+                repeat
+                    IndentLine."Order Line No." := 0;
+                    IndentLine."Purchase Order No." := '';
+                    IndentLine."PO Created" := false;
+                    indentline."Closed Indent Grouped Line" := false;
+                    IndentLine.Modify();
+                    purchLine."Indent Line No." := 0;
+                    purchLine."Indent No." := '';
+                    purchLine."Indent Line Remarks" := '';
+                    purchLine.Quantity := 0;
+                    purchLine.Modify();
+                until IndentLine.Next() = 0;
+        end else
+            Message('Purchase line %1 is partially receive so it line can not be canceled.', purchLine."Line No.");
+    end;
+
+
 
 }

@@ -4,7 +4,7 @@ page 50237 "E3 Closed Indent List"
     ApplicationArea = All;
     UsageCategory = Lists;
     SourceTable = "E3 Indent Line";
-    Caption = 'Closed Indent List';
+    Caption = 'Indent Summary';
     //SourceTableView = where("Closed Indent" = const(true));
     InsertAllowed = false;
     ModifyAllowed = false;
@@ -16,6 +16,12 @@ page 50237 "E3 Closed Indent List"
         {
             repeater(General)
             {
+                field("Document No."; Rec."Document No.")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the Document No of the indent line.';
+                }
                 field(Type; Rec.Type)
                 {
                     ApplicationArea = All;
@@ -154,6 +160,19 @@ page 50237 "E3 Closed Indent List"
                     Editable = false;
                     ToolTip = 'Specifies whether the item is marked as a critical item.';
                 }
+                field("Purchase Order No."; Rec."Purchase Order No.")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the Purchase Order no of indent line.';
+                }
+                field("Order Line No."; Rec."Order Line No.")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the Purchase Order Line no of indent line.';
+                }
+
             }
         }
     }

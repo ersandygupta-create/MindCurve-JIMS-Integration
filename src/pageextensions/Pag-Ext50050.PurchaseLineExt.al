@@ -192,6 +192,44 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 end;
 
             }
+            action(CanclePoLine)
+            {
+                ApplicationArea = all;
+                Caption = 'Cancel PO line';
+                Image = Cancel;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Cancel PO Line';
+                trigger OnAction()
+                var
+                    IndentLine: Record "E3 Indent Line";
+                    purchLine: Record "Purchase Line";
+                begin
+                    if rec."Qty. Invoiced (Base)" = 0 then begin
+
+
+                        IndentLine.Reset();
+                        indentline.SetRange("No.", Rec."No.");
+                        IndentLine.SetRange("Purchase Order No.", rec."Document No.");
+                        if IndentLine.FindSet() then
+                            repeat
+                                IndentLine."PO Created" := false;
+                                IndentLine."Purchase Order No." := '';
+                                indentline."Order Line No." := 0;
+                                indentline."Closed Indent Grouped Line" := false;
+                                IndentLine.Modify();
+                                purchLine := Rec;
+                                purchLine."Indent Line No." := 0;
+                                purchLine."Indent No." := '';
+                                purchline."Indent Line Remarks" := '';
+                                purchLine.Quantity := 0;
+                                purchLine.Modify();
+                            until IndentLine.Next() = 0;
+                        Message('Purchase line %1 has been cancled from indent.', rec."Line No.");
+                    end else
+                        Message('Purchase line %1 has been partially recived so can not be canceled from indent.', rec."Line No.");
+                end;
+            }
             action(GetIndentLines)
             {
                 ApplicationArea = All;
@@ -275,7 +313,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     IndentHeader: Record "E3 Indent Header";
                     IndentLine: Record "E3 Indent Line";
                 begin
-                    PurchHeader.get(rec."Document No.");
+                    PurchHeader.get(Rec."Document Type", rec."Document No.");
                     IndentHeader.Reset();
                     IndentHeader.SetRange(Status, IndentHeader.Status::Approved);
                     IndentHeader.SetRange(Released, true);
