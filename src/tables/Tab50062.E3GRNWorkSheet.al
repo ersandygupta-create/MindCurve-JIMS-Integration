@@ -819,11 +819,18 @@ table 50062 "E3 GRN Work Sheet"
                     "Item Tracking Code" := Item."Item Tracking Code";
                 end;
 
-                if Item.Get(PurchLine."No.") then
+                if Item.Get(PurchLine."No.") then begin
                     if ItemUOM.Get(Item."No.", Item."Purch. Unit of Measure") then
                         Validate("Rec SKU QTY", (PurchLine.Quantity + PurchLine."Free Qty") * ItemUOM."Qty. per Unit of Measure")
                     else
                         Validate("Rec SKU QTY", PurchLine.Quantity + PurchLine."Free Qty");
+                    if Item."Item Tracking Code" = '' then
+                        "Lot Assigned" := true
+                    else
+                        "Lot Assigned" := false;
+                end;
+
+
                 CalculateLandedValue();
 
                 Insert(true);
