@@ -83,8 +83,11 @@ table 50081 "E3 Indent Sale/Purchase Header"
         {
             Caption = 'From Location Code';
             TableRelation = Location;
-            ValidateTableRelation = false;
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                GetStockTransferSetup();
+            end;
         }
         field(15; "To Shortcut Dimension 1 Code"; Code[20])
         {
@@ -144,4 +147,35 @@ table 50081 "E3 Indent Sale/Purchase Header"
             Clustered = true;
         }
     }
+    local procedure GetStockTransferSetup()
+    var
+        StockTransferSetup: Record "E3 Stock Transfer Setup";
+    begin
+        Clear("From Shortcut Dimension 1 Code");
+        Clear("From Shortcut Dimension 2 Code");
+        Clear("To Shortcut Dimension 1 Code");
+        Clear("To Shortcut Dimension 2 Code");
+        Clear("To Location Code");
+
+        if "From Location Code" = '' then
+            exit;
+
+        StockTransferSetup.Reset();
+        StockTransferSetup.SetRange("From Location", "From Location Code");
+
+        if StockTransferSetup.FindFirst() then begin
+            "From Shortcut Dimension 1 Code" := StockTransferSetup."From BU";
+            "From Shortcut Dimension 2 Code" := StockTransferSetup."From Dept";
+
+            "To Shortcut Dimension 1 Code" := StockTransferSetup."To BU";
+            "To Shortcut Dimension 2 Code" := StockTransferSetup."To Dept";
+
+            "To Location Code" := StockTransferSetup."To Location";
+        end
+        else
+            Error(
+                'No Stock Transfer Setup found for From Location %1.',
+                "From Location Code");
+    end;
+
 }

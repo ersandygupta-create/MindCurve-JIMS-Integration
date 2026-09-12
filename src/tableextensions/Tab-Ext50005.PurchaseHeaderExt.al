@@ -186,6 +186,13 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
                             if "No." = '' then
                                 "No." := NoSeries.GetNextNo(VoucherType."Purchase Return Order Nos.", WorkDate(), true);
                         end;
+                    "Document Type"::"Credit Memo":
+                        begin
+                            VoucherType.TestField("Purchase Credit Nos.");
+
+                            if "No." = '' then
+                                "No." := NoSeries.GetNextNo(VoucherType."Purchase Credit Nos.", WorkDate(), true);
+                        end;
                 end;
 
                 CreateDefaultTerms();

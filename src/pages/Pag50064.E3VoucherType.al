@@ -38,6 +38,11 @@ page 50064 "E3 Voucher Types"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the number series used for purchase invoices.';
                 }
+                field("Purchase Credit Nos."; Rec."Purchase Credit Nos.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the Purchase Credit No. Series can be edited.';
+                }
                 field("Sale Order Nos."; Rec."Sale Order Nos.")
                 {
                     ApplicationArea = All;

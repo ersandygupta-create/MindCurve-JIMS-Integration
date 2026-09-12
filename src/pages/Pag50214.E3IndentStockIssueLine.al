@@ -65,6 +65,7 @@ page 50214 "E3 Indent Sale/Purchase Lines"
                 field(Amount; Rec.Amount)
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the line amount.';
                 }
                 field(BatchNo; Rec.BatchNo)

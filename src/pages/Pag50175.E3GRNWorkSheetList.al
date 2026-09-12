@@ -98,6 +98,30 @@ page 50175 "E3 GRN Work Sheet List"
                         Error('Failed to send GRN %1. Please check the Response field.', Rec."Document ID");
                 end;
             }
+            action(PrintIndent)
+            {
+                ApplicationArea = All;
+                Caption = 'GRN Work Sheet Print';
+                Image = Print;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Print the selected indent sale/purchase document.';
+
+                trigger OnAction()
+                var
+                    IndentHeader: Record "E3 GRN Work Sheet Header";
+                begin
+                    IndentHeader.Reset();
+                    IndentHeader.SetRange("Document ID", Rec."Document ID");
+
+                    Report.RunModal(
+                        Report::"E3 GRN Work Sheet",
+                        true,
+                        false,
+                        IndentHeader);
+                end;
+
+            }
         }
     }
 }

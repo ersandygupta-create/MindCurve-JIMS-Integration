@@ -58,10 +58,10 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
             PurchHeader.VALIDATE("Order Date", HISPurchaseSaleHeader."Document Date");
             PurchHeader.VALIDATE("Posting Date", HISPurchaseSaleHeader."Posting Date");
 
-            PurchHeader.VALIDATE("Location Code", StockTransferSetup."To Location");
+            PurchHeader.VALIDATE("Location Code", HISPurchaseSaleHeader."To Location Code");
 
-            IF HISPurchaseSaleHeader."From Shortcut Dimension 1 Code" <> '' THEN
-                PurchHeader.VALIDATE("Shortcut Dimension 1 Code", HISPurchaseSaleHeader."From Shortcut Dimension 1 Code");
+            IF HISPurchaseSaleHeader."To Shortcut Dimension 1 Code" <> '' THEN
+                PurchHeader.VALIDATE("Shortcut Dimension 1 Code", HISPurchaseSaleHeader."To Shortcut Dimension 1 Code");
 
             PurchHeader.VALIDATE("Posting No. Series", '');
             PurchHeader."Integration PO" := TRUE;

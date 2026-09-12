@@ -135,6 +135,12 @@ table 50055 "E3 Voucher Type"
             DataClassification = CustomerContent;
             TableRelation = "No. Series";
         }
+        field(21; "Purchase Credit Nos."; Code[20])
+        {
+            Caption = 'Purchase Credit Nos.';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
     }
 
     keys
