@@ -4,7 +4,7 @@ codeunit 50000 "E3 HIS Integration Mgmt."
     tabledata "Purch. Inv. Line" = rm,
     tabledata "Purch. Cr. Memo Hdr." = rm,
     tabledata "Purch. Cr. Memo Line" = rm;
-
+    // Sandeep
     trigger OnRun()
     begin
     end;
