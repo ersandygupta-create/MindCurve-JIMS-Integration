@@ -109,6 +109,7 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
 
             HISPurchaseSaleHeader."Create PO" := TRUE;
             HISPurchaseSaleHeader.MODIFY(TRUE);
+            Message('Purchase Order %1 has been created.', PurchHeader."No.");
         END;
     end;
 
@@ -215,6 +216,7 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
 
             //HISPurchaseSaleHeader."Create PO" := TRUE;
             HISPurchaseSaleHeader.MODIFY(TRUE);
+            Message('Sales Order %1 has been created.', SalesHeader."No.");
         END;
     end;
 
@@ -365,7 +367,7 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
 
         // Create Reservation Entry for Purchase Line
         CreateReservEntry.CreateReservEntryFor(
-            Database::"Sales Line",
+            Database::"Purchase Line",
             PurchLine."Document Type".AsInteger(),
             PurchLine."Document No.",
             '',
