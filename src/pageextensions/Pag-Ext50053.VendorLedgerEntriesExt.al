@@ -16,6 +16,13 @@ pageextension 50053 "E3 HIS Vend. Ledger Entries" extends "Vendor Ledger Entries
                 Editable = false;
                 ApplicationArea = All;
             }
+            field("Advance Document No"; Rec."Advance Document No")
+            {
+                ApplicationArea = all;
+                Caption = 'Advance PO Number';
+                ToolTip = 'Advance PO Number';
+                Editable = false;
+            }
             field("E3 Send E-Mail"; rec."E3 Send E-Mail")
             {
                 Editable = false;

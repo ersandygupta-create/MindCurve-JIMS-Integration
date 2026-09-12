@@ -115,6 +115,11 @@ page 50064 "E3 Voucher Types"
                     ApplicationArea = All;
                     ToolTip = 'Specifies whether the voucher type is synchronized with the external system.';
                 }
+                field("Advance Document Nos."; Rec."Advance Document Nos.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specify number sequence for Advance document no.';
+                }
             }
         }
     }

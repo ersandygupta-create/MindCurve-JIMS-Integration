@@ -7,5 +7,11 @@ tableextension 50057 DetailedVendLedgerEntrExt extends "Detailed Vendor Ledg. En
             Caption = 'Purchase Order No.';
             DataClassification = ToBeClassified;
         }
+        field(50004; "Advance Document No"; Code[20])
+        {
+            Caption = 'Advance Document No.';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
 }

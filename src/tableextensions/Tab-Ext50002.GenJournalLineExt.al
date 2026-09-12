@@ -60,32 +60,8 @@ tableextension 50002 "E3 Gen. Journal Line Exts" extends "Gen. Journal Line"
         field(50019; "Purchase Order No."; Code[20])
         {
             Caption = 'Purchase Order No.';
-            TableRelation = "Vendor Adv. Pay. Ag. PO" where("Vendor Code" = field("Account No."));//, "Remaining Amount" = filter(<> 0));
-            DataClassification = ToBeClassified;
-            trigger OnValidate()
-            var
-                VendAdvPayAgPO: Record "Vendor Adv. Pay. Ag. PO";
-                decAmount: Decimal;
-            begin
-                VendAdvPayAgPO.Reset();
-                VendAdvPayAgPO.SetRange("Entry Type", VendAdvPayAgPO."Entry Type"::"Purchase Order");
-                VendAdvPayAgPO.SetRange("Purchase Order No.", "Purchase Order No.");
-                IF VendAdvPayAgPO.FindFirst() then begin
-                    VendAdvPayAgPO.CalcFields("Total Applied Amount");
-                    IF ((VendAdvPayAgPO."Total PO Amount" - VendAdvPayAgPO."Total Applied Amount") = 0) then
-                        Error('No Purchase order is pending to apply Amount');
+            Editable = false;
 
-                    IF ((VendAdvPayAgPO."Total PO Amount" - VendAdvPayAgPO."Total Applied Amount") < "Amount (LCY)") then
-                        Error('Remaining Amount is less than Bank Payment Amount so Entry Can''t be applied');
-
-                    if (VendAdvPayAgPO."Total PO Amount" < "Amount (LCY)") OR ("Amount (LCY)" = 0) then
-                        Error('Purchase Order Amount is less than Bank Payment Amount');
-
-                    VendAdvPayAgPO.CalcFields("Total Applied Amount");
-                    VendAdvPayAgPO."Remaining Amount" := (VendAdvPayAgPO."Total PO Amount" - VendAdvPayAgPO."Total Applied Amount");
-                    VendAdvPayAgPO.Modify();
-                end
-            end;
         }
         field(50100; "E3 Encounter No."; Code[50])
         {
@@ -138,6 +114,45 @@ tableextension 50002 "E3 Gen. Journal Line Exts" extends "Gen. Journal Line"
         {
             Caption = 'Bank Integration';
             DataClassification = CustomerContent;
+        }
+        field(50112; "Document No"; Code[20])
+        {
+            Caption = 'Advance Document No.';
+            DataClassification = CustomerContent;
+            TableRelation = "Vendor Adv. Pay. Ag. PO"."Document No" where("Vendor Code" = field("Account No."));//, "Remaining Amount" = filter(<> 0));
+            trigger OnValidate()
+            var
+                VendAdvPayAgPO: Record "Vendor Adv. Pay. Ag. PO";
+                decAmount: Decimal;
+            begin
+
+
+
+                VendAdvPayAgPO.Reset();
+                VendAdvPayAgPO.SetRange("Entry Type", VendAdvPayAgPO."Entry Type"::"Purchase Order");
+                VendAdvPayAgPO.SetRange("Document No", "Document No");
+                IF VendAdvPayAgPO.FindFirst() then begin
+                    VendAdvPayAgPO.CalcFields("Total Applied Amount");
+                    IF ((VendAdvPayAgPO."Total PO Amount" - VendAdvPayAgPO."Total Applied Amount") = 0) then
+                        Error('No Purchase order is pending to apply Amount');
+
+                    // IF ((VendAdvPayAgPO."Total PO Amount" - VendAdvPayAgPO."Total Applied Amount") < "Amount (LCY)") then
+                    //     Error('Remaining Amount is less than Bank Payment Amount so Entry Can''t be applied');
+
+                    // if (VendAdvPayAgPO."Total PO Amount" < "Amount (LCY)") OR ("Amount (LCY)" = 0) then
+                    //     Error('Purchase Order Amount is less than Bank Payment Amount');
+
+                    VendAdvPayAgPO.CalcFields("Total Applied Amount");
+                    //  VendAdvPayAgPO."Remaining Amount" := (VendAdvPayAgPO."Total PO Amount" - VendAdvPayAgPO."Total Applied Amount");
+                    rec.Amount := VendAdvPayAgPO."Remaining Amount";
+                    rec."Purchase Order No." := VendAdvPayAgPO."Purchase Order No.";
+                    Validate(rec.Amount);
+
+                    Rec.Modify();
+                    VendAdvPayAgPO.Modify();
+
+                end
+            end;
         }
 
 

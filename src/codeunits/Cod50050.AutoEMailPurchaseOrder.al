@@ -3,29 +3,28 @@ codeunit 50050 "E3 Purchase Order Auto E-Mail"
     Permissions = tabledata "Purchase Header" = rm;
 
     trigger OnRun()
+    var
+        ProcessedCount: Integer;
     begin
-        for i := 1 to 3 do begin
-            PurchaseHeader1.Reset();
-            PurchaseHeader1.SetRange("Document Type", PurchaseHeader1."Document Type"::Order);
-            PurchaseHeader1.SetRange("E3 Send E-Mail", false);
-            PurchaseHeader1.SetRange(Status, PurchaseHeader1.Status::Released);
+        ProcessedCount := 0;
 
-            if PurchaseHeader1.FindSet() then
-                repeat
-                    SendMailforPurchaseOrderJob(PurchaseHeader1);
+        PurchaseHeader1.Reset();
+        PurchaseHeader1.SetRange("Document Type", PurchaseHeader1."Document Type"::Order);
+        //  PurchaseHeader1.SetRange("E3 Send E-Mail", false);
+        PurchaseHeader1.SetRange(Status, PurchaseHeader1.Status::Released);
+        PurchaseHeader1.SetFilter("No.", '%1', 'JP/PPO/26000013');
 
-                    i := i + 1;
-
-                    if i = 3 then
-                        break;
-
-                until PurchaseHeader1.Next() = 0;
-        end;
+        if PurchaseHeader1.FindSet() then
+            repeat
+                SendMailforPurchaseOrderJob(PurchaseHeader1);
+                ProcessedCount += 1;
+            until (PurchaseHeader1.Next() = 0) or (ProcessedCount >= 3);
     end;
 
     procedure SendMailforPurchaseOrderJob(PurchHeader: Record "Purchase Header")
     begin
-        EMailSetup.Get();
+        if not EMailSetup.Get() then
+            exit;
 
         PurchaseHeader1.Reset();
         PurchaseHeader1.SetRange("Document Type", PurchHeader."Document Type");
@@ -35,36 +34,52 @@ codeunit 50050 "E3 Purchase Order Auto E-Mail"
             if PurchaseHeader1.Status <> PurchaseHeader1.Status::Released then
                 exit;
 
-            Vendor.Get(PurchaseHeader1."Buy-from Vendor No.");
-            if Vendor."Send Order Email" then begin
-                if Vendor."Order Email" <> '' then //begin
+            if not Vendor.Get(PurchaseHeader1."Buy-from Vendor No.") then
+                exit;
 
-                    DocumentNo := DelChr(PurchaseHeader1."No.", '=', '\,/,-');
-                Postingdate := UpperCase(Format(PurchaseHeader1."Order Date", 0, '<Day,2>-<Month Text,3>-<Year,2>'));
-                FileNameVar1 := EMailSetup."Folder Path" + DocumentNo + '-' + Postingdate;
-                RecRef.GetTable(PurchaseHeader1);
-                TempBlob.CreateOutStream(Out);
-                TempBlob.CreateInStream(InStr);
+            // 1. Skip if vendor order email setting is disabled
+            if not Vendor."Send Order Email" then
+                exit;
 
-                Report.SaveAs(EMailSetup."Order Report ID", FileNameVar1, ReportFormat::Pdf, Out, RecRef);
-                Subject := 'Purchase Order' + ' - ' + PurchaseHeader1."No." + ' [' + PurchaseHeader1."Buy-from Vendor No." + ' - ' +
-                    PurchaseHeader1."Buy-from Vendor Name" + '] ';
-                EmailMessage.Create(Vendor."Order Email", Subject, EMailSetup."Order E-Mail Body", false);
-                Clear(Addcc);
-                AddMakeCCEmail(PurchaseHeader1);
+            // 2. Skip if vendor email is blank or has an invalid email structure
+            if not IsValidEmailAddress(Vendor."Order Email") then
+                exit;
 
-                EmailMessage.AddAttachment(FileNameVar1 + '.pdf', 'PDF', InStr);
-                Email.Send(EmailMessage, Enum::"Email Scenario"::"Hospital E-Mail");
-                PurchHeader."E3 Send E-Mail" := true;
-                PurchHeader.Modify;
+            // Clear streams to prevent attachment corruption on loops
+            Clear(TempBlob);
+            Clear(Out);
+            Clear(InStr);
 
-                TotalSend += 1;
+            DocumentNo := DelChr(PurchaseHeader1."No.", '=', '\,/,-');
+            Postingdate := UpperCase(Format(PurchaseHeader1."Order Date", 0, '<Day,2>-<Month Text,3>-<Year,2>'));
+            FileNameVar1 := EMailSetup."Folder Path" + DocumentNo + '-' + Postingdate;
 
-                Commit;
-            end;
+            RecRef.GetTable(PurchaseHeader1);
+            TempBlob.CreateOutStream(Out);
+            TempBlob.CreateInStream(InStr);
+
+            Report.SaveAs(EMailSetup."Order Report ID", FileNameVar1, ReportFormat::Pdf, Out, RecRef);
+
+            Subject := 'Purchase Order' + ' - ' + PurchaseHeader1."No." + ' [' + PurchaseHeader1."Buy-from Vendor No." + ' - ' + PurchaseHeader1."Buy-from Vendor Name" + '] ';
+
+            EmailMessage.Create(Vendor."Order Email".Trim(), Subject, EMailSetup."Order E-Mail Body", false);
+
+            Clear(Addcc);
+            AddMakeCCEmail(PurchaseHeader1);
+
+            EmailMessage.AddAttachment(FileNameVar1 + '.pdf', 'PDF', InStr);
+
+            // Send using Default Email Scenario to avoid missing scenario assignment runtime errors
+            Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+
+            PurchaseHeader1."E3 Send E-Mail" := true;
+            PurchaseHeader1.Modify();
+
+            TotalSend += 1;
+
+            Commit();
         end;
     end;
-    //end;
 
     procedure SendMailforPurchaseOrder(PurchHeader: Record "Purchase Header")
     begin
@@ -72,56 +87,63 @@ codeunit 50050 "E3 Purchase Order Auto E-Mail"
         PurchHeader.SetRange("E3 Send E-Mail", false);
         PurchHeader.SetRange(Status, PurchHeader.Status::Released);
 
-        // PurchHeader.SetRange(
-        //     "E3 Select E-Mail",
-        //     true);
+        if PurchHeader.FindSet() then begin
+            dlgProgress.Open(Text002);
 
-        if PurchHeader.FindFirst() then begin
-            if PurchHeader.Status = PurchHeader.Status::Released then
-                repeat
-
-                    EMailSetup.Get();
-
+            repeat
+                if EMailSetup.Get() then begin
                     PurchaseHeader1.Reset();
                     PurchaseHeader1.SetRange("Document Type", PurchHeader."Document Type");
                     PurchaseHeader1.SetRange("No.", PurchHeader."No.");
+
                     if PurchaseHeader1.FindFirst() then begin
                         if PurchaseHeader1.Status = PurchaseHeader1.Status::Released then
-                            Vendor.Get(PurchaseHeader1."Buy-from Vendor No.");
-                        if Vendor."Send Order Email" then //begin
-                            if Vendor."Order Email" <> '' then begin
-                                DocumentNo := DelChr(PurchaseHeader1."No.", '=', '\,/,-');
-                                Postingdate := UpperCase(Format(PurchaseHeader1."Order Date", 0, '<Day,2>-<Month Text,3>-<Year,2>'));
-                                FileNameVar1 := EMailSetup."Folder Path" + DocumentNo + '-' + Postingdate;
-                                RecRef.GetTable(PurchaseHeader1);
-                                TempBlob.CreateOutStream(Out);
-                                TempBlob.CreateInStream(InStr);
+                            if Vendor.Get(PurchaseHeader1."Buy-from Vendor No.") then begin
 
-                                Report.SaveAs(EMailSetup."Order Report ID", FileNameVar1, ReportFormat::Pdf, Out, RecRef);
-                                Subject := 'Purchase Order' + ' - ' + PurchaseHeader1."No." + ' [' + ' - ' + PurchaseHeader1."Buy-from Vendor Name" + '] ';
-                                EmailMessage.Create(Vendor."Order Email", Subject, EMailSetup."Order E-Mail Body", false);
-                                Clear(Addcc);
-                                AddMakeCCEmail(PurchaseHeader1);
-                                EmailMessage.AddAttachment(FileNameVar1 + '.pdf', 'PDF', InStr);
-                                Email.Send(EmailMessage, Enum::"Email Scenario"::"Hospital E-Mail");
-                                PurchHeader."E3 Send E-Mail" := true;
-                                PurchHeader.Modify;
+                                // Skip if send email flag is off or if address is invalid/blank
+                                if Vendor."Send Order Email" and IsValidEmailAddress(Vendor."Order Email") then begin
+                                    Clear(TempBlob);
+                                    Clear(Out);
+                                    Clear(InStr);
 
-                                Sleep(10000);
+                                    DocumentNo := DelChr(PurchaseHeader1."No.", '=', '\,/,-');
+                                    Postingdate := UpperCase(Format(PurchaseHeader1."Order Date", 0, '<Day,2>-<Month Text,3>-<Year,2>'));
+                                    FileNameVar1 := EMailSetup."Folder Path" + DocumentNo + '-' + Postingdate;
 
-                                TotalSend += 1;
+                                    RecRef.GetTable(PurchaseHeader1);
+                                    TempBlob.CreateOutStream(Out);
+                                    TempBlob.CreateInStream(InStr);
 
-                                Commit;
+                                    Report.SaveAs(EMailSetup."Order Report ID", FileNameVar1, ReportFormat::Pdf, Out, RecRef);
 
-                                dlgProgress.Open(Text002);
-                                dlgProgress.Update(1, TotalSend);
+                                    Subject := 'Purchase Order' + ' - ' + PurchaseHeader1."No." + ' [' + PurchaseHeader1."Buy-from Vendor Name" + '] ';
+
+                                    EmailMessage.Create(Vendor."Order Email".Trim(), Subject, EMailSetup."Order E-Mail Body", false);
+
+                                    Clear(Addcc);
+                                    AddMakeCCEmail(PurchaseHeader1);
+
+                                    EmailMessage.AddAttachment(FileNameVar1 + '.pdf', 'PDF', InStr);
+
+                                    Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+
+                                    PurchaseHeader1."E3 Send E-Mail" := true;
+                                    PurchaseHeader1.Modify();
+
+                                    Sleep(10000);
+
+                                    TotalSend += 1;
+
+                                    Commit();
+
+                                    dlgProgress.Update(1, TotalSend);
+                                end;
                             end;
                     end;
-                //end;
+                end;
+            until PurchHeader.Next() = 0;
 
-                until PurchHeader.Next() = 0;
-
-            dlgProgress.Close;
+            dlgProgress.Close();
         end;
     end;
 
@@ -139,44 +161,47 @@ codeunit 50050 "E3 Purchase Order Auto E-Mail"
         if not ItemMakeMasterRec.FindFirst() then
             exit;
 
-        if ItemMakeMasterRec.LocalEmail = '' then
-            exit;
+        if ItemMakeMasterRec.LocalEmail <> '' then
+            foreach CCMail in ItemMakeMasterRec.LocalEmail.Split(';') do begin
+                CCMail := DelChr(CCMail, '<>', ' ');
+                if IsValidEmailAddress(CCMail) then
+                    EmailMessage.AddRecipient(Enum::"Email Recipient Type"::Cc, CCMail);
+            end;
 
-        foreach CCMail in ItemMakeMasterRec.LocalEmail.Split(';') do begin
-            CCMail := DelChr(CCMail, '<>', ' ');
-
-            if CCMail <> '' then
-                EmailMessage.AddRecipient(
-                    Enum::"Email Recipient Type"::Cc,
-                    CCMail);
-        end;
         if ItemMakeMasterRec.RegEmail <> '' then
             foreach CCMail in ItemMakeMasterRec.RegEmail.Split(';') do begin
                 CCMail := DelChr(CCMail, '<>', ' ');
-
-                if CCMail <> '' then
-                    EmailMessage.AddRecipient(
-                        Enum::"Email Recipient Type"::Cc,
-                        CCMail);
+                if IsValidEmailAddress(CCMail) then
+                    EmailMessage.AddRecipient(Enum::"Email Recipient Type"::Cc, CCMail);
             end;
+
         if ItemMakeMasterRec.NatEmail <> '' then
             foreach CCMail in ItemMakeMasterRec.NatEmail.Split(';') do begin
                 CCMail := DelChr(CCMail, '<>', ' ');
-
-                if CCMail <> '' then
-                    EmailMessage.AddRecipient(
-                        Enum::"Email Recipient Type"::Cc,
-                        CCMail);
+                if IsValidEmailAddress(CCMail) then
+                    EmailMessage.AddRecipient(Enum::"Email Recipient Type"::Cc, CCMail);
             end;
+
         if ItemMakeMasterRec.Email <> '' then
             foreach CCMail in ItemMakeMasterRec.Email.Split(';') do begin
                 CCMail := DelChr(CCMail, '<>', ' ');
-
-                if CCMail <> '' then
-                    EmailMessage.AddRecipient(
-                        Enum::"Email Recipient Type"::Cc,
-                        CCMail);
+                if IsValidEmailAddress(CCMail) then
+                    EmailMessage.AddRecipient(Enum::"Email Recipient Type"::Cc, CCMail);
             end;
+    end;
+
+    local procedure IsValidEmailAddress(EmailAddr: Text): Boolean
+    var
+        MailManagement: Codeunit "Mail Management";
+        CleanEmail: Text;
+    begin
+        CleanEmail := EmailAddr.Trim().ToLower();
+
+        if CleanEmail = '' then
+            exit(false);
+
+        // Standard Business Central Mail Management structural check
+        MailManagement.CheckValidEmailAddresses(CleanEmail);
     end;
 
     var
@@ -197,10 +222,11 @@ codeunit 50050 "E3 Purchase Order Auto E-Mail"
         TotalSend: Integer;
         dlgProgress: Dialog;
         Text002: TextConst ENN = 'Total E-Mail Send #1',
-                             ENU = 'Total E-Mail Send #1';
+                               ENU = 'Total E-Mail Send #1';
         TempBlob: Codeunit "Temp Blob";
         Out: OutStream;
         RecRef: RecordRef;
+        InStream: InStream;
         InStr: InStream;
         Addcc: List of [Text];
         ToEmailID: List of [Text];

@@ -17,41 +17,57 @@ page 50111 "Vendor Advance Pay. Against PO"
         {
             repeater(General)
             {
-                field("Entry Type"; Rec."Entry Type")
+                field("Document No";
+                rec."Document No")
                 {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Entry Type field';
+                    Caption = 'Document No.';
+                    ToolTip = 'Document No.';
                 }
-                field("Purchase Order No."; Rec."Purchase Order No.")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Purchase Order No. field';
-                }
-                field("PO Date"; Rec."PO Date")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the PO Date field';
-                }
-                field("Vendor Code"; Rec."Vendor Code")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Vendor Code field';
-                }
-
                 field("Vendor Name"; Rec."Vendor Name")
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Vendor Name field';
                 }
-                field(Remarks; Rec.Remarks)
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Remarks field';
-                }
                 field("Basic Amount"; Rec."Basic Amount")
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Basic Amount field';
+
+                    trigger OnValidate()
+                    var
+                        AdvancePo: Record "Vendor Adv. Pay. Ag. PO";
+                        AdvancePoAmt: Record "Vendor Adv. Pay. Ag. PO";
+                    begin
+
+                        AdvancePoAmt.Reset();
+                        AdvancePoAmt.SetRange("Entry Type", rec."Entry Type");
+                        AdvancePoAmt.SetRange("Purchase Order No.", rec."Purchase Order No.");
+                        if AdvancePoAmt.FindFirst() then;
+                        AdvancePo.Reset();
+                        AdvancePo.SetRange("Entry Type", rec."Entry Type");
+                        AdvancePo.SetRange("Purchase Order No.", rec."Purchase Order No.");
+                        AdvancePo.CalcSums("Basic Amount");
+                        if Rec."Basic Amount" + AdvancePo."Basic Amount" > AdvancePoAmt."Total PO Amount" then
+                            Error('Amount can not be greater than PO Amount.');
+
+                    end;
+                }
+                field("Advance Request Date";
+                rec."Advance Request Date")
+                {
+                    Caption = 'Advance Request Date';
+                    ToolTip = 'Advance Request Date';
+                }
+                field("Advance Due Date";
+                Rec."Advance Due Date")
+                {
+                    Caption = 'Advance Due Date';
+                    ToolTip = 'Advance Due Date';
+                }
+                field(Remarks; Rec.Remarks)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Remarks field';
                 }
                 field("Total PO Amount"; Rec."Total PO Amount")
                 {
@@ -72,7 +88,38 @@ page 50111 "Vendor Advance Pay. Against PO"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Remaining Amount field';
                 }
+                field("Purchase Order No."; Rec."Purchase Order No.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Purchase Order No. field';
+                }
+                field("PO Date"; Rec."PO Date")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the PO Date field';
+                }
+                field(Release;
+                Rec.Release)
+                {
+                    Caption = 'Release';
+                    ToolTip = 'Release';
+                }
+                field("Entry Type"; Rec."Entry Type")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Entry Type field';
+                }
 
+                field("Vendor Code"; Rec."Vendor Code")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Vendor Code field';
+                }
+                field("BU Code"; rec."BU Code")
+                {
+                    Caption = 'Business Unit';
+                    ToolTip = 'Business Unit';
+                }
             }
         }
 
@@ -85,6 +132,7 @@ page 50111 "Vendor Advance Pay. Against PO"
             action("Update Remaining Amount")
             {
                 Caption = 'Update Remaining Amount';
+                ToolTip = 'Update Remaining Amount';
                 Image = UpdateUnitCost;
                 Promoted = true;
                 PromotedCategory = Process;
@@ -98,6 +146,7 @@ page 50111 "Vendor Advance Pay. Against PO"
                         VendorAdvancePayAgainstPO.Reset();
                         VendorAdvancePayAgainstPO.SetRange("Entry Type", Rec."Entry Type");
                         VendorAdvancePayAgainstPO.SetRange("Purchase Order No.", Rec."Purchase Order No.");
+                        VendorAdvancePayAgainstPO.SetRange("Document No", rec."Document No");
                         IF VendorAdvancePayAgainstPO.FindFirst() then begin
                             VendorAdvancePayAgainstPO.CalcFields(VendorAdvancePayAgainstPO."Total Applied Amount");
                             IF VendorAdvancePayAgainstPO."Total Applied Amount" <> 0 then begin
@@ -115,12 +164,13 @@ page 50111 "Vendor Advance Pay. Against PO"
         VendorAdvancePayAgainstPO.Reset();
         VendorAdvancePayAgainstPO.SetRange("Entry Type", Rec."Entry Type");
         VendorAdvancePayAgainstPO.SetRange("Purchase Order No.", Rec."Purchase Order No.");
+        VendorAdvancePayAgainstPO.SetRange("Document No", rec."Document No");
         IF VendorAdvancePayAgainstPO.FindFirst() then begin
             VendorAdvancePayAgainstPO.CalcFields(VendorAdvancePayAgainstPO."Total Applied Amount");
-            IF VendorAdvancePayAgainstPO."Total Applied Amount" <> 0 then begin
-                VendorAdvancePayAgainstPO."Remaining Amount" := VendorAdvancePayAgainstPO."Total PO Amount" - VendorAdvancePayAgainstPO."Total Applied Amount";
-                VendorAdvancePayAgainstPO.Modify();
-            end;
+            //IF VendorAdvancePayAgainstPO."Total Applied Amount" <> 0 then begin
+            VendorAdvancePayAgainstPO."Remaining Amount" := VendorAdvancePayAgainstPO."Basic Amount" - VendorAdvancePayAgainstPO."Total Applied Amount";
+            VendorAdvancePayAgainstPO.Modify();
+            //  end;
         end;
     end;
 
@@ -129,12 +179,14 @@ page 50111 "Vendor Advance Pay. Against PO"
         VendorAdvancePayAgainstPO.Reset();
         VendorAdvancePayAgainstPO.SetRange("Entry Type", Rec."Entry Type");
         VendorAdvancePayAgainstPO.SetRange("Purchase Order No.", Rec."Purchase Order No.");
+        VendorAdvancePayAgainstPO.SetRange("Document No", rec."Document No");
+
         IF VendorAdvancePayAgainstPO.FindFirst() then begin
             VendorAdvancePayAgainstPO.CalcFields(VendorAdvancePayAgainstPO."Total Applied Amount");
-            IF VendorAdvancePayAgainstPO."Total Applied Amount" <> 0 then begin
-                VendorAdvancePayAgainstPO."Remaining Amount" := VendorAdvancePayAgainstPO."Total PO Amount" - VendorAdvancePayAgainstPO."Total Applied Amount";
-                VendorAdvancePayAgainstPO.Modify();
-            end;
+            // IF VendorAdvancePayAgainstPO."Total Applied Amount" <> 0 then begin
+            VendorAdvancePayAgainstPO."Remaining Amount" := VendorAdvancePayAgainstPO."Basic Amount" - VendorAdvancePayAgainstPO."Total Applied Amount";
+            VendorAdvancePayAgainstPO.Modify();
+            //end;
         end;
     end;
 
