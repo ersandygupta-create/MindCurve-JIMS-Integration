@@ -25,7 +25,7 @@ table 50055 "E3 Voucher Type"
         }
         field(4; "Entry Type"; Option)
         {
-            OptionMembers = ,Indent,Order;
+            OptionMembers = ,Indent,Order,Sale,Purchase;
             DataClassification = CustomerContent;
         }
         field(5; "Item Type"; Code[20])

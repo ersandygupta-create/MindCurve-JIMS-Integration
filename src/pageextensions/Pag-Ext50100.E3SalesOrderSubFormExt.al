@@ -2,7 +2,24 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
 {
     layout
     {
-        // Add changes to page layout here
+        addbefore("Qty. to Ship")
+        {
+            field("Batch No."; Rec."Batch No.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the batch number for the item.';
+            }
+            field("Manufacturing Date"; Rec."Manufacturing Date")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the manufacturing date of the item.';
+            }
+            field("Expiry Date"; Rec."Expiry Date")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the expiry date of the item.';
+            }
+        }
     }
 
     actions
@@ -44,6 +61,42 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
                     end;
 
                     CurrPage.Update(false);
+                end;
+            }
+            action(SplitSalesLine)
+            {
+                Caption = 'Split Line';
+                ApplicationArea = All;
+                Image = Splitlines;
+
+                trigger OnAction()
+                var
+                    SplitQtyPage: Page "E3 Split Qty";
+                    SplitQty: Decimal;
+                begin
+                    // Only allow positive quantity
+                    if Rec.Quantity <= 0 then
+                        Error('Quantity must be greater than zero.');
+
+                    // Open popup
+                    if SplitQtyPage.RunModal() = Action::OK then begin
+                        SplitQty := SplitQtyPage.GetSplitQty();
+
+                        // Validate Split Qty
+                        if SplitQty <= 0 then
+                            Error('Split Qty must be greater than zero.');
+
+                        if SplitQty >= Rec.Quantity then
+                            Error(
+                                'Split Qty must be less than the original Quantity (%1).',
+                                Rec.Quantity);
+
+                        // Create new sales line and reduce current line
+                        CreateSplitLine(Rec, SplitQty);
+
+                        // Refresh page
+                        CurrPage.Update(false);
+                    end;
                 end;
             }
         }
@@ -107,7 +160,37 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
         IndentLine.Modify(true);
     end;
 
+    local procedure CreateSplitLine(
+    var SalesLine: Record "Sales Line";
+    SplitQty: Decimal)
+    var
+        NewSalesLine: Record "Sales Line";
+        NewLineNo: Integer;
+        OriginalQty: Decimal;
+    begin
+        OriginalQty := SalesLine.Quantity;
+        NewLineNo := GetNextSalesLineNo();
 
+        NewSalesLine.Init();
+        NewSalesLine."Document Type" := SalesLine."Document Type";
+        NewSalesLine."Document No." := SalesLine."Document No.";
+        NewSalesLine."Line No." := NewLineNo;
+        NewSalesLine.Validate(Type, SalesLine.Type);
+        if SalesLine."No." <> '' then
+            NewSalesLine.Validate("No.", SalesLine."No.");
+        NewSalesLine.Description := SalesLine.Description;
+        NewSalesLine."Description 2" := SalesLine."Description 2";
+        if SalesLine."Location Code" <> '' then
+            NewSalesLine.Validate("Location Code", SalesLine."Location Code");
+        if SalesLine."Unit of Measure Code" <> '' then
+            NewSalesLine.Validate("Unit of Measure Code", SalesLine."Unit of Measure Code");
+        NewSalesLine.Validate("Unit Price", SalesLine."Unit Price");
+        NewSalesLine.Validate("Line Discount %", SalesLine."Line Discount %");
+        NewSalesLine.Validate(Quantity, SplitQty);
+        NewSalesLine.Insert(true);
+        SalesLine.Validate(Quantity, OriginalQty - SplitQty);
+        SalesLine.Modify(true);
+    end;
 
 
     var
