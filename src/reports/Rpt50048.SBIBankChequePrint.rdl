@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-11T10:12:38.3516970Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-09-12T12:24:51.9211360Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -293,6 +293,7 @@
                   <TextRun>
                     <Value>="A/C PAYEE ONLY"</Value>
                     <Style>
+                      <FontSize>8pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -300,7 +301,7 @@
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>0.38417in</Top>
+            <Top>0.53in</Top>
             <Left>3.44667in</Left>
             <Height>0.25in</Height>
             <Width>1.5in</Width>

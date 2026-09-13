@@ -70,6 +70,28 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
                     Report.RunModal(Report::"Induslnd Bank Check Print", true, true, GenJournalLine);
                 end;
             }
+            action("ICICI Check Print")
+            {
+                ApplicationArea = Basic, Suite;
+                Caption = 'ICICI Check Print';
+                Image = PrintCheck;
+                Promoted = true;
+                PromotedCategory = Process;
+
+                trigger OnAction()
+                var
+                    GenJournalLine: Record "Gen. Journal Line";
+                begin
+                    CurrPage.SaveRecord();
+
+                    GenJournalLine.Reset();
+                    GenJournalLine.SetRange("Journal Template Name", Rec."Journal Template Name");
+                    GenJournalLine.SetRange("Journal Batch Name", Rec."Journal Batch Name");
+                    //GenJournalLine.SetRange("Line No.", Rec."Line No.");
+
+                    Report.RunModal(Report::"ICICI Bank Check Print", true, true, GenJournalLine);
+                end;
+            }
             action("Axis Print Check")
             {
                 ApplicationArea = All;
