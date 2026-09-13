@@ -255,8 +255,16 @@ table 50005 "E3 Integration API Setup"
             DataClassification = CustomerContent;
             Caption = 'GRN Work Sheet API Enabled';
         }
-
-
+        field(51; "Sale Consumption API"; Text[100])
+        {
+            Caption = 'Sale Consumption API';
+            DataClassification = CustomerContent;
+        }
+        field(52; "Sale Consumption API Enabled"; Boolean)
+        {
+            Caption = 'Sale Consumption API Enabled';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

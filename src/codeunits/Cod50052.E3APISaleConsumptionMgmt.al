@@ -2,6 +2,8 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
 {
 
     TableNo = "Job Queue Entry";
+    Permissions = tabledata "Sales Shipment Header" = rm,
+    tabledata "Sales Shipment Line" = rm;
 
     trigger OnRun()
     begin
@@ -49,10 +51,10 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         if not E3APISetup."Integration Enabled" then
             exit(false);
 
-        if not E3APISetup."GRN Work Sheet API Enabled" then
+        if not E3APISetup."Sale Consumption API Enabled" then
             exit(false);
 
-        E3APISetup.TestField("GRN Work Sheet API");
+        E3APISetup.TestField("Sale Consumption API");
 
         if not SaleShipmentHeader.Get(DocumentID) then
             Error(
@@ -68,7 +70,7 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         GRNObj.Add('d365_departmentCode', SaleShipmentHeader."Shortcut Dimension 2 Code");
         GRNObj.Add('departmentName', 'SaleShipmentHeader."Department Name"');
         GRNObj.Add('d365_Supplier_subCode', SaleShipmentHeader."Sell-to Customer No.");
-        GRNObj.Add('placeOfSupply', SaleShipmentHeader.State);
+        GRNObj.Add('placeOfSupply', 'ABC');
         GRNObj.Add('remark', '');
         GRNObj.Add('d365_pChallanNo', SaleShipmentHeader."External Document No.");
         GRNObj.Add('d365_pChallanDate', Format(SaleShipmentHeader."Document Date", 0, '<Year4>-<Month,2>-<Day,2>'));
@@ -86,9 +88,9 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         GRNObj.Add('oh_Amt_Net', 0);
         GRNObj.Add('oh_Amt_LandedValue', 0);
         GRNObj.Add('d365_TimeStamp', Format(CurrentDateTime, 0, 9));
-        GRNObj.Add('preparedBy', SaleShipmentHeader.SystemCreatedBy);
+        GRNObj.Add('preparedBy', 'D365');
         GRNObj.Add('preparedDate', Format(SaleShipmentHeader."Posting Date", 0, '<Year4>-<Month,2>-<Day,2>'));
-        GRNObj.Add('approvedBy', SaleShipmentHeader.SystemCreatedBy);
+        GRNObj.Add('approvedBy', 'D365');
         GRNObj.Add('approvalDateTime', Format(SaleShipmentHeader.SystemModifiedAt, 0,
          '<Year4>-<Month,2>-<Day,2>T<Hours24,2>:<Minutes,2>:<Seconds,2>'));
         GRNObj.Add('businessUnitCode', SaleShipmentHeader."Shortcut Dimension 1 Code");
@@ -114,7 +116,7 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         Clear(LineArray);
 
         SaleShipmentLine.Reset();
-        SaleShipmentLine.SetRange("Document ID", DocumentID);
+        SaleShipmentLine.SetRange("Document No.", DocumentID);
 
         if SaleShipmentLine.FindSet() then
             repeat
@@ -124,7 +126,7 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
 
                     Clear(LineObj);
 
-                    LineObj.Add('d365_DocId', SaleShipmentLine."Document ID");
+                    LineObj.Add('d365_DocId', SaleShipmentLine."Document No.");
                     LineObj.Add('v_SNo', SaleShipmentLine."Line No." DIV 10000);
                     LineObj.Add('d365_itemCode', SaleShipmentLine."No.");
                     LineObj.Add('itemName', SaleShipmentLine.Description);
@@ -161,13 +163,13 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
                     LineObj.Add('skuStaffSaleRate', SaleShipmentLine."Unit Cost");
                     LineObj.Add('barcode', '');
                     LineObj.Add('batchNo', SaleShipmentLine."Batch No.");
-                    LineObj.Add('manufacturingDate', Format(SaleShipmentLine."Manufacturing Date", 0, '<Year4>-<Month,2>-<Day,2>T00:00:00Z'));
-
-                    LineObj.Add('expiryDate', Format(SaleShipmentLine."Expiry Date", 0, '<Year4>-<Month,2>-<Day,2>T00:00:00Z'));
+                    LineObj.Add('manufacturingDate', '2026-09-10');
+                    LineObj.Add('expiryDate', '2026-12-10');
+                    // LineObj.Add('expiryDate', Format(SaleShipmentLine."Expiry Date", 0, '<Year4>-<Month,2>-<Day,2>T00:00:00Z'));
 
                     LineObj.Add('itemMakeCode', '');
                     LineObj.Add('gstTypeCode', '');
-                    LineObj.Add('itemGSTNature', SaleShipmentLine."GST Place of Supply");
+                    LineObj.Add('itemGSTNature', 'AB');
                     LineObj.Add('dm_Status', '');
                     LineObj.Add('dm_TimeStamp', Format(CurrentDateTime, 0, 9));
                     LineObj.Add('dm_docid', 0);
@@ -197,7 +199,7 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         ContentHeaders.Clear();
         ContentHeaders.Add('Content-Type', 'application/json');
         RequestMessage.Content := HttpWebContent;
-        RequestMessage.SetRequestUri(E3APISetup."GRN Work Sheet API");
+        RequestMessage.SetRequestUri(E3APISetup."Sale Consumption API");
         RequestMessage.Method := 'POST';
         // Send Request
         if not HttpWebClient.Send(RequestMessage, ResponseMessage)
@@ -208,7 +210,7 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
             SaleShipmentHeader.Response := CopyStr(JsonResponse, 1, MaxStrLen(SaleShipmentHeader.Response));
             SaleShipmentHeader.Modify(true);
             SaleShipmentLine.Reset();
-            SaleShipmentLine.SetRange("Document ID", DocumentID);
+            SaleShipmentLine.SetRange("Document No.", DocumentID);
             if SaleShipmentLine.FindSet() then
                 repeat
                     SaleShipmentLine.IsSent := false;
@@ -252,7 +254,7 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
 
             // Update Lines
             SaleShipmentLine.Reset();
-            SaleShipmentLine.SetRange("Document ID", DocumentID);
+            SaleShipmentLine.SetRange("Document No.", DocumentID);
             if SaleShipmentLine.FindSet() then
                 repeat
                     SaleShipmentLine.IsSent := true;
@@ -266,7 +268,7 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         SaleShipmentHeader.Response := CopyStr(JsonResponse, 1, MaxStrLen(SaleShipmentHeader.Response));
         SaleShipmentHeader.Modify(true);
         SaleShipmentLine.Reset();
-        SaleShipmentLine.SetRange("Document ID", DocumentID);
+        SaleShipmentLine.SetRange("Document No.", DocumentID);
         if SaleShipmentLine.FindSet() then
             repeat
                 SaleShipmentLine.IsSent := false;
