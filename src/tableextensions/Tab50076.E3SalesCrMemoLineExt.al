@@ -1,4 +1,4 @@
-tableextension 50074 E3SalesLineExt extends "Sales Line"
+tableextension 50076 "E3 Sales Cr. Memo Line" extends "Sales Cr.Memo Line"
 {
     fields
     {
@@ -34,8 +34,5 @@ tableextension 50074 E3SalesLineExt extends "Sales Line"
             Caption = 'MRP';
             DataClassification = CustomerContent;
         }
-
     }
-
-
 }

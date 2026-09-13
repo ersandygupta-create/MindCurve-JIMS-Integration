@@ -191,6 +191,22 @@ page 50213 "E3 Indent Sale/Purchase Card"
                     CurrPage.Update(false);
                 end;
             }
+            action(PurchaseOrderList)
+            {
+                Caption = 'Purchase Order List';
+                ApplicationArea = All;
+                ToolTip = 'Opens the list of purchase orders.';
+                RunObject = Page "Purchase Order List";
+                Image = Purchase;
+            }
+            action(SalesOrderList)
+            {
+                Caption = 'Sales Order List';
+                ApplicationArea = All;
+                ToolTip = 'Opens the list of sales orders.';
+                RunObject = Page "Sales Order List";
+                Image = Sales;
+            }
             action(InterUnit)
             {
                 ApplicationArea = All;

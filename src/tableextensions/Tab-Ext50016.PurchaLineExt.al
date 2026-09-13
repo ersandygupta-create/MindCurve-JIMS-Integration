@@ -121,6 +121,21 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Editable = false;
             DataClassification = CustomerContent;
         }
+        field(50023; "Manufacturing Date"; Date)
+        {
+            Caption = 'Manufacturing Date';
+            DataClassification = CustomerContent;
+        }
+        field(50024; "Expiry Date"; Date)
+        {
+            Caption = 'Expiry Date';
+            DataClassification = CustomerContent;
+        }
+        field(50025; "Batch No."; Code[50])
+        {
+            Caption = 'Batch No.';
+            DataClassification = CustomerContent;
+        }
         modify("No.")
         {
             trigger OnAfterValidate()

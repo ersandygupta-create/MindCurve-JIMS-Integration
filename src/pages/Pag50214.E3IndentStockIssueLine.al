@@ -193,6 +193,7 @@ page 50214 "E3 Indent Sale/Purchase Lines"
 
         SalePurchLine."Indent No." := IndentLine."Document No.";
         SalePurchLine."Indent Line No." := IndentLine."Line No.";
+
         SalePurchLine.Insert(true);
 
         UpdateIndentLine(IndentLine);

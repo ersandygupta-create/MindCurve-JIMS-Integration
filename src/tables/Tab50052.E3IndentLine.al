@@ -518,6 +518,16 @@ table 50052 "E3 Indent Line"
             Caption = 'Order Line No.';
             DataClassification = CustomerContent;
         }
+        field(69; "Sales Order No."; Code[20])
+        {
+            Caption = 'Sales Order No.';
+            DataClassification = CustomerContent;
+        }
+        field(70; "SO Created"; Boolean)
+        {
+            Caption = 'SO Created';
+            DataClassification = CustomerContent;
+        }
         field(80285; "Currency Code"; Code[10])
         {
             DataClassification = CustomerContent;

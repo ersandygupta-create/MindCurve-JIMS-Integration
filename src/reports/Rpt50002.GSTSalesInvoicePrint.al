@@ -66,6 +66,9 @@ report 50002 "GST Sales Invoice Print"
             column(WUOM; WUOM)
             {
             }
+            column(LocationName; LocationName) { }
+            column(LocationName2; LocationName2) { }
+            column(LocationName3; LocationName3) { }
             column(LocationGSTNo; LocationGSTNo)
             {
 
@@ -451,7 +454,6 @@ report 50002 "GST Sales Invoice Print"
                         {
 
                         }
-
                         column(HSNCode__rec; "Sales Invoice Line"."HSN/SAC Code")
                         {
                         }
@@ -490,7 +492,6 @@ report 50002 "GST Sales Invoice Print"
                         column(SRNo; SRNo)
                         {
                         }
-
                         column(taxableAmt; taxableAmt)
                         {
 
@@ -503,6 +504,10 @@ report 50002 "GST Sales Invoice Print"
                         {
 
                         }
+                        column(Manufacturing_Date; "Manufacturing Date") { }
+                        column(Expiry_Date; "Expiry Date") { }
+                        column(Batch_No_; "Batch No.") { }
+                        column(MRP; MRP) { }
                         column(IGSTRate; IGSTRate)
                         {
 
@@ -608,36 +613,36 @@ report 50002 "GST Sales Invoice Print"
                         end;
 
                     }
-                    dataitem(Integer_rec; Integer)
-                    {
+                    // dataitem(Integer_rec; Integer)
+                    // {
 
-                        column(aa; 'aa')
-                        {
-                        }
-                        trigger OnPreDataItem()
-                        begin
-                            SalesLineREC.RESET;
-                            SalesLineREC.COPYFILTERS("Sales invoice Line");
-                            SalesLineREC.SETRANGE(SalesLineREC.Type, SalesLineREC.Type::Item);
-                            MaxNo := 28;
-                            IF ((SalesLineREC.COUNT) > 29) AND ((SalesLineREC.COUNT) < 58) THEN
-                                MaxNo := 58;
-
-
-                            PrintNo := SalesLineREC.COUNT;
-                            NeedNo := MaxNo - PrintNo;
-                            SETRANGE(Number, 1, NeedNo);
+                    //     column(aa; 'aa')
+                    //     {
+                    //     }
+                    //     trigger OnPreDataItem()
+                    //     begin
+                    //         SalesLineREC.RESET;
+                    //         SalesLineREC.COPYFILTERS("Sales invoice Line");
+                    //         SalesLineREC.SETRANGE(SalesLineREC.Type, SalesLineREC.Type::Item);
+                    //         MaxNo := 28;
+                    //         IF ((SalesLineREC.COUNT) > 29) AND ((SalesLineREC.COUNT) < 58) THEN
+                    //             MaxNo := 58;
 
 
-                        end;
+                    //         PrintNo := SalesLineREC.COUNT;
+                    //         NeedNo := MaxNo - PrintNo;
+                    //         SETRANGE(Number, 1, NeedNo);
 
-                        trigger OnAfterGetRecord()
-                        var
-                            myInt: Integer;
-                        begin
 
-                        end;
-                    }
+                    //     end;
+
+                    //     trigger OnAfterGetRecord()
+                    //     var
+                    //         myInt: Integer;
+                    //     begin
+
+                    //     end;
+                    // }
 
 
                     trigger OnAfterGetRecord()
@@ -734,7 +739,10 @@ report 50002 "GST Sales Invoice Print"
                 PODate := '';
                 LocationRec.Reset();
                 if LocationRec.GET("Sales Header"."Location Code") then
-                    LocationGSTNo := LocationRec."GST Registration No.";
+                    LocationName := LocationRec.Name;
+                LocationName2 := LocationRec."Name 2";
+                LocationName3 := LocationRec."Name 3";
+                LocationGSTNo := LocationRec."GST Registration No.";
                 LocAddress := LocationRec.Address + ',' + LocationRec."Address 2" + ',' + LocationRec.City + ' ,' + LocationRec."Post Code";
                 Clear(ShipStateName);
                 Clear(BillStateName);
@@ -1012,27 +1020,17 @@ report 50002 "GST Sales Invoice Print"
         //        EInvoiceHeader: Record "50050";
         SalesInvoiceLine: Record "Sales Invoice Line";
         GST_Zero: Decimal;
-
         Netrate: Decimal;
-
         schemedisc: Decimal;
-
         TempBlob: Codeunit "Temp Blob";
-
         QRcode_text: Text;
-
         totalamt: Decimal;
-
         Outputstream: OutStream;
-
         SIL_GlRec: Record "Sales Invoice Line";
         GL_amt: Decimal;
         pagegl: page 20;
-
         repcheck: Report 1401;
-
         NoText: array[100] of Text;
-
         amountinwords: array[2] of Text;
         netamt: Decimal;
         CheckReport: Report "Check Report";
@@ -1059,7 +1057,9 @@ report 50002 "GST Sales Invoice Print"
         QRCode_text12: Text;
 
         Blank: Integer;
-
+        LocationName: Text[100];
+        LocationName2: Text[100];
+        LocationName3: Text[100];
         predisc: Decimal;
 
         Generalled_rec: Record "General Ledger Setup";

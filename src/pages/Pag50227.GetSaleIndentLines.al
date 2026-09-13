@@ -25,15 +25,15 @@ page 50227 "E3 Get Sale Indent Lines"
                     Visible = true;
                     ToolTip = 'Specifies the quotation document number.';
                 }
-                field("Item Make Code"; Rec."Item Make Code")
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies a value Item Make Code';
+                    ToolTip = 'Specifies the value of the shortcut dimension 1 code.';
                 }
-                field("Item Make Name"; Rec."Item Make Name")
+                field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies a value Item Make Name';
+                    ToolTip = 'Specifies the value of the shortcut dimension 2 code.';
                 }
                 field("No."; Rec."No.")
                 {
@@ -49,12 +49,42 @@ page 50227 "E3 Get Sale Indent Lines"
                     Caption = 'Description';
                     ToolTip = 'Specifies the description of the item.';
                 }
+                field("Item Make Code"; Rec."Item Make Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies a value Item Make Code';
+                }
+                field("Item Make Name"; Rec."Item Make Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies a value Item Make Name';
+                }
                 field(Quantity; Rec."Requested Qty")
                 {
                     ApplicationArea = All;
                     Editable = false;
                     Caption = 'Requested Quantity';
                     ToolTip = 'Specifies the required quantity.';
+                }
+                field("Purch. Unit of Measure"; Rec."Purch. Unit of Measure")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the unit of measure used for purchasing the item.';
+                }
+                field(MRP; Rec.MRP)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies The Value MRP';
+                }
+                field("Qty Per Purch. Unit of Measure"; Rec."Qty Per Purch. Unit of Measure")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the quantity contained in one purchase unit of measure.';
+                }
+                field(Scheme; Rec.Scheme)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies a value Scheme';
                 }
                 field("Indent Qty"; Rec."Indent Qty")
                 {
@@ -65,16 +95,6 @@ page 50227 "E3 Get Sale Indent Lines"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the quantity approved against the indent.';
-                }
-                field("Purch. Unit of Measure"; Rec."Purch. Unit of Measure")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the unit of measure used for purchasing the item.';
-                }
-                field("Qty Per Purch. Unit of Measure"; Rec."Qty Per Purch. Unit of Measure")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the quantity contained in one purchase unit of measure.';
                 }
                 field("Short Qty Requisition"; Rec."Short Qty Requisition")
                 {
@@ -98,22 +118,6 @@ page 50227 "E3 Get Sale Indent Lines"
                     Visible = false;
                     Caption = 'Amount';
                     ToolTip = 'Specifies the required Amount.';
-                }
-                field("SNo."; Rec."SNo.")
-                {
-                    ApplicationArea = All;
-                    Editable = false;
-                    ToolTip = 'Specify a value SNo. field.';
-                }
-                field(MRP; Rec.MRP)
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies The Value MRP';
-                }
-                field(Scheme; Rec.Scheme)
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies a value Scheme';
                 }
             }
         }

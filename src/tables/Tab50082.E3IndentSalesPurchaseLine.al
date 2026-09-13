@@ -184,6 +184,11 @@ table 50082 "E3 Indent Sale/Purchase Line"
             ValidateTableRelation = false;
             DataClassification = CustomerContent;
         }
+        field(28; MRP; Decimal)
+        {
+            Caption = 'MRP';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

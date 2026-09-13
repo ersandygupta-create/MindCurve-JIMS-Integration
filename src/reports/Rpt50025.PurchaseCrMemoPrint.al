@@ -62,6 +62,31 @@ report 50025 "Purchase Cr. Memo Print GST"
                     column(CompanyAddr3; CompanyAddr[3])
                     {
                     }
+                    column(LocationName; Location.Name)
+                    {
+                    }
+                    column(LocationName2; Location."Name 2")
+                    {
+                    }
+                    column(LocationName3; Location."Name 3") { }
+                    column(LocationAddress; Location.Address)
+                    {
+                    }
+                    column(LocationAddress2; Location."Address 2")
+                    {
+                    }
+                    column(LocationCity; Location.City)
+                    {
+                    }
+                    column(LocationPostCode; Location."Post Code")
+                    {
+                    }
+                    column(LocationState; Location.County)
+                    {
+                    }
+                    column(LocationGSTIN; Location."GST Registration No.")
+                    {
+                    }
                     column(VendAddr4; VendAddr[4])
                     {
                     }
@@ -320,6 +345,7 @@ report 50025 "Purchase Cr. Memo Print GST"
                         column(SrcDocNo_PurchCrMemoLine; "Source Document No.")
                         {
                         }
+                        column(MRP; MRP) { }
                         column(Supp_PurchCrMemoLine; Supplementary)
                         {
                         }
@@ -516,6 +542,7 @@ report 50025 "Purchase Cr. Memo Print GST"
 
                         trigger OnAfterGetRecord()
                         begin
+
                             if (Type = Type::"G/L Account") and (not ShowInternalInfo) then
                                 "No." := '';
 
@@ -802,6 +829,10 @@ report 50025 "Purchase Cr. Memo Print GST"
                     CompanyInfo."Fax No." := RespCenter."Fax No.";
                 end else
                     FormatAddr.Company(CompanyAddr, CompanyInfo);
+                Clear(Location);
+
+                if "Location Code" <> '' then
+                    if Location.Get("Location Code") then;
 
                 DimSetEntry1.SetRange("Dimension Set ID", "Dimension Set ID");
 
@@ -975,6 +1006,7 @@ report 50025 "Purchase Cr. Memo Print GST"
         DimSetEntry2: Record "Dimension Set Entry";
         RespCenter: Record "Responsibility Center";
         CurrExchRate: Record "Currency Exchange Rate";
+        Location: Record Location;
         Vendor: Record Vendor;
         PurchCrMemoCountPrinted: Codeunit "PurchCrMemo-Printed";
         FormatAddr: Codeunit "Format Address";
