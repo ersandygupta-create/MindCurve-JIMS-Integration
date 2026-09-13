@@ -109,6 +109,18 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Caption = 'PO Qty';
             DataClassification = CustomerContent;
         }
+        field(50021; "Stock No"; Code[50])
+        {
+            Caption = 'Stock No.';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(50022; "Stock Line No"; Integer)
+        {
+            Caption = 'Stock Line No.';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
         modify("No.")
         {
             trigger OnAfterValidate()

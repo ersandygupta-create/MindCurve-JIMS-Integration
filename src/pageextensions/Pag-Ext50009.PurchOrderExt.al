@@ -165,6 +165,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                     purchLine."Indent Line Remarks" := '';
                     purchLine.Quantity := 0;
                     purchLine.Modify();
+                //Sandeep
                 until IndentLine.Next() = 0;
         end else
             Message('Purchase line %1 is partially receive so it line can not be canceled.', purchLine."Line No.");
