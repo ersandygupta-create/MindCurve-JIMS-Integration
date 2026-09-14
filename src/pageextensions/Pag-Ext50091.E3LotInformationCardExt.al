@@ -31,6 +31,16 @@ pageextension 50091 "E3 Lot No. Information Ext" extends "Lot No. Information Ca
                 ApplicationArea = All;
                 ToolTip = 'Specifies the expiry date of the lot.';
             }
+            field(MRP; Rec.MRP)
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the mrp of the lot.';
+            }
+            field("Purchase Rate"; Rec."Purchase Rate")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the purchase rate of the lot.';
+            }
         }
     }
     trigger OnAfterGetRecord()

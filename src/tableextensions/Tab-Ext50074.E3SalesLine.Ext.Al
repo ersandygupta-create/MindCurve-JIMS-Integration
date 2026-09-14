@@ -111,6 +111,12 @@ tableextension 50074 E3SalesLineExt extends "Sales Line"
             Caption = 'MRP';
             DataClassification = CustomerContent;
         }
+        field(50007; "E3 Indent Line"; Boolean)
+        {
+            Caption = 'Indent Line';
+            DataClassification = CustomerContent;
+        }
+
 
     }
     local procedure CreateOrUpdateItemTracking(SalesLine: Record "Sales Line"; LotNo: Code[50]; ExpiryDate: Date; AvailableQty: Decimal)

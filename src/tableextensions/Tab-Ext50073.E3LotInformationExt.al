@@ -28,6 +28,16 @@ tableextension 50073 "E3 Lot Information Ext" extends "Lot No. Information"
             Caption = 'Expairy Date';
             DataClassification = CustomerContent;
         }
+        field(50005; "MRP"; Decimal)
+        {
+            Caption = 'MRP';
+            DataClassification = CustomerContent;
+        }
+        field(50006; "Purchase Rate"; Decimal)
+        {
+            Caption = 'Purchase Rate';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
