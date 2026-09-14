@@ -523,7 +523,7 @@ report 50048 "SBI Bank Check Print"
         FormatAddr: Codeunit 365;
         CheckManagement: Codeunit 367;
         CompanyAddr: array[8] of Text[50];
-        CheckToAddr: array[8] of Text[50];
+        CheckToAddr: array[8] of Text[100];
         OnesText: array[20] of Text[30];
         TensText: array[10] of Text[30];
         ExponentText: array[5] of Text[30];
