@@ -391,8 +391,8 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
 
                     // Filter Sales Shipment Lines for location, open qty, AND unprocessed lines
                     SalesShipmentLine.Reset();
-                    SalesShipmentLine.SetRange("Location Code", PurchHeader."Location Code");
-                    SalesShipmentLine.SetFilter("Qty. Shipped Not Invoiced", '>0');
+                    SalesShipmentLine.setfilter("E3 Indent Line", '%1', true);
+                    //  SalesShipmentLine.SetFilter("Qty. Shipped Not Invoiced", '>0');
                     SalesShipmentLine.SetRange("Purchase Line Created", false);
 
                     GetShipmentLinesPage.SetTableView(SalesShipmentLine);

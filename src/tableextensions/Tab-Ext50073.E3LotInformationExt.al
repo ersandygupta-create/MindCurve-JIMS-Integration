@@ -38,6 +38,11 @@ tableextension 50073 "E3 Lot Information Ext" extends "Lot No. Information"
             Caption = 'Purchase Rate';
             DataClassification = CustomerContent;
         }
+        field(50007; "Discount %"; Decimal)
+        {
+            Caption = 'Discount %';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

@@ -38,5 +38,10 @@ tableextension 50077 "E3 Sale Shipment Line Ext" extends "Sales Shipment Line"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(50010; "E3 Indent Line"; Boolean)
+        {
+            Caption = 'Indent Line';
+            DataClassification = CustomerContent;
+        }
     }
 }

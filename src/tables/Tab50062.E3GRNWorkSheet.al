@@ -1495,6 +1495,7 @@ table 50062 "E3 GRN Work Sheet"
                     LotInformation."Lot No." := LotLines."Supplier Batch No.";
                     LotInformation.MRP := LotLines."SKU MRP";
                     LotInformation."Purchase Rate" := LotLines.Rate;
+                    LotInformation."Discount %" := LotLines."Line Discount Percentage";
                     LotInformation.Insert(true);
                 end;
 

@@ -41,6 +41,11 @@ pageextension 50091 "E3 Lot No. Information Ext" extends "Lot No. Information Ca
                 ApplicationArea = All;
                 ToolTip = 'Specifies the purchase rate of the lot.';
             }
+            field("Discount %"; Rec."Discount %")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the discount % of the lot.';
+            }
         }
     }
     trigger OnAfterGetRecord()
