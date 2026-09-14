@@ -8,7 +8,7 @@ page 50076 "E3 Vendor Ledger Entries"
     Permissions = TableData "Vendor Ledger Entry" = rm;
     SourceTable = "Vendor Ledger Entry";
     SourceTableView = sorting("Vendor No.", "Posting Date") order(descending) where
-    ("Ready for Payment" = filter(false), Open = filter(true), "Document Type" = filter(Invoice | "Credit Memo" | ''), "Source Code" = filter('JOURNALV' | 'PURCHASES'),
+    ("Ready for Payment" = filter(false), Open = filter(true), "Document Type" = filter(Invoice | "Credit Memo" | ''), "Source Code" = filter('JOURNALV' | 'PURCHASES' | 'GENJNL'),
     "On Hold" = CONST(''), "Bank Integration Enabled" = filter(true),
     "Remaining Amount" = filter(<> 0));
 
