@@ -2,7 +2,7 @@ report 50015 "Voucher RegisterN"
 {
 
     DefaultLayout = RDLC;
-    RDLCLayout = './src/reports/Rpt50015.VoucherRegisterNew.rdlc';
+    RDLCLayout = './src/reports/Rpt50015.VoucherRegister.rdl';
 
     Caption = 'Voucher Register New';
 
