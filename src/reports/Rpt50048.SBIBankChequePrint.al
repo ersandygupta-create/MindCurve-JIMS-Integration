@@ -585,7 +585,7 @@ report 50048 "SBI Bank Check Print"
         TDSCaptionLbl: Label 'TDS';
         BankChargeCaptionLbl: Label 'Bank Charge';
         TransportCaptionLbl: Label 'Transport';
-        BeneficiaryName: Text[50];
+        BeneficiaryName: Text[150];
         AcPayee: Boolean;
         TextAcPay: Text[30];
         CurrCheck: Code[20];
