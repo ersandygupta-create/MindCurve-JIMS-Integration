@@ -98,13 +98,17 @@ tableextension 50074 E3SalesLineExt extends "Sales Line"
 
                     // 1. Assign values back to Sales Line
                     Rec.Validate("Batch No.", TempEntrySummary."Lot No.");
-
                     if TempEntrySummary."Expiration Date" <> 0D then begin
                         Rec."Expiry Date" := TempEntrySummary."Expiration Date";
-                        LotInformation.Get(TempEntrySummary."Lot No.");
-                        validate(rec."Unit Price", LotInformation."Purchase Rate");
-                        validate(Rec."Line Discount %", LotInformation."Discount %");
-                        validate(rec.MRP, LotInformation.MRP);
+                        LotInformation.Reset();
+                        LotInformation.SetRange("Lot No.", TempEntrySummary."Lot No.");
+                        LotInformation.SetRange("Item No.", Rec."No.");
+                        if LotInformation.Find('-') then begin
+                            validate(rec."Unit Price", LotInformation."Purchase Rate");
+                            validate(Rec."Line Discount %", LotInformation."Discount %");
+                            validate(rec.MRP, LotInformation.MRP);
+                        end;
+
 
                     end;
 
