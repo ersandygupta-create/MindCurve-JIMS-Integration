@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-13T06:53:34.5680588Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-09-14T04:41:44.7695202Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -3662,7 +3662,7 @@
                                                                   </Style>
                                                                 </TextRun>
                                                                 <TextRun>
-                                                                  <Value>=Fields!Bank_Name.Value</Value>
+                                                                  <Value>=Fields!BankAccName.Value</Value>
                                                                   <Style>
                                                                     <FontFamily>Tahoma</FontFamily>
                                                                     <FontSize>6pt</FontSize>
@@ -3795,7 +3795,7 @@
                                                                   </Style>
                                                                 </TextRun>
                                                                 <TextRun>
-                                                                  <Value>=Fields!ifsccode.Value</Value>
+                                                                  <Value>=Fields!BankIFSCCode.Value</Value>
                                                                   <Style>
                                                                     <FontFamily>Tahoma</FontFamily>
                                                                     <FontSize>6pt</FontSize>
@@ -3854,7 +3854,7 @@
                                                                   </Style>
                                                                 </TextRun>
                                                                 <TextRun>
-                                                                  <Value>=Fields!BankAcNo.Value</Value>
+                                                                  <Value>=Fields!BankAccountNo.Value</Value>
                                                                   <Style>
                                                                     <FontFamily>Tahoma</FontFamily>
                                                                     <FontSize>6pt</FontSize>
@@ -3915,7 +3915,7 @@
                                                                   </Style>
                                                                 </TextRun>
                                                                 <TextRun>
-                                                                  <Value>=Fields!BankBranchNo.Value</Value>
+                                                                  <Value>=Fields!Branch.Value</Value>
                                                                   <Style>
                                                                     <FontFamily>Tahoma</FontFamily>
                                                                     <FontSize>6pt</FontSize>

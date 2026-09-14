@@ -40,10 +40,6 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
                     IndentLine: Record "E3 Indent Line";
                     GetIndentLinesPage: Page "E3 Get Sale Indent Lines";
                 begin
-                    IndentLine.Reset();
-                    IndentLine.SetRange(Status, IndentLine.Status::Approved);
-                    IndentLine.SetRange(Released, false);
-
                     GetIndentLinesPage.SetTableView(IndentLine);
                     GetIndentLinesPage.LookupMode(true);
 
@@ -101,40 +97,51 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
             }
         }
     }
-    local procedure CreateSalesLineFromIndent(
-    IndentLine: Record "E3 Indent Line")
+    local procedure CreateSalesLineFromIndent(IndentLine: Record "E3 Indent Line")
     var
         SalesLine: Record "Sales Line";
+        Location: Record Location;
     begin
         if SalesLineAlreadyExists(IndentLine) then
             exit;
-
         SalesLine.Init();
 
         SalesLine."Document Type" := Rec."Document Type";
-        SalesLine."Document No." := Rec."No.";
-        SalesLine."Line No." := GetNextSalesLineNo();
+        SalesLine."Document No." := Rec."Document No.";
 
+        SalesLine."Line No." := GetNextSalesLineNo();
         SalesLine.Validate(Type, SalesLine.Type::Item);
         SalesLine.Validate("No.", IndentLine."No.");
         SalesLine.Description := IndentLine.Description;
         SalesLine.Validate(Quantity, IndentLine."Approved Qty");
-        SalesLine.Validate("Unit Price", IndentLine."Unit Cost");
-        if IndentLine."Location Code" <> '' then
-            SalesLine.Validate("Location Code", IndentLine."Location Code");
-        SalesLine.Insert(true);
+        if IndentLine.Remarks = 'Free Qty' then
+            SalesLine.Validate("Unit Cost", 0)
+        else
+            SalesLine.Validate("Unit Price", IndentLine."Unit Cost");
+        if Location.Get(IndentLine."Location Code") then
+            SalesLine.Validate("GST Credit", Location."GST Credit");
+        if IndentLine."Purch. Unit of Measure" <> '' then
+            SalesLine.Validate("Unit of Measure Code", IndentLine."Purch. Unit of Measure");
 
+        SalesLine.MRP := IndentLine.MRP;
+        if IndentLine.Remarks = 'Free Qty' then
+            SalesLine.FOC := true;
+        SalesLine.Insert(true);
         UpdateIndentLine(IndentLine);
     end;
 
+
     local procedure SalesLineAlreadyExists(
-    IndentLine: Record "E3 Indent Line"): Boolean
+        IndentLine: Record "E3 Indent Line"): Boolean
     var
         SalesLine: Record "Sales Line";
     begin
         SalesLine.Reset();
         SalesLine.SetRange("Document Type", Rec."Document Type");
-        SalesLine.SetRange("Document No.", Rec."No.");
+        SalesLine.SetRange("Document No.", Rec."Document No.");
+        // SalesLine.SetRange("Indent No.", IndentLine."Document No.");
+        // SalesLine.SetRange("Indent Line No.", IndentLine."Line No.");
+
         exit(SalesLine.FindFirst());
     end;
 
@@ -144,7 +151,8 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
     begin
         SalesLine.Reset();
         SalesLine.SetRange("Document Type", Rec."Document Type");
-        SalesLine.SetRange("Document No.", Rec."No.");
+        SalesLine.SetRange("Document No.", Rec."Document No.");
+
         if SalesLine.FindLast() then
             exit(SalesLine."Line No." + 10000);
 
@@ -194,5 +202,5 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
 
 
     var
-        myInt: Integer;
+        SalesHeader: Record "Sales Header";
 }
