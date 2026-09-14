@@ -1,4 +1,4 @@
-pageextension 50102 "E3 Purch. Ret. Order SubForm" extends "Purchase Return Order Subform"
+pageextension 50104 "E3 Sale Ret. Order SubForm Ext" extends "Sales Return Order Subform"
 {
     layout
     {
