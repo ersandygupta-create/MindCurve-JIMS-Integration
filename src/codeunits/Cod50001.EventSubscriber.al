@@ -386,4 +386,100 @@ codeunit 50001 "E3 HIS Event Subscriber"
         ArchiveManagement.AutoArchivePurchDocument(PurchaseHeader);
     end;
 
+
+    [EventSubscriber(ObjectType::Page, Page::"Item Tracking Lines",
+     'OnAfterOnClosePage', '', false, false)]
+    local procedure ItemTrackingLinesOnAfterClosePage(
+     var TrackingSpecification: Record "Tracking Specification";
+     CurrentRunMode: Enum "Item Tracking Run Mode";
+     CurrentSourceType: Integer;
+     CurrentSourceRowID: Text[250];
+     SecondSourceRowID: Text[250])
+    begin
+        if CurrentSourceType <> Database::"Sales Line" then
+            exit;
+
+        UpdateSalesLineBatch(
+            CurrentSourceRowID,
+            TrackingSpecification);
+    end;
+
+
+    local procedure UpdateSalesLineBatch(
+        SourceID: Text;
+        TrackingSpecification: Record "Tracking Specification")
+    var
+        SalesLine: Record "Sales Line";
+        ReservationEntry: Record "Reservation Entry";
+        LotNoInfo: Record "Lot No. Information";
+        LotNo: Code[50];
+        ExpiryDate: Date;
+    begin
+        // Only Sales Lines
+        if TrackingSpecification."Source Type" <> Database::"Sales Line" then
+            exit;
+
+        if TrackingSpecification."Source ID" = '' then
+            exit;
+
+        SalesLine.Reset();
+        SalesLine.SetRange(
+            "Document Type",
+            TrackingSpecification."Source Subtype");
+        SalesLine.SetRange(
+            "Document No.",
+            TrackingSpecification."Source ID");
+        SalesLine.SetRange(
+            "Line No.",
+            TrackingSpecification."Source Ref. No.");
+
+        if not SalesLine.FindFirst() then
+            exit;
+
+        ReservationEntry.Reset();
+        ReservationEntry.SetRange(
+            "Source Type",
+            Database::"Sales Line");
+        ReservationEntry.SetRange(
+            "Source Subtype",
+            TrackingSpecification."Source Subtype");
+        ReservationEntry.SetRange(
+            "Source ID",
+            TrackingSpecification."Source ID");
+        ReservationEntry.SetRange(
+            "Source Ref. No.",
+            TrackingSpecification."Source Ref. No.");
+        ReservationEntry.SetRange(
+            "Item No.",
+            SalesLine."No.");
+        ReservationEntry.SetFilter(
+            "Lot No.",
+            '<>%1',
+            '');
+
+        if ReservationEntry.FindFirst() then begin
+
+            LotNo := ReservationEntry."Lot No.";
+
+            LotNoInfo.Reset();
+            LotNoInfo.SetRange("Item No.", SalesLine."No.");
+            LotNoInfo.SetRange("Lot No.", LotNo);
+
+            if LotNoInfo.FindFirst() then begin
+                ExpiryDate := LotNoInfo."Expairy Date";
+            end;
+
+        end;
+
+        if (SalesLine."Batch No." <> LotNo) or
+           (SalesLine."Expiry Date" <> ExpiryDate)
+        then begin
+
+            SalesLine."Batch No." := LotNo;
+            SalesLine."Expiry Date" := ExpiryDate;
+
+            SalesLine.Modify(false);
+        end;
+    end;
+
 }

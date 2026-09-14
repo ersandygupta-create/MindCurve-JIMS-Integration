@@ -4,6 +4,11 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
     {
         addbefore("Qty. to Ship")
         {
+            field(MRP; Rec.MRP)
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the MRP for the item.';
+            }
             field("Batch No."; Rec."Batch No.")
             {
                 ApplicationArea = All;
