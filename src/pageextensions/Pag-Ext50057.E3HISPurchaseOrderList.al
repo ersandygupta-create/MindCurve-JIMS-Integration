@@ -17,6 +17,12 @@ pageextension 50057 "E3 HIS Purchase Order List" extends "Purchase Order List"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the Responsibility Center of the document.';
             }
+            field("E3 Send E-Mail"; Rec."E3 Send E-Mail")
+            {
+                ApplicationArea = all;
+                Caption = 'Send E-mail';
+                ToolTip = 'Send E-mail';
+            }
         }
     }
     actions
