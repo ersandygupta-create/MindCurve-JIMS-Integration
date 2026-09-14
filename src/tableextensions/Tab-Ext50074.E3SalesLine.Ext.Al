@@ -35,6 +35,7 @@ tableextension 50074 E3SalesLineExt extends "Sales Line"
                 TempReservEntry: Record "Reservation Entry" temporary;
                 ItemTrackingSummaryPage: Page "Item Tracking Summary";
                 CreateReservEntry: Codeunit "Create Reserv. Entry";
+                LotInformation: Record "Lot No. Information";
                 NextEntryNo: Integer;
             begin
                 TestField(Type, Type::Item);
@@ -98,8 +99,14 @@ tableextension 50074 E3SalesLineExt extends "Sales Line"
                     // 1. Assign values back to Sales Line
                     Rec.Validate("Batch No.", TempEntrySummary."Lot No.");
 
-                    if TempEntrySummary."Expiration Date" <> 0D then
+                    if TempEntrySummary."Expiration Date" <> 0D then begin
                         Rec."Expiry Date" := TempEntrySummary."Expiration Date";
+                        LotInformation.Get(TempEntrySummary."Lot No.");
+                        validate(rec."Unit Price", LotInformation."Purchase Rate");
+                        validate(Rec."Line Discount %", LotInformation."Discount %");
+                        validate(rec.MRP, LotInformation.MRP);
+
+                    end;
 
                     // 2. Create or Update Item Tracking Line (Reservation Entry)
                     CreateOrUpdateItemTracking(Rec, TempEntrySummary."Lot No.", TempEntrySummary."Expiration Date", rec.Quantity);
@@ -111,6 +118,12 @@ tableextension 50074 E3SalesLineExt extends "Sales Line"
             Caption = 'MRP';
             DataClassification = CustomerContent;
         }
+        field(50007; "E3 Indent Line"; Boolean)
+        {
+            Caption = 'Indent Line';
+            DataClassification = CustomerContent;
+        }
+
 
     }
     local procedure CreateOrUpdateItemTracking(SalesLine: Record "Sales Line"; LotNo: Code[50]; ExpiryDate: Date; AvailableQty: Decimal)

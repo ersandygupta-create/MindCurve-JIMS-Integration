@@ -131,6 +131,7 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
         SalesLine.MRP := IndentLine.MRP;
         if IndentLine.Remarks = 'Free Qty' then
             SalesLine.FOC := true;
+        SalesLine."E3 Indent Line" := true;
         SalesLine.Insert(true);
         UpdateIndentLine(IndentLine);
     end;
