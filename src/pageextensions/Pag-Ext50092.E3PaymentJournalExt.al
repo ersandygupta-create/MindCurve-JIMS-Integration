@@ -1,5 +1,16 @@
 pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
 {
+    layout
+    {
+        addafter("Cheque No.")
+        {
+            field("E3 Narration"; Rec."E3 Narration")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies a value Narration';
+            }
+        }
+    }
     actions
     {
         addafter("P&osting")
