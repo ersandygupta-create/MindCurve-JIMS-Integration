@@ -222,7 +222,7 @@ report 50015 "Voucher RegisterN"
                         SourceCode.GET("Source Code");
                         SourceDesc := SourceCode.Description;
                         IF (("Source Code" = 'BANKPYMTV') OR ("Source Code" = 'BANKRCPTV') OR ("Source Code" = 'CASHPYMTV') OR ("Source Code" = 'CASHRCPTV')) THEN
-                            ReceiptByCaption := 'Receipt by :';
+                            ReceiptByCaption := 'Checked by :';
                     END;
 
                     PageLoop := PageLoop - 1;
@@ -424,7 +424,7 @@ report 50015 "Voucher RegisterN"
         ApprovedByCaptionLbl: Label 'Approved by:';
         IntegerOccurcesCaptionLbl: Label 'IntegerOccurces';
         NarrationCaptionLbl: Label 'Narration :';
-        ReceiptByCaptionLbl: Label 'Receipt by :';
+        ReceiptByCaptionLbl: Label 'Checked by :';
         ReceiptByCaption: Text[50];
         DimensionValue: Record 349;
         GeneralLedgerSetup: Record 98;
