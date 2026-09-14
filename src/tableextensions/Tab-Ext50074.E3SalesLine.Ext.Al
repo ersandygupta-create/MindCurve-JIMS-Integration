@@ -32,12 +32,14 @@ tableextension 50074 E3SalesLineExt extends "Sales Line"
             var
                 ItemLedgerEntry: Record "Item Ledger Entry";
                 TempEntrySummary: Record "Entry Summary" temporary;
-                TempReservEntry: Record "Reservation Entry" temporary; // 1. Declare temp Reservation Entry
+                TempReservEntry: Record "Reservation Entry" temporary;
                 ItemTrackingSummaryPage: Page "Item Tracking Summary";
+                CreateReservEntry: Codeunit "Create Reserv. Entry";
                 NextEntryNo: Integer;
             begin
                 TestField(Type, Type::Item);
                 TestField("No.");
+                TestField(Quantity);
 
                 // Clear and apply filters on Item Ledger Entry
                 ItemLedgerEntry.Reset();
@@ -80,13 +82,12 @@ tableextension 50074 E3SalesLineExt extends "Sales Line"
                 if TempEntrySummary.IsEmpty() then
                     Error('No available inventory found for Item %1 at Location %2.', Rec."No.", Rec."Location Code");
 
-                // 2. Initialize dummy reservation context required by Page 6500 signature
+                // Initialize temporary reservation entry context for Page 6500 signature
                 TempReservEntry.Init();
                 TempReservEntry."Item No." := Rec."No.";
                 TempReservEntry."Location Code" := Rec."Location Code";
                 TempReservEntry."Variant Code" := Rec."Variant Code";
 
-                // 3. Pass BOTH required parameters to SetSources
                 Clear(ItemTrackingSummaryPage);
                 ItemTrackingSummaryPage.SetSources(TempReservEntry, TempEntrySummary);
                 ItemTrackingSummaryPage.LookupMode(true);
@@ -94,11 +95,14 @@ tableextension 50074 E3SalesLineExt extends "Sales Line"
                 if ItemTrackingSummaryPage.RunModal() = ACTION::LookupOK then begin
                     ItemTrackingSummaryPage.GetRecord(TempEntrySummary);
 
-                    // Assign values back to Sales Line
+                    // 1. Assign values back to Sales Line
                     Rec.Validate("Batch No.", TempEntrySummary."Lot No.");
 
                     if TempEntrySummary."Expiration Date" <> 0D then
                         Rec."Expiry Date" := TempEntrySummary."Expiration Date";
+
+                    // 2. Create or Update Item Tracking Line (Reservation Entry)
+                    CreateOrUpdateItemTracking(Rec, TempEntrySummary."Lot No.", TempEntrySummary."Expiration Date", rec.Quantity);
                 end;
             end;
         }
@@ -109,6 +113,46 @@ tableextension 50074 E3SalesLineExt extends "Sales Line"
         }
 
     }
+    local procedure CreateOrUpdateItemTracking(SalesLine: Record "Sales Line"; LotNo: Code[50]; ExpiryDate: Date; AvailableQty: Decimal)
+    var
+        ReservEntry: Record "Reservation Entry";
+        CreateReservEntry: Codeunit "Create Reserv. Entry";
+        QtyToAssign: Decimal;
+        QtyToAssignBase: Decimal;
+    begin
+        // Calculate quantities to assign
+        QtyToAssign := AvailableQty;
+        QtyToAssignBase := QtyToAssign * SalesLine."Qty. per Unit of Measure";
 
+        // 1. Set tracking attributes directly on the Reservation Entry record
+        ReservEntry.Init();
+        ReservEntry."Lot No." := LotNo;
+        ReservEntry."Expiration Date" := ExpiryDate;
 
+        // 2. Initialize tracking context for the Sales Line
+        CreateReservEntry.CreateReservEntryFor(
+            Database::"Sales Line",
+            SalesLine."Document Type".AsInteger(),
+            SalesLine."Document No.",
+            '',
+            0,
+            SalesLine."Line No.",
+            SalesLine."Qty. per Unit of Measure",
+            QtyToAssign,
+            QtyToAssignBase,
+            ReservEntry
+        );
+
+        // 3. Insert record into Table 337 (Reservation Entry)
+        CreateReservEntry.CreateEntry(
+            SalesLine."No.",
+            SalesLine."Variant Code",
+            SalesLine."Location Code",
+            SalesLine.Description,
+            SalesLine."Shipment Date",
+            SalesLine."Shipment Date",
+            0,
+            Enum::"Reservation Status"::Surplus
+        );
+    end;
 }

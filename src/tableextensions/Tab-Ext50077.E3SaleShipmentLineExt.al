@@ -32,5 +32,11 @@ tableextension 50077 "E3 Sale Shipment Line Ext" extends "Sales Shipment Line"
             Caption = 'Response';
             DataClassification = CustomerContent;
         }
+        field(50009; "Purchase Line Created"; Boolean)
+        {
+            Caption = 'Purchase Line Created';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
 }

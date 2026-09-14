@@ -366,6 +366,46 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     CurrPage.Update(false);
                 end;
             }
+            action("Get Shipment Lines")
+            {
+                ApplicationArea = All;
+                Image = ShipmentLines;
+                ToolTip = 'Get posted shipment lines matching the current location.';
+                Caption = 'Get Shipment Lines';
+                Promoted = true;
+                PromotedCategory = Process;
+
+                trigger OnAction()
+                var
+                    SalesShipmentLine: Record "Sales Shipment Line";
+                    PurchHeader: Record "Purchase Header";
+                    GetShipmentLinesPage: Page "Posted Sales Shipment Lines";
+                begin
+                    PurchHeader.Get(Rec."Document Type", Rec."Document No.");
+
+                    PurchHeader.TestField("Document Type", PurchHeader."Document Type"::Order);
+                    PurchHeader.TestField("Buy-from Vendor No.");
+                    PurchHeader.TestField("Location Code");
+
+                    // Filter Sales Shipment Lines for location, open qty, AND not yet created
+                    SalesShipmentLine.Reset();
+                    SalesShipmentLine.SetRange("Location Code", PurchHeader."Location Code");
+                    //  SalesShipmentLine.SetFilter("Qty. Shipped Not Invoiced", '>0');
+                    SalesShipmentLine.SetRange("Purchase Line Created", false); // Exclude already processed lines
+
+                    GetShipmentLinesPage.SetTableView(SalesShipmentLine);
+                    GetShipmentLinesPage.LookupMode(true);
+
+                    if GetShipmentLinesPage.RunModal() = ACTION::LookupOK then begin
+                        GetShipmentLinesPage.SetSelectionFilter(SalesShipmentLine);
+
+                        if SalesShipmentLine.FindSet() then
+                            repeat
+                                InsertPurchaseLineFromShipment(PurchHeader, SalesShipmentLine);
+                            until SalesShipmentLine.Next() = 0;
+                    end;
+                end;
+            }
         }
     }
 
@@ -738,6 +778,66 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
             IsLineEditable := false;
             if UserSetup.Get(UserId) then
                 IsLineEditable := UserSetup."PO Line Modify";
+        end;
+    end;
+
+    local procedure InsertPurchaseLineFromShipment(PurchHeader: Record "Purchase Header"; var SalesShipmentLine: Record "Sales Shipment Line")
+    var
+        PurchLine: Record "Purchase Line";
+        NextLineNo: Integer;
+    begin
+        // Find the last existing Line No. on the Purchase Order
+        PurchLine.Reset();
+        PurchLine.SetRange("Document Type", PurchHeader."Document Type");
+        PurchLine.SetRange("Document No.", PurchHeader."No.");
+        if PurchLine.FindLast() then
+            NextLineNo := PurchLine."Line No." + 10000
+        else
+            NextLineNo := 10000;
+
+        // Initialize new Purchase Line
+        PurchLine.Init();
+        PurchLine."Document Type" := PurchHeader."Document Type";
+        PurchLine."Document No." := PurchHeader."No.";
+        PurchLine."Line No." := NextLineNo;
+        PurchLine.Insert(true);
+
+        // Populate line fields
+        PurchLine.Validate(Type, ConvertShipmentTypeToPurchaseType(SalesShipmentLine.Type));
+        PurchLine.Validate("No.", SalesShipmentLine."No.");
+
+        if SalesShipmentLine."Variant Code" <> '' then
+            PurchLine.Validate("Variant Code", SalesShipmentLine."Variant Code");
+
+        PurchLine.Validate("Location Code", PurchHeader."Location Code");
+        PurchLine.Validate(Quantity, SalesShipmentLine."Qty. Shipped Not Invoiced");
+
+        if SalesShipmentLine."Unit of Measure Code" <> '' then
+            PurchLine.Validate("Unit of Measure Code", SalesShipmentLine."Unit of Measure Code");
+
+        PurchLine.Description := SalesShipmentLine.Description;
+        PurchLine.Modify(true);
+
+        // Mark the Sales Shipment Line as processed
+        SalesShipmentLine."Purchase Line Created" := true;
+        SalesShipmentLine.Modify(true);
+    end;
+
+    local procedure ConvertShipmentTypeToPurchaseType(ShipmentType: Enum "Sales Line Type"): Enum "Purchase Line Type"
+    begin
+        case ShipmentType of
+            ShipmentType::Item:
+                exit(Enum::"Purchase Line Type"::Item);
+            ShipmentType::"G/L Account":
+                exit(Enum::"Purchase Line Type"::"G/L Account");
+            ShipmentType::Resource:
+                exit(Enum::"Purchase Line Type"::Resource);
+            ShipmentType::"Fixed Asset":
+                exit(Enum::"Purchase Line Type"::"Fixed Asset");
+            ShipmentType::"Charge (Item)":
+                exit(Enum::"Purchase Line Type"::"Charge (Item)");
+            else
+                exit(Enum::"Purchase Line Type"::" ");
         end;
     end;
 

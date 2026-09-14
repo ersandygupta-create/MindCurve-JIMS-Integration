@@ -15,7 +15,7 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             var
                 purchrcptHeader: Record "E3 GRN Work Sheet Header";
             begin
-                if ("Vendor Invoice No." <> '') then begin
+                if ("Vendor Invoice No." <> '') and ("Document Type" = "Document Type"::Order) then begin
                     purchrcptHeader.Reset();
                     purchrcptHeader.SetRange("Supplier Code", "Buy-from Vendor No.");
                     purchrcptHeader.SetRange("Purchase Challan No.", "Vendor Invoice No.");
