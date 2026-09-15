@@ -24,181 +24,6 @@
       <rd:DataSourceID>586d31da-36c5-4a49-9a16-65f1fa107442</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="CompPicture">
-          <DataField>CompPicture</DataField>
-        </Field>
-        <Field Name="CompanyName">
-          <DataField>CompanyName</DataField>
-        </Field>
-        <Field Name="CompanyAddress">
-          <DataField>CompanyAddress</DataField>
-        </Field>
-        <Field Name="CompanyAddress2">
-          <DataField>CompanyAddress2</DataField>
-        </Field>
-        <Field Name="CompanyCity">
-          <DataField>CompanyCity</DataField>
-        </Field>
-        <Field Name="CompanyPostCode">
-          <DataField>CompanyPostCode</DataField>
-        </Field>
-        <Field Name="CompanyPhone">
-          <DataField>CompanyPhone</DataField>
-        </Field>
-        <Field Name="CompEmail">
-          <DataField>CompEmail</DataField>
-        </Field>
-        <Field Name="ComGSTIN">
-          <DataField>ComGSTIN</DataField>
-        </Field>
-        <Field Name="ReportTitle">
-          <DataField>ReportTitle</DataField>
-        </Field>
-        <Field Name="ReqNo">
-          <DataField>ReqNo</DataField>
-        </Field>
-        <Field Name="ReqDate">
-          <DataField>ReqDate</DataField>
-        </Field>
-        <Field Name="PONo">
-          <DataField>PONo</DataField>
-        </Field>
-        <Field Name="PODate">
-          <DataField>PODate</DataField>
-        </Field>
-        <Field Name="SupplierNo">
-          <DataField>SupplierNo</DataField>
-        </Field>
-        <Field Name="SupplierName">
-          <DataField>SupplierName</DataField>
-        </Field>
-        <Field Name="PaymentTerms">
-          <DataField>PaymentTerms</DataField>
-        </Field>
-        <Field Name="CurrencyCode">
-          <DataField>CurrencyCode</DataField>
-        </Field>
-        <Field Name="POAmount">
-          <DataField>POAmount</DataField>
-        </Field>
-        <Field Name="POAmountFormat">
-          <DataField>POAmountFormat</DataField>
-        </Field>
-        <Field Name="LineNo">
-          <DataField>LineNo</DataField>
-        </Field>
-        <Field Name="ItemNo">
-          <DataField>ItemNo</DataField>
-        </Field>
-        <Field Name="ItemName">
-          <DataField>ItemName</DataField>
-        </Field>
-        <Field Name="Unit">
-          <DataField>Unit</DataField>
-        </Field>
-        <Field Name="Qty">
-          <DataField>Qty</DataField>
-        </Field>
-        <Field Name="QtyFormat">
-          <DataField>QtyFormat</DataField>
-        </Field>
-        <Field Name="Rate">
-          <DataField>Rate</DataField>
-        </Field>
-        <Field Name="RateFormat">
-          <DataField>RateFormat</DataField>
-        </Field>
-        <Field Name="LineAmount">
-          <DataField>LineAmount</DataField>
-        </Field>
-        <Field Name="LineAmountFormat">
-          <DataField>LineAmountFormat</DataField>
-        </Field>
-        <Field Name="LineAmountInclVAT">
-          <DataField>LineAmountInclVAT</DataField>
-        </Field>
-        <Field Name="LineAmountInclVATFormat">
-          <DataField>LineAmountInclVATFormat</DataField>
-        </Field>
-        <Field Name="GRNDate">
-          <DataField>GRNDate</DataField>
-        </Field>
-        <Field Name="GRNNo">
-          <DataField>GRNNo</DataField>
-        </Field>
-        <Field Name="ChallanNo">
-          <DataField>ChallanNo</DataField>
-        </Field>
-        <Field Name="ChallanDate">
-          <DataField>ChallanDate</DataField>
-        </Field>
-        <Field Name="GRNValue">
-          <DataField>GRNValue</DataField>
-        </Field>
-        <Field Name="GRNValueFormat">
-          <DataField>GRNValueFormat</DataField>
-        </Field>
-        <Field Name="GRNStatus">
-          <DataField>GRNStatus</DataField>
-        </Field>
-        <Field Name="GRNEnteredBy">
-          <DataField>GRNEnteredBy</DataField>
-        </Field>
-        <Field Name="BillDate">
-          <DataField>BillDate</DataField>
-        </Field>
-        <Field Name="BillNo">
-          <DataField>BillNo</DataField>
-        </Field>
-        <Field Name="PartyNo">
-          <DataField>PartyNo</DataField>
-        </Field>
-        <Field Name="PartyName">
-          <DataField>PartyName</DataField>
-        </Field>
-        <Field Name="PartyDate">
-          <DataField>PartyDate</DataField>
-        </Field>
-        <Field Name="BillValue">
-          <DataField>BillValue</DataField>
-        </Field>
-        <Field Name="BillValueFormat">
-          <DataField>BillValueFormat</DataField>
-        </Field>
-        <Field Name="TDS">
-          <DataField>TDS</DataField>
-        </Field>
-        <Field Name="TDSFormat">
-          <DataField>TDSFormat</DataField>
-        </Field>
-        <Field Name="NetPayable">
-          <DataField>NetPayable</DataField>
-        </Field>
-        <Field Name="NetPayableFormat">
-          <DataField>NetPayableFormat</DataField>
-        </Field>
-        <Field Name="BillStatus">
-          <DataField>BillStatus</DataField>
-        </Field>
-        <Field Name="LastLocation">
-          <DataField>LastLocation</DataField>
-        </Field>
-        <Field Name="PaymentDueDate">
-          <DataField>PaymentDueDate</DataField>
-        </Field>
-        <Field Name="BillEnteredBy">
-          <DataField>BillEnteredBy</DataField>
-        </Field>
-      </Fields>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -3060,4 +2885,179 @@ End Function
 </Code>
   <Language>=User!Language</Language>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="CompPicture">
+          <DataField>CompPicture</DataField>
+        </Field>
+        <Field Name="CompanyName">
+          <DataField>CompanyName</DataField>
+        </Field>
+        <Field Name="CompanyAddress">
+          <DataField>CompanyAddress</DataField>
+        </Field>
+        <Field Name="CompanyAddress2">
+          <DataField>CompanyAddress2</DataField>
+        </Field>
+        <Field Name="CompanyCity">
+          <DataField>CompanyCity</DataField>
+        </Field>
+        <Field Name="CompanyPostCode">
+          <DataField>CompanyPostCode</DataField>
+        </Field>
+        <Field Name="CompanyPhone">
+          <DataField>CompanyPhone</DataField>
+        </Field>
+        <Field Name="CompEmail">
+          <DataField>CompEmail</DataField>
+        </Field>
+        <Field Name="ComGSTIN">
+          <DataField>ComGSTIN</DataField>
+        </Field>
+        <Field Name="ReportTitle">
+          <DataField>ReportTitle</DataField>
+        </Field>
+        <Field Name="ReqNo">
+          <DataField>ReqNo</DataField>
+        </Field>
+        <Field Name="ReqDate">
+          <DataField>ReqDate</DataField>
+        </Field>
+        <Field Name="PONo">
+          <DataField>PONo</DataField>
+        </Field>
+        <Field Name="PODate">
+          <DataField>PODate</DataField>
+        </Field>
+        <Field Name="SupplierNo">
+          <DataField>SupplierNo</DataField>
+        </Field>
+        <Field Name="SupplierName">
+          <DataField>SupplierName</DataField>
+        </Field>
+        <Field Name="PaymentTerms">
+          <DataField>PaymentTerms</DataField>
+        </Field>
+        <Field Name="CurrencyCode">
+          <DataField>CurrencyCode</DataField>
+        </Field>
+        <Field Name="POAmount">
+          <DataField>POAmount</DataField>
+        </Field>
+        <Field Name="POAmountFormat">
+          <DataField>POAmountFormat</DataField>
+        </Field>
+        <Field Name="LineNo">
+          <DataField>LineNo</DataField>
+        </Field>
+        <Field Name="ItemNo">
+          <DataField>ItemNo</DataField>
+        </Field>
+        <Field Name="ItemName">
+          <DataField>ItemName</DataField>
+        </Field>
+        <Field Name="Unit">
+          <DataField>Unit</DataField>
+        </Field>
+        <Field Name="Qty">
+          <DataField>Qty</DataField>
+        </Field>
+        <Field Name="QtyFormat">
+          <DataField>QtyFormat</DataField>
+        </Field>
+        <Field Name="Rate">
+          <DataField>Rate</DataField>
+        </Field>
+        <Field Name="RateFormat">
+          <DataField>RateFormat</DataField>
+        </Field>
+        <Field Name="LineAmount">
+          <DataField>LineAmount</DataField>
+        </Field>
+        <Field Name="LineAmountFormat">
+          <DataField>LineAmountFormat</DataField>
+        </Field>
+        <Field Name="LineAmountInclVAT">
+          <DataField>LineAmountInclVAT</DataField>
+        </Field>
+        <Field Name="LineAmountInclVATFormat">
+          <DataField>LineAmountInclVATFormat</DataField>
+        </Field>
+        <Field Name="GRNDate">
+          <DataField>GRNDate</DataField>
+        </Field>
+        <Field Name="GRNNo">
+          <DataField>GRNNo</DataField>
+        </Field>
+        <Field Name="ChallanNo">
+          <DataField>ChallanNo</DataField>
+        </Field>
+        <Field Name="ChallanDate">
+          <DataField>ChallanDate</DataField>
+        </Field>
+        <Field Name="GRNValue">
+          <DataField>GRNValue</DataField>
+        </Field>
+        <Field Name="GRNValueFormat">
+          <DataField>GRNValueFormat</DataField>
+        </Field>
+        <Field Name="GRNStatus">
+          <DataField>GRNStatus</DataField>
+        </Field>
+        <Field Name="GRNEnteredBy">
+          <DataField>GRNEnteredBy</DataField>
+        </Field>
+        <Field Name="BillDate">
+          <DataField>BillDate</DataField>
+        </Field>
+        <Field Name="BillNo">
+          <DataField>BillNo</DataField>
+        </Field>
+        <Field Name="PartyNo">
+          <DataField>PartyNo</DataField>
+        </Field>
+        <Field Name="PartyName">
+          <DataField>PartyName</DataField>
+        </Field>
+        <Field Name="PartyDate">
+          <DataField>PartyDate</DataField>
+        </Field>
+        <Field Name="BillValue">
+          <DataField>BillValue</DataField>
+        </Field>
+        <Field Name="BillValueFormat">
+          <DataField>BillValueFormat</DataField>
+        </Field>
+        <Field Name="TDS">
+          <DataField>TDS</DataField>
+        </Field>
+        <Field Name="TDSFormat">
+          <DataField>TDSFormat</DataField>
+        </Field>
+        <Field Name="NetPayable">
+          <DataField>NetPayable</DataField>
+        </Field>
+        <Field Name="NetPayableFormat">
+          <DataField>NetPayableFormat</DataField>
+        </Field>
+        <Field Name="BillStatus">
+          <DataField>BillStatus</DataField>
+        </Field>
+        <Field Name="LastLocation">
+          <DataField>LastLocation</DataField>
+        </Field>
+        <Field Name="PaymentDueDate">
+          <DataField>PaymentDueDate</DataField>
+        </Field>
+        <Field Name="BillEnteredBy">
+          <DataField>BillEnteredBy</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>
