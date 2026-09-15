@@ -1495,7 +1495,7 @@ table 50062 "E3 GRN Work Sheet"
                     LotInformation.Init();
                     LotInformation."Item No." := PurchLine."No.";
                     LotInformation."Lot No." := LotLines."Supplier Batch No.";
-                    LotInformation.MRP := LotLines."SKU MRP";
+                    LotInformation.MRP := LotLines.MRP;
                     LotInformation."Purchase Rate" := LotLines.Rate;
                     LotInformation."Discount %" := LotLines."Line Discount Percentage";
                     LotInformation.Insert(true);
@@ -1518,4 +1518,155 @@ table 50062 "E3 GRN Work Sheet"
         rec."Lot Assigned" := true;
         rec.Modify();
     end;
+
+    procedure InitFromSalesInvoiceLine(PONo: Code[20])
+    var
+        PurchaseHeader: Record "Purchase Header";
+        PurchLine: Record "Purchase Line";
+        Item: Record Item;
+        HSNSAC: Record "HSN/SAC";
+        DimensionValue: Record "Dimension Value";
+        GeneralLedgerSetup: Record "General Ledger Setup";
+        ItemUOM: Record "Item Unit of Measure";
+        GSTPercentage: Decimal;
+        DepartmentValue: Record "Dimension Value";
+        LocationRec: Record Location;
+        CompanyInformation: Record "Company Information";
+        Vendor: Record Vendor;
+
+    begin
+        PurchLine.Reset();
+        PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+        PurchLine.SetRange("Document No.", PONo);
+
+        if PurchLine.FindSet() then
+            repeat
+                if Get(PurchLine."Document No.", PurchLine."Line No.") then
+                    continue;
+
+                Init();
+
+                "PO No." := PurchLine."Document No.";
+                "Line No." := PurchLine."Line No.";
+                "Entry No." := PurchLine."Entry No.";
+                "Item No." := PurchLine."No.";
+                "Item Name" := PurchLine.Description;
+                "Unit of Measure" := PurchLine."Unit of Measure";
+                "Qty. per Unit of Measure" := PurchLine."Qty. per Unit of Measure";
+                "PO Qty" := PurchLine.Quantity;
+                Validate("Receipt Qty", PurchLine.Quantity);
+                Validate("Invoice Qty", PurchLine.Quantity);
+                //"Line Gross" := PurchLine."Line Amount";
+                Validate("Free Qty", PurchLine."Free Qty");
+                "Outstanding Qty" := PurchLine."Quantity";
+                "Quantity Received" := PurchLine."Quantity Received";
+                //"Rejected Qty" := PurchLine."Qty. to Reject (C.E.)";
+                Validate("PO MRP", PurchLine.MRP);
+                Validate(MRP, PurchLine.MRP);
+                Scheme := PurchLine.Scheme;
+                "Base Unit of Measure" := PurchLine."Unit of Measure Code";
+                //"Line Discount Amount" := PurchLine."Line Discount Amount";
+                "Line Discount Percentage" := PurchLine."Line Discount %";
+                "GST Group Code" := PurchLine."GST Group Code";
+                "GST Jurisdiction Type" := PurchLine."GST Jurisdiction Type";
+                "Item Make Code" := PurchLine."Item Make Code";
+                "Item Make Name" := PurchLine."Item Make Name";
+                "GST Type Code" := Format(PurchLine."GST Vendor Type");
+                "Shortcut Dimension 1 Code" := PurchLine."Shortcut Dimension 1 Code";
+                Validate("Department Code", PurchLine."Location Code");
+                "Supplier Batch No." := PurchLine."Batch No.";
+                "Expiry Date" := PurchLine."Expiry Date";
+                Clear(LocationRec);
+                if LocationRec.Get(PurchLine."Location Code") then
+                    "Department Name" := LocationRec.Name
+                else
+                    "Department Name" := '';
+                Validate("HSN Code", PurchLine."HSN/SAC Code");
+                "Indent Doc ID" := PurchLine."Indent No.";
+                "Indent Line No." := PurchLine."Indent Line No.";
+                "Unit Code" := PurchLine."Unit of Measure";
+                "Indent SKU Qty" := PurchLine.Quantity;
+                //"Taxable Amount" := PurchLine."Line Amount";
+                "Final Discount %" := PurchLine."Line Discount %";
+                "Final Discount Amount" := PurchLine."Line Discount Amount";
+                Rate := PurchLine."Direct Unit Cost";
+                "OH Amt Net" := PurchLine."Line Amount";
+                "Indent SKU Qty" := PurchLine.Quantity;
+                "Margin Code" := PurchLine."Margin Code";
+                "Orig. Line No." := PurchLine."Line No.";
+                "Company Value" := PurchLine."Company Value";
+                "Patient Value" := PurchLine."Patient Value";
+                PurchaseHeader.Get(PurchLine."Document Type", PurchLine."Document No.");
+                "Voucher Type" := PurchaseHeader."GRN Voucher Type Name";
+                "Vendor Invoice No." := PurchaseHeader."Vendor Invoice No.";
+                "Vendor Code" := PurchLine."Buy-from Vendor No.";
+                if PurchLine."Buy-from Vendor No." <> '' then begin
+
+                    Vendor.Reset();
+                    Vendor.SetRange("No.", PurchLine."Buy-from Vendor No.");
+
+                    if Vendor.FindFirst() then
+                        "Supplier State" := Vendor."State Code";
+                end;
+
+                "CGST %" := 0;
+                "CGST Amount" := 0;
+                "SGST %" := 0;
+                "SGST Amount" := 0;
+                "IGST %" := 0;
+                "IGST Amount" := 0;
+
+                if Evaluate(GSTPercentage, PurchLine."GST Group Code") then
+                    if PurchLine."GST Jurisdiction Type" = PurchLine."GST Jurisdiction Type"::Interstate then begin
+                        "IGST %" := GSTPercentage;
+                        "IGST Amount" := Round(
+                            "Taxable Amount" * "IGST %" / 100,
+                            0.01);
+                    end else begin
+                        "CGST %" := GSTPercentage / 2;
+                        "SGST %" := GSTPercentage / 2;
+
+                        "CGST Amount" := Round(
+                            "Taxable Amount" * "CGST %" / 100,
+                            0.01);
+
+                        "SGST Amount" := Round(
+                            "Taxable Amount" * "SGST %" / 100,
+                            0.01);
+                    end;
+
+
+                if PurchLine."HSN/SAC Code" <> '' then begin
+                    "HSN Code" := PurchLine."HSN/SAC Code";
+                    HSNSAC.Reset();
+                    HSNSAC.SetRange(Code, PurchLine."HSN/SAC Code");
+                    if HSNSAC.FindFirst() then begin
+                        if PurchLine."GST Group Code" <> '' then
+                            "Item GST Nature" := HSNSAC.GLEN;
+                    end;
+                end;
+
+                if Item.Get(PurchLine."No.") then begin
+                    "Lot No." := Item."Lot Nos.";
+                    "Item Tracking Code" := Item."Item Tracking Code";
+                end;
+
+                if Item.Get(PurchLine."No.") then begin
+                    if ItemUOM.Get(Item."No.", Item."Purch. Unit of Measure") then
+                        Validate("Rec SKU QTY", (PurchLine.Quantity + PurchLine."Free Qty") * ItemUOM."Qty. per Unit of Measure")
+                    else
+                        Validate("Rec SKU QTY", PurchLine.Quantity + PurchLine."Free Qty");
+                    if Item."Item Tracking Code" = '' then
+                        "Lot Assigned" := true
+                    else
+                        "Lot Assigned" := false;
+                end;
+
+
+                CalculateLandedValue();
+
+                Insert(true);
+            until PurchLine.Next() = 0;
+    end;
+
 }
