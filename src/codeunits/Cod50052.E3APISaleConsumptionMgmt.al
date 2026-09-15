@@ -233,7 +233,7 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
 
             if ResponseRoot.ReadFrom(JsonResponse)
             then begin
-                if ResponseRoot.SelectToken('d365_GrnStatus', ResponseToken)
+                if ResponseRoot.SelectToken('d365_ConsumptionStatus', ResponseToken)
                 then begin
                     ResponseArray := ResponseToken.AsArray();
                     for J := 0 to

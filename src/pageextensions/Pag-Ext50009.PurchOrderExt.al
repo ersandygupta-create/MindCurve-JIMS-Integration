@@ -102,10 +102,10 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                     Page.Run(Page::"E3 Order Terms & Conditions", POTerms);
                 end;
             }
-            action("Cancle PO")
+            action("Cancel PO")
             {
                 ApplicationArea = All;
-                Caption = 'Cancle PO';
+                Caption = 'Cancel PO';
                 Image = Cancel;
                 Promoted = true;
                 PromotedCategory = Process;
