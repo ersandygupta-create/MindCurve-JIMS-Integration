@@ -16,6 +16,9 @@ report 50055 "Advance Request Receipt"
 
             RequestFilterFields = "No.", "Buy-from Vendor No.", "Order Date";
 
+            column(CompPicture; CompanyInfo.Picture)
+            {
+            }
             column(CompanyName; CompanyInfo.Name)
             {
             }
@@ -39,7 +42,12 @@ report 50055 "Advance Request Receipt"
             column(CompanyPhone; CompanyInfo."Phone No.")
             {
             }
-
+            column(CompEmail; CompanyInfo."E-Mail")
+            {
+            }
+            column(ComGSTIN; CompanyInfo."GST Registration No.")
+            {
+            }
             column(ReportTitle; ReportTitleLbl)
             {
             }
@@ -130,10 +138,6 @@ report 50055 "Advance Request Receipt"
                 }
             }
 
-            // -----------------------------
-            // GRN Details
-            // -----------------------------
-
             dataitem(GRN; "Purch. Rcpt. Header")
             {
                 DataItemLink = "Order No." = field("No.");
@@ -174,11 +178,6 @@ report 50055 "Advance Request Receipt"
                     CalculateGRNValue();
                 end;
             }
-
-            // -----------------------------
-            // Bill / Posted Invoice Details
-            // -----------------------------
-
             dataitem(Bill; "Purch. Inv. Header")
             {
                 DataItemLink = "Order No." = field("No.");
@@ -403,10 +402,11 @@ report 50055 "Advance Request Receipt"
 
         if PurchRcptLine.FindSet() then
             repeat
-                GRNValue += PurchRcptLine."Item Rcpt. Entry No.";
+                GRNValue += PurchRcptLine.Quantity * PurchRcptLine."Direct Unit Cost";
             until PurchRcptLine.Next() = 0;
 
         GRNStatus := 'Received';
+
         GRNEnteredBy := UserId;
     end;
 
@@ -447,5 +447,6 @@ report 50055 "Advance Request Receipt"
     trigger OnInitReport()
     begin
         CompanyInfo.Get();
+        CompanyInfo.CalcFields(Picture);
     end;
 }
