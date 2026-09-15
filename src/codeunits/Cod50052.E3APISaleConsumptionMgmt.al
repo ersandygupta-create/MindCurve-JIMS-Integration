@@ -110,6 +110,9 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         GRNObj.Add('dm_TimeStamp', Format(CurrentDateTime, 0, 9));
         GRNObj.Add('dm_docid', 0);
         GRNObj.Add('legalEntity', CompanyName);
+        GRNObj.Add('ProcessIndicator', 'E');
+        GRNObj.Add('processDatetime', Format(CurrentDateTime(), 0, '<Year4>-<Month,2>-<Day,2>T<Hours24,2>:<Minutes,2>:<Seconds,2>'));
+        GRNObj.Add('ErrorMsg', '');
 
         // Line
 
