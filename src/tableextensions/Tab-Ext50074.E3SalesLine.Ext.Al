@@ -116,6 +116,19 @@ tableextension 50074 E3SalesLineExt extends "Sales Line"
                     CreateOrUpdateItemTracking(Rec, TempEntrySummary."Lot No.", TempEntrySummary."Expiration Date", rec.Quantity);
                 end;
             end;
+
+            trigger OnValidate()
+            begin
+                // If the Batch No. is cleared, clear expiration date and remove item tracking lines
+                if Rec."Batch No." = '' then begin
+                    Rec."Expiry Date" := 0D;
+
+                    // Call procedure to clear existing reservation entries
+                    DeleteExistingItemTrackingLines(Rec);
+                end else
+                    // If changed manually, update tracking lines
+                    CreateOrUpdateItemTracking(Rec, Rec."Batch No.", Rec."Expiry Date", Rec.Quantity);
+            end;
         }
         field(50006; MRP; Decimal)
         {
@@ -171,5 +184,21 @@ tableextension 50074 E3SalesLineExt extends "Sales Line"
             0,
             Enum::"Reservation Status"::Surplus
         );
+    end;
+
+    local procedure DeleteExistingItemTrackingLines(SalesLine: Record "Sales Line")
+    var
+        ReservEntry: Record "Reservation Entry";
+    begin
+        // Filter to tracking entries linked to this specific Sales Line
+        ReservEntry.Reset();
+        ReservEntry.SetRange("Source Type", Database::"Sales Line");
+        ReservEntry.SetRange("Source Subtype", SalesLine."Document Type");
+        ReservEntry.SetRange("Source ID", SalesLine."Document No.");
+        ReservEntry.SetRange("Source Ref. No.", SalesLine."Line No.");
+        ReservEntry.SetRange("Reservation Status", ReservEntry."Reservation Status"::Surplus);
+
+        if not ReservEntry.IsEmpty() then
+            ReservEntry.DeleteAll(true);
     end;
 }
