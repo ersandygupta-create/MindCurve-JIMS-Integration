@@ -509,4 +509,25 @@ codeunit 50001 "E3 HIS Event Subscriber"
         PurchInvHeader."Voucher Type" := PurchHeader."Voucher Type";
     end;
 
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnBeforeConfirmPost', '', false, false)]
+    // local procedure OnBeforeConfirmPost(var PurchaseHeader: Record "Purchase Header"; var HideDialog: Boolean; var IsHandled: Boolean)
+    // var
+    //     PostInvoiceQst: Label 'Do you want to post the Invoice?';
+    // begin
+    //     // Apply logic only to Purchase Orders
+    //     if PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Order then begin
+
+    //         // Ask user for confirmation to post Invoice only
+    //         if not Confirm(PostInvoiceQst, false) then
+    //             Error(''); // Stop process if user clicks No
+
+    //         // Explicitly set Receive to FALSE and Invoice to TRUE
+    //         PurchaseHeader.Receive := false;
+    //         PurchaseHeader.Invoice := true;
+
+    //         // Hide the standard "Receive / Invoice / Receive and Invoice" selection dialog
+    //         HideDialog := true;
+    //     end;
+    // end;
+
 }
