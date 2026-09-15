@@ -130,6 +130,11 @@ page 50064 "E3 Voucher Types"
                     ApplicationArea = All;
                     ToolTip = 'Vendor No.';
                 }
+                field("Order Voucher Code"; Rec."Order Voucher Code")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Order Voucher Code';
+                }
             }
         }
     }

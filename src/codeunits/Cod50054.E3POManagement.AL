@@ -23,7 +23,7 @@ codeunit 50054 "E3 Create PO Management"
         // 1. Create Purchase Header
         PurchHeader.Init();
         PurchHeader."Document Type" := PurchHeader."Document Type"::Order;
-        PurchHeader."Voucher Type" := SalesInvHeader."Voucher Type";
+        PurchHeader.validate("Voucher Type", voucherType."Order Voucher Code");
         PurchHeader.Insert(true); // Generates No. from No. Series
 
         // Update Header details (Set your designated Vendor No.)
@@ -68,7 +68,7 @@ codeunit 50054 "E3 Create PO Management"
 
         if GRNWorkSheet.IsEmpty() then begin
             // Create GRN Worksheet only first time
-            GRNWorkSheet.InitFromPurchaseLine(PurchLine."Document No.");
+            GRNWorkSheet.InitFromSalesInvoiceLine(PurchLine."Document No.");
         end;
 
 

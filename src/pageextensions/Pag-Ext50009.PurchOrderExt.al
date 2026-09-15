@@ -64,6 +64,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 ApplicationArea = All;
                 Caption = 'Item Make Code';
                 ToolTip = 'Specifies the unique code of the item make.';
+                ShowMandatory = true;
             }
         }
         addbefore("No.")

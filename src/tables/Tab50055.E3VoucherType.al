@@ -147,6 +147,11 @@ table 50055 "E3 Voucher Type"
             DataClassification = CustomerContent;
             TableRelation = Vendor."No.";
         }
+        field(23; "Order Voucher Code"; Code[10])
+        {
+            Caption = 'Order Voucher Code';
+            DataClassification = ToBeClassified;
+        }
     }
 
     keys
