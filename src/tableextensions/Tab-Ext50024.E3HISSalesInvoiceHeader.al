@@ -67,5 +67,11 @@ tableextension 50024 "E3 HIS Sales Invoice Header" extends "Sales Invoice Header
             DataClassification = CustomerContent;
             Caption = 'Payer Name';
         }
+        field(50108; "Voucher Type"; Code[20])
+        {
+            Caption = 'Voucher Type';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Voucher Type".Code where("Entry Type" = const(Sale));
+        }
     }
 }

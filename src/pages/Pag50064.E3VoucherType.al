@@ -125,6 +125,11 @@ page 50064 "E3 Voucher Types"
                     ApplicationArea = All;
                     ToolTip = 'Specify number sequence for Advance document no.';
                 }
+                field("Vendor No."; Rec."Vendor No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Vendor No.';
+                }
             }
         }
     }

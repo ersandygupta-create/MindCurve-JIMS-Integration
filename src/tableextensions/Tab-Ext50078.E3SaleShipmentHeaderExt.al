@@ -12,5 +12,11 @@ tableextension 50078 "E3 Sale Shipment Header Ext" extends "Sales Shipment Heade
             Caption = 'Response';
             DataClassification = CustomerContent;
         }
+        field(50108; "Voucher Type"; Code[20])
+        {
+            Caption = 'Voucher Type';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Voucher Type".Code where("Entry Type" = const(Sale));
+        }
     }
 }

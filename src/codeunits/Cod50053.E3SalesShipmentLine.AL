@@ -6,8 +6,23 @@ codeunit 50053 "Shipment Line Processing"
     procedure InsertPurchaseLineFromShipment(PurchHeader: Record "Purchase Header"; var SalesShipmentLine: Record "Sales Shipment Line")
     var
         PurchLine: Record "Purchase Line";
+        SalesInvHeader: Record "Sales Invoice Header";
+        SalesInvLine: Record "Sales Invoice Line";
         NextLineNo: Integer;
     begin
+        // 1. Trace and update Vendor Invoice details on Purchase Header
+        SalesInvLine.Reset();
+        SalesInvLine.SetRange("Shipment No.", SalesShipmentLine."Document No.");
+        SalesInvLine.SetRange("Shipment Line No.", SalesShipmentLine."Line No.");
+
+        if SalesInvLine.FindFirst() then
+            if SalesInvHeader.Get(SalesInvLine."Document No.") then begin
+                // Update Purchase Header fields with Invoice No and Posting/Document Date
+                PurchHeader.Validate("Vendor Invoice No.", SalesInvHeader."No.");
+                PurchHeader.Validate("Posting Date", SalesInvHeader."Posting Date");
+                PurchHeader.Validate("Document Date", SalesInvHeader."Document Date");
+                PurchHeader.Modify(true);
+            end;
         // Find the last existing Line No. on the Purchase Order
         PurchLine.Reset();
         PurchLine.SetRange("Document Type", PurchHeader."Document Type");
@@ -24,7 +39,7 @@ codeunit 50053 "Shipment Line Processing"
         PurchLine."Line No." := NextLineNo;
         PurchLine.Insert(true);
 
-        // Populate line fields
+        // Populate line fieldss
         PurchLine.Validate(Type, ConvertShipmentTypeToPurchaseType(SalesShipmentLine.Type));
         PurchLine.Validate("No.", SalesShipmentLine."No.");
 
@@ -32,7 +47,9 @@ codeunit 50053 "Shipment Line Processing"
             PurchLine.Validate("Variant Code", SalesShipmentLine."Variant Code");
 
         PurchLine.Validate("Location Code", PurchHeader."Location Code");
-        PurchLine.Validate(Quantity, SalesShipmentLine."Qty. Shipped Not Invoiced");
+        //PurchLine.Validate(Quantity, SalesShipmentLine."Qty. Shipped Not Invoiced");
+        purchline.Validate(MRP, SalesShipmentLine.MRP);
+        purchline.validate(Quantity, SalesShipmentLine.Quantity);
 
         if SalesShipmentLine."Unit of Measure Code" <> '' then
             PurchLine.Validate("Unit of Measure Code", SalesShipmentLine."Unit of Measure Code");

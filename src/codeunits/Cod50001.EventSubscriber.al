@@ -491,4 +491,22 @@ codeunit 50001 "E3 HIS Event Subscriber"
         SalesShptLine."E3 Indent Line" := SalesLine."E3 Indent Line";
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforeSalesInvHeaderInsert', '', false, false)]
+    local procedure OnBeforeSalesInvHeaderInsert(var SalesHeader: Record "Sales Header"; var SalesInvHeader: Record "Sales Invoice Header")
+    begin
+        SalesInvHeader."Voucher Type" := SalesHeader."Voucher Type";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforeSalesShptHeaderInsert', '', false, false)]
+    local procedure OnBeforeSalesShptHeaderInsert(var SalesShptHeader: Record "Sales Shipment Header"; SalesHeader: Record "Sales Header"; CommitIsSuppressed: Boolean; var IsHandled: Boolean; var TempWhseRcptHeader: Record "Warehouse Receipt Header" temporary; WhseReceive: Boolean; var TempWhseShptHeader: Record "Warehouse Shipment Header" temporary; WhseShip: Boolean; InvtPickPutaway: Boolean)
+    begin
+        SalesShptHeader."Voucher Type" := SalesHeader."Voucher Type";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePurchInvHeaderInsert', '', false, false)]
+    local procedure OnBeforePurchInvHeaderInsert(var PurchHeader: Record "Purchase Header"; var PurchInvHeader: Record "Purch. Inv. Header")
+    begin
+        PurchInvHeader."Voucher Type" := PurchHeader."Voucher Type";
+    end;
+
 }

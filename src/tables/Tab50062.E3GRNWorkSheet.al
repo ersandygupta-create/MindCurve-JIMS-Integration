@@ -744,6 +744,8 @@ table 50062 "E3 GRN Work Sheet"
                 "GST Type Code" := Format(PurchLine."GST Vendor Type");
                 "Shortcut Dimension 1 Code" := PurchLine."Shortcut Dimension 1 Code";
                 Validate("Department Code", PurchLine."Location Code");
+                "Supplier Batch No." := PurchLine."Batch No.";
+                "Expiry Date" := PurchLine."Expiry Date";
                 Clear(LocationRec);
                 if LocationRec.Get(PurchLine."Location Code") then
                     "Department Name" := LocationRec.Name

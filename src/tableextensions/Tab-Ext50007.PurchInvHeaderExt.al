@@ -49,6 +49,12 @@ tableextension 50007 "E3 HIS Purch. Inv. Header" extends "Purch. Inv. Header"
             Caption = 'Indent No.';
             DataClassification = CustomerContent;
         }
+        field(50111; "Voucher Type"; Code[20])
+        {
+            Caption = 'Voucher Type';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Voucher Type".Code where("Entry Type" = const(Sale));
+        }
 
     }
 }
