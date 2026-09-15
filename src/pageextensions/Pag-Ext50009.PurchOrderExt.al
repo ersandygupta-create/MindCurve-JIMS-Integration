@@ -1,3 +1,4 @@
+
 pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
 {
     layout
@@ -74,6 +75,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 ApplicationArea = All;
                 Caption = 'Voucher Type';
                 Editable = Rec."Voucher Type" = '';
+                ToolTip = 'Voucher Type';
 
                 trigger OnValidate()
                 begin
@@ -114,7 +116,6 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
 
                 trigger OnAction()
                 var
-                    IndentLine: Record "E3 Indent Line";
                     purchaseline: record "Purchase Line";
                 begin
                     purchaseline.reset();
@@ -130,10 +131,6 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
             }
         }
     }
-
-    var
-        recPurchHdr: Record "Purchase Header";
-        VoucherTypeEditable: Boolean;
 
     trigger OnOpenPage()
     var
