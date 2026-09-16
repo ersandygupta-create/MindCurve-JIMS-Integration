@@ -105,7 +105,12 @@ report 50055 "E3 Advance Request Receipt"
             dataitem(DetailedVendorLedgEntry; "Detailed Vendor Ledg. Entry")
             {
                 DataItemLink = "Advance Document No" = field("Document No");
-                DataItemTableView = sorting("Vendor Ledger Entry No.", "Entry No.") where(Unapplied = const(false));
+                DataItemTableView =
+                    sorting("Vendor Ledger Entry No.", "Entry No.")
+                    where(
+                        "Document Type" = const(Invoice),
+                        Unapplied = const(false)
+                    );
                 column(BillPostingDate; "Posting Date")
                 {
                     IncludeCaption = false;
@@ -123,6 +128,73 @@ report 50055 "E3 Advance Request Receipt"
                     BillAppliedAmount := Abs(Amount);
                 end;
             }
+            dataitem(AdvancePaymentEntry; "Detailed Vendor Ledg. Entry")
+            {
+                DataItemLink = "Advance Document No" = field("Document No");
+                DataItemTableView = sorting("Vendor Ledger Entry No.", "Entry No.") where("Document Type" = const(Payment), Unapplied = const(false));
+                column(AdvPaymentPostingDate; "Posting Date")
+                {
+                    IncludeCaption = false;
+                }
+                column(AdvPaymentEntryType; Format("Entry Type"))
+                {
+                    IncludeCaption = false;
+                }
+                column(AdvPaymentDocumentType; Format("Document Type"))
+                {
+                    IncludeCaption = false;
+                }
+                column(AdvPaymentDocumentNo; "Document No.")
+                {
+                    IncludeCaption = false;
+                }
+                column(AdvPaymentVendorNo; AdvPaymentVendorNo)
+                {
+                    IncludeCaption = false;
+                }
+                column(AdvPaymentCurrencyCode; AdvPaymentCurrencyCode)
+                {
+                    IncludeCaption = false;
+                }
+                column(AdvPaymentAmount; AdvPaymentAmount)
+                {
+                    IncludeCaption = false;
+                }
+                column(AdvPaymentAmountLCY; AdvPaymentAmountLCY)
+                {
+                    IncludeCaption = false;
+                }
+                column(AdvPaymentDueDate; AdvPaymentDueDate)
+                {
+                    IncludeCaption = false;
+                }
+                column(AdvPaymentEntryNo; "Entry No.")
+                {
+                    IncludeCaption = false;
+                }
+                column(AdvPaymentMode; AdvPaymentMode) { IncludeCaption = false; }
+                column(AdvPaymentBankName; AdvPaymentBankName)
+                {
+                    IncludeCaption = false;
+                }
+                column(AdvPaymentChequeNo; AdvPaymentChequeNo)
+                {
+                    IncludeCaption = false;
+                }
+                column(AdvPaymentChequeDate; AdvPaymentChequeDate)
+                {
+                    IncludeCaption = false;
+                }
+                trigger OnAfterGetRecord()
+                begin
+                    ClearAdvPaymentDetails();
+                    GetAdvPaymentDetails();
+
+                    AdvPaymentAmount := Abs(Amount);
+                    AdvPaymentAmountLCY := Abs("Amount (LCY)");
+                end;
+            }
+
             // ---------------------------------------------------------
             // PURCHASE HEADER
             // ---------------------------------------------------------
@@ -335,6 +407,58 @@ report 50055 "E3 Advance Request Receipt"
         Clear(BillAppliedAmount);
     end;
 
+    local procedure GetAdvPaymentDetails()
+    var
+        VendorLedgerEntry: Record "Vendor Ledger Entry";
+        BankAccountLedgerEntry: Record "Bank Account Ledger Entry";
+        BankAccount: Record "Bank Account";
+
+    begin
+        Clear(AdvPaymentVendorNo);
+        Clear(AdvPaymentCurrencyCode);
+        Clear(AdvPaymentDueDate);
+
+        if not VendorLedgerEntry.Get(
+            AdvancePaymentEntry."Vendor Ledger Entry No.")
+        then
+            exit;
+        AdvPaymentVendorNo := VendorLedgerEntry."Vendor No.";
+        AdvPaymentMode := Format(VendorLedgerEntry."Payment Method Code");
+
+        BankAccountLedgerEntry.Reset();
+
+        BankAccountLedgerEntry.SetRange(
+            "Posting Date",
+            VendorLedgerEntry."Posting Date");
+
+        BankAccountLedgerEntry.SetRange(
+            "Document No.",
+            VendorLedgerEntry."Document No.");
+
+        if BankAccountLedgerEntry.FindFirst() then begin
+            if BankAccount.Get(BankAccountLedgerEntry."Bank Account No.")
+            then
+                AdvPaymentBankName := BankAccount.Name;
+            AdvPaymentChequeNo := BankAccountLedgerEntry."Cheque No.";
+            AdvPaymentChequeDate := BankAccountLedgerEntry."Cheque Date";
+        end;
+    end;
+
+    local procedure ClearAdvPaymentDetails()
+    begin
+        Clear(AdvPaymentVendorNo);
+        Clear(AdvPaymentCurrencyCode);
+        Clear(AdvPaymentAmount);
+        Clear(AdvPaymentAmountLCY);
+        Clear(AdvPaymentDueDate);
+        Clear(AdvPaymentMode);
+        Clear(AdvPaymentBankName);
+        Clear(AdvPaymentChequeNo);
+        Clear(AdvPaymentChequeDate);
+
+    end;
+
+
     trigger OnPreReport()
     begin
         CompanyInfo.Get();
@@ -348,6 +472,17 @@ report 50055 "E3 Advance Request Receipt"
         BillVendorCode: Code[20];
         BillVendorName: Text[100];
         BillAppliedAmount: Decimal;
+        AdvPaymentVendorNo: Code[20];
+        AdvPaymentCurrencyCode: Code[10];
+        AdvPaymentAmount: Decimal;
+        AdvPaymentAmountLCY: Decimal;
+        AdvPaymentDueDate: Date;
+        AdvPaymentMode: Text[50];
+        AdvPaymentBankName: Text[100];
+        AdvPaymentChequeNo: Code[20];
+        AdvPaymentChequeDate: Date;
+
+
 
 
 
