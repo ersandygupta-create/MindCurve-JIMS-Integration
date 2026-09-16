@@ -223,7 +223,7 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
         if PurchLine.FindSet() then
             repeat
                 // Calculate basic amount = Quantity * Direct Unit Cost
-                LineAmount := PurchLine.Quantity * PurchLine."Direct Unit Cost";
+                LineAmount += PurchLine.Quantity * PurchLine."Direct Unit Cost";
 
                 // Only calculate GST when GST Group Code exists
                 if PurchLine."GST Group Code" <> '' then begin
