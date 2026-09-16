@@ -175,6 +175,7 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
         VoucherType: Record "E3 Voucher Type";
         PaymentTerm: Record "Payment Terms";
         NoSeries: Codeunit "No. Series";
+    //  TaxCalculation: Codeunit "Tax Document Interface"; // Indian GST Engine
     begin
         rec."Advance Request Date" := WorkDate();
 
@@ -182,7 +183,10 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
         PurchOrder.SetRange("No.", "Purchase Order No.");
         if PurchOrder.FindFirst() then begin
             PurchOrder.CalcFields(Amount);
-            "Total PO Amount" := PurchOrder.Amount;
+            PurchOrder.CalcFields("Amount Including VAT");
+            "Total PO Amount" := PurchOrder."Amount Including VAT";
+            ;
+            ;
 
             VoucherType.Reset();
             VoucherType.SetRange(Code, PurchOrder."Voucher Type");
@@ -198,5 +202,11 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
             "Advance Due Date" := CalcDate(PaymentTerm."Due Date Calculation", WorkDate());
             "BU Code" := PurchOrder."Shortcut Dimension 1 Code";
         end;
+    end;
+
+    trigger OnDelete()
+    begin
+        if rec.Release = true then
+            Error('Document is release and can not be deleted.');
     end;
 }

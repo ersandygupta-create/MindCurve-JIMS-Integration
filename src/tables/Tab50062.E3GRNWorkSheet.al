@@ -724,8 +724,8 @@ table 50062 "E3 GRN Work Sheet"
                 "Unit of Measure" := PurchLine."Unit of Measure";
                 "Qty. per Unit of Measure" := PurchLine."Qty. per Unit of Measure";
                 "PO Qty" := PurchLine.Quantity;
-                Validate("Receipt Qty", PurchLine."Qty. to Receive");
-                Validate("Invoice Qty", PurchLine."Qty. to Invoice");
+                //Validate("Receipt Qty", PurchLine."Qty. to Receive");
+                //Validate("Invoice Qty", PurchLine."Qty. to Invoice");
                 //"Line Gross" := PurchLine."Line Amount";
                 Validate("Free Qty", PurchLine."Free Qty");
                 "Outstanding Qty" := PurchLine."Quantity";

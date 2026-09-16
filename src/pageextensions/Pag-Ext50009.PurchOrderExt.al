@@ -157,6 +157,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                     IndentLine."Purchase Order No." := '';
                     IndentLine."PO Created" := false;
                     indentline."Closed Indent Grouped Line" := false;
+                    IndentLine."Released Stock Issue" := false;
                     IndentLine.Modify();
                     purchLine."Indent Line No." := 0;
                     purchLine."Indent No." := '';

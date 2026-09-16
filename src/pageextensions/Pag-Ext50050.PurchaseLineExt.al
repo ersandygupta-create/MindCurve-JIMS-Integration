@@ -218,6 +218,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                                 IndentLine."Purchase Order No." := '';
                                 indentline."Order Line No." := 0;
                                 indentline."Closed Indent Grouped Line" := false;
+                                IndentLine."Released Stock Issue" := false;
                                 IndentLine.Modify();
                                 purchLine := Rec;
                                 purchLine."Indent Line No." := 0;
@@ -229,74 +230,6 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                         Message('Purchase line %1 has been cancled from indent.', rec."Line No.");
                     end else
                         Message('Purchase line %1 has been partially recived so can not be canceled from indent.', rec."Line No.");
-                end;
-            }
-            action(GetIndentLines)
-            {
-                ApplicationArea = All;
-                Caption = 'Get Indent Lines';
-                Image = GetLines;
-                Promoted = true;
-                Visible = false;
-                PromotedCategory = Process;
-                ToolTip = 'Select released indent lines and add them to the purchase order.';
-
-                trigger OnAction()
-                var
-                    IndentHeader: Record "E3 Indent Header";
-                    IndentLine: Record "E3 Indent Line";
-                    GetIndentLinesPage: Page "E3 Get Indent Lines";
-                    SelectedMakeCode: Code[20];
-                    DocumentNo: Code[20];
-                    LineNo: Integer;
-                    SelectedLines: Record "E3 Indent Line";
-                    PurchHeader: Record "Purchase Header";
-                begin
-                    IndentHeader.Reset();
-                    IndentHeader.SetRange(Status, IndentHeader.Status::Approved);
-                    IndentHeader.SetRange(Released, true);
-
-                    // if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then begin
-                    //     if PurchHeader."Location Code" <> '' then
-                    //         IndentLine.SetRange("Location Code", PurchHeader."Location Code");
-                    // end;
-
-                    GetIndentLinesPage.SetTableView(IndentLine);
-                    GetIndentLinesPage.LookupMode(true);
-                    if GetIndentLinesPage.RunModal() <> Action::LookupOK then
-                        exit;
-                    GetIndentLinesPage.SetSelectionFilter(IndentLine);
-                    if not IndentLine.FindSet() then
-                        exit;
-                    SelectedMakeCode := IndentLine."Item Make Code";
-                    repeat
-                        if IndentLine."Item Make Code" <> SelectedMakeCode then begin
-                            Message(
-                                'You have selected a different Make Code.\' +
-                                'First Selected Make Code: %1\' +
-                                'Selected Make Code: %2\' +
-                                'Item No.: %3',
-                                SelectedMakeCode,
-                                IndentLine."Item Make Code",
-                                IndentLine."No.");
-
-                            exit;
-                        end;
-
-                    until IndentLine.Next() = 0;
-                    GetIndentLinesPage.SetSelectionFilter(SelectedLines);
-                    if not SelectedLines.FindSet() then
-                        exit;
-                    repeat
-                        DocumentNo := SelectedLines."Document No.";
-                        LineNo := SelectedLines."Line No.";
-                        CreatePurchaseLineFromIndent(SelectedLines);
-                        if IndentLine.Get(DocumentNo, LineNo) then begin
-                            IndentLine."Closed Indent" := true;
-                            IndentLine.Modify(true);
-                        end;
-                    until SelectedLines.Next() = 0;
-                    CurrPage.Update(false);
                 end;
             }
             action("Group Indent Lines")
@@ -695,6 +628,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                                 IndentLine."Order Line No." := Rec."Line No.";
                                 IndentLine."PO Created" := true;
                                 IndentLine."Closed Indent Grouped Line" := true;
+                                IndentLine."Released Stock Issue" := true;
                                 IndentLine.Modify(true);
                             end;
                         until SelectedLines.Next() = 0;

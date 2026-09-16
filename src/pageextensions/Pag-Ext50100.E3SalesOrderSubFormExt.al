@@ -31,6 +31,40 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
     {
         addlast(processing)
         {
+            action(CancleSoLine)
+            {
+                ApplicationArea = all;
+                Caption = 'Cancel SO line';
+                Image = Cancel;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Cancel SO Line';
+                trigger OnAction()
+                var
+                    IndentLine: Record "E3 Indent Line";
+                    salesLine: Record "Sales Line";
+                begin
+                    if (rec."Qty. Invoiced (Base)" = 0) and (rec."Qty. Shipped (Base)" = 0) then begin
+
+
+                        IndentLine.Reset();
+                        indentline.SetRange("No.", Rec."No.");
+                        IndentLine.SetRange("Sales Order No.", rec."Document No.");
+                        if IndentLine.FindSet() then
+                            repeat
+                                IndentLine."SO Created" := false;
+                                IndentLine."Sales Order No." := '';
+                                //IndentLine."Document No." := '';
+                                IndentLine.Modify();
+                                salesLine := Rec;
+                                salesLine.Delete(true);
+                            until IndentLine.Next() = 0;
+                        Message('Sales line %1 has been cancled from indent and Deleted.', rec."Line No.");
+                    end else
+                        Message('Sales line %1 has been partially Invoiced so can not be canceled from indent.', rec."Line No.");
+                end;
+            }
+
             action(GetIndentLines)
             {
                 ApplicationArea = All;
@@ -133,7 +167,7 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
             SalesLine.FOC := true;
         SalesLine."E3 Indent Line" := true;
         SalesLine.Insert(true);
-        UpdateIndentLine(IndentLine);
+        UpdateIndentLine(IndentLine, SalesLine);
     end;
 
 
@@ -166,9 +200,9 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
     end;
 
     local procedure UpdateIndentLine(
-        var IndentLine: Record "E3 Indent Line")
+        var IndentLine: Record "E3 Indent Line"; SalesLine: Record "Sales Line")
     begin
-        IndentLine."Sales Order No." := Rec."No.";
+        IndentLine."Sales Order No." := SalesLine."Document No.";
         IndentLine."SO Created" := true;
 
         IndentLine.Modify(true);

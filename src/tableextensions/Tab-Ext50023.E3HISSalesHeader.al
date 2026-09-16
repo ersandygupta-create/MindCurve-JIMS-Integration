@@ -136,4 +136,20 @@ tableextension 50023 "E3 HIS Sales Header" extends "Sales Header"
             DataClassification = CustomerContent;
         }
     }
+    trigger OnBeforeDelete()
+    begin
+        CheckIndentLine(Rec);
+    end;
+
+    local procedure CheckIndentLine(SalesHeader: Record "Sales Header")
+    var
+        SalesLine: Record "Sales Line";
+    begin
+        SalesLine.Reset();
+        SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+        SalesLine.setrange("Document No.", SalesHeader."No.");
+        SalesLine.SetFilter("E3 Indent Line", '%1', true);
+        if SalesLine.Find('-') then
+            Error('Indent Order can not be deleted.');
+    end;
 }
