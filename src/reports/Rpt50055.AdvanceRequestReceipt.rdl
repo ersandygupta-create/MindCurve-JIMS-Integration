@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-16T08:48:15.2717826Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-09-16T12:46:25.5831930Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -1312,7 +1312,7 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>=First(Fields!TotalPOAmount.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!TotalPOAmount.Value, "DataSet_Result")+First(Fields!GST_Amount.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Tahoma</FontFamily>
                       <FontSize>7pt</FontSize>
@@ -2378,7 +2378,6 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <rd:Selected>true</rd:Selected>
                         <Textbox Name="AdvPaymentChequeDate">
                           <rd:DefaultName>AdvPaymentChequeDate</rd:DefaultName>
                           <CanGrow>true</CanGrow>
@@ -2701,6 +2700,12 @@ End Function
         </Field>
         <Field Name="TotalPOAmountFormat">
           <DataField>TotalPOAmountFormat</DataField>
+        </Field>
+        <Field Name="GST_Amount">
+          <DataField>GST_Amount</DataField>
+        </Field>
+        <Field Name="GST_AmountFormat">
+          <DataField>GST_AmountFormat</DataField>
         </Field>
         <Field Name="TotalAppliedAmount">
           <DataField>TotalAppliedAmount</DataField>

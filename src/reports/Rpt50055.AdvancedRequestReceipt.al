@@ -46,6 +46,10 @@ report 50055 "E3 Advance Request Receipt"
             {
                 IncludeCaption = false;
             }
+            column(GST_Amount; "GST Amount")
+            {
+                IncludeCaption = false;
+            }
             column(TotalAppliedAmount; "Total Applied Amount")
             {
                 IncludeCaption = false;
