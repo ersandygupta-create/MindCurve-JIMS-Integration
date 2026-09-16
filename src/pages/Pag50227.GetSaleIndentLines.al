@@ -8,7 +8,7 @@ page 50227 "E3 Get Sale Indent Lines"
     DeleteAllowed = false;
     ModifyAllowed = false;
     MultipleNewLines = true;
-    SourceTableView = where("Released Stock Issue" = const(true));
+    SourceTableView = where("Released Stock Issue" = const(true), "SO Created" = const(false));
 
     layout
     {

@@ -315,6 +315,7 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Error(
                 'User Setup is not defined for user %1.',
                 UserId);
+        CheckIndentPO(Rec);
     end;
 
     local procedure ValidateDocumentDate()
@@ -334,6 +335,18 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
                 'Document Date %1 must be less than or equal to Posting Date %2.',
                 "Document Date",
                 "Posting Date");
+    end;
+
+    local procedure CheckIndentPO(Purchaseeader: Record "Purchase Header")
+    var
+        PurchLine: Record "Purchase Line";
+    begin
+        PurchLine.Reset();
+        purchline.SetRange("Document Type", Purchaseeader."Document Type");
+        PurchLine.SetRange("Document No.", Purchaseeader."No.");
+        PurchLine.SetFilter("Indent Line Remarks", '<>%1', '');
+        if PurchLine.Find('-') then
+            Error('Indent PO Can not be deleted.');
     end;
 
 }

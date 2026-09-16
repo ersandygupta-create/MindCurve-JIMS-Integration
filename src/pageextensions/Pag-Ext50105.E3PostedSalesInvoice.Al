@@ -20,9 +20,11 @@ pageextension 50105 "E3 Posted Sales Invoice" extends 143
                 begin
                     // 1. Validate that Voucher Type is populated
                     Rec.TestField("Voucher Type");
-
-                    // 2. Execute Purchase Order Creation Logic
-                    CreateMgmt.CreatePurchaseOrderFromSalesInvoice(Rec);
+                    if (rec."Purchase Order Created" = false) then
+                        // 2. Execute Purchase Order Creation Logic
+                        CreateMgmt.CreatePurchaseOrderFromSalesInvoice(Rec)
+                    else
+                        Message('Purchase Order already created.');
                 end;
             }
         }

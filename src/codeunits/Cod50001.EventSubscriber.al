@@ -465,9 +465,8 @@ codeunit 50001 "E3 HIS Event Subscriber"
             LotNoInfo.SetRange("Item No.", SalesLine."No.");
             LotNoInfo.SetRange("Lot No.", LotNo);
 
-            if LotNoInfo.FindFirst() then begin
+            if LotNoInfo.FindFirst() then
                 ExpiryDate := LotNoInfo."Expairy Date";
-            end;
 
         end;
 
@@ -529,5 +528,15 @@ codeunit 50001 "E3 HIS Event Subscriber"
     //         HideDialog := true;
     //     end;
     // end;
-
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"User Setup Management", 'OnBeforeCheckRespCenter2', '', false, false)]
+    local procedure BypassCheckRespCenter(DocType: Option Sales,Purchase,Service; AccRespCenter: Code[10]; UserCode: Code[50]; var IsHandled: Boolean; var Result: Boolean)
+    var
+        Context: Codeunit "E3 PO Creation Context";
+    begin
+        // Only bypass if triggered from your custom Codeunit
+        if Context.IsBypassActive() then begin
+            Result := true;
+            IsHandled := true;
+        end;
+    end;
 }

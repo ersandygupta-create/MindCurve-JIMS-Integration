@@ -219,6 +219,12 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             end;
         }
     }
+    trigger OnBeforeDelete()
+    begin
+        if rec."Indent Line Remarks" <> '' then
+            Error('Indent Purchase line can not be deleted.');
+    end;
+
     local procedure CheckMakeCode(var PurchaseHeader: Record "Purchase Header"; ItemMakeCode: code[20])
     begin
         if ItemMakeCode <> PurchaseHeader."Item Make Code" then

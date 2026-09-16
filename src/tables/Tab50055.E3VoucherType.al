@@ -152,6 +152,11 @@ table 50055 "E3 Voucher Type"
             Caption = 'Order Voucher Code';
             DataClassification = ToBeClassified;
         }
+        field(24; "Purchase Order Created"; Boolean)
+        {
+            Caption = 'Purchase Order.';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
