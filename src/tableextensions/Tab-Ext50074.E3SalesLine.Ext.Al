@@ -144,9 +144,13 @@ tableextension 50074 E3SalesLineExt extends "Sales Line"
 
     }
     trigger OnBeforeDelete()
+
     begin
+        //  if not SingleInstanceCodeUnit.IsSalesLineBypassActive() then begin
         if rec."E3 Indent Line" = true then
             Error('Indent Line can not be deleted.');
+        //end;
+
     end;
 
     local procedure CreateOrUpdateItemTracking(SalesLine: Record "Sales Line"; LotNo: Code[50]; ExpiryDate: Date; AvailableQty: Decimal)
@@ -207,4 +211,7 @@ tableextension 50074 E3SalesLineExt extends "Sales Line"
         if not ReservEntry.IsEmpty() then
             ReservEntry.DeleteAll(true);
     end;
+
+    var
+        SingleInstanceCodeUnit: Codeunit "E3 PO Creation Context";
 }

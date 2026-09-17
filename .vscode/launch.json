@@ -6,7 +6,11 @@
             "request": "launch",
             "type": "al",
             "environmentType": "Sandbox",
+<<<<<<< HEAD
             "environmentName": "Replica",
+=======
+            "environmentName": "SB170926",
+>>>>>>> 23fdde16a54813305cdf33d79b768ac9cc68316b
             "startupObjectId": 22,
             "startupObjectType": "Page",
             "tenant": "03698fc9-f9f4-4b50-a08a-e35a65aaa8b8",

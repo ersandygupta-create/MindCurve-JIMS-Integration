@@ -39,10 +39,12 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
                 Promoted = true;
                 PromotedCategory = Process;
                 ToolTip = 'Cancel SO Line';
+
                 trigger OnAction()
                 var
                     IndentLine: Record "E3 Indent Line";
                     salesLine: Record "Sales Line";
+
                 begin
                     if (rec."Qty. Invoiced (Base)" = 0) and (rec."Qty. Shipped (Base)" = 0) then begin
 
@@ -56,9 +58,13 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
                                 IndentLine."Sales Order No." := '';
                                 //IndentLine."Document No." := '';
                                 IndentLine.Modify();
-                                salesLine := Rec;
-                                salesLine.Delete(true);
                             until IndentLine.Next() = 0;
+                        Rec."E3 Indent Line" := false;
+                        Rec.Modify(false);
+                        //SingleInstance.SetBypass(true);
+                        SalesLine.Get(Rec."Document Type", Rec."Document No.", Rec."Line No.");
+                        SalesLine.Delete(true);
+                        //SingleInstance.SetBypass(false);
                         Message('Sales line %1 has been cancled from indent and Deleted.', rec."Line No.");
                     end else
                         Message('Sales line %1 has been partially Invoiced so can not be canceled from indent.', rec."Line No.");
@@ -239,4 +245,5 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
 
     var
         SalesHeader: Record "Sales Header";
+        SingleInstance: Codeunit "E3 PO Creation Context";
 }
