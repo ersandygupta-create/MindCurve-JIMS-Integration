@@ -247,11 +247,14 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     IndentHeader: Record "E3 Indent Header";
                     IndentLine: Record "E3 Indent Line";
                 begin
-                    PurchHeader.get(Rec."Document Type", rec."Document No.");
+                    PurchHeader.Reset();
+                    PurchHeader.SetRange("Document Type", rec."Document Type");
+                    PurchHeader.SetRange("No.", rec."Document No.");
+                    if PurchHeader.FindFirst() then;
                     IndentHeader.Reset();
                     IndentHeader.SetRange(Status, IndentHeader.Status::Approved);
                     IndentHeader.SetRange(Released, true);
-                    GroupIndentLines(PurchHeader."Item Make Code");
+                    GroupIndentLines(PurchHeader."Item Make Code", PurchHeader);
                 end;
             }
             action("Validate Purch Price")
@@ -530,10 +533,10 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
             until PurchLine.Next() = 0;
     end;
 
-    local procedure GroupIndentLines(var ItemMakeCode: Code[20])
+    local procedure GroupIndentLines(var ItemMakeCode: Code[20]; PurchHeader: Record "Purchase Header")
     var
         IndentLine: Record "E3 Indent Line";
-        SelectedIndentLine: Record "E3 Indent Line";
+        SelectedIndentLine: Record "E3 Indent Line" temporary; // MUST BE TEMPORARY
         SelectedLines: Record "E3 Indent Line" temporary;
         CurrentLine: Record "E3 Indent Line" temporary;
         GetGroupingIndentLinesPage: Page "E3 Get Groupping Indent Lines";
@@ -541,7 +544,6 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         GroupKey: Text;
         TotalQty: Decimal;
         FirstIndentLine: Record "E3 Indent Line";
-        FirstMakeCode: Code[50];
     begin
         // 1. Initial base filters
         IndentLine.Reset();
@@ -551,59 +553,51 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
 
         // 2. Handle blank ItemMakeCode scenario
         if ItemMakeCode = '' then begin
-            // Find the first available indent line matching the criteria
             if IndentLine.FindFirst() then begin
                 ItemMakeCode := IndentLine."Item Make Code";
 
-                // Update the Purchase Header with the determined Make Code
-                Rec.Validate("Item Make Code", ItemMakeCode);
-                Rec.Modify(true);
-            end else
-                ;
+                // Update Purchase Header with the extracted code
+                PurchHeader.Validate("Item Make Code", ItemMakeCode);
+                PurchHeader.Modify(true);
+            end;
         end;
 
-        // Apply the Make Code filter (whether passed initially or retrieved above)
+        // Release SQL write lock before running modal page
+        CurrPage.SaveRecord();
+        Commit();
+
+        // Re-apply base filters AND the Make Code filter
+        IndentLine.Reset();
+        IndentLine.SetRange("Released Stock Issue Purchase", true);
+        IndentLine.SetFilter(Remarks, 'PO Qty|Free Qty');
+        IndentLine.SetRange("PO Created", false);
+
         if ItemMakeCode <> '' then
             IndentLine.SetRange("Item Make Code", ItemMakeCode);
 
-        // Stop execution if no lines match the criteria
         if IndentLine.IsEmpty() then
             Error('No indent lines are available for grouping.');
 
-        // 3. Open lookup page with filtered records
+        // 3. Open lookup page showing ONLY filtered records
         GetGroupingIndentLinesPage.SetTableView(IndentLine);
         GetGroupingIndentLinesPage.LookupMode(true);
 
         if GetGroupingIndentLinesPage.RunModal() <> Action::LookupOK then
             exit;
 
-        // Get multi-selected lines using custom page procedure
-        GetGroupingIndentLinesPage.SetTableView(SelectedIndentLine);
+        // 4. Fetch ONLY user-selected lines into the temporary variable
+        GetGroupingIndentLinesPage.GetSelectedLines(SelectedIndentLine);
 
         if not SelectedIndentLine.FindSet() then
             exit;
 
-        Clear(FirstMakeCode);
-
-        // 4. Validate and copy selected lines to temporary buffer
+        // Copy marked selection into processing buffers
         repeat
-            if FirstMakeCode = '' then
-                FirstMakeCode := SelectedIndentLine."Item Make Code"
-            else
-                if FirstMakeCode <> SelectedIndentLine."Item Make Code" then
-                    Error('Selected indent lines have different Make Codes. Make Code must be the same for all selected lines.');
-
             SelectedLines := SelectedIndentLine;
             SelectedLines.Insert();
+            CurrentLine := SelectedIndentLine;
+            CurrentLine.Insert();
         until SelectedIndentLine.Next() = 0;
-
-        // Duplicate selection into CurrentLine buffer for distinct grouping iteration
-        SelectedLines.Reset();
-        if SelectedLines.FindSet() then
-            repeat
-                CurrentLine := SelectedLines;
-                CurrentLine.Insert();
-            until SelectedLines.Next() = 0;
 
         CurrentLine.Reset();
 
@@ -618,7 +612,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     TotalQty := 0;
                     Clear(FirstIndentLine);
 
-                    // Calculate cumulative quantity for the current group
+                    // Calculate cumulative quantity for current group
                     SelectedLines.Reset();
                     SelectedLines.SetRange("No.", CurrentLine."No.");
                     SelectedLines.SetRange(Description, CurrentLine.Description);
@@ -644,8 +638,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     if SelectedLines.FindSet() then
                         repeat
                             if IndentLine.Get(SelectedLines."Document No.", SelectedLines."Line No.") then begin
-                                IndentLine."Purchase Order No." := Rec."Document No.";
-                                IndentLine."Order Line No." := Rec."Line No.";
+                                IndentLine."Purchase Order No." := PurchHeader."No.";
                                 IndentLine."PO Created" := true;
                                 IndentLine."Closed Indent Grouped Line" := true;
                                 IndentLine."Released Stock Issue" := true;

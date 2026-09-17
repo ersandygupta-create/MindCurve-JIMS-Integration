@@ -27,7 +27,11 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             var
                 PurchaseHeader: REcord "Purchase Header";
             begin
-                PurchaseHeader.get(rec."Document No.");
+                // sandeep
+                PurchaseHeader.Reset();
+                PurchaseHeader.SetRange("No.", Rec."Document No.");
+                PurchaseHeader.SetRange("Document Type", rec."Document Type");
+                if PurchaseHeader.FindFirst() then;
                 if rec."Indent No." <> '' then
                     CheckMakeCode(PurchaseHeader, rec."Item Make Code");
             end;

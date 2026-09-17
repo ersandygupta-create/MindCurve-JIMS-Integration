@@ -122,15 +122,34 @@ page 50227 "E3 Get Sale Indent Lines"
             }
         }
     }
-    procedure GetSelectedLines(var TargetIndentLine: Record "E3 Indent Line")
+    var
+        TempIndentLine: Record "E3 Indent Line" temporary;
+
+    // This trigger fires inside the page execution before closing on OK
+    trigger OnQueryClosePage(CloseAction: Action): Boolean
+    var
+        SelectedIndentLine: Record "E3 Indent Line";
     begin
-        // 1. Clear any previous marks/filters
+        if CloseAction = Action::LookupOK then begin
+            CurrPage.SetSelectionFilter(SelectedIndentLine);
+            if SelectedIndentLine.FindSet() then
+                repeat
+                    TempIndentLine := SelectedIndentLine;
+                    TempIndentLine.Insert();
+                until SelectedIndentLine.Next() = 0;
+        end;
+    end;
+
+    // Export the captured temporary records to the calling code
+    procedure GetSelectedLines(var TargetIndentLine: Record "E3 Indent Line" temporary)
+    begin
         TargetIndentLine.Reset();
+        TargetIndentLine.DeleteAll();
 
-        // 2. Pass selected rows into Rec buffer
-        CurrPage.SetSelectionFilter(Rec);
-
-        // 3. Copy the exact filtered view to the target variable
-        TargetIndentLine.Copy(Rec);
+        if TempIndentLine.FindSet() then
+            repeat
+                TargetIndentLine := TempIndentLine;
+                TargetIndentLine.Insert();
+            until TempIndentLine.Next() = 0;
     end;
 }

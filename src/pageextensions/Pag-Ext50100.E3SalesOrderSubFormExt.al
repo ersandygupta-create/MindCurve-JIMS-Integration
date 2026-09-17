@@ -76,23 +76,20 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
 
                 trigger OnAction()
                 var
-                    IndentLine: Record "E3 Indent Line";
+                    TempIndentLine: Record "E3 Indent Line" temporary; // MUST BE TEMPORARY
                     GetIndentLinesPage: Page "E3 Get Sale Indent Lines";
                 begin
-                    GetIndentLinesPage.SetTableView(IndentLine);
                     GetIndentLinesPage.LookupMode(true);
 
                     if GetIndentLinesPage.RunModal() = Action::LookupOK then begin
+                        // Retrieves all marked rows stored inside TempIndentLine
+                        GetIndentLinesPage.GetSelectedLines(TempIndentLine);
 
-                        GetIndentLinesPage.GetSelectedLines(IndentLine);
-
-                        if not IndentLine.FindSet() then
-                            exit;
-
-                        repeat
-                            if not SalesLineAlreadyExists(IndentLine) then
-                                CreateSalesLineFromIndent(IndentLine);
-                        until IndentLine.Next() = 0;
+                        if TempIndentLine.FindSet() then
+                            repeat
+                                //if not SalesLineAlreadyExists(TempIndentLine) then
+                                CreateSalesLineFromIndent(TempIndentLine);
+                            until TempIndentLine.Next() = 0;
                     end;
 
                     CurrPage.Update(false);
@@ -141,10 +138,8 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
         SalesLine: Record "Sales Line";
         Location: Record Location;
     begin
-        if SalesLineAlreadyExists(IndentLine) then
-            exit;
-        SalesLine.Init();
 
+        SalesLine.Init();
         SalesLine."Document Type" := Rec."Document Type";
         SalesLine."Document No." := Rec."Document No.";
 

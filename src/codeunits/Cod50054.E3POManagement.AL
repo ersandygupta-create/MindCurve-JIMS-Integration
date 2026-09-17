@@ -35,7 +35,7 @@ codeunit 50054 "E3 Create PO Management"
         PurchHeader."Document Type" := PurchHeader."Document Type"::Order;
         PurchHeader.Validate("Voucher Type", voucherType."Order Voucher Code");
         if voucherTypeResp."Responsibility Center" <> '' then
-            PurchHeader."Responsibility Center" := voucherTypeResp."Responsibility Center";
+            PurchHeader.validate("Responsibility Center", voucherTypeResp."Responsibility Center");
 
         PurchHeader.Insert(true); // Validation check runs here, but is bypassed by Context flag
 

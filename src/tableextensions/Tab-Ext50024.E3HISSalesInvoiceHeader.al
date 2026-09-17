@@ -88,4 +88,8 @@ tableextension 50024 "E3 HIS Sales Invoice Header" extends "Sales Invoice Header
 
         }
     }
+    trigger OnAfterInsert()
+    begin
+        "Purchase Order Created" := false;
+    end;
 }
