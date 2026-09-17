@@ -122,4 +122,15 @@ page 50227 "E3 Get Sale Indent Lines"
             }
         }
     }
+    procedure GetSelectedLines(var TargetIndentLine: Record "E3 Indent Line")
+    begin
+        // 1. Clear any previous marks/filters
+        TargetIndentLine.Reset();
+
+        // 2. Pass selected rows into Rec buffer
+        CurrPage.SetSelectionFilter(Rec);
+
+        // 3. Copy the exact filtered view to the target variable
+        TargetIndentLine.Copy(Rec);
+    end;
 }

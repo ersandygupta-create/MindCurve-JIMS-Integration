@@ -530,7 +530,136 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
             until PurchLine.Next() = 0;
     end;
 
-    local procedure GroupIndentLines(var ItemMakeCode: code[20])
+    local procedure GroupIndentLines(var ItemMakeCode: Code[20])
+    var
+        IndentLine: Record "E3 Indent Line";
+        SelectedIndentLine: Record "E3 Indent Line";
+        SelectedLines: Record "E3 Indent Line" temporary;
+        CurrentLine: Record "E3 Indent Line" temporary;
+        GetGroupingIndentLinesPage: Page "E3 Get Groupping Indent Lines";
+        ProcessedGroups: Dictionary of [Text, Boolean];
+        GroupKey: Text;
+        TotalQty: Decimal;
+        FirstIndentLine: Record "E3 Indent Line";
+        FirstMakeCode: Code[50];
+    begin
+        // 1. Initial base filters
+        IndentLine.Reset();
+        IndentLine.SetRange("Released Stock Issue Purchase", true);
+        IndentLine.SetFilter(Remarks, 'PO Qty|Free Qty');
+        IndentLine.SetRange("PO Created", false);
+
+        // 2. Handle blank ItemMakeCode scenario
+        if ItemMakeCode = '' then begin
+            // Find the first available indent line matching the criteria
+            if IndentLine.FindFirst() then begin
+                ItemMakeCode := IndentLine."Item Make Code";
+
+                // Update the Purchase Header with the determined Make Code
+                Rec.Validate("Item Make Code", ItemMakeCode);
+                Rec.Modify(true);
+            end else
+                ;
+        end;
+
+        // Apply the Make Code filter (whether passed initially or retrieved above)
+        if ItemMakeCode <> '' then
+            IndentLine.SetRange("Item Make Code", ItemMakeCode);
+
+        // Stop execution if no lines match the criteria
+        if IndentLine.IsEmpty() then
+            Error('No indent lines are available for grouping.');
+
+        // 3. Open lookup page with filtered records
+        GetGroupingIndentLinesPage.SetTableView(IndentLine);
+        GetGroupingIndentLinesPage.LookupMode(true);
+
+        if GetGroupingIndentLinesPage.RunModal() <> Action::LookupOK then
+            exit;
+
+        // Get multi-selected lines using custom page procedure
+        GetGroupingIndentLinesPage.SetTableView(SelectedIndentLine);
+
+        if not SelectedIndentLine.FindSet() then
+            exit;
+
+        Clear(FirstMakeCode);
+
+        // 4. Validate and copy selected lines to temporary buffer
+        repeat
+            if FirstMakeCode = '' then
+                FirstMakeCode := SelectedIndentLine."Item Make Code"
+            else
+                if FirstMakeCode <> SelectedIndentLine."Item Make Code" then
+                    Error('Selected indent lines have different Make Codes. Make Code must be the same for all selected lines.');
+
+            SelectedLines := SelectedIndentLine;
+            SelectedLines.Insert();
+        until SelectedIndentLine.Next() = 0;
+
+        // Duplicate selection into CurrentLine buffer for distinct grouping iteration
+        SelectedLines.Reset();
+        if SelectedLines.FindSet() then
+            repeat
+                CurrentLine := SelectedLines;
+                CurrentLine.Insert();
+            until SelectedLines.Next() = 0;
+
+        CurrentLine.Reset();
+
+        // 5. Group selected lines by Item No., Description, and Remarks
+        if CurrentLine.FindSet() then
+            repeat
+                GroupKey := CurrentLine."No." + '|' + CurrentLine.Description + '|' + CurrentLine.Remarks;
+
+                if not ProcessedGroups.ContainsKey(GroupKey) then begin
+                    ProcessedGroups.Add(GroupKey, true);
+
+                    TotalQty := 0;
+                    Clear(FirstIndentLine);
+
+                    // Calculate cumulative quantity for the current group
+                    SelectedLines.Reset();
+                    SelectedLines.SetRange("No.", CurrentLine."No.");
+                    SelectedLines.SetRange(Description, CurrentLine.Description);
+                    SelectedLines.SetRange(Remarks, CurrentLine.Remarks);
+
+                    if SelectedLines.FindSet() then
+                        repeat
+                            TotalQty := TotalQty + SelectedLines."Requested Qty";
+                            if FirstIndentLine."Document No." = '' then
+                                FirstIndentLine.Get(SelectedLines."Document No.", SelectedLines."Line No.");
+                        until SelectedLines.Next() = 0;
+
+                    // Create the grouped Purchase Line
+                    if (FirstIndentLine."Document No." <> '') and (TotalQty <> 0) then
+                        CreateGroupedPurchaseLine(FirstIndentLine, TotalQty);
+
+                    // Mark processed Indent Lines as closed and linked to Purchase Order
+                    SelectedLines.Reset();
+                    SelectedLines.SetRange("No.", CurrentLine."No.");
+                    SelectedLines.SetRange(Description, CurrentLine.Description);
+                    SelectedLines.SetRange(Remarks, CurrentLine.Remarks);
+
+                    if SelectedLines.FindSet() then
+                        repeat
+                            if IndentLine.Get(SelectedLines."Document No.", SelectedLines."Line No.") then begin
+                                IndentLine."Purchase Order No." := Rec."Document No.";
+                                IndentLine."Order Line No." := Rec."Line No.";
+                                IndentLine."PO Created" := true;
+                                IndentLine."Closed Indent Grouped Line" := true;
+                                IndentLine."Released Stock Issue" := true;
+                                IndentLine.Modify(true);
+                            end;
+                        until SelectedLines.Next() = 0;
+                end;
+            until CurrentLine.Next() = 0;
+
+        CurrPage.Update(false);
+        Message('Selected indent lines have been grouped and added to the purchase order.');
+    end;
+
+    local procedure GroupIndentLinesBackup(var ItemMakeCode: code[20])
     var
         IndentLine: Record "E3 Indent Line";
         SelectedIndentLine: Record "E3 Indent Line";

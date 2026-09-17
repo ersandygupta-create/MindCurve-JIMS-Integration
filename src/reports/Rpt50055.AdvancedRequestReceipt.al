@@ -5,6 +5,12 @@ report 50055 "E3 Advance Request Receipt"
     ApplicationArea = All;
     DefaultLayout = RDLC;
     RDLCLayout = './src/Reports/Rpt50055.AdvanceRequestReceipt.rdl';
+    Permissions = TableData "Company Information" = r,
+                  TableData "Vendor Ledger Entry" = r,
+                  TableData "Bank Account Ledger Entry" = r,
+                  TableData "Bank Account" = r,
+                  TableData Vendor = r,
+                  TableData "Purch. Rcpt. Header" = r;
 
     dataset
     {
