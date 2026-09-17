@@ -66,14 +66,11 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
         Clear(GRNObj);
 
         GRNObj.Add('d365_DocId', PurchaseShipmentHeader."No.");
-        GRNObj.Add('v_Type', 'Purchase Challan (D)');
+        GRNObj.Add('v_Type', PurchaseShipmentHeader."GRN Voucher Type Name");
         GRNObj.Add('v_Prefix', '');
         GRNObj.Add('v_Date', Format(PurchaseShipmentHeader."Posting Date", 0, '<Year4>-<Month,2>-<Day,2>'));
         GRNObj.Add('d365_departmentCode', PurchaseShipmentHeader."Location Code");
-        if Location.Get(PurchaseShipmentHeader."Location Code") then
-            GRNObj.Add('departmentName', Location.Name)
-        else
-            GRNObj.Add('departmentName', '');
+        GRNObj.Add('departmentName', '');
         GRNObj.Add('d365_Supplier_subCode', PurchaseShipmentHeader."Buy-from Vendor No.");
         GRNObj.Add('placeOfSupply', 'HR');
         GRNObj.Add('remark', '');
@@ -142,10 +139,7 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
                     LineObj.Add('d365_itemCode', PurchaseShipmentLine."No.");
                     LineObj.Add('itemName', PurchaseShipmentLine.Description);
                     LineObj.Add('d365_departmentCode', PurchaseShipmentLine."Location Code");
-                    if Location.Get(PurchaseShipmentLine."Location Code") then
-                        GRNObj.Add('departmentName', Location.Name)
-                    else
-                        GRNObj.Add('departmentName', '');
+                    GRNObj.Add('departmentName', '');
                     LineObj.Add('d365_unitCode', PurchaseShipmentLine."Unit of Measure");
                     LineObj.Add('d365_hsnCode', '0');
                     LineObj.Add('indentSKUQty', PurchaseShipmentLine.Quantity);

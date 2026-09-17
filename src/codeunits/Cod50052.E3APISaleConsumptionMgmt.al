@@ -18,8 +18,6 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         E3APISetup: Record "E3 Integration API Setup";
         SaleShipmentHeader: Record "Sales Shipment Header";
         SaleShipmentLine: Record "Sales Shipment Line";
-        Location: Record Location;
-        DimensionValue: Record "Dimension Value";
 
     procedure SendSaleShipmentDetails(DocumentID: Code[20]): Boolean
     var
@@ -66,16 +64,13 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         Clear(GRNObj);
 
         GRNObj.Add('d365_DocId', SaleShipmentHeader."No.");
-        GRNObj.Add('v_Type', 'Transfer Shipment');
+        GRNObj.Add('v_Type', '');
         GRNObj.Add('v_Prefix', '');
         GRNObj.Add('v_Date', Format(SaleShipmentHeader."Posting Date", 0, '<Year4>-<Month,2>-<Day,2>'));
-        GRNObj.Add('d365_departmentCode', SaleShipmentHeader."Location Code");
-        if Location.Get(SaleShipmentHeader."Location Code") then
-            GRNObj.Add('departmentName', Location.Name)
-        else
-            GRNObj.Add('departmentName', '');
+        GRNObj.Add('d365_departmentCode', SaleShipmentHeader."Shortcut Dimension 2 Code");
+        GRNObj.Add('departmentName', 'SaleShipmentHeader."Department Name"');
         GRNObj.Add('d365_Supplier_subCode', SaleShipmentHeader."Sell-to Customer No.");
-        GRNObj.Add('placeOfSupply', 'HR');
+        GRNObj.Add('placeOfSupply', 'ABC');
         GRNObj.Add('remark', '');
         GRNObj.Add('d365_pChallanNo', SaleShipmentHeader."External Document No.");
         GRNObj.Add('d365_pChallanDate', Format(SaleShipmentHeader."Document Date", 0, '<Year4>-<Month,2>-<Day,2>'));
@@ -99,10 +94,7 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         GRNObj.Add('approvalDateTime', Format(SaleShipmentHeader.SystemModifiedAt, 0,
          '<Year4>-<Month,2>-<Day,2>T<Hours24,2>:<Minutes,2>:<Seconds,2>'));
         GRNObj.Add('businessUnitCode', SaleShipmentHeader."Shortcut Dimension 1 Code");
-        if DimensionValue.Get(SaleShipmentHeader."Shortcut Dimension 1 Code") then
-            GRNObj.Add('businessUnitName', DimensionValue.Name)
-        else
-            GRNObj.Add('businessUnitName', '');
+        GRNObj.Add('businessUnitName', '');
         GRNObj.Add('rcmApplicable', 0);
         GRNObj.Add('partyType', 'Customer');
         GRNObj.Add('gsTin', SaleShipmentHeader."Customer GST Reg. No.");
@@ -141,11 +133,8 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
                     LineObj.Add('v_SNo', SaleShipmentLine."Line No." DIV 10000);
                     LineObj.Add('d365_itemCode', SaleShipmentLine."No.");
                     LineObj.Add('itemName', SaleShipmentLine.Description);
-                    LineObj.Add('d365_departmentCode', SaleShipmentLine."Location Code");
-                    if Location.Get(SaleShipmentHeader."Location Code") then
-                        GRNObj.Add('departmentName', Location.Name)
-                    else
-                        GRNObj.Add('departmentName', '');
+                    LineObj.Add('d365_departmentCode', SaleShipmentLine."Shortcut Dimension 2 Code");
+                    LineObj.Add('departmentName', '');
                     LineObj.Add('d365_unitCode', SaleShipmentLine."Unit of Measure");
                     LineObj.Add('d365_hsnCode', SaleShipmentLine."HSN/SAC Code");
                     LineObj.Add('indentSKUQty', SaleShipmentLine.Quantity);
@@ -177,7 +166,7 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
                     LineObj.Add('skuStaffSaleRate', SaleShipmentLine."Unit Cost");
                     LineObj.Add('barcode', '');
                     LineObj.Add('batchNo', SaleShipmentLine."Batch No.");
-                    LineObj.Add('manufacturingDate', '2026-09-10');
+                    LineObj.Add('manufacturingDate', '2026-09-17');
                     LineObj.Add('expiryDate', '2026-12-10');
                     // LineObj.Add('expiryDate', Format(SaleShipmentLine."Expiry Date", 0, '<Year4>-<Month,2>-<Day,2>T00:00:00Z'));
 

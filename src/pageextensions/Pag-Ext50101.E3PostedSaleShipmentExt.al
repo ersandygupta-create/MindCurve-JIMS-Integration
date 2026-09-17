@@ -17,14 +17,18 @@ pageextension 50101 "E3 Posted Sales Ship Ext" extends "Posted Sales Shipments"
                 var
                     HISIntegrationMgt: Codeunit "E3 Sale Shipment Cons. Mgmt.";
                 begin
-                    // Validate selected shipment
-                    if Rec."No." = '' then
-                        Error('Posted Sales Shipment No. cannot be blank.');
-                    HISIntegrationMgt.SendSaleShipmentDetails(Rec."No.");
+                    Rec.TestField("No.");
 
-                    Message(
-                        'Posted Sales Shipment %1 has been sent to HIS.',
-                        Rec."No.");
+                    if not Confirm(
+                         StrSubstNo('Do you want to send GRN %1 to the DB?', Rec."No."))
+                    then
+                        exit;
+
+                    if HISIntegrationMgt.SendSaleShipmentDetails(Rec."No.") then begin
+                        Message('Sale %1 has been sent successfully.', Rec."No.");
+                        CurrPage.Update(true);
+                    end else
+                        Error('Failed to send Sale %1. Please check the Response field.', Rec."No.");
                 end;
             }
         }
