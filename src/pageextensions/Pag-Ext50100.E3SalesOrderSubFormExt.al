@@ -84,7 +84,7 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
 
                     if GetIndentLinesPage.RunModal() = Action::LookupOK then begin
 
-                        GetIndentLinesPage.SetSelectionFilter(IndentLine);
+                        GetIndentLinesPage.GetSelectedLines(IndentLine);
 
                         if not IndentLine.FindSet() then
                             exit;
@@ -237,6 +237,7 @@ pageextension 50100 "E3 Sales Order Subform Ext" extends "Sales Order Subform"
         NewSalesLine.Validate(Quantity, SplitQty);
         NewSalesLine.Insert(true);
         SalesLine.Validate(Quantity, OriginalQty - SplitQty);
+        SalesLine.Validate(MRP, SalesLine.MRP);
         SalesLine.Modify(true);
     end;
 

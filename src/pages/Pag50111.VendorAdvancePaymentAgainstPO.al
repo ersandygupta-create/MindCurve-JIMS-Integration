@@ -10,7 +10,7 @@ page 50111 "Vendor Advance Pay. Against PO"
     DeleteAllowed = true;
     ModifyAllowed = true;
     InsertAllowed = true;
-
+    Permissions = tabledata "Vendor Adv. Pay. Ag. PO" = rm;
     layout
     {
         area(content)
@@ -143,22 +143,27 @@ page 50111 "Vendor Advance Pay. Against PO"
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 ToolTip = 'Print the Advance Request Receipt.';
+
                 trigger OnAction()
                 var
                     AdvanceRequest: Record "Vendor Adv. Pay. Ag. PO";
                 begin
-                    AdvanceRequest.Copy(Rec);
+                    // 1. Save page changes & release active SQL write transaction
+                    CurrPage.SaveRecord();
+                    Commit();
+
+                    // 2. Prepare filter buffer
+                    AdvanceRequest.Reset();
                     AdvanceRequest.SetRange("Document No", Rec."Document No");
 
+                    // 3. Run report modally with Request Page (true)
                     Report.RunModal(
                         Report::"E3 Advance Request Receipt",
-                        true,
+                        false,  // ReqWindow = true (Allowed because Commit released transaction)
                         false,
                         AdvanceRequest
                     );
                 end;
-
-
             }
             action(ReleaseDoc)
             {

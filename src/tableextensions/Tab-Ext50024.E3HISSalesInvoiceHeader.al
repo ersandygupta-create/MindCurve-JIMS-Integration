@@ -77,12 +77,14 @@ tableextension 50024 "E3 HIS Sales Invoice Header" extends "Sales Invoice Header
         {
             Caption = 'Purchase order No.';
             DataClassification = ToBeClassified;
+            InitValue = '';
 
         }
         field(50110; "Purchase Order Created"; Boolean)
         {
             Caption = 'Purchase order Created';
             DataClassification = ToBeClassified;
+            InitValue = false;
 
         }
     }
