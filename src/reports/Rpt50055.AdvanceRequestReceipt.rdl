@@ -1123,6 +1123,9 @@
                 </TablixMember>
                 <TablixMember>
                   <Group Name="Details2" />
+                  <Visibility>
+                    <Hidden>=IIf(Fields!BillPostingDate.Value&lt;&gt;0,FALSE,TRUE)</Hidden>
+                  </Visibility>
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
@@ -1408,7 +1411,7 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>=First(Fields!TotalPOAmount.Value, "DataSet_Result")+sum(First(Fields!GST_Amount.Value, "DataSet_Result"))</Value>
+                    <Value>=First(Fields!TotalPOAmount.Value, "DataSet_Result")+(Fields!GST_Amount.Value)</Value>
                     <Style>
                       <FontFamily>Tahoma</FontFamily>
                       <FontSize>7pt</FontSize>

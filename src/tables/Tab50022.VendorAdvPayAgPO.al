@@ -222,35 +222,22 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
 
         if PurchLine.FindSet() then
             repeat
-                // Calculate basic amount = Quantity * Direct Unit Cost
-                LineAmount += PurchLine.Quantity * PurchLine."Direct Unit Cost";
+                // Reset line amount for each purchase line
+                LineAmount := PurchLine.Quantity * PurchLine."Direct Unit Cost";
 
-                // Only calculate GST when GST Group Code exists
                 if PurchLine."GST Group Code" <> '' then begin
+                    GSTPercentage := 0;
 
-                    // Replace this part with your GST Group setup/rate lookup
-                    GSTPercentage += 0;
-                    Evaluate(GSTPercentage, PurchLine."GST Group Code");
-
-                    GSTAmount += Round(
-                        LineAmount * GSTPercentage / 100,
-                        0.01);
+                    if Evaluate(GSTPercentage, PurchLine."GST Group Code") then
+                        GSTAmount += Round(
+                            LineAmount * GSTPercentage / 100,
+                            0.01);
                 end;
             until PurchLine.Next() = 0;
 
         "GST Amount" := GSTAmount;
     end;
 
-
-    // local procedure GetGSTPercentage(GSTGroupCode: Code[20]): Decimal
-    // var
-    //     GSTGroup: Record "GST Group";
-    // begin
-    //     if GSTGroup.Get(GSTGroupCode) then
-    //         exit(GSTGroup.Code);
-
-    //     exit(0);
-    // end;
 
     trigger OnDelete()
     begin
