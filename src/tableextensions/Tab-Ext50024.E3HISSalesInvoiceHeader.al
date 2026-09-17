@@ -71,7 +71,6 @@ tableextension 50024 "E3 HIS Sales Invoice Header" extends "Sales Invoice Header
         {
             Caption = 'Voucher Type';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Voucher Type".Code where("Entry Type" = const(Sale));
         }
         field(50109; "Purchase Order No."; Code[20])
         {
@@ -85,7 +84,16 @@ tableextension 50024 "E3 HIS Sales Invoice Header" extends "Sales Invoice Header
             Caption = 'Purchase order Created';
             DataClassification = ToBeClassified;
             InitValue = false;
-
+        }
+        field(50112; "GRN Voucher Type Name"; Text[60])
+        {
+            Caption = 'GRN Voucher Type Name';
+            DataClassification = CustomerContent;
+        }
+        field(50113; Sync; Boolean)
+        {
+            Caption = 'Sync';
+            DataClassification = CustomerContent;
         }
     }
     trigger OnAfterInsert()

@@ -67,5 +67,21 @@ tableextension 50025 "E3 HIS Sales Cr.Memo Hdr" extends "Sales Cr.Memo Header"
             DataClassification = CustomerContent;
             Caption = 'Payer Name';
         }
+        field(50108; "Voucher Type"; Code[20])
+        {
+            Caption = 'Voucher Type';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Voucher Type".Code where("Entry Type" = const(Sale));
+        }
+        field(50112; "GRN Voucher Type Name"; Text[60])
+        {
+            Caption = 'GRN Voucher Type Name';
+            DataClassification = CustomerContent;
+        }
+        field(50113; Sync; Boolean)
+        {
+            Caption = 'Sync';
+            DataClassification = CustomerContent;
+        }
     }
 }

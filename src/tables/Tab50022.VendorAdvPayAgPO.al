@@ -211,7 +211,9 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
     var
         PurchLine: Record "Purchase Line";
         GSTAmount: Decimal;
-        LineAmount: Decimal;
+        GrossLineAmount: Decimal;
+        DiscountAmount: Decimal;
+        TaxableAmount: Decimal;
         GSTPercentage: Decimal;
     begin
         GSTAmount := 0;
@@ -222,16 +224,31 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
 
         if PurchLine.FindSet() then
             repeat
-                // Reset line amount for each purchase line
-                LineAmount := PurchLine.Quantity * PurchLine."Direct Unit Cost";
+                // Gross amount before line discount
+                GrossLineAmount :=
+                    PurchLine.Quantity * PurchLine."Direct Unit Cost";
 
+                // Calculate line discount
+                DiscountAmount :=
+                    Round(
+                        GrossLineAmount *
+                        PurchLine."Line Discount %" / 100,
+                        0.01);
+
+                // Taxable amount after discount
+                TaxableAmount :=
+                    GrossLineAmount - DiscountAmount;
+
+                // GST Group Code contains GST percentage
                 if PurchLine."GST Group Code" <> '' then begin
                     GSTPercentage := 0;
 
-                    if Evaluate(GSTPercentage, PurchLine."GST Group Code") then
-                        GSTAmount += Round(
-                            LineAmount * GSTPercentage / 100,
-                            0.01);
+                    if Evaluate(GSTPercentage, PurchLine."GST Group Code") then begin
+                        GSTAmount +=
+                            Round(
+                                TaxableAmount * GSTPercentage / 100,
+                                0.01);
+                    end;
                 end;
             until PurchLine.Next() = 0;
 

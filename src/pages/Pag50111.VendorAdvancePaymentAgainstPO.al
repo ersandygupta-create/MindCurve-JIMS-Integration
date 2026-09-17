@@ -142,7 +142,6 @@ page 50111 "Vendor Advance Pay. Against PO"
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
-                Visible = false;
                 ToolTip = 'Print the Advance Request Receipt.';
 
                 trigger OnAction()
