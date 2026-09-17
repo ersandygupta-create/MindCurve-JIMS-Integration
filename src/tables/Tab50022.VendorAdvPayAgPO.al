@@ -31,6 +31,7 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
                 if not PaymentTerm.Get(PurchaseHeader."Payment Terms Code") then
                     exit;
                 "Advance Due Date" := CalcDate(PaymentTerm."Due Date Calculation", WorkDate());
+                CalculateGSTAmount();
 
             end;
 
@@ -175,6 +176,7 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
         VoucherType: Record "E3 Voucher Type";
         PaymentTerm: Record "Payment Terms";
         NoSeries: Codeunit "No. Series";
+        CalcStatistics: Codeunit "Calculate Statistics";
     //  TaxCalculation: Codeunit "Tax Document Interface"; // Indian GST Engine
     begin
         rec."Advance Request Date" := WorkDate();
@@ -185,6 +187,7 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
             PurchOrder.CalcFields(Amount);
             PurchOrder.CalcFields("Amount Including VAT");
             "Total PO Amount" := PurchOrder."Amount Including VAT";
+            CalculateGSTAmount();
             ;
             ;
 
@@ -203,6 +206,38 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
             "BU Code" := PurchOrder."Shortcut Dimension 1 Code";
         end;
     end;
+
+    local procedure CalculateGSTAmount()
+    var
+        PurchLine: Record "Purchase Line";
+        GSTAmount: Decimal;
+        LineAmount: Decimal;
+        GSTPercentage: Decimal;
+    begin
+        GSTAmount := 0;
+
+        PurchLine.Reset();
+        PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+        PurchLine.SetRange("Document No.", "Purchase Order No.");
+
+        if PurchLine.FindSet() then
+            repeat
+                // Reset line amount for each purchase line
+                LineAmount := PurchLine.Quantity * PurchLine."Direct Unit Cost";
+
+                if PurchLine."GST Group Code" <> '' then begin
+                    GSTPercentage := 0;
+
+                    if Evaluate(GSTPercentage, PurchLine."GST Group Code") then
+                        GSTAmount += Round(
+                            LineAmount * GSTPercentage / 100,
+                            0.01);
+                end;
+            until PurchLine.Next() = 0;
+
+        "GST Amount" := GSTAmount;
+    end;
+
 
     trigger OnDelete()
     begin

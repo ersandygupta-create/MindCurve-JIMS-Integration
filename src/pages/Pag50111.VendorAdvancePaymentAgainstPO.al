@@ -74,7 +74,12 @@ page 50111 "Vendor Advance Pay. Against PO"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Total PO Amount field';
                 }
-
+                field("GST Amount"; Rec."GST Amount")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                    ToolTip = 'Specifies the value of the GST Amount field';
+                }
                 field("Total Applied Amount"; Rec."Total Applied Amount")
                 {
                     ApplicationArea = all;
@@ -129,6 +134,32 @@ page 50111 "Vendor Advance Pay. Against PO"
     {
         area(navigation)
         {
+            action("Advance Request Receipt")
+            {
+                ApplicationArea = All;
+                Caption = 'Print Advance Request Receipt';
+                Image = Report;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                ToolTip = 'Print the Advance Request Receipt.';
+                trigger OnAction()
+                var
+                    AdvanceRequest: Record "Vendor Adv. Pay. Ag. PO";
+                begin
+                    AdvanceRequest.Copy(Rec);
+                    AdvanceRequest.SetRange("Document No", Rec."Document No");
+
+                    Report.RunModal(
+                        Report::"E3 Advance Request Receipt",
+                        true,
+                        false,
+                        AdvanceRequest
+                    );
+                end;
+
+
+            }
             action(ReleaseDoc)
             {
                 Caption = 'Release';
