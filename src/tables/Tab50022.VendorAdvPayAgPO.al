@@ -229,7 +229,7 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
                 if PurchLine."GST Group Code" <> '' then begin
 
                     // Replace this part with your GST Group setup/rate lookup
-                    GSTPercentage := 0;
+                    GSTPercentage += 0;
                     Evaluate(GSTPercentage, PurchLine."GST Group Code");
 
                     GSTAmount += Round(
