@@ -42,11 +42,12 @@ codeunit 50054 "E3 Create PO Management"
         PurchHeader.Insert(true); // Validation check runs here, but is bypassed by Context flag
 
         ResponsibilityCenter.Get(voucherTypeResp."Responsibility Center");
-        PurchHeader.Validate("Location Code", ResponsibilityCenter."Location Code");
+
         PurchHeader.Validate("Posting Date", SalesInvHeader."Posting Date");
         PurchHeader.Validate("Document Date", SalesInvHeader."Document Date");
         PurchHeader.Validate("Vendor Invoice No.", SalesInvHeader."No.");
         PurchHeader.Validate("Buy-from Vendor No.", voucherType."Vendor No.");
+        PurchHeader.Validate("Location Code", ResponsibilityCenter."Location Code");
         PurchHeader.Modify(true);
         // 3. Loop Sales Invoice Lines and Create Purchase Lines
         SalesInvLine.Reset();
