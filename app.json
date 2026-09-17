@@ -3,7 +3,7 @@
   "name": "JIMS Integration",
   "publisher": "MindCurve",
 
-  "version": "1.0.0.20",
+  "version": "1.0.0.22",
  
   "brief": "JIMS Integration",
   "description": "HIS Integration with JIMS",
