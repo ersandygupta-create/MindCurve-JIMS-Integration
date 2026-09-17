@@ -1,9 +1,9 @@
-codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
+codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
 {
 
     TableNo = "Job Queue Entry";
-    Permissions = tabledata "Sales Shipment Header" = rm,
-    tabledata "Sales Shipment Line" = rm;
+    Permissions = tabledata "Return Shipment Header" = rm,
+    tabledata "Return Shipment Line" = rm;
 
     trigger OnRun()
     begin
@@ -16,12 +16,12 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
 
     var
         E3APISetup: Record "E3 Integration API Setup";
-        SaleShipmentHeader: Record "Sales Shipment Header";
-        SaleShipmentLine: Record "Sales Shipment Line";
+        PurchaseShipmentHeader: Record "Return Shipment Header";
+        PurchaseShipmentLine: Record "Return Shipment Line";
         Location: Record Location;
         DimensionValue: Record "Dimension Value";
 
-    procedure SendSaleShipmentDetails(DocumentID: Code[20]): Boolean
+    procedure SendPurchaseShipmentDetails(DocumentID: Code[20]): Boolean
     var
         HttpWebClient: HttpClient;
         HttpWebContent: HttpContent;
@@ -58,27 +58,27 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
 
         E3APISetup.TestField("Sale Consumption API");
 
-        if not SaleShipmentHeader.Get(DocumentID) then
+        if not PurchaseShipmentHeader.Get(DocumentID) then
             Error(
                 'Document %1 not found.',
                 DocumentID);
 
         Clear(GRNObj);
 
-        GRNObj.Add('d365_DocId', SaleShipmentHeader."No.");
-        GRNObj.Add('v_Type', 'Transfer Shipment');
+        GRNObj.Add('d365_DocId', PurchaseShipmentHeader."No.");
+        GRNObj.Add('v_Type', 'Purchase Challan (D)');
         GRNObj.Add('v_Prefix', '');
-        GRNObj.Add('v_Date', Format(SaleShipmentHeader."Posting Date", 0, '<Year4>-<Month,2>-<Day,2>'));
-        GRNObj.Add('d365_departmentCode', SaleShipmentHeader."Location Code");
-        if Location.Get(SaleShipmentHeader."Location Code") then
+        GRNObj.Add('v_Date', Format(PurchaseShipmentHeader."Posting Date", 0, '<Year4>-<Month,2>-<Day,2>'));
+        GRNObj.Add('d365_departmentCode', PurchaseShipmentHeader."Location Code");
+        if Location.Get(PurchaseShipmentHeader."Location Code") then
             GRNObj.Add('departmentName', Location.Name)
         else
             GRNObj.Add('departmentName', '');
-        GRNObj.Add('d365_Supplier_subCode', SaleShipmentHeader."Sell-to Customer No.");
+        GRNObj.Add('d365_Supplier_subCode', PurchaseShipmentHeader."Buy-from Vendor No.");
         GRNObj.Add('placeOfSupply', 'HR');
         GRNObj.Add('remark', '');
-        GRNObj.Add('d365_pChallanNo', SaleShipmentHeader."External Document No.");
-        GRNObj.Add('d365_pChallanDate', Format(SaleShipmentHeader."Document Date", 0, '<Year4>-<Month,2>-<Day,2>'));
+        GRNObj.Add('d365_pChallanNo', PurchaseShipmentHeader."Return Order No.");
+        GRNObj.Add('d365_pChallanDate', Format(PurchaseShipmentHeader."Document Date", 0, '<Year4>-<Month,2>-<Day,2>'));
         GRNObj.Add('oh_Amt_Gross', 0);
         GRNObj.Add('oh_Amt_Discount', 0);
         GRNObj.Add('oh_Amt_Taxable', 0);
@@ -94,23 +94,23 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         GRNObj.Add('oh_Amt_LandedValue', 0);
         GRNObj.Add('d365_TimeStamp', Format(CurrentDateTime, 0, 9));
         GRNObj.Add('preparedBy', 'D365');
-        GRNObj.Add('preparedDate', Format(SaleShipmentHeader."Posting Date", 0, '<Year4>-<Month,2>-<Day,2>'));
+        GRNObj.Add('preparedDate', Format(PurchaseShipmentHeader."Posting Date", 0, '<Year4>-<Month,2>-<Day,2>'));
         GRNObj.Add('approvedBy', 'D365');
-        GRNObj.Add('approvalDateTime', Format(SaleShipmentHeader.SystemModifiedAt, 0,
+        GRNObj.Add('approvalDateTime', Format(PurchaseShipmentHeader.SystemModifiedAt, 0,
          '<Year4>-<Month,2>-<Day,2>T<Hours24,2>:<Minutes,2>:<Seconds,2>'));
-        GRNObj.Add('businessUnitCode', SaleShipmentHeader."Shortcut Dimension 1 Code");
-        if DimensionValue.Get(SaleShipmentHeader."Shortcut Dimension 1 Code") then
+        GRNObj.Add('businessUnitCode', PurchaseShipmentHeader."Shortcut Dimension 1 Code");
+        if DimensionValue.Get(PurchaseShipmentHeader."Shortcut Dimension 1 Code") then
             GRNObj.Add('businessUnitName', DimensionValue.Name)
         else
             GRNObj.Add('businessUnitName', '');
         GRNObj.Add('rcmApplicable', 0);
-        GRNObj.Add('partyType', 'Customer');
-        GRNObj.Add('gsTin', SaleShipmentHeader."Customer GST Reg. No.");
-        GRNObj.Add('eWayBillNo', SaleShipmentHeader."E-Way Bill No.");
+        GRNObj.Add('partyType', 'Vendor');
+        GRNObj.Add('gsTin', PurchaseShipmentHeader."VAT Registration No.");
+        GRNObj.Add('eWayBillNo', PurchaseShipmentHeader."No.");
         GRNObj.Add('eWayBillDt', Format(CurrentDateTime, 0, 9));
         GRNObj.Add('lrNo', '');
         GRNObj.Add('lrDate', Format(CurrentDateTime, 0, 9));
-        // if SaleShipmentHeader."GST Location" = 'Intrastate' then
+        // if PurchaseShipmentHeader."GST Location" = 'Intrastate' then
         //     GRNObj.Add('gsTlocation', '1')
         // else
         GRNObj.Add('gsTlocation', '1');
@@ -126,34 +126,34 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
 
         Clear(LineArray);
 
-        SaleShipmentLine.Reset();
-        SaleShipmentLine.SetRange("Document No.", DocumentID);
+        PurchaseShipmentLine.Reset();
+        PurchaseShipmentLine.SetRange("Document No.", DocumentID);
 
-        if SaleShipmentLine.FindSet() then
+        if PurchaseShipmentLine.FindSet() then
             repeat
 
                 // Skip zero received quantity
-                if SaleShipmentLine.Quantity <> 0 then begin
+                if PurchaseShipmentLine.Quantity <> 0 then begin
 
                     Clear(LineObj);
 
-                    LineObj.Add('d365_DocId', SaleShipmentLine."Document No.");
-                    LineObj.Add('v_SNo', SaleShipmentLine."Line No." DIV 10000);
-                    LineObj.Add('d365_itemCode', SaleShipmentLine."No.");
-                    LineObj.Add('itemName', SaleShipmentLine.Description);
-                    LineObj.Add('d365_departmentCode', SaleShipmentLine."Location Code");
-                    if Location.Get(SaleShipmentHeader."Location Code") then
+                    LineObj.Add('d365_DocId', PurchaseShipmentLine."Document No.");
+                    LineObj.Add('v_SNo', PurchaseShipmentLine."Line No." DIV 10000);
+                    LineObj.Add('d365_itemCode', PurchaseShipmentLine."No.");
+                    LineObj.Add('itemName', PurchaseShipmentLine.Description);
+                    LineObj.Add('d365_departmentCode', PurchaseShipmentLine."Location Code");
+                    if Location.Get(PurchaseShipmentLine."Location Code") then
                         GRNObj.Add('departmentName', Location.Name)
                     else
                         GRNObj.Add('departmentName', '');
-                    LineObj.Add('d365_unitCode', SaleShipmentLine."Unit of Measure");
-                    LineObj.Add('d365_hsnCode', SaleShipmentLine."HSN/SAC Code");
-                    LineObj.Add('indentSKUQty', SaleShipmentLine.Quantity);
-                    LineObj.Add('issQty', SaleShipmentLine.Quantity);
-                    LineObj.Add('rate', Round(SaleShipmentLine."Unit Cost"));
-                    LineObj.Add('oh_Amt_Gross', SaleShipmentLine."VAT Base Amount");
-                    LineObj.Add('oh_Amt_Discount', SaleShipmentLine."Line Discount %");
-                    LineObj.Add('oh_at_Discount', SaleShipmentLine."Line Discount %");
+                    LineObj.Add('d365_unitCode', PurchaseShipmentLine."Unit of Measure");
+                    LineObj.Add('d365_hsnCode', '0');
+                    LineObj.Add('indentSKUQty', PurchaseShipmentLine.Quantity);
+                    LineObj.Add('issQty', PurchaseShipmentLine.Quantity);
+                    LineObj.Add('rate', Round(PurchaseShipmentLine."Unit Cost"));
+                    LineObj.Add('oh_Amt_Gross', PurchaseShipmentLine."VAT Base Amount");
+                    LineObj.Add('oh_Amt_Discount', PurchaseShipmentLine."Line Discount %");
+                    LineObj.Add('oh_at_Discount', PurchaseShipmentLine."Line Discount %");
                     LineObj.Add('oh_Amt_Taxable', 0);
                     LineObj.Add('oh_at_CGST', 0);
                     LineObj.Add('oh_Amt_CGST', 0);
@@ -167,23 +167,23 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
                     LineObj.Add('oh_Amt_FinalDiscount', 0);
                     LineObj.Add('oh_Amt_Net', 0);
                     LineObj.Add('landedSkuValue', 0);
-                    LineObj.Add('landedSkuRate', SaleShipmentLine."Unit Cost");
+                    LineObj.Add('landedSkuRate', PurchaseShipmentLine."Unit Cost");
                     LineObj.Add('remark', '');
-                    LineObj.Add('mrp', SaleShipmentLine.MRP);
-                    LineObj.Add('skuMrp', SaleShipmentLine.MRP);
-                    LineObj.Add('saleRate', SaleShipmentLine."Unit Cost");
-                    LineObj.Add('skuSaleRate', SaleShipmentLine."Unit Cost");
-                    LineObj.Add('staffSaleRate', SaleShipmentLine."Unit Cost");
-                    LineObj.Add('skuStaffSaleRate', SaleShipmentLine."Unit Cost");
+                    LineObj.Add('mrp', PurchaseShipmentLine.MRP);
+                    LineObj.Add('skuMrp', PurchaseShipmentLine.MRP);
+                    LineObj.Add('saleRate', PurchaseShipmentLine."Unit Cost");
+                    LineObj.Add('skuSaleRate', PurchaseShipmentLine."Unit Cost");
+                    LineObj.Add('staffSaleRate', PurchaseShipmentLine."Unit Cost");
+                    LineObj.Add('skuStaffSaleRate', PurchaseShipmentLine."Unit Cost");
                     LineObj.Add('barcode', '');
-                    LineObj.Add('batchNo', SaleShipmentLine."Batch No.");
+                    LineObj.Add('batchNo', PurchaseShipmentLine."Batch No.");
                     LineObj.Add('manufacturingDate', '2026-09-10');
                     LineObj.Add('expiryDate', '2026-12-10');
-                    // LineObj.Add('expiryDate', Format(SaleShipmentLine."Expiry Date", 0, '<Year4>-<Month,2>-<Day,2>T00:00:00Z'));
+                    // LineObj.Add('expiryDate', Format(PurchaseShipmentLine."Expiry Date", 0, '<Year4>-<Month,2>-<Day,2>T00:00:00Z'));
 
-                    LineObj.Add('itemMakeCode', '');
+                    LineObj.Add('itemMakeCode', PurchaseShipmentLine."Item Make Code");
                     LineObj.Add('gstTypeCode', '');
-                    LineObj.Add('itemGSTNature', 'AB');
+                    LineObj.Add('itemGSTNature', '');
                     LineObj.Add('dm_Status', '');
                     LineObj.Add('dm_TimeStamp', Format(CurrentDateTime, 0, 9));
                     LineObj.Add('dm_docid', 0);
@@ -193,7 +193,7 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
                     LineArray.Add(LineObj);
                 end;
 
-            until SaleShipmentLine.Next() = 0;
+            until PurchaseShipmentLine.Next() = 0;
 
         GRNObj.Add('lines', LineArray);
 
@@ -220,17 +220,17 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         then begin
 
             JsonResponse := GetLastErrorText();
-            SaleShipmentHeader.IsSent := false;
-            SaleShipmentHeader.Response := CopyStr(JsonResponse, 1, MaxStrLen(SaleShipmentHeader.Response));
-            SaleShipmentHeader.Modify(true);
-            SaleShipmentLine.Reset();
-            SaleShipmentLine.SetRange("Document No.", DocumentID);
-            if SaleShipmentLine.FindSet() then
+            PurchaseShipmentHeader.IsSent := false;
+            PurchaseShipmentHeader.Response := CopyStr(JsonResponse, 1, MaxStrLen(PurchaseShipmentHeader.Response));
+            PurchaseShipmentHeader.Modify(true);
+            PurchaseShipmentLine.Reset();
+            PurchaseShipmentLine.SetRange("Document No.", DocumentID);
+            if PurchaseShipmentLine.FindSet() then
                 repeat
-                    SaleShipmentLine.IsSent := false;
-                    SaleShipmentLine.Response := CopyStr(JsonResponse, 1, MaxStrLen(SaleShipmentLine.Response));
-                    SaleShipmentLine.Modify(true);
-                until SaleShipmentLine.Next() = 0;
+                    PurchaseShipmentLine.IsSent := false;
+                    PurchaseShipmentLine.Response := CopyStr(JsonResponse, 1, MaxStrLen(PurchaseShipmentLine.Response));
+                    PurchaseShipmentLine.Modify(true);
+                until PurchaseShipmentLine.Next() = 0;
 
             exit(false);
         end;
@@ -262,33 +262,33 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
             end;
 
             // Update Header
-            SaleShipmentHeader.IsSent := true;
-            SaleShipmentHeader.Response := CopyStr(ResponseMsg, 1, MaxStrLen(SaleShipmentHeader.Response));
-            SaleShipmentHeader.Modify(true);
+            PurchaseShipmentHeader.IsSent := true;
+            PurchaseShipmentHeader.Response := CopyStr(ResponseMsg, 1, MaxStrLen(PurchaseShipmentHeader.Response));
+            PurchaseShipmentHeader.Modify(true);
 
             // Update Lines
-            SaleShipmentLine.Reset();
-            SaleShipmentLine.SetRange("Document No.", DocumentID);
-            if SaleShipmentLine.FindSet() then
+            PurchaseShipmentLine.Reset();
+            PurchaseShipmentLine.SetRange("Document No.", DocumentID);
+            if PurchaseShipmentLine.FindSet() then
                 repeat
-                    SaleShipmentLine.IsSent := true;
-                    SaleShipmentLine.Response := CopyStr(ResponseMsg, 1, MaxStrLen(SaleShipmentLine.Response));
-                    SaleShipmentLine.Modify(true);
-                until SaleShipmentLine.Next() = 0;
+                    PurchaseShipmentLine.IsSent := true;
+                    PurchaseShipmentLine.Response := CopyStr(ResponseMsg, 1, MaxStrLen(PurchaseShipmentLine.Response));
+                    PurchaseShipmentLine.Modify(true);
+                until PurchaseShipmentLine.Next() = 0;
             exit(true);
         end;
         // Error Response
-        SaleShipmentHeader.IsSent := false;
-        SaleShipmentHeader.Response := CopyStr(JsonResponse, 1, MaxStrLen(SaleShipmentHeader.Response));
-        SaleShipmentHeader.Modify(true);
-        SaleShipmentLine.Reset();
-        SaleShipmentLine.SetRange("Document No.", DocumentID);
-        if SaleShipmentLine.FindSet() then
+        PurchaseShipmentHeader.IsSent := false;
+        PurchaseShipmentHeader.Response := CopyStr(JsonResponse, 1, MaxStrLen(PurchaseShipmentHeader.Response));
+        PurchaseShipmentHeader.Modify(true);
+        PurchaseShipmentLine.Reset();
+        PurchaseShipmentLine.SetRange("Document No.", DocumentID);
+        if PurchaseShipmentLine.FindSet() then
             repeat
-                SaleShipmentLine.IsSent := false;
-                SaleShipmentLine.Response := CopyStr(JsonResponse, 1, MaxStrLen(SaleShipmentLine.Response));
-                SaleShipmentLine.Modify(true);
-            until SaleShipmentLine.Next() = 0;
+                PurchaseShipmentLine.IsSent := false;
+                PurchaseShipmentLine.Response := CopyStr(JsonResponse, 1, MaxStrLen(PurchaseShipmentLine.Response));
+                PurchaseShipmentLine.Modify(true);
+            until PurchaseShipmentLine.Next() = 0;
         exit(false);
     end;
 }

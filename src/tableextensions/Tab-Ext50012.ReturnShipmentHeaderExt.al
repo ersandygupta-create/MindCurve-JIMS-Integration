@@ -17,5 +17,30 @@ tableextension 50012 "E3 HIS Return Shipment Header" extends "Return Shipment He
             Caption = 'Item Type';
             DataClassification = CustomerContent;
         }
+        field(50016; "Voucher Type"; Code[20])
+        {
+            Caption = 'Voucher Type';
+            DataClassification = CustomerContent;
+        }
+        field(50017; "GRN Voucher Type Name"; Text[60])
+        {
+            Caption = 'GRN Voucher Type Name';
+            DataClassification = CustomerContent;
+        }
+        field(50018; "Print Caption"; Text[50])
+        {
+            Caption = 'Print Caption';
+            DataClassification = CustomerContent;
+        }
+        field(50019; IsSent; Boolean)
+        {
+            Caption = 'IsSent';
+            DataClassification = CustomerContent;
+        }
+        field(50020; Response; Text[30])
+        {
+            Caption = 'Response';
+            DataClassification = CustomerContent;
+        }
     }
 }

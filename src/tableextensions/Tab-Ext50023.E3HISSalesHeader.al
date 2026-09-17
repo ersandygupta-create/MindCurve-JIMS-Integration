@@ -125,12 +125,12 @@ tableextension 50023 "E3 HIS Sales Header" extends "Sales Header"
                 end;
             end;
         }
-        field(50109; "GRN Voucher Type Name"; Text[60])
+        field(50112; "GRN Voucher Type Name"; Text[60])
         {
             Caption = 'GRN Voucher Type Name';
             DataClassification = CustomerContent;
         }
-        field(50110; Sync; Boolean)
+        field(50113; Sync; Boolean)
         {
             Caption = 'Sync';
             DataClassification = CustomerContent;

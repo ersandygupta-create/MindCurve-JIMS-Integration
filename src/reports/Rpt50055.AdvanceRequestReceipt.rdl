@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-17T05:21:09.0537868Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-09-17T05:43:25.9576907Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -444,6 +444,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
+                                    <Format>#,0.00;(#,0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -481,6 +482,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
+                                    <Format>#,0.00;(#,0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1004,6 +1006,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
+                                    <Format>#,0.00;(#,0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1078,6 +1081,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
+                                    <Format>#,0.00;(#,0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1416,6 +1420,7 @@
                       <FontFamily>Tahoma</FontFamily>
                       <FontSize>7pt</FontSize>
                       <FontWeight>Normal</FontWeight>
+                      <Format>#,0.00;(#,0.00)</Format>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1425,7 +1430,7 @@
             <Top>1.89111in</Top>
             <Left>0.03in</Left>
             <Height>0.15972in</Height>
-            <Width>3.32639in</Width>
+            <Width>2.48389in</Width>
             <ZIndex>9</ZIndex>
             <Style>
               <Border>
@@ -2619,6 +2624,7 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
+                        <rd:Selected>true</rd:Selected>
                         <Textbox Name="AdvPaymentAmount">
                           <rd:DefaultName>AdvPaymentAmount</rd:DefaultName>
                           <CanGrow>true</CanGrow>
@@ -2631,6 +2637,7 @@
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
+                                    <Format>#,0.00;(#,0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2927,6 +2934,7 @@
                       <FontFamily>Tahoma</FontFamily>
                       <FontSize>7pt</FontSize>
                       <FontWeight>Normal</FontWeight>
+                      <Format>#,0.00;(#,0.00)</Format>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2934,9 +2942,9 @@
               </Paragraph>
             </Paragraphs>
             <Top>1.89111in</Top>
-            <Left>3.39806in</Left>
+            <Left>2.58333in</Left>
             <Height>0.15972in</Height>
-            <Width>4.34499in</Width>
+            <Width>5.15972in</Width>
             <ZIndex>20</ZIndex>
             <Style>
               <Border>
