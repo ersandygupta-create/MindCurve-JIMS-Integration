@@ -5,6 +5,7 @@ codeunit 50055 "E3 PO Creation Context"
 
     var
         BypassRespCenterCheck: Boolean;
+        ByPassSalesLine: Boolean;
 
     procedure SetBypass(Enable: Boolean)
     begin
@@ -15,4 +16,15 @@ codeunit 50055 "E3 PO Creation Context"
     begin
         exit(BypassRespCenterCheck);
     end;
+
+    procedure SetByPassSalesLineCheck(enable: Boolean)
+    begin
+        ByPassSalesLine := enable;
+    end;
+
+    procedure IsSalesLineBypassActive(): Boolean
+    begin
+        exit(ByPassSalesLine);
+    end;
+
 }

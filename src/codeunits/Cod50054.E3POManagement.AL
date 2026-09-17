@@ -11,6 +11,7 @@ codeunit 50054 "E3 Create PO Management"
         GRNWorkSheet: Record "E3 GRN Work Sheet";
         voucherType: Record "E3 Voucher Type";
         voucherTypeResp: Record "E3 Voucher Type";
+        ResponsibilityCenter: Record "Responsibility Center";
     begin
         // Enable the bypass flag specifically for this execution
         Context.SetBypass(true);
@@ -36,10 +37,12 @@ codeunit 50054 "E3 Create PO Management"
         PurchHeader.Validate("Voucher Type", voucherType."Order Voucher Code");
         if voucherTypeResp."Responsibility Center" <> '' then
             PurchHeader.validate("Responsibility Center", voucherTypeResp."Responsibility Center");
+        PurchHeader.Validate("Responsibility Center");
 
         PurchHeader.Insert(true); // Validation check runs here, but is bypassed by Context flag
 
-
+        ResponsibilityCenter.Get(voucherTypeResp."Responsibility Center");
+        PurchHeader.Validate("Location Code", ResponsibilityCenter."Location Code");
         PurchHeader.Validate("Posting Date", SalesInvHeader."Posting Date");
         PurchHeader.Validate("Document Date", SalesInvHeader."Document Date");
         PurchHeader.Validate("Vendor Invoice No.", SalesInvHeader."No.");
