@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-17T03:56:39.4358507Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-09-17T05:21:09.0537868Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -1403,7 +1403,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Amount : </Value>
+                    <Value>PO Amount : </Value>
                     <Style>
                       <FontFamily>Tahoma</FontFamily>
                       <FontSize>7pt</FontSize>
@@ -1425,7 +1425,7 @@
             <Top>1.89111in</Top>
             <Left>0.03in</Left>
             <Height>0.15972in</Height>
-            <Width>7.72695in</Width>
+            <Width>3.32639in</Width>
             <ZIndex>9</ZIndex>
             <Style>
               <Border>
@@ -2896,6 +2896,48 @@
             <Height>0.25in</Height>
             <Width>3.345in</Width>
             <ZIndex>19</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox49">
+            <rd:DefaultName>Textbox25</rd:DefaultName>
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Advance Amount : </Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>7pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>=First(Fields!RequestAmount.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>7pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <Top>1.89111in</Top>
+            <Left>3.39806in</Left>
+            <Height>0.15972in</Height>
+            <Width>4.34499in</Width>
+            <ZIndex>20</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>

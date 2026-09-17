@@ -562,7 +562,7 @@ report 50051 "ICICI Bank Check Print"
         HighestLineNo: Integer;
         PreprintedStub: Boolean;
         TotalText: Text[10];
-        Test: Text[100];
+        Test: Text[200];
         DocDate: Date;
         i: Integer;
         Text062: Label 'G/L Account,Customer,Vendor,Bank Account';
