@@ -1,9 +1,8 @@
 codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
 {
-
     TableNo = "Job Queue Entry";
     Permissions = tabledata "Sales Shipment Header" = rm,
-    tabledata "Sales Shipment Line" = rm;
+                  tabledata "Sales Shipment Line" = rm;
 
     trigger OnRun()
     begin
@@ -57,9 +56,7 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         E3APISetup.TestField("Sale Consumption API");
 
         if not SaleShipmentHeader.Get(DocumentID) then
-            Error(
-                'Document %1 not found.',
-                DocumentID);
+            Error('Document %1 not found.', DocumentID);
 
         Clear(GRNObj);
 
@@ -68,7 +65,10 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         GRNObj.Add('v_Prefix', '');
         GRNObj.Add('v_Date', Format(SaleShipmentHeader."Posting Date", 0, '<Year4>-<Month,2>-<Day,2>'));
         GRNObj.Add('d365_departmentCode', SaleShipmentHeader."Shortcut Dimension 2 Code");
-        GRNObj.Add('departmentName', 'SaleShipmentHeader."Department Name"');
+
+        // FIX 1: Pass actual field value instead of literal text string
+        GRNObj.Add('departmentName', SaleShipmentHeader."Location Code");
+
         GRNObj.Add('d365_Supplier_subCode', SaleShipmentHeader."Sell-to Customer No.");
         GRNObj.Add('placeOfSupply', 'ABC');
         GRNObj.Add('remark', '');
@@ -87,48 +87,38 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         GRNObj.Add('oh_Amt_RoundOff', 0);
         GRNObj.Add('oh_Amt_Net', 0);
         GRNObj.Add('oh_Amt_LandedValue', 0);
-        GRNObj.Add('d365_TimeStamp', Format(CurrentDateTime, 0, 9));
+        GRNObj.Add('d365_TimeStamp', Format(CurrentDateTime(), 0, 9));
         GRNObj.Add('preparedBy', 'D365');
         GRNObj.Add('preparedDate', Format(SaleShipmentHeader."Posting Date", 0, '<Year4>-<Month,2>-<Day,2>'));
         GRNObj.Add('approvedBy', 'D365');
-        GRNObj.Add('approvalDateTime', Format(SaleShipmentHeader.SystemModifiedAt, 0,
-         '<Year4>-<Month,2>-<Day,2>T<Hours24,2>:<Minutes,2>:<Seconds,2>'));
+        GRNObj.Add('approvalDateTime', Format(SaleShipmentHeader.SystemModifiedAt, 0, '<Year4>-<Month,2>-<Day,2>T<Hours24,2>:<Minutes,2>:<Seconds,2>'));
         GRNObj.Add('businessUnitCode', SaleShipmentHeader."Shortcut Dimension 1 Code");
         GRNObj.Add('businessUnitName', '');
         GRNObj.Add('rcmApplicable', 0);
         GRNObj.Add('partyType', 'Customer');
         GRNObj.Add('gsTin', SaleShipmentHeader."Customer GST Reg. No.");
         GRNObj.Add('eWayBillNo', SaleShipmentHeader."E-Way Bill No.");
-        GRNObj.Add('eWayBillDt', Format(CurrentDateTime, 0, 9));
+        GRNObj.Add('eWayBillDt', Format(CurrentDateTime(), 0, 9));
         GRNObj.Add('lrNo', '');
-        GRNObj.Add('lrDate', Format(CurrentDateTime, 0, 9));
-        // if SaleShipmentHeader."GST Location" = 'Intrastate' then
-        //     GRNObj.Add('gsTlocation', '1')
-        // else
+        GRNObj.Add('lrDate', Format(CurrentDateTime(), 0, 9));
         GRNObj.Add('gsTlocation', '1');
         GRNObj.Add('dm_Status', '');
-        GRNObj.Add('dm_TimeStamp', Format(CurrentDateTime, 0, 9));
+        GRNObj.Add('dm_TimeStamp', Format(CurrentDateTime(), 0, 9));
         GRNObj.Add('dm_docid', 0);
         GRNObj.Add('legalEntity', CompanyName);
         GRNObj.Add('ProcessIndicator', 'E');
         GRNObj.Add('processDatetime', Format(CurrentDateTime(), 0, '<Year4>-<Month,2>-<Day,2>T<Hours24,2>:<Minutes,2>:<Seconds,2>'));
         GRNObj.Add('ErrorMsg', '');
 
-        // Line
-
+        // Lines Construction
         Clear(LineArray);
-
         SaleShipmentLine.Reset();
         SaleShipmentLine.SetRange("Document No.", DocumentID);
 
         if SaleShipmentLine.FindSet() then
             repeat
-
-                // Skip zero received quantity
                 if SaleShipmentLine.Quantity <> 0 then begin
-
                     Clear(LineObj);
-
                     LineObj.Add('d365_DocId', SaleShipmentLine."Document No.");
                     LineObj.Add('v_SNo', SaleShipmentLine."Line No." DIV 10000);
                     LineObj.Add('d365_itemCode', SaleShipmentLine."No.");
@@ -166,22 +156,19 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
                     LineObj.Add('skuStaffSaleRate', SaleShipmentLine."Unit Cost");
                     LineObj.Add('barcode', '');
                     LineObj.Add('batchNo', SaleShipmentLine."Batch No.");
-                    LineObj.Add('manufacturingDate', '2026-09-17');
-                    LineObj.Add('expiryDate', '2026-12-10');
-                    // LineObj.Add('expiryDate', Format(SaleShipmentLine."Expiry Date", 0, '<Year4>-<Month,2>-<Day,2>T00:00:00Z'));
-
+                    LineObj.Add('manufacturingDate', Format(WorkDate(), 0, 9));
+                    LineObj.Add('expiryDate', Format(WorkDate(), 0, 9));
                     LineObj.Add('itemMakeCode', '');
                     LineObj.Add('gstTypeCode', '');
                     LineObj.Add('itemGSTNature', 'AB');
                     LineObj.Add('dm_Status', '');
-                    LineObj.Add('dm_TimeStamp', Format(CurrentDateTime, 0, 9));
+                    LineObj.Add('dm_TimeStamp', Format(CurrentDateTime(), 0, 9));
                     LineObj.Add('dm_docid', 0);
-                    LineObj.Add('d365_DateTime', Format(CurrentDateTime, 0, 9));
+                    LineObj.Add('d365_DateTime', Format(CurrentDateTime(), 0, 9));
                     LineObj.Add('d365_Status', 'Success');
 
                     LineArray.Add(LineObj);
                 end;
-
             until SaleShipmentLine.Next() = 0;
 
         GRNObj.Add('lines', LineArray);
@@ -191,93 +178,74 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
 
         Clear(RootObj);
         RootObj.Add('header', HeaderArray);
-        // Generate JSON
         RootObj.WriteTo(ReqPayload);
-        if GuiAllowed then
-            Message('Request:\%1', ReqPayload);
 
-        // HTTP Request
+        // HTTP Request Headers
         HttpWebContent.WriteFrom(ReqPayload);
         HttpWebContent.GetHeaders(ContentHeaders);
         ContentHeaders.Clear();
         ContentHeaders.Add('Content-Type', 'application/json');
+
+        // FIX 2: Set explicit Content-Length to avoid chunked transfer rejection
+        ContentHeaders.Add('Content-Length', Format(StrLen(ReqPayload)));
+
         RequestMessage.Content := HttpWebContent;
         RequestMessage.SetRequestUri(E3APISetup."Sale Consumption API");
         RequestMessage.Method := 'POST';
-        // Send Request
-        if not HttpWebClient.Send(RequestMessage, ResponseMessage)
-        then begin
 
+        // Add standard User-Agent header
+        HttpWebClient.DefaultRequestHeaders.Add('User-Agent', 'Dynamics365BusinessCentral');
+
+        // Send HTTP Call
+        if not HttpWebClient.Send(RequestMessage, ResponseMessage) then begin
             JsonResponse := GetLastErrorText();
-            SaleShipmentHeader.IsSent := false;
-            SaleShipmentHeader.Response := CopyStr(JsonResponse, 1, MaxStrLen(SaleShipmentHeader.Response));
-            SaleShipmentHeader.Modify(true);
-            SaleShipmentLine.Reset();
-            SaleShipmentLine.SetRange("Document No.", DocumentID);
-            if SaleShipmentLine.FindSet() then
-                repeat
-                    SaleShipmentLine.IsSent := false;
-                    SaleShipmentLine.Response := CopyStr(JsonResponse, 1, MaxStrLen(SaleShipmentLine.Response));
-                    SaleShipmentLine.Modify(true);
-                until SaleShipmentLine.Next() = 0;
-
+            UpdateShipmentStatus(DocumentID, false, JsonResponse);
             exit(false);
         end;
-        // Read Response
-        ResponseMessage.Content.ReadAs(JsonResponse);
-        if GuiAllowed then
-            Message('Response:\%1', JsonResponse);
 
-        // Successful Response
+        ResponseMessage.Content.ReadAs(JsonResponse);
+
         if ResponseMessage.IsSuccessStatusCode then begin
             ResponseMsg := JsonResponse;
 
             Clear(ResponseRoot);
-
-            if ResponseRoot.ReadFrom(JsonResponse)
-            then begin
-                if ResponseRoot.SelectToken('d365_ConsumptionStatus', ResponseToken)
-                then begin
+            if ResponseRoot.ReadFrom(JsonResponse) then
+                if ResponseRoot.SelectToken('d365_ConsumptionStatus', ResponseToken) then begin
                     ResponseArray := ResponseToken.AsArray();
-                    for J := 0 to
-                        ResponseArray.Count() - 1
-                    do begin
+                    for J := 0 to ResponseArray.Count() - 1 do begin
                         ResponseArray.Get(J, ResponseToken);
                         ChildObj := ResponseToken.AsObject();
                         if ChildObj.SelectToken('errorMsg', CJToken) then
                             ResponseMsg := CJToken.AsValue().AsText();
                     end;
                 end;
-            end;
 
-            // Update Header
-            SaleShipmentHeader.IsSent := true;
-            SaleShipmentHeader.Response := CopyStr(ResponseMsg, 1, MaxStrLen(SaleShipmentHeader.Response));
-            SaleShipmentHeader.Modify(true);
-
-            // Update Lines
-            SaleShipmentLine.Reset();
-            SaleShipmentLine.SetRange("Document No.", DocumentID);
-            if SaleShipmentLine.FindSet() then
-                repeat
-                    SaleShipmentLine.IsSent := true;
-                    SaleShipmentLine.Response := CopyStr(ResponseMsg, 1, MaxStrLen(SaleShipmentLine.Response));
-                    SaleShipmentLine.Modify(true);
-                until SaleShipmentLine.Next() = 0;
+            UpdateShipmentStatus(DocumentID, true, ResponseMsg);
             exit(true);
         end;
-        // Error Response
-        SaleShipmentHeader.IsSent := false;
-        SaleShipmentHeader.Response := CopyStr(JsonResponse, 1, MaxStrLen(SaleShipmentHeader.Response));
-        SaleShipmentHeader.Modify(true);
-        SaleShipmentLine.Reset();
-        SaleShipmentLine.SetRange("Document No.", DocumentID);
-        if SaleShipmentLine.FindSet() then
-            repeat
-                SaleShipmentLine.IsSent := false;
-                SaleShipmentLine.Response := CopyStr(JsonResponse, 1, MaxStrLen(SaleShipmentLine.Response));
-                SaleShipmentLine.Modify(true);
-            until SaleShipmentLine.Next() = 0;
+
+        UpdateShipmentStatus(DocumentID, false, JsonResponse);
         exit(false);
+    end;
+
+    local procedure UpdateShipmentStatus(DocumentID: Code[20]; SentStatus: Boolean; ResponseMessage: Text)
+    var
+        HeaderRec: Record "Sales Shipment Header";
+        LineRec: Record "Sales Shipment Line";
+    begin
+        if HeaderRec.Get(DocumentID) then begin
+            HeaderRec.IsSent := SentStatus;
+            HeaderRec.Response := CopyStr(ResponseMessage, 1, MaxStrLen(HeaderRec.Response));
+            HeaderRec.Modify(true);
+        end;
+
+        LineRec.Reset();
+        LineRec.SetRange("Document No.", DocumentID);
+        if LineRec.FindSet() then
+            repeat
+                LineRec.IsSent := SentStatus;
+                LineRec.Response := CopyStr(ResponseMessage, 1, MaxStrLen(LineRec.Response));
+                LineRec.Modify(true);
+            until LineRec.Next() = 0;
     end;
 }

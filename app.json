@@ -2,9 +2,8 @@
   "id": "ede53059-43d1-450d-a3f6-7136a9649af5",
   "name": "JIMS Integration",
   "publisher": "MindCurve",
-
   "version": "1.0.0.24",
- 
+  "target": "Cloud",
   "brief": "JIMS Integration",
   "description": "HIS Integration with JIMS",
   "privacyStatement": "https://MindCurve.in",
@@ -12,6 +11,7 @@
   "help": "https://MindCurve.in",
   "url": "https://MindCurve.in",
   "logo": "logo/3E Logo.jpg",
+
   "dependencies": [
     {
               "id": "db643212-b7fb-4dd4-b5a8-cb44ac714461",
