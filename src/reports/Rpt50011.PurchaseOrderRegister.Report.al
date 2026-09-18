@@ -314,13 +314,15 @@ report 50011 "Purchase Order Register"
         ExcelBuf.AddColumn('Item Description', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Invoice No./Original Invoice No. 
         ExcelBuf.AddColumn('Item Company', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);                                                                                                    // ExcelBuf.AddColumn('Item Make Name', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Item make name
         ExcelBuf.AddColumn('Ordered Qty', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Invoice Date/ Original Invoice Date
-        ExcelBuf.AddColumn('UOM', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//UOM
+        ExcelBuf.AddColumn('UOM', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//UOM       
         ExcelBuf.AddColumn('Received Qty', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Credit/Debit Note/Refund/Sales Return Voucher Number
         ExcelBuf.AddColumn('Net Amount', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Net amount
         ExcelBuf.AddColumn('Pending Quantity', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Credit/Debit Note/Refund/Sales Return Voucher Date 
         ExcelBuf.AddColumn('Pending Invoice Quantity', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Credit/Debit Note/Refund/Sales Return Voucher Date 
         ExcelBuf.AddColumn('GST Group', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Reference Invoice Date
         ExcelBuf.AddColumn('Item Cost', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Sales Return Type
+        ExcelBuf.AddColumn('MRP', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddColumn('Discount %', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.AddColumn('GST', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//E-Way Bill No.
         ExcelBuf.AddColumn('Discount', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//E-Way Bill Date
         ExcelBuf.AddColumn('Total cost', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Is Supply through e-Commerce
@@ -403,6 +405,9 @@ report 50011 "Purchase Order Register"
         ExcelBuf.AddColumn("Purchase Line"."Qty. Rcd. Not Invoiced (Base)", false, '', false, false, false, '', ExcelBuf."Cell Type"::Number);//company
         ExcelBuf.AddColumn("Purchase Line"."GST Group Code", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//company
         ExcelBuf.AddColumn("Purchase Line"."Direct Unit Cost", false, '', false, false, false, '', ExcelBuf."Cell Type"::Number);//company
+        ExcelBuf.AddColumn("Purchase Line".MRP, false, '', false, false, false, '', ExcelBuf."Cell Type"::Number);//company
+        ExcelBuf.AddColumn("Purchase Line"."Line Discount %", false, '', false, false, false, '', ExcelBuf."Cell Type"::Number);//company
+
 
 
         CGSTAmount := 0;
