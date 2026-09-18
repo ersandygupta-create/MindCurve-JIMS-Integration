@@ -187,7 +187,7 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
             PurchOrder.CalcFields(Amount);
             PurchOrder.CalcFields("Amount Including VAT");
             CalculateGSTAmount();
-            "Total PO Amount" := PurchOrder."Amount Including VAT" + "GST Amount";
+            "Total PO Amount" := round(PurchOrder."Amount Including VAT" + "GST Amount", 1);
 
             ;
 
