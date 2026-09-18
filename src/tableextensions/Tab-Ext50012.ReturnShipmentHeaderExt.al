@@ -32,12 +32,12 @@ tableextension 50012 "E3 HIS Return Shipment Header" extends "Return Shipment He
             Caption = 'Print Caption';
             DataClassification = CustomerContent;
         }
-        field(50019; IsSent; Boolean)
+        field(50100; IsSent; Boolean)
         {
             Caption = 'IsSent';
             DataClassification = CustomerContent;
         }
-        field(50020; Response; Text[30])
+        field(50101; Response; Text[30])
         {
             Caption = 'Response';
             DataClassification = CustomerContent;
