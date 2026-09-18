@@ -46,8 +46,9 @@ page 50111 "Vendor Advance Pay. Against PO"
                         AdvancePo.Reset();
                         AdvancePo.SetRange("Entry Type", rec."Entry Type");
                         AdvancePo.SetRange("Purchase Order No.", rec."Purchase Order No.");
+                        AdvancePo.SetRange("Document No", Rec."Document No");
                         AdvancePo.CalcSums("Basic Amount");
-                        if Rec."Basic Amount" > AdvancePoAmt."Total PO Amount" then
+                        if Rec."Basic Amount" + AdvancePo."Basic Amount" > AdvancePoAmt."Total PO Amount" then
                             Error('Amount can not be greater than PO Amount.');
 
                     end;
