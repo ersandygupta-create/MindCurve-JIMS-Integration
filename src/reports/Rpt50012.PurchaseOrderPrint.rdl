@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:am="http://schemas.microsoft.com/sqlserver/reporting/authoringmetadata" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:am="http://schemas.microsoft.com/sqlserver/reporting/authoringmetadata">
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
   <am:AuthoringMetadata>
@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-14T23:50:13.5592193Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-09-18T06:13:28.0967359Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -1557,7 +1557,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!Line_Amount.Value)+sum(Fields!Inv__Discount_Amount.Value)</Value>
+                                  <Value>=Sum(Fields!Line_Amount.Value)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2061,8 +2061,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Round(Sum(Fields!Line_Amount.Value)+Sum(Fields!Line_Discount_Amount.Value)+Sum(Fields!LineGSTAmount.Value),0)
--(Sum(Fields!Line_Amount.Value)+Sum(Fields!Line_Discount_Amount.Value)+Sum(Fields!LineGSTAmount.Value))</Value>
+                                  <Value>=Round(Fields!RoundoffAmt.Value)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2238,17 +2237,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!TotalAmttoVendor.Value + Round(Sum(Fields!Line_Amount.Value)+Sum(Fields!Line_Discount_Amount.Value)+Sum(Fields!LineGSTAmount.Value),0)
--(Sum(Fields!Line_Amount.Value)+Sum(Fields!Line_Discount_Amount.Value)+Sum(Fields!LineGSTAmount.Value))</Value>
-                                  <Style>
-                                    <FontFamily>Segoe UI</FontFamily>
-                                    <FontSize>7pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
-                                    <Format>n0</Format>
-                                  </Style>
-                                </TextRun>
-                                <TextRun>
-                                  <Value>.00</Value>
+                                  <Value>=Fields!TotalAmttoVendor.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -3046,30 +3035,30 @@
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
               <TablixMembers>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
+                <TablixMember />
+                <TablixMember />
                 <TablixMember>
                   <Group Name="Details" />
                   <Visibility>
                     <Hidden>=IIf(Fields!Line_No_.Value&lt;&gt;0,FALSE,TRUE)</Hidden>
                   </Visibility>
                 </TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Top>1.70in</Top>
+            <Top>1.7in</Top>
             <Left>0.03104in</Left>
             <Height>4.30374in</Height>
             <Width>7.80799in</Width>
@@ -3772,6 +3761,12 @@ End Function</Code>
         </Field>
         <Field Name="TotalAmttoVendorFormat">
           <DataField>TotalAmttoVendorFormat</DataField>
+        </Field>
+        <Field Name="RoundoffAmt">
+          <DataField>RoundoffAmt</DataField>
+        </Field>
+        <Field Name="RoundoffAmtFormat">
+          <DataField>RoundoffAmtFormat</DataField>
         </Field>
         <Field Name="txtPurchaseHeader">
           <DataField>txtPurchaseHeader</DataField>

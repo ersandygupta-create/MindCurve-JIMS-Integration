@@ -71,12 +71,12 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
             begin
                 if PurchHeader.Get(PurchHeader."Document Type"::Order, "Purchase Order No.") then begin
                     PurchHeader.CalcFields(Amount);
-
-                    if "Basic Amount" > PurchHeader.Amount then
+                    //CalcFields("Total PO Amount");
+                    if "Basic Amount" > "Total PO Amount" then
                         Error(
                           'Basic Amount (%1) cannot be greater than Purchase Order Amount (%2).',
                           "Basic Amount",
-                          PurchHeader.Amount);
+                          "Total PO Amount");
                     CalcFields("Total Applied Amount");
                     rec."Remaining Amount" := Rec."Basic Amount" - rec."Total Applied Amount";
                 end;
@@ -186,10 +186,11 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
         if PurchOrder.FindFirst() then begin
             PurchOrder.CalcFields(Amount);
             PurchOrder.CalcFields("Amount Including VAT");
-            "Total PO Amount" := PurchOrder."Amount Including VAT";
             CalculateGSTAmount();
+            "Total PO Amount" := PurchOrder."Amount Including VAT" + "GST Amount";
+
             ;
-            ;
+
 
             VoucherType.Reset();
             VoucherType.SetRange(Code, PurchOrder."Voucher Type");

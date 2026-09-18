@@ -157,6 +157,8 @@ report 50012 "Purchase Order Print"
             column(TotalAmttoVendor; TotalAmttoVendor)
             {
             }
+            column(RoundoffAmt; RoundoffAmt)
+            { }
             column(txtPurchaseHeader; txtPurchaseHeader)
             {
 
@@ -277,6 +279,11 @@ report 50012 "Purchase Order Print"
                     SGSTRsAmount_Var := (TotalInclTaxAmount / 2);
                 END ELSE
                     IGSTRsAmount_Var := TotalInclTaxAmount;
+
+                if Customer."GST Registration No." = '' then
+                    TotalAmttoVendor := TotalAmttoVendor + abs(TotalInclTaxAmount);
+
+                RoundoffAmt := TotalAmttoVendor;
 
                 PostedVoucher.InitTextVariable;
                 PostedVoucher.FormatNoText(AmtWords, Round(TotalAmttoVendor, 1), PurchaseHeader."Currency Code");
@@ -578,6 +585,7 @@ report 50012 "Purchase Order Print"
         decGSTPer: Decimal;
         TotalTDS: Decimal;
         TotalAmttoVendor: Decimal;
+        RoundoffAmt: Decimal;
         rpt: Report 18008;
         CalcStatistics: Codeunit "Calculate Statistics";
         RecordIDList: List of [RecordID];
