@@ -48,7 +48,7 @@ report 50055 "E3 Advance Request Receipt"
             {
                 IncludeCaption = false;
             }
-            column(TotalPOAmount; "Total PO Amount")
+            column(TotalPOAmount; Round("Total PO Amount", 1))
             {
                 IncludeCaption = false;
             }

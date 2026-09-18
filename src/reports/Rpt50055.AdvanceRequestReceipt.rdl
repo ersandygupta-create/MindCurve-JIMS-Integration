@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-17T05:43:25.9576907Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-09-18T09:21:23.8270872Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -286,7 +286,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Amount</Value>
+                                  <Value>Amount Excl. GST</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -373,7 +373,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <Style>
@@ -410,7 +412,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <Style>
@@ -448,7 +452,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <Style>
@@ -486,7 +492,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <Style>
@@ -1415,7 +1423,7 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>=First(Fields!TotalPOAmount.Value, "DataSet_Result")+(Fields!GST_Amount.Value)</Value>
+                    <Value>=First(Fields!TotalPOAmount.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Tahoma</FontFamily>
                       <FontSize>7pt</FontSize>
@@ -1813,7 +1821,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <Style>
@@ -1888,7 +1898,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <Style>
@@ -1925,7 +1937,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <Style>
@@ -1962,7 +1976,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <Style>
@@ -1999,7 +2015,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <Style>
@@ -2624,7 +2642,6 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <rd:Selected>true</rd:Selected>
                         <Textbox Name="AdvPaymentAmount">
                           <rd:DefaultName>AdvPaymentAmount</rd:DefaultName>
                           <CanGrow>true</CanGrow>
@@ -2863,10 +2880,10 @@
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>4.47446in</Top>
+            <Top>4.84946in</Top>
             <Left>0.02306in</Left>
             <Height>0.2361in</Height>
-            <Width>3.37972in</Width>
+            <Width>2.37972in</Width>
             <ZIndex>18</ZIndex>
             <Style>
               <Border>
@@ -2898,10 +2915,10 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>4.47446in</Top>
-            <Left>4.41195in</Left>
+            <Top>4.84946in</Top>
+            <Left>4.75695in</Left>
             <Height>0.25in</Height>
-            <Width>3.345in</Width>
+            <Width>3in</Width>
             <ZIndex>19</ZIndex>
             <Style>
               <Border>
@@ -2956,8 +2973,47 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
+          <Textbox Name="Textbox50">
+            <rd:DefaultName>Textbox36</rd:DefaultName>
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Checked By :</Value>
+                    <Style>
+                      <FontSize>9pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value xml:space="preserve"> </Value>
+                    <Style>
+                      <FontSize>9pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <Top>4.84946in</Top>
+            <Left>2.37723in</Left>
+            <Height>0.2361in</Height>
+            <Width>2.37972in</Width>
+            <ZIndex>21</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
-        <Height>4.72446in</Height>
+        <Height>5.09946in</Height>
         <Style />
       </Body>
       <Width>7.75695in</Width>

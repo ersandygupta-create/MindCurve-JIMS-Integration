@@ -87,6 +87,8 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             trigger OnLookup()
             var
                 AdvancedPO: Record "Vendor Adv. Pay. Ag. PO";
+                VoucherType: Record "E3 Voucher Type";
+                NoSeries: Codeunit "No. Series";
             begin
                 // Check if Advance PO already exists for this Purchase Order
                 AdvancedPO.Reset();
@@ -101,6 +103,11 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
                     AdvancedPO."Vendor Code" := Rec."Buy-from Vendor No.";
                     AdvancedPO."Vendor Name" := Rec."Buy-from Vendor Name";
                     AdvancedPO."PO Date" := Rec."Order Date";
+                    VoucherType.Reset();
+                    VoucherType.SetRange(Code, Rec."Voucher Type");
+                    if VoucherType.FindFirst() then
+                        if AdvancedPO."Document No" = '' then
+                            AdvancedPO."Document No" := NoSeries.GetNextNo(VoucherType."Advance Document Nos.", WorkDate(), true);
                     AdvancedPO.Insert(true);
                 end;
 

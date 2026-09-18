@@ -38,7 +38,8 @@ page 50111 "Vendor Advance Pay. Against PO"
                         AdvancePo: Record "Vendor Adv. Pay. Ag. PO";
                         AdvancePoAmt: Record "Vendor Adv. Pay. Ag. PO";
                     begin
-
+                        if rec."Document No" = '' then
+                            Rec.Insert();
                         AdvancePoAmt.Reset();
                         AdvancePoAmt.SetRange("Entry Type", rec."Entry Type");
                         AdvancePoAmt.SetRange("Purchase Order No.", rec."Purchase Order No.");
@@ -46,9 +47,9 @@ page 50111 "Vendor Advance Pay. Against PO"
                         AdvancePo.Reset();
                         AdvancePo.SetRange("Entry Type", rec."Entry Type");
                         AdvancePo.SetRange("Purchase Order No.", rec."Purchase Order No.");
-                        AdvancePo.SetRange("Document No", Rec."Document No");
+                        AdvancePo.SetFilter("Document No", '<>%1', Rec."Document No");
                         AdvancePo.CalcSums("Basic Amount");
-                        if Rec."Basic Amount" + AdvancePo."Basic Amount" > AdvancePoAmt."Total PO Amount" then
+                        if Rec."Basic Amount" + AdvancePo."Basic Amount" > Rec."Total PO Amount" then
                             Error('Amount can not be greater than PO Amount.');
 
                     end;
@@ -238,6 +239,13 @@ page 50111 "Vendor Advance Pay. Against PO"
             VendorAdvancePayAgainstPO.Modify();
             //end;
         end;
+    end;
+
+    trigger OnNewRecord(BelowxRec: Boolean)
+    begin
+        // Executes immediately when pressing Down Arrow to create a line
+        Rec.Insert(); // Call your table initialization codeunit/method
+        Rec."Advance Due Date" := WorkDate();
     end;
 
 
