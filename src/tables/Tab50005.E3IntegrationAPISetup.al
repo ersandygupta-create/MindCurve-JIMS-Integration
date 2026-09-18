@@ -265,6 +265,16 @@ table 50005 "E3 Integration API Setup"
             Caption = 'Sale Consumption API Enabled';
             DataClassification = CustomerContent;
         }
+        field(53; "Indent Status API"; Text[100])
+        {
+            Caption = 'Indent Status API';
+            DataClassification = CustomerContent;
+        }
+        field(54; "Indent Status API Enabled"; Boolean)
+        {
+            Caption = 'Indent Status API Enabled';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

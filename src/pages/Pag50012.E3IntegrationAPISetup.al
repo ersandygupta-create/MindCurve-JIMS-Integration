@@ -220,6 +220,18 @@ page 50012 "E3 Integration API Setup"
                 {
                     ToolTip = 'Specifies the value of the Sale Consumption API Enabled field.';
                 }
+                field("Indent Status API"; Rec."Indent Status API")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Indent Status API';
+                    ToolTip = 'Specifies the API status or response received for the indent.';
+                }
+                field("Indent Status API Enabled"; Rec."Indent Status API Enabled")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Indent Status API Enabled';
+                    ToolTip = 'Specifies whether the Indent Status API integration is enabled.';
+                }
             }
         }
     }
