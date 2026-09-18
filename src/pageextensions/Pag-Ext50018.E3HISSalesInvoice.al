@@ -26,4 +26,5 @@ pageextension 50018 "E3 HIS Sales Invoice" extends "Sales Invoice"
             }
         }
     }
+
 }

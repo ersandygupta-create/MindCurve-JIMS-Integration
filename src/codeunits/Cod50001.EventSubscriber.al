@@ -386,4 +386,157 @@ codeunit 50001 "E3 HIS Event Subscriber"
         ArchiveManagement.AutoArchivePurchDocument(PurchaseHeader);
     end;
 
+
+    [EventSubscriber(ObjectType::Page, Page::"Item Tracking Lines",
+     'OnAfterOnClosePage', '', false, false)]
+    local procedure ItemTrackingLinesOnAfterClosePage(
+     var TrackingSpecification: Record "Tracking Specification";
+     CurrentRunMode: Enum "Item Tracking Run Mode";
+     CurrentSourceType: Integer;
+     CurrentSourceRowID: Text[250];
+     SecondSourceRowID: Text[250])
+    begin
+        if CurrentSourceType <> Database::"Sales Line" then
+            exit;
+
+        UpdateSalesLineBatch(
+            CurrentSourceRowID,
+            TrackingSpecification);
+    end;
+
+
+    local procedure UpdateSalesLineBatch(
+        SourceID: Text;
+        TrackingSpecification: Record "Tracking Specification")
+    var
+        SalesLine: Record "Sales Line";
+        ReservationEntry: Record "Reservation Entry";
+        LotNoInfo: Record "Lot No. Information";
+        LotNo: Code[50];
+        ExpiryDate: Date;
+    begin
+        // Only Sales Lines
+        if TrackingSpecification."Source Type" <> Database::"Sales Line" then
+            exit;
+
+        if TrackingSpecification."Source ID" = '' then
+            exit;
+
+        SalesLine.Reset();
+        SalesLine.SetRange(
+            "Document Type",
+            TrackingSpecification."Source Subtype");
+        SalesLine.SetRange(
+            "Document No.",
+            TrackingSpecification."Source ID");
+        SalesLine.SetRange(
+            "Line No.",
+            TrackingSpecification."Source Ref. No.");
+
+        if not SalesLine.FindFirst() then
+            exit;
+
+        ReservationEntry.Reset();
+        ReservationEntry.SetRange(
+            "Source Type",
+            Database::"Sales Line");
+        ReservationEntry.SetRange(
+            "Source Subtype",
+            TrackingSpecification."Source Subtype");
+        ReservationEntry.SetRange(
+            "Source ID",
+            TrackingSpecification."Source ID");
+        ReservationEntry.SetRange(
+            "Source Ref. No.",
+            TrackingSpecification."Source Ref. No.");
+        ReservationEntry.SetRange(
+            "Item No.",
+            SalesLine."No.");
+        ReservationEntry.SetFilter(
+            "Lot No.",
+            '<>%1',
+            '');
+
+        if ReservationEntry.FindFirst() then begin
+
+            LotNo := ReservationEntry."Lot No.";
+
+            LotNoInfo.Reset();
+            LotNoInfo.SetRange("Item No.", SalesLine."No.");
+            LotNoInfo.SetRange("Lot No.", LotNo);
+
+            if LotNoInfo.FindFirst() then
+                ExpiryDate := LotNoInfo."Expairy Date";
+
+        end;
+
+        if (SalesLine."Batch No." <> LotNo) or
+           (SalesLine."Expiry Date" <> ExpiryDate)
+        then begin
+
+            SalesLine."Batch No." := LotNo;
+            SalesLine."Expiry Date" := ExpiryDate;
+
+            SalesLine.Modify(false);
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforeSalesShptLineInsert', '', false, false)]
+    local procedure OnBeforeSalesShptLineInsert(var SalesShptLine: Record "Sales Shipment Line"; SalesShptHeader: Record "Sales Shipment Header"; SalesLine: Record "Sales Line"; CommitIsSuppressed: Boolean; PostedWhseShipmentLine: Record "Posted Whse. Shipment Line"; SalesHeader: Record "Sales Header"; WhseShip: Boolean; WhseReceive: Boolean; ItemLedgShptEntryNo: Integer; xSalesLine: record "Sales Line"; var TempSalesLineGlobal: record "Sales Line" temporary; var IsHandled: Boolean)
+
+
+    begin
+        // Transfer the value from Sales Line to Sales Shipment Line
+        SalesShptLine."E3 Indent Line" := SalesLine."E3 Indent Line";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforeSalesInvHeaderInsert', '', false, false)]
+    local procedure OnBeforeSalesInvHeaderInsert(var SalesHeader: Record "Sales Header"; var SalesInvHeader: Record "Sales Invoice Header")
+    begin
+        SalesInvHeader."Voucher Type" := SalesHeader."Voucher Type";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforeSalesShptHeaderInsert', '', false, false)]
+    local procedure OnBeforeSalesShptHeaderInsert(var SalesShptHeader: Record "Sales Shipment Header"; SalesHeader: Record "Sales Header"; CommitIsSuppressed: Boolean; var IsHandled: Boolean; var TempWhseRcptHeader: Record "Warehouse Receipt Header" temporary; WhseReceive: Boolean; var TempWhseShptHeader: Record "Warehouse Shipment Header" temporary; WhseShip: Boolean; InvtPickPutaway: Boolean)
+    begin
+        SalesShptHeader."Voucher Type" := SalesHeader."Voucher Type";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePurchInvHeaderInsert', '', false, false)]
+    local procedure OnBeforePurchInvHeaderInsert(var PurchHeader: Record "Purchase Header"; var PurchInvHeader: Record "Purch. Inv. Header")
+    begin
+        PurchInvHeader."Voucher Type" := PurchHeader."Voucher Type";
+    end;
+
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnBeforeConfirmPost', '', false, false)]
+    // local procedure OnBeforeConfirmPost(var PurchaseHeader: Record "Purchase Header"; var HideDialog: Boolean; var IsHandled: Boolean)
+    // var
+    //     PostInvoiceQst: Label 'Do you want to post the Invoice?';
+    // begin
+    //     // Apply logic only to Purchase Orders
+    //     if PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Order then begin
+
+    //         // Ask user for confirmation to post Invoice only
+    //         if not Confirm(PostInvoiceQst, false) then
+    //             Error(''); // Stop process if user clicks No
+
+    //         // Explicitly set Receive to FALSE and Invoice to TRUE
+    //         PurchaseHeader.Receive := false;
+    //         PurchaseHeader.Invoice := true;
+
+    //         // Hide the standard "Receive / Invoice / Receive and Invoice" selection dialog
+    //         HideDialog := true;
+    //     end;
+    // end;
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"User Setup Management", 'OnBeforeCheckRespCenter2', '', false, false)]
+    local procedure BypassCheckRespCenter(DocType: Option Sales,Purchase,Service; AccRespCenter: Code[10]; UserCode: Code[50]; var IsHandled: Boolean; var Result: Boolean)
+    var
+        Context: Codeunit "E3 PO Creation Context";
+    begin
+        // Only bypass if triggered from your custom Codeunit
+        if Context.IsBypassActive() then begin
+            Result := true;
+            IsHandled := true;
+        end;
+    end;
 }

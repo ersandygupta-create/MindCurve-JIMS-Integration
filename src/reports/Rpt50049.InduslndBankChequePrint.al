@@ -523,7 +523,7 @@ report 50049 "Induslnd Bank Check Print"
         FormatAddr: Codeunit 365;
         CheckManagement: Codeunit 367;
         CompanyAddr: array[8] of Text[50];
-        CheckToAddr: array[8] of Text[50];
+        CheckToAddr: array[8] of Text[200];
         OnesText: array[20] of Text[30];
         TensText: array[10] of Text[30];
         ExponentText: array[5] of Text[30];
@@ -556,7 +556,7 @@ report 50049 "Induslnd Bank Check Print"
         HighestLineNo: Integer;
         PreprintedStub: Boolean;
         TotalText: Text[10];
-        Test: Text[100];
+        Test: Text[200];
         DocDate: Date;
         i: Integer;
         Text062: Label 'G/L Account,Customer,Vendor,Bank Account';

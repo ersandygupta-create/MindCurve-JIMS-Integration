@@ -49,6 +49,21 @@ tableextension 50007 "E3 HIS Purch. Inv. Header" extends "Purch. Inv. Header"
             Caption = 'Indent No.';
             DataClassification = CustomerContent;
         }
+        field(50016; "Voucher Type"; Code[20])
+        {
+            Caption = 'Voucher Type';
+            DataClassification = CustomerContent;
+        }
+        field(50017; "GRN Voucher Type Name"; Text[60])
+        {
+            Caption = 'GRN Voucher Type Name';
+            DataClassification = CustomerContent;
+        }
+        field(50018; "Print Caption"; Text[50])
+        {
+            Caption = 'Print Caption';
+            DataClassification = CustomerContent;
+        }
 
     }
 }

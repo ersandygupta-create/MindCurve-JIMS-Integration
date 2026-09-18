@@ -212,6 +212,14 @@ page 50012 "E3 Integration API Setup"
                 {
                     ToolTip = 'Specifies the value of the GRN Work Sheet API Enabled field.';
                 }
+                field("Sale Consumption API"; Rec."Sale Consumption API")
+                {
+                    ToolTip = 'Specifies the value of the Sale Consumption API field.';
+                }
+                field("Sale Consumption API Enabled"; Rec."Sale Consumption API Enabled")
+                {
+                    ToolTip = 'Specifies the value of the Sale Consumption API Enabled field.';
+                }
             }
         }
     }

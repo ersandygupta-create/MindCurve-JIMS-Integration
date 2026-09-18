@@ -109,7 +109,7 @@ report 50035 "E3 Gate OutWard Print"
                 column(Serial_No_; "Serial No.")
                 {
                 }
-                column(EstimatedValue; "Estimated Value")
+                column(EstimatedValue; "Estimated Value Receive")
                 {
                 }
                 column(AssetNo; "Asset No.")

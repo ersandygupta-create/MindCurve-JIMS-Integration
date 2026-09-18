@@ -183,6 +183,7 @@ page 50236 "E3 Indent Stock Receipt Lines"
         SalePurchLine."Item Name" := IndentLine.Description;
         SalePurchLine.Validate("Shipped Qty", IndentLine."Approved Qty");
         SalePurchLine.Validate("Unit Cost", IndentLine."Unit Cost");
+        SalePurchLine.MRP := IndentLine.MRP;
         // if IndentLine."Location Code" <> '' then
         //     SalePurchLine.Validate("Location Code", IndentLine."Location Code");       
         SalePurchLine."Indent No." := IndentLine."Document No.";

@@ -67,5 +67,37 @@ tableextension 50024 "E3 HIS Sales Invoice Header" extends "Sales Invoice Header
             DataClassification = CustomerContent;
             Caption = 'Payer Name';
         }
+        field(50108; "Voucher Type"; Code[20])
+        {
+            Caption = 'Voucher Type';
+            DataClassification = CustomerContent;
+        }
+        field(50109; "Purchase Order No."; Code[20])
+        {
+            Caption = 'Purchase order No.';
+            DataClassification = ToBeClassified;
+            InitValue = '';
+
+        }
+        field(50110; "Purchase Order Created"; Boolean)
+        {
+            Caption = 'Purchase order Created';
+            DataClassification = ToBeClassified;
+            InitValue = false;
+        }
+        field(50112; "GRN Voucher Type Name"; Text[60])
+        {
+            Caption = 'GRN Voucher Type Name';
+            DataClassification = CustomerContent;
+        }
+        field(50113; Sync; Boolean)
+        {
+            Caption = 'Sync';
+            DataClassification = CustomerContent;
+        }
     }
+    trigger OnAfterInsert()
+    begin
+        "Purchase Order Created" := false;
+    end;
 }

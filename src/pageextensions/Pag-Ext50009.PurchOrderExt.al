@@ -1,3 +1,4 @@
+
 pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
 {
     layout
@@ -64,6 +65,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 ApplicationArea = All;
                 Caption = 'Item Make Code';
                 ToolTip = 'Specifies the unique code of the item make.';
+                ShowMandatory = true;
             }
         }
         addbefore("No.")
@@ -73,6 +75,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 ApplicationArea = All;
                 Caption = 'Voucher Type';
                 Editable = Rec."Voucher Type" = '';
+                ToolTip = 'Voucher Type';
 
                 trigger OnValidate()
                 begin
@@ -102,10 +105,10 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                     Page.Run(Page::"E3 Order Terms & Conditions", POTerms);
                 end;
             }
-            action("Cancle PO")
+            action("Cancel PO")
             {
                 ApplicationArea = All;
-                Caption = 'Cancle PO';
+                Caption = 'Cancel PO';
                 Image = Cancel;
                 Promoted = true;
                 PromotedCategory = Process;
@@ -113,7 +116,6 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
 
                 trigger OnAction()
                 var
-                    IndentLine: Record "E3 Indent Line";
                     purchaseline: record "Purchase Line";
                 begin
                     purchaseline.reset();
@@ -129,10 +131,6 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
             }
         }
     }
-
-    var
-        recPurchHdr: Record "Purchase Header";
-        VoucherTypeEditable: Boolean;
 
     trigger OnOpenPage()
     var
@@ -159,6 +157,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                     IndentLine."Purchase Order No." := '';
                     IndentLine."PO Created" := false;
                     indentline."Closed Indent Grouped Line" := false;
+                    IndentLine."Released Stock Issue" := false;
                     IndentLine.Modify();
                     purchLine."Indent Line No." := 0;
                     purchLine."Indent No." := '';

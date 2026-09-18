@@ -121,23 +121,19 @@ report 50044 "Axis Bank Check Print"
                     CheckToAddr[1] := Test;
 
                 decAmount := 0;
+
                 recGenJnlLine2.RESET;
-                //recGenJnlLine2.SETRANGE("Journal Template Name","Journal Batch Name");
-                //recGenJnlLine2.SETRANGE("Journal Batch Name","Journal Batch Name");
+                recGenJnlLine2.SETRANGE("Journal Template Name", GenJnlLine."Journal Template Name");
+                recGenJnlLine2.SETRANGE("Journal Batch Name", GenJnlLine."Journal Batch Name");
                 recGenJnlLine2.SETRANGE("Document No.", GenJnlLine."Document No.");
                 recGenJnlLine2.SETRANGE("Posting Date", GenJnlLine."Posting Date");
-                IF recGenJnlLine2.FINDFIRST THEN BEGIN
+
+                IF recGenJnlLine2.FINDSET THEN
                     REPEAT
                         decAmount += recGenJnlLine2.Amount;
                     UNTIL recGenJnlLine2.NEXT = 0;
-                END;
-                decAmount := Round(decAmount, 1, '<');
 
-
-
-
-
-
+                decAmount := ROUND(decAmount, 1, '<');
                 CheckAmountText := FORMAT(decAmount);
 
                 UseCheckNo := INCSTR(UseCheckNo);
@@ -156,18 +152,23 @@ report 50044 "Axis Bank Check Print"
                 FormatNoText(DescriptionLine, decAmount, 'PAISA ONLY');
 
                 GenJnlLine3.RESET;
-                GenJnlLine3.SETRANGE("Document No.", "Document No.");
+                GenJnlLine3.SETRANGE("Journal Template Name", GenJnlLine."Journal Template Name");
+                GenJnlLine3.SETRANGE("Journal Batch Name", GenJnlLine."Journal Batch Name");
+                GenJnlLine3.SETRANGE("Document No.", GenJnlLine."Document No.");
                 GenJnlLine3.SETFILTER("Cheque No.", '%1', '');
-                IF GenJnlLine3.FINDFIRST THEN BEGIN
+
+                IF GenJnlLine3.FINDSET THEN BEGIN
                     REPEAT
                         GenJnlLine."Cheque No." := UseCheckNo;
+
                         IF GenJnlLine3."Cheque No." = '' THEN
                             GenJnlLine."Cheque Date" := GenJnlLine3."Posting Date"
                         ELSE
                             GenJnlLine."Cheque Date" := GenJnlLine3."Cheque Date";
+
                         GenJnlLine."Bank Payment Type" := GenJnlLine."Bank Payment Type"::" ";
                         GenJnlLine.MODIFY;
-                    UNTIL GenJnlLine.NEXT = 0;
+                    UNTIL GenJnlLine3.NEXT = 0;
                 END;
             end;
         }
@@ -264,19 +265,26 @@ report 50044 "Axis Bank Check Print"
 
         trigger OnInit()
         begin
-            Test := 'YOURSELF';
+            Test := '';
         end;
 
         trigger OnOpenPage()
         begin
-            IF BankAcc2."No." <> '' THEN
-                IF BankAcc2.GET(BankAcc2."No.") THEN
-                    UseCheckNo := BankAcc2."Last Check No."
-                ELSE BEGIN
-                    BankAcc2."No." := '';
-                    UseCheckNo := '';
-                END;
-            //CLEAR(BeneficiaryName);
+            BankAcc2.Init();
+            UseCheckNo := '';
+
+            GenJnlLine2.RESET;
+            GenJnlLine2.SETRANGE(
+                "Bal. Account Type",
+                GenJnlLine2."Bal. Account Type"::"Bank Account"
+            );
+
+            if GenJnlLine2.FindFirst() then begin
+                if GenJnlLine2."Bal. Account No." <> '' then begin
+                    if BankAcc2.Get(GenJnlLine2."Bal. Account No.") then
+                        UseCheckNo := BankAcc2."Last Check No.";
+                end;
+            end;
         end;
     }
 
@@ -523,7 +531,7 @@ report 50044 "Axis Bank Check Print"
         FormatAddr: Codeunit 365;
         CheckManagement: Codeunit 367;
         CompanyAddr: array[8] of Text[50];
-        CheckToAddr: array[8] of Text[50];
+        CheckToAddr: array[8] of Text[200];
         OnesText: array[20] of Text[30];
         TensText: array[10] of Text[30];
         ExponentText: array[5] of Text[30];
@@ -556,7 +564,7 @@ report 50044 "Axis Bank Check Print"
         HighestLineNo: Integer;
         PreprintedStub: Boolean;
         TotalText: Text[10];
-        Test: Text[100];
+        Test: Text[200];
         DocDate: Date;
         i: Integer;
         Text062: Label 'G/L Account,Customer,Vendor,Bank Account';

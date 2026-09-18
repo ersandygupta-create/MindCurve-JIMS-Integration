@@ -27,7 +27,11 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             var
                 PurchaseHeader: REcord "Purchase Header";
             begin
-                PurchaseHeader.get(rec."Document No.");
+                // sandeep
+                PurchaseHeader.Reset();
+                PurchaseHeader.SetRange("No.", Rec."Document No.");
+                PurchaseHeader.SetRange("Document Type", rec."Document Type");
+                if PurchaseHeader.FindFirst() then;
                 if rec."Indent No." <> '' then
                     CheckMakeCode(PurchaseHeader, rec."Item Make Code");
             end;
@@ -121,6 +125,21 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Editable = false;
             DataClassification = CustomerContent;
         }
+        field(50023; "Manufacturing Date"; Date)
+        {
+            Caption = 'Manufacturing Date';
+            DataClassification = CustomerContent;
+        }
+        field(50024; "Expiry Date"; Date)
+        {
+            Caption = 'Expiry Date';
+            DataClassification = CustomerContent;
+        }
+        field(50025; "Batch No."; Code[50])
+        {
+            Caption = 'Batch No.';
+            DataClassification = CustomerContent;
+        }
         modify("No.")
         {
             trigger OnAfterValidate()
@@ -204,6 +223,12 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             end;
         }
     }
+    trigger OnBeforeDelete()
+    begin
+        if rec."Indent Line Remarks" <> '' then
+            Error('Indent Purchase line can not be deleted.');
+    end;
+
     local procedure CheckMakeCode(var PurchaseHeader: Record "Purchase Header"; ItemMakeCode: code[20])
     begin
         if ItemMakeCode <> PurchaseHeader."Item Make Code" then

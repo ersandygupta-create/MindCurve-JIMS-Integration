@@ -25,7 +25,7 @@ table 50055 "E3 Voucher Type"
         }
         field(4; "Entry Type"; Option)
         {
-            OptionMembers = ,Indent,Order;
+            OptionMembers = ,Indent,Order,Sale,Purchase;
             DataClassification = CustomerContent;
         }
         field(5; "Item Type"; Code[20])
@@ -140,6 +140,22 @@ table 50055 "E3 Voucher Type"
             Caption = 'Purchase Credit Nos.';
             DataClassification = CustomerContent;
             TableRelation = "No. Series";
+        }
+        field(22; "Vendor No."; Code[20])
+        {
+            Caption = 'Vendor No.';
+            DataClassification = CustomerContent;
+            TableRelation = Vendor."No.";
+        }
+        field(23; "Order Voucher Code"; Code[10])
+        {
+            Caption = 'Order Voucher Code';
+            DataClassification = ToBeClassified;
+        }
+        field(24; "Purchase Order Created"; Boolean)
+        {
+            Caption = 'Purchase Order.';
+            DataClassification = CustomerContent;
         }
     }
 

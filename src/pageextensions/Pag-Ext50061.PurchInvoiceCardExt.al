@@ -48,6 +48,31 @@ pageextension 50061 "E3 HIS Purchase Invoice Card" extends "Purchase Invoice"
                     CheckAdvance(Rec);
                 end;
             }
+            action(PrintProformaPurchaseInvoice)
+            {
+                ApplicationArea = All;
+                Caption = 'Print Pro Forma Invoice';
+                Image = Print;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Print the Pro Forma Purchase Invoice.';
+
+                trigger OnAction()
+                var
+                    PurchHeader: Record "Purchase Header";
+                begin
+                    CurrPage.SetSelectionFilter(PurchHeader);
+
+                    if PurchHeader.IsEmpty() then
+                        Error('Please select a purchase document.');
+
+                    Report.RunModal(
+                        Report::"E3 Pro Forma Purchase Invoice",
+                        true,
+                        false,
+                        PurchHeader);
+                end;
+            }
         }
     }
 

@@ -168,7 +168,12 @@ codeunit 50046 "E3 GRN Work Sheet Mgmt."
                     LineObj.Add('barcode', GRNWorkSheetLine.Barcode);
                     LineObj.Add('batchNo', GRNWorkSheetLine."Batch No.");
                     LineObj.Add('manufacturingDate', Format(CurrentDateTime, 0, 9));
-                    LineObj.Add('expiryDate', Format(GRNWorkSheetLine."Expiry Date", 0, '<Year4>-<Month,2>-<Day,2>'));
+                    if GRNWorkSheetLine."Expiry Date" = 0D then
+                        LineObj.Add('expiryDate', Format(Today(), 0, '<Year4>-<Month,2>-<Day,2>'))
+                    else
+                        LineObj.Add('expiryDate', Format(GRNWorkSheetLine."Expiry Date", 0, '<Year4>-<Month,2>-<Day,2>'));
+
+                    //LineObj.Add('expiryDate', Format(GRNWorkSheetLine."Expiry Date", 0, '<Year4>-<Month,2>-<Day,2>'));
                     LineObj.Add('itemMakeCode', GRNWorkSheetLine."Item Make Code");
                     LineObj.Add('gstTypeCode', GRNWorkSheetLine."GST Type Code");
                     LineObj.Add('itemGSTNature', GRNWorkSheetLine."Item GST Nature");

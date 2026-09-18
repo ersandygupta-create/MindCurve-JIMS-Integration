@@ -31,6 +31,7 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
                 if not PaymentTerm.Get(PurchaseHeader."Payment Terms Code") then
                     exit;
                 "Advance Due Date" := CalcDate(PaymentTerm."Due Date Calculation", WorkDate());
+                CalculateGSTAmount();
 
             end;
 
@@ -175,6 +176,8 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
         VoucherType: Record "E3 Voucher Type";
         PaymentTerm: Record "Payment Terms";
         NoSeries: Codeunit "No. Series";
+        CalcStatistics: Codeunit "Calculate Statistics";
+    //  TaxCalculation: Codeunit "Tax Document Interface"; // Indian GST Engine
     begin
         rec."Advance Request Date" := WorkDate();
 
@@ -182,7 +185,11 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
         PurchOrder.SetRange("No.", "Purchase Order No.");
         if PurchOrder.FindFirst() then begin
             PurchOrder.CalcFields(Amount);
-            "Total PO Amount" := PurchOrder.Amount;
+            PurchOrder.CalcFields("Amount Including VAT");
+            "Total PO Amount" := PurchOrder."Amount Including VAT";
+            CalculateGSTAmount();
+            ;
+            ;
 
             VoucherType.Reset();
             VoucherType.SetRange(Code, PurchOrder."Voucher Type");
@@ -198,5 +205,60 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
             "Advance Due Date" := CalcDate(PaymentTerm."Due Date Calculation", WorkDate());
             "BU Code" := PurchOrder."Shortcut Dimension 1 Code";
         end;
+    end;
+
+    local procedure CalculateGSTAmount()
+    var
+        PurchLine: Record "Purchase Line";
+        GSTAmount: Decimal;
+        GrossLineAmount: Decimal;
+        DiscountAmount: Decimal;
+        TaxableAmount: Decimal;
+        GSTPercentage: Decimal;
+    begin
+        GSTAmount := 0;
+
+        PurchLine.Reset();
+        PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+        PurchLine.SetRange("Document No.", "Purchase Order No.");
+
+        if PurchLine.FindSet() then
+            repeat
+                // Gross amount before line discount
+                GrossLineAmount :=
+                    PurchLine.Quantity * PurchLine."Direct Unit Cost";
+
+                // Calculate line discount
+                DiscountAmount :=
+                    Round(
+                        GrossLineAmount *
+                        PurchLine."Line Discount %" / 100,
+                        0.01);
+
+                // Taxable amount after discount
+                TaxableAmount :=
+                    GrossLineAmount - DiscountAmount;
+
+                // GST Group Code contains GST percentage
+                if PurchLine."GST Group Code" <> '' then begin
+                    GSTPercentage := 0;
+
+                    if Evaluate(GSTPercentage, PurchLine."GST Group Code") then begin
+                        GSTAmount +=
+                            Round(
+                                TaxableAmount * GSTPercentage / 100,
+                                0.01);
+                    end;
+                end;
+            until PurchLine.Next() = 0;
+
+        "GST Amount" := GSTAmount;
+    end;
+
+
+    trigger OnDelete()
+    begin
+        if rec.Release = true then
+            Error('Document is release and can not be deleted.');
     end;
 }

@@ -77,7 +77,7 @@ tableextension 50023 "E3 HIS Sales Header" extends "Sales Header"
         {
             Caption = 'Voucher Type';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Voucher Type".Code where("Entry Type" = const(Order));
+            TableRelation = "E3 Voucher Type".Code where("Entry Type" = const(Sale));
             trigger OnValidate()
             var
                 VoucherType: Record "E3 Voucher Type";
@@ -89,6 +89,7 @@ tableextension 50023 "E3 HIS Sales Header" extends "Sales Header"
                 VoucherType.Get("Voucher Type");
 
                 "GRN Voucher Type Name" := VoucherType."GRN Voucher Type Name";
+                Validate("Responsibility Center", VoucherType."Responsibility Center");
                 Sync := VoucherType.Sync;
 
                 case "Document Type" of
@@ -114,18 +115,41 @@ tableextension 50023 "E3 HIS Sales Header" extends "Sales Header"
                             if "No." = '' then
                                 "No." := NoSeries.GetNextNo(VoucherType."Sale Return Order", WorkDate(), true);
                         end;
+                    "Document Type"::"Credit Memo":
+                        begin
+                            VoucherType.TestField("Sale Credit Nos.");
+
+                            if "No." = '' then
+                                "No." := NoSeries.GetNextNo(VoucherType."Sale Credit Nos.", WorkDate(), true);
+                        end;
                 end;
             end;
         }
-        field(50109; "GRN Voucher Type Name"; Text[60])
+        field(50112; "GRN Voucher Type Name"; Text[60])
         {
             Caption = 'GRN Voucher Type Name';
             DataClassification = CustomerContent;
         }
-        field(50110; Sync; Boolean)
+        field(50113; Sync; Boolean)
         {
             Caption = 'Sync';
             DataClassification = CustomerContent;
         }
     }
+    trigger OnBeforeDelete()
+    begin
+        CheckIndentLine(Rec);
+    end;
+
+    local procedure CheckIndentLine(SalesHeader: Record "Sales Header")
+    var
+        SalesLine: Record "Sales Line";
+    begin
+        SalesLine.Reset();
+        SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+        SalesLine.setrange("Document No.", SalesHeader."No.");
+        SalesLine.SetFilter("E3 Indent Line", '%1', true);
+        if SalesLine.Find('-') then
+            Error('Indent Order can not be deleted.');
+    end;
 }

@@ -24,6 +24,21 @@ page 50171 "E3 Approved HIS Indent List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the voucher type Name associated with the indent.';
                 }
+                field("Indent No."; Rec."Document No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the unique indent number.';
+                }
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the shortcut dimension 1 code.';
+                }
+                field("Business Unit Name"; Rec."Business Unit Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the name of the business unit.';
+                }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = All;
@@ -38,11 +53,6 @@ page 50171 "E3 Approved HIS Indent List"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the source type of the indent.';
-                }
-                field("Indent No."; Rec."Document No.")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the unique indent number.';
                 }
                 field("Indenter Name"; Rec."Indenter Name")
                 {

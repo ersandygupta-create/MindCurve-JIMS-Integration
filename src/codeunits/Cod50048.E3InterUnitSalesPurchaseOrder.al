@@ -101,6 +101,9 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
                     PurchLine."Vendor Item No." := HISPurchaseSaleLine."Item ID";
                     PurchLine."Stock No" := HISPurchaseSaleHeader."Document No.";
                     PurchLine."Stock Line No" := HISPurchaseSaleLine."Line No.";
+                    PurchLine."Batch No." := HISPurchaseSaleLine.BatchNo;
+                    PurchLine."Expiry Date" := HISPurchaseSaleLine.ExpiryDate;
+                    PurchLine.MRP := HISPurchaseSaleLine.MRP;
                     PurchLine.INSERT(TRUE);
                     if HISPurchaseSaleLine.BatchNo <> '' then
                         CreatePurchLineItemTracking(HISPurchaseSaleLine, PurchLine);
@@ -208,6 +211,9 @@ codeunit 50048 "E3 InterUnit Sale/Purch Mgt."
                     SalesLine.VALIDATE("HSN/SAC Code", HISPurchaseSaleLine."HSN/SAC Code");
                     SalesLine."Stock No" := HISPurchaseSaleHeader."Document No.";
                     SalesLine."Stock Line No" := HISPurchaseSaleLine."Line No.";
+                    SalesLine."Batch No." := HISPurchaseSaleLine.BatchNo;
+                    SalesLine."Expiry Date" := HISPurchaseSaleLine.ExpiryDate;
+                    SalesLine.MRP := HISPurchaseSaleLine.MRP;
                     SalesLine.INSERT(TRUE);
                     if HISPurchaseSaleLine.BatchNo <> '' then
                         CreateSalesLineItemTracking(HISPurchaseSaleLine, SalesLine);

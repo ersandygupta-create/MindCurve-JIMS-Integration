@@ -145,4 +145,19 @@ page 50240 "E3 Get Groupping Indent Lines"
         DocumentType := PurchaseDocumentType;
         DocumentNo := PurchaseDocumentNo;
     end;
+
+    procedure GetSelectedLines(var TargetIndentLine: Record "E3 Indent Line" temporary)
+    var
+        SelectedRec: Record "E3 Indent Line";
+    begin
+        TargetIndentLine.Reset();
+        TargetIndentLine.DeleteAll();
+
+        CurrPage.SetSelectionFilter(SelectedRec);
+        if SelectedRec.FindSet() then
+            repeat
+                TargetIndentLine := SelectedRec;
+                TargetIndentLine.Insert();
+            until SelectedRec.Next() = 0;
+    end;
 }

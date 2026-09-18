@@ -55,6 +55,20 @@ tableextension 50018 "E3 HIS Purch. Inv. Line" extends "Purch. Inv. Line"
             Caption = 'Scheme';
             DataClassification = CustomerContent;
         }
-
+        field(50023; "Manufacturing Date"; Date)
+        {
+            Caption = 'Manufacturing Date';
+            DataClassification = CustomerContent;
+        }
+        field(50024; "Expiry Date"; Date)
+        {
+            Caption = 'Expiry Date';
+            DataClassification = CustomerContent;
+        }
+        field(50025; "Batch No."; Code[50])
+        {
+            Caption = 'Batch No.';
+            DataClassification = CustomerContent;
+        }
     }
 }
