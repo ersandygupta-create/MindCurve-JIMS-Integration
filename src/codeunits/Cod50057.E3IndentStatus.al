@@ -54,7 +54,7 @@ codeunit 50057 "E3 Indent Status Mgmt."
         // =========================
         Clear(ItemObj);
 
-        ItemObj.Add('docId', Format(IndentLineUpdateLog."Document No."));
+        ItemObj.Add('docId', 0);
         ItemObj.Add('v_SNo', Format(IndentLineUpdateLog."SNo."));
         ItemObj.Add('businessUnitCode', IndentLineUpdateLog."Shortcut Dimension 1 Code");
         ItemObj.Add('itemCode', IndentLineUpdateLog."No.");
