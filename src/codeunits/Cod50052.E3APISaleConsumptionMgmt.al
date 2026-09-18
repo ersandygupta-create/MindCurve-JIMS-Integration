@@ -178,8 +178,8 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
                     LineObj.Add('skuStaffSaleRate', SaleShipmentLine."Unit Cost");
                     LineObj.Add('barcode', SaleShipmentLine."Document No.");
                     LineObj.Add('batchNo', SaleShipmentLine."Batch No.");
-                    LineObj.Add('manufacturingDate', Format(SaleShipmentLine."Manufacturing Date", 0, '<Year4>-<Month,2>-<Day,2>'));
-                    LineObj.Add('expiryDate', Format(SaleShipmentLine."Expiry Date", 0, '<Year4>-<Month,2>-<Day,2>'));
+                    LineObj.Add('manufacturingDate', Format(WorkDate(), 0, '<Year4>-<Month,2>-<Day,2>'));
+                    LineObj.Add('expiryDate', Format(WorkDate(), 0, '<Year4>-<Month,2>-<Day,2>'));
                     Clear(Item);
 
                     if (SaleShipmentLine.Type = SaleShipmentLine.Type::Item) and
@@ -207,9 +207,12 @@ codeunit 50052 "E3 Sale Shipment Cons. Mgmt."
         Clear(HeaderArray);
         HeaderArray.Add(GRNObj);
 
+
         Clear(RootObj);
         RootObj.Add('header', HeaderArray);
         RootObj.WriteTo(ReqPayload);
+        if GuiAllowed then
+            Message('Request:\%1', ReqPayload);
 
         // HTTP Request Headers
         HttpWebContent.WriteFrom(ReqPayload);
