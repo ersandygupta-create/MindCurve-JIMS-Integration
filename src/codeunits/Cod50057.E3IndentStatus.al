@@ -59,12 +59,12 @@ codeunit 50057 "E3 Indent Status Mgmt."
         ItemObj.Add('businessUnitCode', IndentLineUpdateLog."Shortcut Dimension 1 Code");
         ItemObj.Add('itemCode', IndentLineUpdateLog."No.");
         ItemObj.Add('dm_itemCode', 0);
-        ItemObj.Add('status', IndentLineUpdateLog.Status);
+        ItemObj.Add('status', format(IndentLineUpdateLog.Status));
         ItemObj.Add('remark', IndentLineUpdateLog.Remarks);
         ItemObj.Add('uom', IndentLineUpdateLog."Unit of Measure");
         ItemObj.Add('qty', IndentLineUpdateLog."Approved Qty");
         ItemObj.Add('indentnumber', IndentLineUpdateLog."Document No.");
-        ItemObj.Add('indentserialnumber', IndentLineUpdateLog."Entry No.");
+        ItemObj.Add('indentserialnumber', 0);
 
         ItemArray.Add(ItemObj);
 
