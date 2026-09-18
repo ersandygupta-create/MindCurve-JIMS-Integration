@@ -22,5 +22,15 @@ tableextension 50075 "E3 Sales Invoice Line Ext" extends "Sales Invoice Line"
             Caption = 'MRP';
             DataClassification = CustomerContent;
         }
+        field(50114; IsSent; Boolean)
+        {
+            Caption = 'IsSent';
+            DataClassification = CustomerContent;
+        }
+        field(50115; Response; Text[30])
+        {
+            Caption = 'Response';
+            DataClassification = CustomerContent;
+        }
     }
 }

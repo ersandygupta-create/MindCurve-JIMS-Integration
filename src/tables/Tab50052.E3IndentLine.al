@@ -528,6 +528,16 @@ table 50052 "E3 Indent Line"
             Caption = 'SO Created';
             DataClassification = CustomerContent;
         }
+        field(71; IsSent; Boolean)
+        {
+            Caption = 'IsSent';
+            DataClassification = CustomerContent;
+        }
+        field(72; Response; Text[30])
+        {
+            Caption = 'Response';
+            DataClassification = CustomerContent;
+        }
         field(80285; "Currency Code"; Code[10])
         {
             DataClassification = CustomerContent;

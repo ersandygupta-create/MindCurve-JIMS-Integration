@@ -95,6 +95,16 @@ tableextension 50024 "E3 HIS Sales Invoice Header" extends "Sales Invoice Header
             Caption = 'Sync';
             DataClassification = CustomerContent;
         }
+        field(50114; IsSent; Boolean)
+        {
+            Caption = 'IsSent';
+            DataClassification = CustomerContent;
+        }
+        field(50115; Response; Text[30])
+        {
+            Caption = 'Response';
+            DataClassification = CustomerContent;
+        }
     }
     trigger OnAfterInsert()
     begin

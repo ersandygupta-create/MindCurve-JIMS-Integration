@@ -172,7 +172,48 @@ page 50237 "E3 Closed Indent List"
                     Editable = false;
                     ToolTip = 'Specifies the Purchase Order Line no of indent line.';
                 }
+            }
+        }
+    }
+    actions
+    {
+        area(Processing)
+        {
+            action(SendToStatusAPI)
+            {
+                ApplicationArea = All;
+                Caption = 'Send to Status API';
+                ToolTip = 'Sends the selected indent line status to the Status API.';
+                Image = SendTo;
 
+                trigger OnAction()
+                var
+                    IndentStatusMgmt: Codeunit "E3 Indent Status Mgmt.";
+                    IndentLineRec: Record "E3 Indent Line";
+                begin
+                    CurrPage.SetSelectionFilter(IndentLineRec);
+
+                    if IndentLineRec.IsEmpty() then
+                        Error('Please select at least one indent line.');
+
+                    if IndentLineRec.FindSet() then
+                        repeat
+                            if IndentLineRec."IsSent" then
+                                Error(
+                                    'Indent %1, S.No. %2 has already been sent.',
+                                    IndentLineRec."Document No.",
+                                    IndentLineRec."SNo.");
+
+                            if not IndentStatusMgmt.SendIndentLineDetails(IndentLineRec) then
+                                Error(
+                                    'Failed to send Indent %1, S.No. %2. Please check the Response field.',
+                                    IndentLineRec."Document No.",
+                                    IndentLineRec."SNo.");
+                        until IndentLineRec.Next() = 0;
+
+                    Message('Indent status sent successfully.');
+                    CurrPage.Update(false);
+                end;
             }
         }
     }

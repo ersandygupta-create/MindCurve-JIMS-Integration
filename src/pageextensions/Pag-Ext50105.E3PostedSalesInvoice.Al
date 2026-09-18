@@ -27,6 +27,33 @@ pageextension 50105 "E3 Posted Sales Invoice" extends 143
                         Message('Purchase Order already created.');
                 end;
             }
+            action(SendToHIS)
+            {
+                ApplicationArea = All;
+                Caption = 'Send to HIS';
+                Image = SendTo;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Sends the selected posted sales Invoice data to HIS.';
+
+                trigger OnAction()
+                var
+                    HISIntegrationMgt: Codeunit "E3 Sale Invoice Cons. Mgmt.";
+                begin
+                    Rec.TestField("No.");
+
+                    if not Confirm(
+                         StrSubstNo('Do you want to send Invoice %1 to the DB?', Rec."No."))
+                    then
+                        exit;
+
+                    if HISIntegrationMgt.SendSaleInvoiceDetails(Rec."No.") then begin
+                        Message('Sale %1 has been sent successfully.', Rec."No.");
+                        CurrPage.Update(true);
+                    end else
+                        Error('Failed to send Sale %1. Please check the Response field.', Rec."No.");
+                end;
+            }
         }
     }
 
