@@ -18,8 +18,9 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
         E3APISetup: Record "E3 Integration API Setup";
         PurchaseShipmentHeader: Record "Return Shipment Header";
         PurchaseShipmentLine: Record "Return Shipment Line";
-        Location: Record Location;
+        GLSetup: Record "General Ledger Setup";
         DimensionValue: Record "Dimension Value";
+        Location: Record Location;
 
     procedure SendPurchaseShipmentDetails(DocumentID: Code[20]): Boolean
     var
@@ -70,6 +71,7 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
         GRNObj.Add('v_Prefix', '');
         GRNObj.Add('v_Date', Format(PurchaseShipmentHeader."Posting Date", 0, '<Year4>-<Month,2>-<Day,2>'));
         GRNObj.Add('d365_departmentCode', PurchaseShipmentHeader."Location Code");
+
         GRNObj.Add('departmentName', '');
         GRNObj.Add('d365_Supplier_subCode', PurchaseShipmentHeader."Buy-from Vendor No.");
         GRNObj.Add('placeOfSupply', 'HR');
@@ -96,7 +98,10 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
         GRNObj.Add('approvalDateTime', Format(PurchaseShipmentHeader.SystemModifiedAt, 0,
          '<Year4>-<Month,2>-<Day,2>T<Hours24,2>:<Minutes,2>:<Seconds,2>'));
         GRNObj.Add('businessUnitCode', PurchaseShipmentHeader."Shortcut Dimension 1 Code");
-        if DimensionValue.Get(PurchaseShipmentHeader."Shortcut Dimension 1 Code") then
+        Clear(DimensionValue);
+        if DimensionValue.Get(
+            GLSetup."Global Dimension 1 Code", PurchaseShipmentHeader."Shortcut Dimension 1 Code")
+        then
             GRNObj.Add('businessUnitName', DimensionValue.Name)
         else
             GRNObj.Add('businessUnitName', '');
@@ -139,6 +144,7 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
                     LineObj.Add('d365_itemCode', PurchaseShipmentLine."No.");
                     LineObj.Add('itemName', PurchaseShipmentLine.Description);
                     LineObj.Add('d365_departmentCode', PurchaseShipmentLine."Location Code");
+
                     GRNObj.Add('departmentName', '');
                     LineObj.Add('d365_unitCode', PurchaseShipmentLine."Unit of Measure");
                     LineObj.Add('d365_hsnCode', '0');
