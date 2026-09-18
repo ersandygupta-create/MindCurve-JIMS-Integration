@@ -176,7 +176,6 @@ codeunit 50052 "E3 Sale Invoice Cons. Mgmt."
                     LineObj.Add('landedSkuValue', 0);
                     LineObj.Add('landedSkuRate', SaleInvoiceLine."Unit Cost");
                     LineObj.Add('remark', '');
-<<<<<<< HEAD
                     LineObj.Add('mrp', SaleInvoiceLine.MRP);
                     LineObj.Add('skuMrp', SaleInvoiceLine.MRP);
                     LineObj.Add('saleRate', SaleInvoiceLine."Unit Cost");
@@ -187,18 +186,6 @@ codeunit 50052 "E3 Sale Invoice Cons. Mgmt."
                     LineObj.Add('batchNo', SaleInvoiceLine."Batch No.");
                     LineObj.Add('manufacturingDate', Format(WorkDate(), 0, 9));
                     LineObj.Add('expiryDate', Format(WorkDate(), 0, 9));
-=======
-                    // LineObj.Add('mrp', SaleShipmentLine.MRP);
-                    // LineObj.Add('skuMrp', SaleShipmentLine.MRP);
-                    // LineObj.Add('saleRate', SaleShipmentLine."Unit Cost");
-                    // LineObj.Add('skuSaleRate', SaleShipmentLine."Unit Cost");
-                    // LineObj.Add('staffSaleRate', SaleShipmentLine."Unit Cost");
-                    // LineObj.Add('skuStaffSaleRate', SaleShipmentLine."Unit Cost");
-                    // LineObj.Add('barcode', SaleShipmentLine."Document No.");
-                    // LineObj.Add('batchNo', SaleShipmentLine."Batch No.");
-                    LineObj.Add('manufacturingDate', Format(WorkDate(), 0, '<Year4>-<Month,2>-<Day,2>'));
-                    LineObj.Add('expiryDate', Format(WorkDate(), 0, '<Year4>-<Month,2>-<Day,2>'));
->>>>>>> cbdfa8659c01e8afcc2f2c89d4a2333a993cc542
                     Clear(Item);
 
                     if (SaleInvoiceLine.Type = SaleInvoiceLine.Type::Item) and
