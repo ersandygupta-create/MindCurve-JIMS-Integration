@@ -21,6 +21,8 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
         GLSetup: Record "General Ledger Setup";
         DimensionValue: Record "Dimension Value";
         Location: Record Location;
+        Item: Record Item;
+        Vendor: Record Vendor;
 
     procedure SendPurchaseShipmentDetails(DocumentID: Code[20]): Boolean
     var
@@ -47,6 +49,7 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
         JsonResponse: Text;
         ResponseMsg: Text;
         J: Integer;
+        FYYear: Integer;
     begin
         if not E3APISetup.Get() then
             exit(false);
@@ -68,7 +71,11 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
 
         GRNObj.Add('d365_DocId', PurchaseShipmentHeader."No.");
         GRNObj.Add('v_Type', PurchaseShipmentHeader."GRN Voucher Type Name");
-        GRNObj.Add('v_Prefix', PurchaseShipmentHeader."Voucher Type");
+        if Date2DMY(Today(), 2) >= 4 then
+            FYYear := Date2DMY(Today(), 3)
+        else
+            FYYear := Date2DMY(Today(), 3) - 1;
+        GRNObj.Add('v_Prefix', Format(FYYear MOD 100));
         GRNObj.Add('v_Date', Format(PurchaseShipmentHeader."Posting Date", 0, '<Year4>-<Month,2>-<Day,2>'));
         GRNObj.Add('d365_departmentCode', PurchaseShipmentHeader."Location Code");
 
@@ -103,6 +110,7 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
         GRNObj.Add('approvedBy', 'D365');
         GRNObj.Add('approvalDateTime', Format(PurchaseShipmentHeader.SystemModifiedAt, 0,
          '<Year4>-<Month,2>-<Day,2>T<Hours24,2>:<Minutes,2>:<Seconds,2>'));
+        GLSetup.Get();
         GRNObj.Add('businessUnitCode', PurchaseShipmentHeader."Shortcut Dimension 1 Code");
         Clear(DimensionValue);
         if DimensionValue.Get(
@@ -113,7 +121,13 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
             GRNObj.Add('businessUnitName', '');
         GRNObj.Add('rcmApplicable', 0);
         GRNObj.Add('partyType', 'Vendor');
-        GRNObj.Add('gsTin', PurchaseShipmentHeader."VAT Registration No.");
+        if PurchaseShipmentHeader."Buy-from Vendor No." <> '' then begin
+            if Vendor.Get(PurchaseShipmentHeader."Buy-from Vendor No.") then
+                GRNObj.Add('gsTin', Vendor."GST Registration No.")
+            else
+                GRNObj.Add('gsTin', '');
+        end else
+            GRNObj.Add('gsTin', '');
         GRNObj.Add('eWayBillNo', PurchaseShipmentHeader."No.");
         GRNObj.Add('eWayBillDt', Format(CurrentDateTime, 0, 9));
         GRNObj.Add('lrNo', '');
@@ -187,15 +201,27 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
                     LineObj.Add('skuSaleRate', PurchaseShipmentLine."Unit Cost");
                     LineObj.Add('staffSaleRate', PurchaseShipmentLine."Unit Cost");
                     LineObj.Add('skuStaffSaleRate', PurchaseShipmentLine."Unit Cost");
-                    LineObj.Add('barcode', '');
+                    LineObj.Add('barcode', PurchaseShipmentLine."Document No.");
                     LineObj.Add('batchNo', PurchaseShipmentLine."Batch No.");
-                    LineObj.Add('manufacturingDate', '2026-09-10');
-                    LineObj.Add('expiryDate', '2026-12-10');
+                    LineObj.Add('manufacturingDate', PurchaseShipmentLine."Manufacturing Date");
+                    LineObj.Add('expiryDate', PurchaseShipmentLine."Expiry Date");
                     // LineObj.Add('expiryDate', Format(PurchaseShipmentLine."Expiry Date", 0, '<Year4>-<Month,2>-<Day,2>T00:00:00Z'));
 
                     LineObj.Add('itemMakeCode', PurchaseShipmentLine."Item Make Code");
-                    LineObj.Add('gstTypeCode', '');
-                    LineObj.Add('itemGSTNature', '');
+                    if PurchaseShipmentHeader."Buy-from Vendor No." <> '' then begin
+                        if Vendor.Get(PurchaseShipmentHeader."Buy-from Vendor No.") then
+                            LineObj.Add('gstTypeCode', Format(Vendor."GST Vendor Type"))
+                        else
+                            LineObj.Add('gstTypeCode', '');
+                    end else
+                        LineObj.Add('gstTypeCode', '');
+                    if PurchaseShipmentLine."No." <> '' then begin
+                        if Item.Get(PurchaseShipmentLine."No.") then
+                            LineObj.Add('itemGSTNature', Format(Item.GLEN))
+                        else
+                            LineObj.Add('itemGSTNature', '');
+                    end else
+                        LineObj.Add('itemGSTNature', '');
                     LineObj.Add('dm_Status', '');
                     LineObj.Add('dm_TimeStamp', Format(CurrentDateTime, 0, 9));
                     LineObj.Add('dm_docid', 0);

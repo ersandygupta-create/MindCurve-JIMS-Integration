@@ -539,4 +539,117 @@ codeunit 50001 "E3 HIS Event Subscriber"
             IsHandled := true;
         end;
     end;
+
+    [EventSubscriber(ObjectType::Page, Page::"Item Tracking Lines",
+       'OnAfterOnClosePage', '', false, false)]
+    local procedure ItemTrackingLinesOnAfterClosePages(
+       var TrackingSpecification: Record "Tracking Specification";
+       CurrentRunMode: Enum "Item Tracking Run Mode";
+       CurrentSourceType: Integer;
+       CurrentSourceRowID: Text[250];
+       SecondSourceRowID: Text[250])
+    begin
+        // Only Purchase Line
+        if CurrentSourceType <> Database::"Purchase Line" then
+            exit;
+
+        UpdatePurchaseReturnLine(
+            TrackingSpecification,
+            CurrentSourceType);
+    end;
+
+
+    local procedure UpdatePurchaseReturnLine(
+        TrackingSpecification: Record "Tracking Specification";
+        CurrentSourceType: Integer)
+    var
+        PurchaseLine: Record "Purchase Line";
+        ReservationEntry: Record "Reservation Entry";
+        LotNoInfo: Record "Lot No. Information";
+        LotNo: Code[50];
+        ExpiryDate: Date;
+    begin
+        // Only Purchase Lines
+        if CurrentSourceType <> Database::"Purchase Line" then
+            exit;
+
+        if TrackingSpecification."Source Type" <> Database::"Purchase Line" then
+            exit;
+
+        if TrackingSpecification."Source ID" = '' then
+            exit;
+
+        if TrackingSpecification."Source Ref. No." = 0 then
+            exit;
+
+        // Only Purchase Return Order
+        PurchaseLine.Reset();
+        PurchaseLine.SetRange(
+            "Document Type",
+            PurchaseLine."Document Type"::"Return Order");
+        PurchaseLine.SetRange(
+            "Document No.",
+            TrackingSpecification."Source ID");
+        PurchaseLine.SetRange(
+            "Line No.",
+            TrackingSpecification."Source Ref. No.");
+
+        if not PurchaseLine.FindFirst() then
+            exit;
+
+        // Get Reservation Entry
+        ReservationEntry.Reset();
+        ReservationEntry.SetRange(
+            "Source Type",
+            Database::"Purchase Line");
+        ReservationEntry.SetRange(
+            "Source Subtype",
+            PurchaseLine."Document Type");
+        ReservationEntry.SetRange(
+            "Source ID",
+            PurchaseLine."Document No.");
+        ReservationEntry.SetRange(
+            "Source Ref. No.",
+            PurchaseLine."Line No.");
+        ReservationEntry.SetRange(
+            "Item No.",
+            PurchaseLine."No.");
+        ReservationEntry.SetFilter(
+            "Lot No.",
+            '<>%1',
+            '');
+
+        if ReservationEntry.FindFirst() then begin
+
+            LotNo := ReservationEntry."Lot No.";
+
+            // Get expiry date from Lot No. Information
+            LotNoInfo.Reset();
+            LotNoInfo.SetRange(
+                "Item No.",
+                PurchaseLine."No.");
+            LotNoInfo.SetRange(
+                "Lot No.",
+                LotNo);
+
+            if LotNoInfo.FindFirst() then
+                ExpiryDate := LotNoInfo."Expairy Date";
+        end;
+
+        // Update only if value is changed
+        if (PurchaseLine."Batch No." <> LotNo) or
+           (PurchaseLine."Expiry Date" <> ExpiryDate)
+        then begin
+
+            PurchaseLine."Batch No." := CopyStr(
+                LotNo,
+                1,
+                MaxStrLen(PurchaseLine."Batch No."));
+
+            PurchaseLine."Expiry Date" := ExpiryDate;
+
+            PurchaseLine.Modify(false);
+        end;
+    end;
+
 }
