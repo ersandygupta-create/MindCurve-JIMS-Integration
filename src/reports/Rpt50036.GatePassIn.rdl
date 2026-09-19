@@ -24,148 +24,6 @@
       <rd:DataSourceID>4b1fdd1b-4fec-4d42-ae93-56ab2fbaff12</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="GateNo">
-          <DataField>GateNo</DataField>
-        </Field>
-        <Field Name="PostedNo">
-          <DataField>PostedNo</DataField>
-        </Field>
-        <Field Name="Reference_Document_No_">
-          <DataField>Reference_Document_No_</DataField>
-        </Field>
-        <Field Name="Purpose_Description">
-          <DataField>Purpose_Description</DataField>
-        </Field>
-        <Field Name="To_Destination_Name">
-          <DataField>To_Destination_Name</DataField>
-        </Field>
-        <Field Name="CompanyLogo">
-          <DataField>CompanyLogo</DataField>
-        </Field>
-        <Field Name="LocationCode">
-          <DataField>LocationCode</DataField>
-        </Field>
-        <Field Name="LocationName">
-          <DataField>LocationName</DataField>
-        </Field>
-        <Field Name="LocationAdd">
-          <DataField>LocationAdd</DataField>
-        </Field>
-        <Field Name="LocationAdd2">
-          <DataField>LocationAdd2</DataField>
-        </Field>
-        <Field Name="LocationPhoneNo">
-          <DataField>LocationPhoneNo</DataField>
-        </Field>
-        <Field Name="GatePassType">
-          <DataField>GatePassType</DataField>
-        </Field>
-        <Field Name="Vendor_Name">
-          <DataField>Vendor_Name</DataField>
-        </Field>
-        <Field Name="Vendor_No_">
-          <DataField>Vendor_No_</DataField>
-        </Field>
-        <Field Name="Person">
-          <DataField>Person</DataField>
-        </Field>
-        <Field Name="Vehicle_No_">
-          <DataField>Vehicle_No_</DataField>
-        </Field>
-        <Field Name="PurposeCode">
-          <DataField>PurposeCode</DataField>
-        </Field>
-        <Field Name="From_Department_Name">
-          <DataField>From_Department_Name</DataField>
-        </Field>
-        <Field Name="ToDestination">
-          <DataField>ToDestination</DataField>
-        </Field>
-        <Field Name="Expected_Return_Date">
-          <DataField>Expected_Return_Date</DataField>
-        </Field>
-        <Field Name="Remarks">
-          <DataField>Remarks</DataField>
-        </Field>
-        <Field Name="PreparedBy">
-          <DataField>PreparedBy</DataField>
-        </Field>
-        <Field Name="PrintedBy">
-          <DataField>PrintedBy</DataField>
-        </Field>
-        <Field Name="PrintedDateTime">
-          <DataField>PrintedDateTime</DataField>
-        </Field>
-        <Field Name="GatePassDateTime">
-          <DataField>GatePassDateTime</DataField>
-        </Field>
-        <Field Name="GateOutDate">
-          <DataField>GateOutDate</DataField>
-        </Field>
-        <Field Name="GateOutTime">
-          <DataField>GateOutTime</DataField>
-        </Field>
-        <Field Name="Posting_Date">
-          <DataField>Posting_Date</DataField>
-        </Field>
-        <Field Name="OutwardPostingDate">
-          <DataField>OutwardPostingDate</DataField>
-        </Field>
-        <Field Name="OutwardPostingDateTime">
-          <DataField>OutwardPostingDateTime</DataField>
-        </Field>
-        <Field Name="Line_No_">
-          <DataField>Line_No_</DataField>
-        </Field>
-        <Field Name="SNo">
-          <DataField>SNo</DataField>
-        </Field>
-        <Field Name="ItemName">
-          <DataField>ItemName</DataField>
-        </Field>
-        <Field Name="Serial_No_">
-          <DataField>Serial_No_</DataField>
-        </Field>
-        <Field Name="Quantity_Received">
-          <DataField>Quantity_Received</DataField>
-        </Field>
-        <Field Name="Quantity_ReceivedFormat">
-          <DataField>Quantity_ReceivedFormat</DataField>
-        </Field>
-        <Field Name="UnitOfMeasurement">
-          <DataField>UnitOfMeasurement</DataField>
-        </Field>
-        <Field Name="Estimated_Value_Receive">
-          <DataField>Estimated_Value_Receive</DataField>
-        </Field>
-        <Field Name="Estimated_Value_ReceiveFormat">
-          <DataField>Estimated_Value_ReceiveFormat</DataField>
-        </Field>
-        <Field Name="EstimatedValue">
-          <DataField>EstimatedValue</DataField>
-        </Field>
-        <Field Name="EstimatedValueFormat">
-          <DataField>EstimatedValueFormat</DataField>
-        </Field>
-        <Field Name="AssetNo">
-          <DataField>AssetNo</DataField>
-        </Field>
-        <Field Name="Fixed_Asset_Name">
-          <DataField>Fixed_Asset_Name</DataField>
-        </Field>
-        <Field Name="LineRemarks">
-          <DataField>LineRemarks</DataField>
-        </Field>
-      </Fields>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -2343,12 +2201,6 @@
       </Page>
     </ReportSection>
   </ReportSections>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <Code>Public Function BlankZero(ByVal Value As Decimal)
     if Value = 0 then
         Return ""
@@ -2401,4 +2253,146 @@ AV33/BHj/lIP+0H/ANiz4Y/9Cv64GvQv+CN0Buf28v2jrmMM8NvoXhW2eQLlVkI1BtmcdduDjPfntX7r
   </EmbeddedImages>
   <Language>=User!Language</Language>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="GateNo">
+          <DataField>GateNo</DataField>
+        </Field>
+        <Field Name="PostedNo">
+          <DataField>PostedNo</DataField>
+        </Field>
+        <Field Name="Reference_Document_No_">
+          <DataField>Reference_Document_No_</DataField>
+        </Field>
+        <Field Name="Purpose_Description">
+          <DataField>Purpose_Description</DataField>
+        </Field>
+        <Field Name="To_Destination_Name">
+          <DataField>To_Destination_Name</DataField>
+        </Field>
+        <Field Name="CompanyLogo">
+          <DataField>CompanyLogo</DataField>
+        </Field>
+        <Field Name="LocationCode">
+          <DataField>LocationCode</DataField>
+        </Field>
+        <Field Name="LocationName">
+          <DataField>LocationName</DataField>
+        </Field>
+        <Field Name="LocationAdd">
+          <DataField>LocationAdd</DataField>
+        </Field>
+        <Field Name="LocationAdd2">
+          <DataField>LocationAdd2</DataField>
+        </Field>
+        <Field Name="LocationPhoneNo">
+          <DataField>LocationPhoneNo</DataField>
+        </Field>
+        <Field Name="GatePassType">
+          <DataField>GatePassType</DataField>
+        </Field>
+        <Field Name="Vendor_Name">
+          <DataField>Vendor_Name</DataField>
+        </Field>
+        <Field Name="Vendor_No_">
+          <DataField>Vendor_No_</DataField>
+        </Field>
+        <Field Name="Person">
+          <DataField>Person</DataField>
+        </Field>
+        <Field Name="Vehicle_No_">
+          <DataField>Vehicle_No_</DataField>
+        </Field>
+        <Field Name="PurposeCode">
+          <DataField>PurposeCode</DataField>
+        </Field>
+        <Field Name="From_Department_Name">
+          <DataField>From_Department_Name</DataField>
+        </Field>
+        <Field Name="ToDestination">
+          <DataField>ToDestination</DataField>
+        </Field>
+        <Field Name="Expected_Return_Date">
+          <DataField>Expected_Return_Date</DataField>
+        </Field>
+        <Field Name="Remarks">
+          <DataField>Remarks</DataField>
+        </Field>
+        <Field Name="PreparedBy">
+          <DataField>PreparedBy</DataField>
+        </Field>
+        <Field Name="PrintedBy">
+          <DataField>PrintedBy</DataField>
+        </Field>
+        <Field Name="PrintedDateTime">
+          <DataField>PrintedDateTime</DataField>
+        </Field>
+        <Field Name="GatePassDateTime">
+          <DataField>GatePassDateTime</DataField>
+        </Field>
+        <Field Name="GateOutDate">
+          <DataField>GateOutDate</DataField>
+        </Field>
+        <Field Name="GateOutTime">
+          <DataField>GateOutTime</DataField>
+        </Field>
+        <Field Name="Posting_Date">
+          <DataField>Posting_Date</DataField>
+        </Field>
+        <Field Name="OutwardPostingDate">
+          <DataField>OutwardPostingDate</DataField>
+        </Field>
+        <Field Name="OutwardPostingDateTime">
+          <DataField>OutwardPostingDateTime</DataField>
+        </Field>
+        <Field Name="Line_No_">
+          <DataField>Line_No_</DataField>
+        </Field>
+        <Field Name="SNo">
+          <DataField>SNo</DataField>
+        </Field>
+        <Field Name="ItemName">
+          <DataField>ItemName</DataField>
+        </Field>
+        <Field Name="Serial_No_">
+          <DataField>Serial_No_</DataField>
+        </Field>
+        <Field Name="Quantity_Received">
+          <DataField>Quantity_Received</DataField>
+        </Field>
+        <Field Name="Quantity_ReceivedFormat">
+          <DataField>Quantity_ReceivedFormat</DataField>
+        </Field>
+        <Field Name="UnitOfMeasurement">
+          <DataField>UnitOfMeasurement</DataField>
+        </Field>
+        <Field Name="Estimated_Value_Receive">
+          <DataField>Estimated_Value_Receive</DataField>
+        </Field>
+        <Field Name="Estimated_Value_ReceiveFormat">
+          <DataField>Estimated_Value_ReceiveFormat</DataField>
+        </Field>
+        <Field Name="EstimatedValue">
+          <DataField>EstimatedValue</DataField>
+        </Field>
+        <Field Name="EstimatedValueFormat">
+          <DataField>EstimatedValueFormat</DataField>
+        </Field>
+        <Field Name="AssetNo">
+          <DataField>AssetNo</DataField>
+        </Field>
+        <Field Name="Fixed_Asset_Name">
+          <DataField>Fixed_Asset_Name</DataField>
+        </Field>
+        <Field Name="LineRemarks">
+          <DataField>LineRemarks</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>
