@@ -173,7 +173,13 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
                     else
                         LineObj.Add('departmentName', '');
                     LineObj.Add('d365_unitCode', PurchaseShipmentLine."Unit of Measure");
-                    LineObj.Add('d365_hsnCode', '0');
+                    if PurchaseShipmentLine."No." <> '' then begin
+                        if Item.Get(PurchaseShipmentLine."No.") then
+                            LineObj.Add('d365_hsnCode', Format(Item."HSN/SAC Code"))
+                        else
+                            LineObj.Add('d365_hsnCode', '');
+                    end else
+                        LineObj.Add('d365_hsnCode', '');
                     LineObj.Add('indentSKUQty', PurchaseShipmentLine.Quantity);
                     LineObj.Add('issQty', PurchaseShipmentLine.Quantity);
                     LineObj.Add('rate', Round(PurchaseShipmentLine."Unit Cost"));
