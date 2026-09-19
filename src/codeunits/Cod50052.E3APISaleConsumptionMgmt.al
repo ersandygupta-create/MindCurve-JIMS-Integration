@@ -136,6 +136,7 @@ codeunit 50052 "E3 Sale Invoice Cons. Mgmt."
         Clear(LineArray);
         SaleInvoiceLine.Reset();
         SaleInvoiceLine.SetRange("Document No.", DocumentID);
+        SaleInvoiceLine.SetRange(Type, SaleInvoiceLine.Type::Item);
 
         if SaleInvoiceLine.FindSet() then
             repeat
