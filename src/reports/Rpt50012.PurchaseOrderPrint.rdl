@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-18T06:13:28.0967359Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-09-21T13:40:57.1818436Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -32,7 +32,7 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>0.27364in</Width>
+                  <Width>0.25975in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1.4199in</Width>
@@ -44,7 +44,7 @@
                   <Width>0.42247in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.7304in</Width>
+                  <Width>0.67484in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.43903in</Width>
@@ -62,7 +62,7 @@
                   <Width>0.51289in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.3618in</Width>
+                  <Width>0.43124in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.4789in</Width>
@@ -2061,12 +2061,12 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Round(Fields!RoundoffAmt.Value)</Value>
+                                  <Value>=Fields!RoundoffAmt.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Format>0.00</Format>
+                                    <Format>n2</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2190,7 +2190,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>="Grand Total Amount (" &amp; Fields!Currency_Code.Value &amp;")"</Value>
+                                  <Value>="Grand Total Amount "</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2242,7 +2242,7 @@
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Format>n0</Format>
+                                    <Format>n2</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3058,7 +3058,7 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Top>1.7in</Top>
+            <Top>1.95in</Top>
             <Left>0.03104in</Left>
             <Height>4.30374in</Height>
             <Width>7.80799in</Width>
@@ -3236,7 +3236,8 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>W/S DL No</Value>
+                    <Label>WS</Label>
+                    <Value>=IIF(Fields!W_S_DL_No_.Value&lt;&gt;"","W/S DL No -","")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -3244,7 +3245,7 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value> - </Value>
+                    <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -3267,7 +3268,8 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Retail DL No</Value>
+                    <Label>RetailDLNo</Label>
+                    <Value>=IIF(Fields!Retail_DL_No_.Value &lt;&gt; "", "Retail DL No - ", "")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -3275,7 +3277,7 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value> - </Value>
+                    <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -3298,7 +3300,7 @@
             </Paragraphs>
             <Top>0.02652in</Top>
             <Left>3.17112in</Left>
-            <Height>1.47696in</Height>
+            <Height>1.56029in</Height>
             <Width>4.66791in</Width>
             <ZIndex>1</ZIndex>
             <Style>
@@ -3327,13 +3329,15 @@
                     </Style>
                   </TextRun>
                 </TextRuns>
-                <Style />
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>1.46181in</Top>
-            <Left>3.5293in</Left>
+            <Top>1.71181in</Top>
+            <Left>0.03104in</Left>
             <Height>0.24306in</Height>
-            <Width>1.35417in</Width>
+            <Width>7.80799in</Width>
             <ZIndex>2</ZIndex>
             <Style>
               <Border>
@@ -3362,35 +3366,6 @@
               </Border>
             </Style>
           </Image>
-          <Textbox Name="Textbox14">
-            <rd:DefaultName>Textbox14</rd:DefaultName>
-            <CanGrow>true</CanGrow>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value />
-                    <Style />
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <Top>0.02306in</Top>
-            <Left>0.03694in</Left>
-            <Height>2.37496in</Height>
-            <Width>7.80209in</Width>
-            <ZIndex>4</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
         </ReportItems>
         <Height>7.03in</Height>
         <Style>
@@ -3404,7 +3379,7 @@
           </BackgroundImage>
         </Style>
       </Body>
-      <Width>7.87in</Width>
+      <Width>7.83903in</Width>
       <Page>
         <PageFooter>
           <Height>0.29514in</Height>
