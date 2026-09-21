@@ -186,7 +186,14 @@ codeunit 50052 "E3 Sale Invoice Cons. Mgmt."
                     LineObj.Add('barcode', SaleInvoiceLine."Document No.");
                     LineObj.Add('batchNo', SaleInvoiceLine."Batch No.");
                     LineObj.Add('manufacturingDate', Format(WorkDate(), 0, 9));
-                    LineObj.Add('expiryDate', Format(SaleInvoiceLine."Expiry Date", 0, '<Year4>-<Month,2>-<Day,2>'));
+                    if SaleInvoiceLine."Expiry Date" = 0D then
+                        LineObj.Add(
+                            'expiryDate',
+                            Format(CalcDate('<+1Y>', SaleInvoiceHeader."Posting Date"), 0, 9))
+                    else
+                        LineObj.Add(
+                            'expiryDate',
+                            Format(SaleInvoiceLine."Expiry Date", 0, 9));
                     Clear(Item);
 
                     if (SaleInvoiceLine.Type = SaleInvoiceLine.Type::Item) and

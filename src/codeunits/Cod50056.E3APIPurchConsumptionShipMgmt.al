@@ -23,6 +23,8 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
         Location: Record Location;
         Item: Record Item;
         Vendor: Record Vendor;
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        ExpiryDate: Date;
 
     procedure SendPurchaseShipmentDetails(DocumentID: Code[20]): Boolean
     var
@@ -210,9 +212,17 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
                     LineObj.Add('barcode', PurchaseShipmentLine."Document No.");
                     LineObj.Add('batchNo', PurchaseShipmentLine."Batch No.");
                     LineObj.Add('manufacturingDate', PurchaseShipmentLine."Manufacturing Date");
-                    LineObj.Add('expiryDate', PurchaseShipmentLine."Expiry Date");
-                    // LineObj.Add('expiryDate', Format(PurchaseShipmentLine."Expiry Date", 0, '<Year4>-<Month,2>-<Day,2>T00:00:00Z'));
+                    if PurchaseShipmentLine."Expiry Date" <> 0D then
+                        ExpiryDate := PurchaseShipmentLine."Expiry Date"
+                    else
+                        ExpiryDate := GetExpiryDateFromLotInformation(
+                            PurchaseShipmentLine."Document No.",
+                            PurchaseShipmentLine."No.",
+                            PurchaseShipmentHeader."Posting Date");
 
+                    LineObj.Add(
+                        'expiryDate',
+                        Format(ExpiryDate, 0, 9));
                     LineObj.Add('itemMakeCode', PurchaseShipmentLine."Item Make Code");
                     if PurchaseShipmentHeader."Buy-from Vendor No." <> '' then begin
                         if Vendor.Get(PurchaseShipmentHeader."Buy-from Vendor No.") then
@@ -334,5 +344,37 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
                 PurchaseShipmentLine.Modify(true);
             until PurchaseShipmentLine.Next() = 0;
         exit(false);
+    end;
+
+    local procedure GetExpiryDateFromLotInformation(
+    DocumentNo: Code[20];
+    ItemNo: Code[20];
+    DefaultDate: Date): Date
+    var
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        LotInformation: Record "Lot No. Information";
+    begin
+        Clear(ExpiryDate);
+
+        ItemLedgerEntry.Reset();
+        ItemLedgerEntry.SetRange("Document No.", DocumentNo);
+        ItemLedgerEntry.SetRange("Item No.", ItemNo);
+
+        if ItemLedgerEntry.FindFirst() then begin
+            if ItemLedgerEntry."Lot No." <> '' then begin
+                LotInformation.Reset();
+                LotInformation.SetRange("Item No.", ItemLedgerEntry."Item No.");
+                LotInformation.SetRange("Lot No.", ItemLedgerEntry."Lot No.");
+
+                if LotInformation.FindFirst() then
+                    if LotInformation."Expairy Date" <> 0D then
+                        exit(LotInformation."Expairy Date");
+            end;
+        end;
+
+        if DefaultDate <> 0D then
+            exit(CalcDate('<+1Y>', DefaultDate));
+
+        exit(CalcDate('<+1Y>', Today()));
     end;
 }

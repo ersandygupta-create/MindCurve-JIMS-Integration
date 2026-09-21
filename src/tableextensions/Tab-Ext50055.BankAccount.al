@@ -35,7 +35,11 @@ tableextension 50055 "Bank Account" extends "Bank Account"
             Caption = 'Client Code 1';
             DataClassification = CustomerContent;
         }
-
+        field(50055; "Payment Report ID"; Integer)
+        {
+            Caption = 'Payment Report ID';
+            DataClassification = CustomerContent;
+        }
         modify("Date Filter")
         {
             trigger OnAfterValidate()

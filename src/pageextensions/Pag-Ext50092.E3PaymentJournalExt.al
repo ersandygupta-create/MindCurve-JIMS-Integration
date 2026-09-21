@@ -10,113 +10,86 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
                 ToolTip = 'Specifies a value Narration';
             }
         }
-    }
-    actions
-    {
-        addafter("P&osting")
+
+        addafter("Bal. Account No.")
         {
-            action("HDFC Check Print")
-            {
-                ApplicationArea = Basic, Suite;
-                Caption = 'HDFC Check Print';
-                Image = PrintCheck;
-                Promoted = true;
-                PromotedCategory = Process;
-
-                trigger OnAction()
-                var
-                    GenJournalLine: Record "Gen. Journal Line";
-                begin
-                    CurrPage.SaveRecord();
-
-                    GenJournalLine.Reset();
-                    GenJournalLine.SetRange("Journal Template Name", Rec."Journal Template Name");
-                    GenJournalLine.SetRange("Journal Batch Name", Rec."Journal Batch Name");
-                    //GenJournalLine.SetRange("Line No.", Rec."Line No.");
-
-                    Report.RunModal(Report::"Bank Check H", true, true, GenJournalLine);
-                end;
-            }
-            action("SBI Check Print")
-            {
-                ApplicationArea = Basic, Suite;
-                Caption = 'SBI Check Print';
-                Image = PrintCheck;
-                Promoted = true;
-                PromotedCategory = Process;
-
-                trigger OnAction()
-                var
-                    GenJournalLine: Record "Gen. Journal Line";
-                begin
-                    CurrPage.SaveRecord();
-
-                    GenJournalLine.Reset();
-                    GenJournalLine.SetRange("Journal Template Name", Rec."Journal Template Name");
-                    GenJournalLine.SetRange("Journal Batch Name", Rec."Journal Batch Name");
-                    //GenJournalLine.SetRange("Line No.", Rec."Line No.");
-
-                    Report.RunModal(Report::"SBI Bank Check Print", true, true, GenJournalLine);
-                end;
-            }
-            action("Induslnd Check Print")
-            {
-                ApplicationArea = Basic, Suite;
-                Caption = 'Induslnd Check Print';
-                Image = PrintCheck;
-                Promoted = true;
-                PromotedCategory = Process;
-
-                trigger OnAction()
-                var
-                    GenJournalLine: Record "Gen. Journal Line";
-                begin
-                    CurrPage.SaveRecord();
-
-                    GenJournalLine.Reset();
-                    GenJournalLine.SetRange("Journal Template Name", Rec."Journal Template Name");
-                    GenJournalLine.SetRange("Journal Batch Name", Rec."Journal Batch Name");
-                    //GenJournalLine.SetRange("Line No.", Rec."Line No.");
-
-                    Report.RunModal(Report::"Induslnd Bank Check Print", true, true, GenJournalLine);
-                end;
-            }
-            action("ICICI Check Print")
-            {
-                ApplicationArea = Basic, Suite;
-                Caption = 'ICICI Check Print';
-                Image = PrintCheck;
-                Promoted = true;
-                PromotedCategory = Process;
-
-                trigger OnAction()
-                var
-                    GenJournalLine: Record "Gen. Journal Line";
-                begin
-                    CurrPage.SaveRecord();
-
-                    GenJournalLine.Reset();
-                    GenJournalLine.SetRange("Journal Template Name", Rec."Journal Template Name");
-                    GenJournalLine.SetRange("Journal Batch Name", Rec."Journal Batch Name");
-                    //GenJournalLine.SetRange("Line No.", Rec."Line No.");
-
-                    Report.RunModal(Report::"ICICI Bank Check Print", true, true, GenJournalLine);
-                end;
-            }
-            action("Axis Print Check")
+            field("Purchase Order No."; Rec."Purchase Order No.")
             {
                 ApplicationArea = All;
-                Caption = 'Axis Check Print';
-                Image = PrintCheck;
+                ToolTip = 'Purchase Order No.';
+                Caption = 'Purchase Order No.';
+            }
+
+            field("Document No"; Rec."Document No")
+            {
+                ToolTip = 'Advance Document No.';
+                ApplicationArea = All;
+                Caption = 'Advance Document No.';
+            }
+        }
+
+        modify("Bal. Account No.")
+        {
+            trigger OnAfterValidate()
+            begin
+                UpdateCardPaymentAction();
+                CurrPage.Update(false);
+            end;
+        }
+    }
+
+    actions
+    {
+        addafter("Post and &Print")
+        {
+            action(CardPayment)
+            {
+                Caption = 'Check Print';
+                ApplicationArea = All;
+                Image = Payment;
+                Visible = ShowCardPayment;
                 Promoted = true;
                 PromotedCategory = Process;
 
                 trigger OnAction()
                 begin
-                    Report.RunModal(Report::"Axis Bank Check Print", true, true, Rec);
+                    if CardPaymentReportID = 0 then
+                        Error(
+                            'Card Payment Report is not configured for Bank Account %1.',
+                            Rec."Bal. Account No.");
+
+                    Report.Run(CardPaymentReportID);
                 end;
             }
-
         }
     }
+
+    trigger OnAfterGetRecord()
+    begin
+        UpdateCardPaymentAction();
+    end;
+
+    local procedure UpdateCardPaymentAction()
+    var
+        BankAccount: Record "Bank Account";
+    begin
+        ShowCardPayment := false;
+        CardPaymentReportID := 0;
+
+        if Rec."Bal. Account Type" <> Rec."Bal. Account Type"::"Bank Account" then
+            exit;
+
+        if Rec."Bal. Account No." = '' then
+            exit;
+
+        if not BankAccount.Get(Rec."Bal. Account No.") then
+            exit;
+
+        CardPaymentReportID := BankAccount."Payment Report ID";
+        ShowCardPayment := CardPaymentReportID <> 0;
+    end;
+
+    var
+        ShowCardPayment: Boolean;
+        CardPaymentReportID: Integer;
 }

@@ -110,9 +110,6 @@ report 50102 "E3 Gate Inward Print"
             column(OutwardPostingDateTime; OutwardPostingDateTime)
             {
             }
-
-
-
             dataitem(GateEntryLine; "E3 Gate Entry Line")
             {
                 DataItemLink = "Document No." = field("Document No.");
@@ -131,7 +128,6 @@ report 50102 "E3 Gate Inward Print"
                 {
 
                 }
-
                 column(Quantity_Received; "Quantity Received")
                 {
                 }
@@ -154,8 +150,6 @@ report 50102 "E3 Gate Inward Print"
                 column(LineRemarks; Specification)
                 {
                 }
-
-
                 trigger OnAfterGetRecord()
                 begin
                     SNo += 1;
