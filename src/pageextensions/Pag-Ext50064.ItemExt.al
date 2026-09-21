@@ -102,6 +102,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Marketing Company Code"; Rec."Marketing Company Code")
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the Marketing Company Code.';
                 }
                 field("Marketing Company Name"; Rec."Marketing Company Name")
@@ -249,6 +250,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("E3 Margin Code"; Rec."E3 Margin Code")
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the value of E3 Margin Code field.';
                 }
                 field("Margin Name"; Rec."Margin Name")
@@ -370,11 +372,13 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Incl Free Qty in Sale Rate"; Rec."Incl Free Qty in Sale Rate")
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the value of Incl Free Qty in Sale Rate field.';
                 }
                 field("Sale Discount Allow"; Rec."Sale Discount Allow")
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the value of Sale Discount Allow field.';
                 }
                 field("Sale Rate Editable"; Rec."Sale Rate Editable")
@@ -395,6 +399,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Sale Returnable Item"; Rec."Sale Returnable Item")
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the value of Sale Returnable Item field.';
                 }
                 field("Quotation Required"; Rec."Quatation Required")

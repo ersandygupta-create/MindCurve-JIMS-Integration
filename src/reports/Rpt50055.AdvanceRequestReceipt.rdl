@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-18T09:21:23.8270872Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-09-21T03:40:39.4575428Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -36,7 +36,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!CompanyName.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!LocationName.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontSize>9pt</FontSize>
                       <FontWeight>Bold</FontWeight>
@@ -50,9 +50,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!CompanyAddress.Value, "DataSet_Result") &amp; " " &amp; First(Fields!CompanyAddress2.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!LocationName2.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontSize>8pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -63,9 +64,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>="Email : " &amp; First(Fields!CompanyEMail.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!LocationName3.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontSize>8pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -76,9 +78,38 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>="Phone : " &amp; First(Fields!CompanyPhone.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!LocationAddress.Value, "DataSet_Result") &amp; " " &amp; First(Fields!LocationAddress2.Value, "DataSet_Result") &amp; " " &amp; First(Fields!LocationCity.Value, "DataSet_Result") &amp; " - " &amp; First(Fields!LocationPostCode.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontSize>8pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=" Phone No. : " &amp; First(Fields!LocationPhone.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=" GSTIN : " &amp; First(Fields!LocationGST.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1353,7 +1384,7 @@
             <Top>1.51611in</Top>
             <Left>2.58333in</Left>
             <Height>0.15972in</Height>
-            <Width>2.49778in</Width>
+            <Width>1.48389in</Width>
             <ZIndex>7</ZIndex>
             <Style>
               <Border>
@@ -2881,9 +2912,9 @@
               </Paragraph>
             </Paragraphs>
             <Top>4.84946in</Top>
-            <Left>0.02306in</Left>
+            <Left>0.01611in</Left>
             <Height>0.2361in</Height>
-            <Width>2.37972in</Width>
+            <Width>2.56722in</Width>
             <ZIndex>18</ZIndex>
             <Style>
               <Border>
@@ -2916,9 +2947,9 @@
               </Paragraph>
             </Paragraphs>
             <Top>4.84946in</Top>
-            <Left>4.75695in</Left>
+            <Left>5.19445in</Left>
             <Height>0.25in</Height>
-            <Width>3in</Width>
+            <Width>2.5625in</Width>
             <ZIndex>19</ZIndex>
             <Style>
               <Border>
@@ -2994,14 +3025,58 @@
                     </Style>
                   </TextRun>
                 </TextRuns>
-                <Style />
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
               </Paragraph>
             </Paragraphs>
             <Top>4.84946in</Top>
-            <Left>2.37723in</Left>
+            <Left>2.58333in</Left>
             <Height>0.2361in</Height>
-            <Width>2.37972in</Width>
+            <Width>2.61112in</Width>
             <ZIndex>21</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox51">
+            <rd:DefaultName>Textbox25</rd:DefaultName>
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Remarks : </Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>7pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>=First(Fields!Remarks.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>7pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <Top>1.50222in</Top>
+            <Left>4.06722in</Left>
+            <Height>0.21528in</Height>
+            <Width>3.67583in</Width>
+            <ZIndex>22</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -3145,6 +3220,33 @@ End Function
         </Field>
         <Field Name="CompanyPicture">
           <DataField>CompanyPicture</DataField>
+        </Field>
+        <Field Name="LocationName">
+          <DataField>LocationName</DataField>
+        </Field>
+        <Field Name="LocationName2">
+          <DataField>LocationName2</DataField>
+        </Field>
+        <Field Name="LocationName3">
+          <DataField>LocationName3</DataField>
+        </Field>
+        <Field Name="LocationAddress">
+          <DataField>LocationAddress</DataField>
+        </Field>
+        <Field Name="LocationAddress2">
+          <DataField>LocationAddress2</DataField>
+        </Field>
+        <Field Name="LocationCity">
+          <DataField>LocationCity</DataField>
+        </Field>
+        <Field Name="LocationPostCode">
+          <DataField>LocationPostCode</DataField>
+        </Field>
+        <Field Name="LocationPhone">
+          <DataField>LocationPhone</DataField>
+        </Field>
+        <Field Name="LocationGST">
+          <DataField>LocationGST</DataField>
         </Field>
         <Field Name="BillPostingDate">
           <DataField>BillPostingDate</DataField>

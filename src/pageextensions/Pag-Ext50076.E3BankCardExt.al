@@ -24,6 +24,12 @@ pageextension 50076 "E3 Bank Card Ext" extends "Bank Account Card"
                     ApplicationArea = All;
                     ToolTip = 'Specify a Client Code 1 field.';
                 }
+                field("Payment Report ID"; Rec."Payment Report ID")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Payment Report ID';
+                    ToolTip = 'Specifies the report ID used for payments from this bank account.';
+                }
             }
         }
     }
