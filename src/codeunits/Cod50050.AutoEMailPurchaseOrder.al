@@ -44,10 +44,15 @@ codeunit 50050 "E3 Purchase Order Auto E-Mail"
                 Postingdate := UpperCase(Format(PurchaseHeader1."Order Date", 0, '<Day,2>-<Month Text,3>-<Year,2>'));
                 FileNameVar1 := EMailSetup."Folder Path" + DocumentNo + '-' + Postingdate;
                 RecRef.GetTable(PurchaseHeader1);
+                Clear(TempBlob);
                 TempBlob.CreateOutStream(Out);
-                TempBlob.CreateInStream(InStr);
 
-                Report.SaveAs(EMailSetup."Order Report ID", FileNameVar1, ReportFormat::Pdf, Out, RecRef);
+                if not Report.SaveAs(EMailSetup."Order Report ID", FileNameVar1, ReportFormat::Pdf, Out, RecRef)
+                then
+                    Error('Purchase Order %1 report could not be generated.', PurchaseHeader1."No.");
+
+                Clear(InStr);
+                TempBlob.CreateInStream(InStr);
                 Subject := 'Purchase Order' + ' - ' + PurchaseHeader1."No." + ' [' + PurchaseHeader1."Buy-from Vendor No." + ' - ' +
                     PurchaseHeader1."Buy-from Vendor Name" + '] ';
                 EmailMessage.Create(Vendor."Order Email", Subject, EMailSetup."Order E-Mail Body", false);
