@@ -128,21 +128,21 @@ page 50014 "E3 Item Master List"
                             Clear(NewItemDesc);
 
                             if UpperCase(Format(HisMasterStaging."Item Type 1 Name")) = 'PHARMACY' then begin
-                                AddValue(NewItemDesc, HisMasterStaging."Material Category Name");
-                                AddValue(NewItemDesc, HisMasterStaging."Display Name");
-                                AddValue(NewItemDesc, HisMasterStaging."Strength Name");
-                                AddValue(NewItemDesc, HisMasterStaging."Model Name");
+                                AddValue(NewItemDesc, UpperCase(HisMasterStaging."Material Category Name"));
+                                AddValue(NewItemDesc, UpperCase(HisMasterStaging."Display Name"));
+                                AddValue(NewItemDesc, UpperCase(HisMasterStaging."Strength Name"));
+                                AddValue(NewItemDesc, UpperCase(HisMasterStaging."Model Name"));
                             end else begin
-                                AddValue(NewItemDesc, HisMasterStaging."Material Category Name");
-                                AddValue(NewItemDesc, HisMasterStaging."Material Type Name");
-                                AddValue(NewItemDesc, HisMasterStaging."Specification Name");
-                                AddValue(NewItemDesc, HisMasterStaging."Model Name");
+                                AddValue(NewItemDesc, UpperCase(HisMasterStaging."Material Category Name"));
+                                AddValue(NewItemDesc, UpperCase(HisMasterStaging."Material Type Name"));
+                                AddValue(NewItemDesc, UpperCase(HisMasterStaging."Specification Name"));
+                                AddValue(NewItemDesc, uppercase(HisMasterStaging."Model Name"));
                             end;
 
                             // Validate duplicate description
                             Item.Reset();
                             Item.SetRange(Description, NewItemDesc);
-                            if Item.FindFirst() then
+                            if Item.find('-') then
                                 Error(
                                     'Item Description "%1" already exists in Item No. %2.',
                                     NewItemDesc,

@@ -323,6 +323,7 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
                 'User Setup is not defined for user %1.',
                 UserId);
         CheckIndentPO(Rec);
+        CheckPurchLine(Rec);
     end;
 
     local procedure ValidateDocumentDate()
@@ -354,6 +355,19 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
         PurchLine.SetFilter("Indent Line Remarks", '<>%1', '');
         if PurchLine.Find('-') then
             Error('Indent PO Can not be deleted.');
+    end;
+
+    local procedure CheckPurchLine(Var PurchHeader: Record "Purchase Header")
+    var
+        PurchLine: Record "Purchase Line";
+    begin
+        PurchLine.Reset();
+        purchline.SetRange("Document Type", PurchHeader."Document Type");
+        PurchLine.SetRange("Document No.", PurchHeader."No.");
+        PurchLine.SetFilter("Purch Rcpt No.", '<>%1', '');
+        PurchLine.SetFilter("Purch Rcpt Line No.", '<>%1', 0);
+        if PurchLine.Find('-') then
+            Error('Purchase Invoice Created by Rcpt line can not be deleted.');
     end;
 
 }

@@ -619,10 +619,10 @@ table 50000 "E3 HIS Master Staging"
         {
             Caption = 'Specification';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Item Speciality Master";
+            TableRelation = "E3 Item Strength Master";
             trigger OnValidate()
             var
-                SpecificationRec: Record "E3 Item Speciality Master";
+                SpecificationRec: Record "E3 Item Strength Master";
             begin
                 if "Specification Code" = '' then begin
                     "Specification Name" := '';
