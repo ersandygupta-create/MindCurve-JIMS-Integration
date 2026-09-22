@@ -45,6 +45,11 @@ pageextension 50057 "E3 HIS Purchase Order List" extends "Purchase Order List"
 
                     if PurchaseHeader.FindSet() then
                         repeat
+                            if PurchaseHeader."E3 Send E-Mail" then
+                                Error(
+                                    'Purchase Order %1 mail already sent.',
+                                    PurchaseHeader."No.");
+
                             OrderAutoEmail.SendMailforPurchaseOrderJob(
                                 PurchaseHeader);
                         until PurchaseHeader.Next() = 0;
