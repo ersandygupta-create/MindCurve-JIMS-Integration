@@ -140,6 +140,16 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Caption = 'Batch No.';
             DataClassification = CustomerContent;
         }
+        field(50026; "Purch Rcpt No."; Code[50])
+        {
+            Caption = 'Receipt No.';
+            DataClassification = CustomerContent;
+        }
+        field(50027; "Purch Rcpt Line No."; Integer)
+        {
+            Caption = 'Purch Rcpt Line No.';
+            DataClassification = CustomerContent;
+        }
         modify("No.")
         {
             trigger OnAfterValidate()
@@ -227,6 +237,8 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
     begin
         if rec."Indent Line Remarks" <> '' then
             Error('Indent Purchase line can not be deleted.');
+        if rec."Purch Rcpt No." <> '' then
+            Error('Line created through receipt line can not be deleted.');
     end;
 
     local procedure CheckMakeCode(var PurchaseHeader: Record "Purchase Header"; ItemMakeCode: code[20])

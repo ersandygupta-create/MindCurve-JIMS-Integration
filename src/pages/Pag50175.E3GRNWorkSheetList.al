@@ -122,6 +122,22 @@ page 50175 "E3 GRN Work Sheet List"
                 end;
 
             }
+            action("Craete Purchase Invoice")
+            {
+                Caption = 'Craete Purchase Invoice for GRN Lines';
+                ToolTip = 'Create Purchase Order for GRN Lines';
+                ApplicationArea = All;
+                Image = Create;
+                trigger OnAction()
+                var
+                    GRNInvoiceMgt: Codeunit "E3 GRN Invoice Management";
+                begin
+                    if Confirm('Do you want to create Purchase Invoices for all uninvoiced GRN lines?') then begin
+                        GRNInvoiceMgt.BatchCreateInvoicesFromReceipts();
+                        CurrPage.Update(false);
+                    end;
+                end;
+            }
         }
     }
 }

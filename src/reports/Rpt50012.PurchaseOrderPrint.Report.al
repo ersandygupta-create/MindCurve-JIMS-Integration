@@ -273,6 +273,12 @@ report 50012 "Purchase Order Print"
                         TotalAmttoVendor += TotalInclTaxAmount;
                 end;
 
+                // sandeep for unregistered vendor 
+                PurchaseLine.Reset();
+                PurchaseLine.SetRange("Document Type", "Document Type");
+                PurchaseLine.SetRange("Document No.", "No.");
+                PurchaseLine.CalcSums("Line Amount");
+
                 Customer.get("Buy-from Vendor No.");
                 IF (Customer."State Code" = "Location State Code") and (TotalInclTaxAmount <> 0) then begin
                     CGSTRsAmount_Var := (TotalInclTaxAmount / 2);
@@ -280,10 +286,17 @@ report 50012 "Purchase Order Print"
                 END ELSE
                     IGSTRsAmount_Var := TotalInclTaxAmount;
 
-                if Customer."GST Registration No." = '' then
-                    TotalAmttoVendor := TotalAmttoVendor + abs(TotalInclTaxAmount);
 
-                RoundoffAmt := TotalAmttoVendor;
+
+                if Customer."GST Registration No." = '' then begin
+                    TotalAmttoVendor := round(PurchaseLine."Line Amount", 1);
+                    RoundoffAmt := abs(PurchaseLine."Line Amount" - Round(TotalAmttoVendor, 1));
+
+                end else
+                    RoundoffAmt := abs(TotalAmttoVendor - Round(TotalAmttoVendor, 1));
+                //TotalAmttoVendor + abs(TotalInclTaxAmount);
+
+
 
                 PostedVoucher.InitTextVariable;
                 PostedVoucher.FormatNoText(AmtWords, Round(TotalAmttoVendor, 1), PurchaseHeader."Currency Code");
@@ -545,6 +558,7 @@ report 50012 "Purchase Order Print"
     var
         CompInfo: Record "Company Information";
         Customer: Record "Vendor";
+        PurchLine: Record "Purchase Line";
         CompAdd: Text[500];
         recState: Record State;
         CountryRegion: Record "Country/Region";

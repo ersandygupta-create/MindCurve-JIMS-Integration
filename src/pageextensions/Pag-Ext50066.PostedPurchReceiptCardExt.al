@@ -22,6 +22,16 @@ pageextension 50066 "Posted Purch Receipt Card Ext" extends "Posted Purchase Rec
                 ApplicationArea = All;
                 Editable = false;
             }
+            field("Purchase Invoice No"; Rec."Purchase Invoice No")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Purchase Invoice No.';
+            }
+            field("Purchase Invoice Created"; Rec."Purchase Invoice Created")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Purchase Invoice Created';
+            }
         }
 
     }
