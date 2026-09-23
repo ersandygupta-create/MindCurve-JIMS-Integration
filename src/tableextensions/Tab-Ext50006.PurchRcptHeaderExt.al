@@ -68,17 +68,27 @@ tableextension 50006 "E3 HIS Purch. Rcpt. Header" extends "Purch. Rcpt. Header"
             Caption = 'Sync';
             DataClassification = CustomerContent;
         }
-        field(50021; "Purchase Invoice No"; code[20])
+        field(70001; "Purchase Invoice No"; code[20])
         {
             Caption = 'Purchase Invoice No.';
             DataClassification = ToBeClassified;
             Editable = false;
         }
-        field(50022; "Purchase Invoice Created"; Boolean)
+        field(70002; "Purchase Invoice Created"; Boolean)
         {
             Caption = 'Purchase Invoice Created';
             DataClassification = ToBeClassified;
             Editable = false;
+        }
+        field(70003; "Vendor Invoice No."; Text[35])
+        {
+            Caption = 'Vendor Invoice No';
+            DataClassification = ToBeClassified;
+        }
+        field(50007; "Purchase Narration"; Text[160])
+        {
+            Caption = 'Purchase Narration';
+            DataClassification = CustomerContent;
         }
 
     }
