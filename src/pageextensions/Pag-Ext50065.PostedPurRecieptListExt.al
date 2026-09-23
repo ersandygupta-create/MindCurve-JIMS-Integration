@@ -47,6 +47,22 @@ pageextension 50065 "Posted Pur Receipt List Ext" extends "Posted Purchase Recei
                     GRNInvoiceMgmt.CreateInvoicesFromSelectedReceipts(PurchRcptHeader);
                 end;
             }
+            action(CleanupData)
+            {
+                ApplicationArea = All;
+                Caption = 'Cleanup Data';
+                Image = Create;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Cleanup Data';
+
+                trigger OnAction()
+                var
+                    GRNInvoiceMgmt: Codeunit "E3 Invoice Cleanup Management";
+                begin
+                    GRNInvoiceMgmt.DeleteAllPurchaseInvoicesForcefully();
+                end;
+            }
         }
     }
 }

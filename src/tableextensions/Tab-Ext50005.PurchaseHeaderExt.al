@@ -254,6 +254,36 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Editable = false;
             DataClassification = CustomerContent;
         }
+        field(80001; "Receipt No."; code[20])
+        {
+            Caption = 'Receipt NO.';
+            DataClassification = ToBeClassified;
+            editable = false;
+        }
+        field(80002; "Receipt Date"; Date)
+        {
+            Caption = 'Receipt Date';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(81101; "Submit to Finance"; Boolean)
+        {
+            Editable = false;
+            Caption = 'Submit to Finance';
+            DataClassification = CustomerContent;
+        }
+        field(81102; "Receive Finance"; Boolean)
+        {
+            Editable = false;
+            Caption = 'Receive';
+            DataClassification = CustomerContent;
+        }
+        field(81103; "Submit Doc No."; code[20])
+        {
+            Editable = false;
+            Caption = 'Submit Doc. No.';
+            DataClassification = CustomerContent;
+        }
     }
 
 

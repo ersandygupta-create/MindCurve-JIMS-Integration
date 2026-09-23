@@ -135,6 +135,11 @@ page 50064 "E3 Voucher Types"
                     ApplicationArea = all;
                     ToolTip = 'Order Voucher Code';
                 }
+                field("Finance Doc. No."; Rec."Finance Doc. No.")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Finance Document No. Series';
+                }
             }
         }
     }

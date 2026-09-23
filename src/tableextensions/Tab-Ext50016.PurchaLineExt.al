@@ -140,12 +140,12 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Caption = 'Batch No.';
             DataClassification = CustomerContent;
         }
-        field(50026; "Purch Rcpt No."; Code[50])
+        field(70001; "Purch Rcpt No."; Code[50])
         {
             Caption = 'Receipt No.';
             DataClassification = CustomerContent;
         }
-        field(50027; "Purch Rcpt Line No."; Integer)
+        field(70002; "Purch Rcpt Line No."; Integer)
         {
             Caption = 'Purch Rcpt Line No.';
             DataClassification = CustomerContent;

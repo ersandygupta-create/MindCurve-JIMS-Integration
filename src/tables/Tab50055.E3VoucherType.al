@@ -157,6 +157,11 @@ table 50055 "E3 Voucher Type"
             Caption = 'Purchase Order.';
             DataClassification = CustomerContent;
         }
+        field(25; "Finance Doc. No."; Code[20])
+        {
+            Caption = 'Finance Doc. No.';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
