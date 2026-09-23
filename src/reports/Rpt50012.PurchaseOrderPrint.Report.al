@@ -296,7 +296,7 @@ report 50012 "Purchase Order Print"
                     RoundoffAmt := abs(TotalAmttoVendor - Round(TotalAmttoVendor, 1));
                 //TotalAmttoVendor + abs(TotalInclTaxAmount);
 
-
+                TotalAmttoVendor := Round(TotalAmttoVendor, 1);
 
                 PostedVoucher.InitTextVariable;
                 PostedVoucher.FormatNoText(AmtWords, Round(TotalAmttoVendor, 1), PurchaseHeader."Currency Code");
@@ -452,6 +452,10 @@ report 50012 "Purchase Order Print"
             }
             column(Line_Discount__; "Line Discount %")
             {
+            }
+            column(GrossAmt; Quantity * "Direct Unit Cost")
+            {
+
             }
             column(IGSTRatePercnt_Var;
             IGSTRatePercnt_Var)

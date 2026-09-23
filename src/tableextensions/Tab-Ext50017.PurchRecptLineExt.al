@@ -49,7 +49,7 @@ tableextension 50017 "E3 HIS Purch. Recpt. Line" extends "Purch. Rcpt. Line"
             Caption = 'Scheme';
             DataClassification = CustomerContent;
         }
-        field(80001; "Purchase Inv Created"; Boolean)
+        field(81001; "Purchase Inv Created"; Boolean)
         {
             Caption = 'Purchase Invoice Created';
             DataClassification = CustomerContent;
