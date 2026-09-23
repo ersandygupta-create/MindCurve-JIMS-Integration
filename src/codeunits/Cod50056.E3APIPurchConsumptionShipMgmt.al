@@ -25,6 +25,7 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
         Vendor: Record Vendor;
         ItemLedgerEntry: Record "Item Ledger Entry";
         ExpiryDate: Date;
+        GRNWorkSheetLine: Record "E3 GRN Work Sheet Line";
 
     procedure SendPurchaseShipmentDetails(DocumentID: Code[20]): Boolean
     var
@@ -203,26 +204,39 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
                     LineObj.Add('landedSkuValue', 0);
                     LineObj.Add('landedSkuRate', PurchaseShipmentLine."Unit Cost");
                     LineObj.Add('remark', '');
-                    LineObj.Add('mrp', PurchaseShipmentLine.MRP);
-                    LineObj.Add('skuMrp', PurchaseShipmentLine.MRP);
-                    LineObj.Add('saleRate', PurchaseShipmentLine."Unit Cost");
-                    LineObj.Add('skuSaleRate', PurchaseShipmentLine."Unit Cost");
-                    LineObj.Add('staffSaleRate', PurchaseShipmentLine."Unit Cost");
-                    LineObj.Add('skuStaffSaleRate', PurchaseShipmentLine."Unit Cost");
-                    LineObj.Add('barcode', PurchaseShipmentLine."Document No.");
-                    LineObj.Add('batchNo', PurchaseShipmentLine."Batch No.");
-                    LineObj.Add('manufacturingDate', PurchaseShipmentLine."Manufacturing Date");
-                    if PurchaseShipmentLine."Expiry Date" <> 0D then
-                        ExpiryDate := PurchaseShipmentLine."Expiry Date"
-                    else
-                        ExpiryDate := GetExpiryDateFromLotInformation(
-                            PurchaseShipmentLine."Document No.",
-                            PurchaseShipmentLine."No.",
-                            PurchaseShipmentHeader."Posting Date");
+                    Clear(GRNWorkSheetLine);
 
-                    LineObj.Add(
-                        'expiryDate',
-                        Format(ExpiryDate, 0, 9));
+                    if GetPostedGRNLine(PurchaseShipmentLine."No.", PurchaseShipmentLine."Batch No.", PurchaseShipmentLine."Shortcut Dimension 1 Code",
+                        GRNWorkSheetLine)
+                    then begin
+
+                        LineObj.Add('mrp', GRNWorkSheetLine.MRP);
+                        LineObj.Add('saleRate', GRNWorkSheetLine."Sale Rate");
+                        LineObj.Add('staffSaleRate', GRNWorkSheetLine."Staff Sale Rate");
+                        LineObj.Add('skuMrp', GRNWorkSheetLine."SKU MRP");
+                        LineObj.Add('skuSaleRate', GRNWorkSheetLine."SKU Sale Rate");
+                        LineObj.Add('skuStaffSaleRate', GRNWorkSheetLine."SKU Staff Sale Rate");
+                        LineObj.Add('barcode', GRNWorkSheetLine.Barcode);
+                        LineObj.Add('batchNo', GRNWorkSheetLine."Batch No.");
+                        LineObj.Add('manufacturingDate', Format(GRNWorkSheetLine."Manufacturing Date", 0, 9));
+                        LineObj.Add('expiryDate', Format(GRNWorkSheetLine."Expiry Date", 0, 9));
+
+                    end else begin
+
+                        LineObj.Add('mrp', 0);
+                        LineObj.Add('saleRate', 0);
+                        LineObj.Add('staffSaleRate', 0);
+                        LineObj.Add('skuMrp', 0);
+                        LineObj.Add('skuSaleRate', 0);
+                        LineObj.Add('skuStaffSaleRate', 0);
+                        LineObj.Add('barcode', '');
+                        LineObj.Add('batchNo', '');
+                        LineObj.Add('manufacturingDate', Format(WorkDate(), 0, 9));
+                        ExpiryDate := CalcDate('<1Y>', PurchaseShipmentHeader."Posting Date");
+                        LineObj.Add('expiryDate', Format(ExpiryDate, 0, '<Year4>-<Month,2>-<Day,2>'));
+
+
+                    end;
                     LineObj.Add('itemMakeCode', PurchaseShipmentLine."Item Make Code");
                     if PurchaseShipmentHeader."Buy-from Vendor No." <> '' then begin
                         if Vendor.Get(PurchaseShipmentHeader."Buy-from Vendor No.") then
@@ -376,5 +390,44 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
             exit(CalcDate('<+1Y>', DefaultDate));
 
         exit(CalcDate('<+1Y>', Today()));
+    end;
+
+    local procedure GetPostedGRNLine(
+    ItemNo: Code[20];
+    BatchNo: Code[50];
+    UnitCode: Code[20];
+    var GRNLine: Record "E3 GRN Work Sheet Line"): Boolean
+    var
+        GRNWorkSheetHeader: Record "E3 GRN Work Sheet Header";
+    begin
+        Clear(GRNLine);
+
+        GRNLine.Reset();
+        GRNLine.SetRange("Item Code", ItemNo);
+        GRNLine.SetRange("Batch No.", BatchNo);
+
+        // Oldest created GRN line first
+        GRNLine.SetCurrentKey(SystemCreatedAt);
+        GRNLine.SetAscending(SystemCreatedAt, true);
+
+        if GRNLine.FindSet() then
+            repeat
+                Clear(GRNWorkSheetHeader);
+
+                GRNWorkSheetHeader.Reset();
+                GRNWorkSheetHeader.SetRange(
+                    "Document ID",
+                    GRNLine."Document ID");
+
+                if GRNWorkSheetHeader.FindFirst() then begin
+                    // Unit is taken from GRN Worksheet Header
+                    if GRNWorkSheetHeader."Business Unit Code" = UnitCode then
+                        exit(true);
+                end;
+
+            until GRNLine.Next() = 0;
+
+        Clear(GRNLine);
+        exit(false);
     end;
 }

@@ -21,6 +21,8 @@ codeunit 50052 "E3 Sale Invoice Cons. Mgmt."
         DimensionValue: Record "Dimension Value";
         Location: Record Location;
         Item: Record Item;
+        GRNWorkSheetLine: Record "E3 GRN Work Sheet Line";
+        ExpiryDate: Date;
 
     procedure SendSaleInvoiceDetails(DocumentID: Code[20]): Boolean
     var
@@ -177,25 +179,38 @@ codeunit 50052 "E3 Sale Invoice Cons. Mgmt."
                     LineObj.Add('landedSkuValue', 0);
                     LineObj.Add('landedSkuRate', SaleInvoiceLine."Unit Cost");
                     LineObj.Add('remark', '');
-                    LineObj.Add('mrp', SaleInvoiceLine.MRP);
-                    LineObj.Add('skuMrp', SaleInvoiceLine.MRP);
-                    LineObj.Add('saleRate', SaleInvoiceLine."Unit Cost");
-                    LineObj.Add('skuSaleRate', SaleInvoiceLine."Unit Cost");
-                    LineObj.Add('staffSaleRate', SaleInvoiceLine."Unit Cost");
-                    LineObj.Add('skuStaffSaleRate', SaleInvoiceLine."Unit Cost");
-                    LineObj.Add('barcode', SaleInvoiceLine."Document No.");
-                    LineObj.Add('batchNo', SaleInvoiceLine."Batch No.");
-                    LineObj.Add('manufacturingDate', Format(WorkDate(), 0, 9));
-                    if SaleInvoiceLine."Expiry Date" = 0D then
-                        LineObj.Add(
-                            'expiryDate',
-                            Format(CalcDate('<+1Y>', SaleInvoiceHeader."Posting Date"), 0, 9))
-                    else
-                        LineObj.Add(
-                            'expiryDate',
-                            Format(SaleInvoiceLine."Expiry Date", 0, 9));
-                    Clear(Item);
+                    Clear(GRNWorkSheetLine);
 
+                    if GetPostedGRNLine(SaleInvoiceLine."No.", SaleInvoiceLine."Batch No.", SaleInvoiceLine."Shortcut Dimension 1 Code",
+                        GRNWorkSheetLine)
+                    then begin
+                        LineObj.Add('mrp', GRNWorkSheetLine.MRP);
+                        LineObj.Add('saleRate', GRNWorkSheetLine."Sale Rate");
+                        LineObj.Add('staffSaleRate', GRNWorkSheetLine."Staff Sale Rate");
+                        LineObj.Add('skuMrp', GRNWorkSheetLine."SKU MRP");
+                        LineObj.Add('skuSaleRate', GRNWorkSheetLine."SKU Sale Rate");
+                        LineObj.Add('skuStaffSaleRate', GRNWorkSheetLine."SKU Staff Sale Rate");
+                        LineObj.Add('barcode', GRNWorkSheetLine.Barcode);
+                        LineObj.Add('batchNo', GRNWorkSheetLine."Batch No.");
+                        LineObj.Add('manufacturingDate', Format(WorkDate(), 0, 9));
+                        LineObj.Add('expiryDate', Format(GRNWorkSheetLine."Expiry Date", 0, 9));
+
+                    end else begin
+                        // No Posted GRN Worksheet Line found
+                        LineObj.Add('mrp', 0);
+                        LineObj.Add('saleRate', 0);
+                        LineObj.Add('staffSaleRate', 0);
+                        LineObj.Add('skuMrp', 0);
+                        LineObj.Add('skuSaleRate', 0);
+                        LineObj.Add('skuStaffSaleRate', 0);
+                        LineObj.Add('barcode', '');
+                        LineObj.Add('batchNo', '');
+                        LineObj.Add('manufacturingDate', Format(WorkDate(), 0, 9));
+                        ExpiryDate := CalcDate('<1Y>', SaleInvoiceHeader."Posting Date");
+                        LineObj.Add('expiryDate', Format(ExpiryDate, 0, '<Year4>-<Month,2>-<Day,2>'));
+
+                    end;
+                    Clear(Item);
                     if (SaleInvoiceLine.Type = SaleInvoiceLine.Type::Item) and
                        (SaleInvoiceLine."No." <> '') and
                        Item.Get(SaleInvoiceLine."No.")
@@ -313,4 +328,46 @@ codeunit 50052 "E3 Sale Invoice Cons. Mgmt."
             until SaleInvoiceLine.Next() = 0;
         exit(false);
     end;
+
+
+    local procedure GetPostedGRNLine(
+    ItemNo: Code[20];
+    BatchNo: Code[50];
+    UnitCode: Code[20];
+    var GRNLine: Record "E3 GRN Work Sheet Line"): Boolean
+    var
+        GRNWorkSheetHeader: Record "E3 GRN Work Sheet Header";
+    begin
+        Clear(GRNLine);
+
+        GRNLine.Reset();
+        GRNLine.SetRange("Item Code", ItemNo);
+        GRNLine.SetRange("Batch No.", BatchNo);
+
+        // Oldest GRN line first
+        GRNLine.SetCurrentKey(SystemCreatedAt);
+        GRNLine.SetAscending(SystemCreatedAt, true);
+
+        if GRNLine.FindSet() then
+            repeat
+                // Find GRN Header for the line
+                GRNWorkSheetHeader.Reset();
+                GRNWorkSheetHeader.SetRange(
+                    "Document ID",
+                    GRNLine."Document ID");
+
+                if GRNWorkSheetHeader.FindFirst() then begin
+
+                    // Unit comes from GRN Work Sheet Header
+                    if GRNWorkSheetHeader."Business Unit Code" = UnitCode then
+                        exit(true);
+
+                end;
+
+            until GRNLine.Next() = 0;
+
+        Clear(GRNLine);
+        exit(false);
+    end;
+
 }
