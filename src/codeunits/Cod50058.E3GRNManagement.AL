@@ -114,6 +114,7 @@ codeunit 50058 "E3 GRN Invoice Management"
             PurchHeader.Validate("Location Code", PurchRcptHeader."Location Code");
         PurchHeader.Validate("Posting Date", PurchRcptHeader."Posting Date");
         PurchHeader.Validate("Document Date", PurchRcptHeader."Document Date");
+        PurchHeader.Validate("Currency Code", PurchRcptHeader."Currency Code");
         PurchHeader.Modify(true);
 
         // Step 2: Collect valid lines for this single GRN into temporary buffer
