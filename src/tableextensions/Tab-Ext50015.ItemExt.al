@@ -542,10 +542,10 @@ tableextension 50015 "E3 HIS Item" extends Item
         {
             Caption = 'Item Speciality Code';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Item Strength Master".Code;
+            TableRelation = "E3 Item Speciality Master".Code;
             trigger OnValidate()
             var
-                ItemSpeciality: Record "E3 Item Strength Master";
+                ItemSpeciality: Record "E3 Item Speciality Master";
             begin
                 if "Item Speciality Code" = '' then begin
                     "Speciality Name" := '';

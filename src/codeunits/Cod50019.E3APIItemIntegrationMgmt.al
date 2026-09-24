@@ -47,7 +47,7 @@ codeunit 50019 "E3 Item Integration Mgmt."
 
             E3ItemLog.Modify(true);
             // Step 3: Send via Job Queue
-            EnqueueItemJobEntry(E3ItemLog);
+            //EnqueueItemJobEntry(E3ItemLog);
             Message('Item Log created and queued to send to JIMS.');
         end else
             Message('No pending log found.');
@@ -111,8 +111,8 @@ codeunit 50019 "E3 Item Integration Mgmt."
             (Rec.Blocked <> xRec.Blocked);
 
 
-        if E3UpdateNeeded then
-            CreateItemLog(Rec);
+        // if E3UpdateNeeded then
+        //     CreateItemLog(Rec);
     end;
 
     local procedure CreateItemLog(ItemRec: Record Item)

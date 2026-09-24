@@ -243,8 +243,9 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Margin Fix"; Rec."Margin Fix")
                 {
                     ApplicationArea = All;
-                    ShowMandatory = Rec."Margin Fix" = Rec."Margin Fix"::" ";
+                    //ShowMandatory = Rec."Margin Fix" = Rec."Margin Fix"::" ";
                     Caption = 'Type of RC';
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the value of Margin Fix field.';
                 }
                 field("E3 Margin Code"; Rec."E3 Margin Code")
@@ -285,7 +286,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Item Speciality Code"; Rec."Item Speciality Code")
                 {
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                     ToolTip = 'Specifies the value of Speciality Code field.';
                 }
                 field("Speciality Name"; Rec."Speciality Name")
@@ -641,6 +642,8 @@ pageextension 50064 "Item Ext" extends "Item Card"
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     begin
         Rec.TestField("Base Unit of Measure");
+        //Rec.TestField("GST Group Code");
+        //Rec.TestField("HSN/SAC Code");
         exit(true);
     end;
 
