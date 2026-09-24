@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-21T13:40:57.1818436Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-09-23T09:34:06.9362052Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -1557,7 +1557,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!Line_Amount.Value)</Value>
+                                  <Value>=Sum(Fields!GrossAmt.Value)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -3061,7 +3061,7 @@
             <Top>1.95in</Top>
             <Left>0.03104in</Left>
             <Height>4.30374in</Height>
-            <Width>7.80799in</Width>
+            <Width>7.80798in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -3829,6 +3829,12 @@ End Function</Code>
         </Field>
         <Field Name="Line_Discount__Format">
           <DataField>Line_Discount__Format</DataField>
+        </Field>
+        <Field Name="GrossAmt">
+          <DataField>GrossAmt</DataField>
+        </Field>
+        <Field Name="GrossAmtFormat">
+          <DataField>GrossAmtFormat</DataField>
         </Field>
         <Field Name="IGSTRatePercnt_Var">
           <DataField>IGSTRatePercnt_Var</DataField>
