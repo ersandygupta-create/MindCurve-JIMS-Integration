@@ -9,6 +9,11 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
                 ApplicationArea = All;
                 ToolTip = 'Specifies a value Narration';
             }
+            field("CheckPrinted"; Rec."Check Printed")
+            {
+                ApplicationArea = All;
+                Editable = true;
+            }
         }
 
         addafter("Bal. Account No.")
@@ -84,13 +89,22 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
                 PromotedCategory = Process;
 
                 trigger OnAction()
+                var
+                    GenJnlLine: Record "Gen. Journal Line";
                 begin
                     if CardPaymentReportID = 0 then
                         Error(
                             'Card Payment Report is not configured for Bank Account %1.',
                             Rec."Bal. Account No.");
 
-                    Report.Run(CardPaymentReportID);
+                    GenJnlLine.Reset();
+                    GenJnlLine.SetRange("Journal Template Name", Rec."Journal Template Name");
+                    GenJnlLine.SetRange("Journal Batch Name", Rec."Journal Batch Name");
+                    GenJnlLine.SetRange("Document No.", Rec."Document No.");
+
+                    Report.RunModal(CardPaymentReportID, true, true, GenJnlLine);
+
+                    //Report.Run(CardPaymentReportID);
                 end;
             }
         }

@@ -10,7 +10,7 @@ report 50048 "SBI Bank Check Print"
         dataitem(GenJnlLine; 81)
         {
             DataItemTableView = SORTING("Journal Template Name", "Journal Batch Name", "Posting Date", "Document No.");
-            RequestFilterFields = "Document No.";
+            RequestFilterFields = "Journal Template Name", "Journal Batch Name", "Document No.";
             column(JnlTemplateName_GenJnlLine; "Journal Template Name")
             {
             }

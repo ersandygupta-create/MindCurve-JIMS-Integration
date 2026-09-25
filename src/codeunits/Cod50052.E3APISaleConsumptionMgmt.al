@@ -158,7 +158,7 @@ codeunit 50052 "E3 Sale Invoice Cons. Mgmt."
                         LineObj.Add('departmentName', '');
                     LineObj.Add('d365_unitCode', SaleInvoiceLine."Unit of Measure");
                     LineObj.Add('d365_hsnCode', SaleInvoiceLine."HSN/SAC Code");
-                    LineObj.Add('indentSKUQty', SaleInvoiceLine.Quantity);
+                    LineObj.Add('indentSKUQty', SaleInvoiceLine.Quantity * SaleInvoiceLine."Qty. per Unit of Measure");
                     LineObj.Add('issQty', SaleInvoiceLine.Quantity);
                     LineObj.Add('rate', Round(SaleInvoiceLine."Unit Cost"));
                     LineObj.Add('oh_Amt_Gross', SaleInvoiceLine."VAT Base Amount");
