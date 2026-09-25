@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-23T08:45:06.5385369Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-09-25T04:13:29.4770264Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -390,6 +390,7 @@
                     <Value>="********" + First(Fields!decAmount.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontWeight>Bold</FontWeight>
+                      <Format>#,0.00;(#,0.00)</Format>
                     </Style>
                   </TextRun>
                 </TextRuns>
