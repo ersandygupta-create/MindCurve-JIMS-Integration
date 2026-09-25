@@ -133,6 +133,8 @@ report 50044 "Axis Bank Check Print"
                 IF recGenJnlLine2.FINDSET THEN
                     REPEAT
                         decAmount += recGenJnlLine2.Amount;
+                        // sandeep
+                        tdsAmount1 += GetUnpostedTDSAmount(recGenJnlLine2);
                     UNTIL recGenJnlLine2.NEXT = 0;
 
                 // sandeep
@@ -146,7 +148,7 @@ report 50044 "Axis Bank Check Print"
                 if RecordCount > 1 then
                     CheckToAddr[1] := Test;
 
-
+                decAmount := decAmount - tdsAmount1;
                 decAmount := ROUND(decAmount, 1, '<');
                 CheckAmountText := FORMAT(decAmount);
                 CheckAmountText := FORMAT(decAmount);
@@ -764,6 +766,7 @@ report 50044 "Axis Bank Check Print"
         recGenJnlLine3: Record 81;
         RecordCount: Integer;
         decAmount: Decimal;
+        tdsAmount1: Decimal;
         CheckReport: Report 1401;
         Test1: text[500];
 
@@ -780,6 +783,24 @@ report 50044 "Axis Bank Check Print"
     [IntegrationEvent(false, false)]
     local procedure OnAfterFormatNoText(var NoText: array[2] of Text[80]; No: Decimal; CurrencyCode: Code[10])
     begin
+    end;
+
+    procedure GetUnpostedTDSAmount(GenJournalLine: Record "Gen. Journal Line"): Decimal
+    var
+        TaxTransactionValue: Record "Tax Transaction Value";
+        TDSTotal: Decimal;
+    begin
+        // Filter by the RecordID of the unposted Gen. Journal Line
+        TaxTransactionValue.SetRange("Tax Record ID", GenJournalLine.RecordId());
+        TaxTransactionValue.SetRange("Value Type", TaxTransactionValue."Value Type"::COMPONENT);
+        TaxTransactionValue.SetRange("Value ID", 1); // Component ID for TDS
+
+        if TaxTransactionValue.FindSet() then
+            repeat
+                TDSTotal += TaxTransactionValue.Amount;
+            until TaxTransactionValue.Next() = 0;
+
+        exit(TDSTotal);
     end;
 }
 
