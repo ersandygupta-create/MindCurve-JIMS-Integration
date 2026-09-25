@@ -24,76 +24,6 @@
       <rd:DataSourceID>aed4a190-12be-4619-83de-7470140929b0</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="JnlTemplateName_GenJnlLine">
-          <DataField>JnlTemplateName_GenJnlLine</DataField>
-        </Field>
-        <Field Name="JnlBatchName_GenJnlLine">
-          <DataField>JnlBatchName_GenJnlLine</DataField>
-        </Field>
-        <Field Name="LineNo_GenJnlLine">
-          <DataField>LineNo_GenJnlLine</DataField>
-        </Field>
-        <Field Name="TextAcPay">
-          <DataField>TextAcPay</DataField>
-        </Field>
-        <Field Name="YearVar">
-          <DataField>YearVar</DataField>
-        </Field>
-        <Field Name="MonthText">
-          <DataField>MonthText</DataField>
-        </Field>
-        <Field Name="DayText">
-          <DataField>DayText</DataField>
-        </Field>
-        <Field Name="DayText1">
-          <DataField>DayText1</DataField>
-        </Field>
-        <Field Name="DayText2">
-          <DataField>DayText2</DataField>
-        </Field>
-        <Field Name="Month1">
-          <DataField>Month1</DataField>
-        </Field>
-        <Field Name="Month2">
-          <DataField>Month2</DataField>
-        </Field>
-        <Field Name="year1">
-          <DataField>year1</DataField>
-        </Field>
-        <Field Name="year2">
-          <DataField>year2</DataField>
-        </Field>
-        <Field Name="year3">
-          <DataField>year3</DataField>
-        </Field>
-        <Field Name="year4">
-          <DataField>year4</DataField>
-        </Field>
-        <Field Name="AcPayee">
-          <DataField>AcPayee</DataField>
-        </Field>
-        <Field Name="CheckToAddr1">
-          <DataField>CheckToAddr1</DataField>
-        </Field>
-        <Field Name="CheckDateText1">
-          <DataField>CheckDateText1</DataField>
-        </Field>
-        <Field Name="DescriptionLine">
-          <DataField>DescriptionLine</DataField>
-        </Field>
-        <Field Name="decAmount">
-          <DataField>decAmount</DataField>
-        </Field>
-      </Fields>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -498,12 +428,6 @@
       </Page>
     </ReportSection>
   </ReportSections>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <Code>Public Function BlankZero(ByVal Value As Decimal)
     if Value = 0 then
         Return ""
@@ -563,4 +487,74 @@ End Function
 </Code>
   <Language>=User!Language</Language>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="JnlTemplateName_GenJnlLine">
+          <DataField>JnlTemplateName_GenJnlLine</DataField>
+        </Field>
+        <Field Name="JnlBatchName_GenJnlLine">
+          <DataField>JnlBatchName_GenJnlLine</DataField>
+        </Field>
+        <Field Name="LineNo_GenJnlLine">
+          <DataField>LineNo_GenJnlLine</DataField>
+        </Field>
+        <Field Name="TextAcPay">
+          <DataField>TextAcPay</DataField>
+        </Field>
+        <Field Name="YearVar">
+          <DataField>YearVar</DataField>
+        </Field>
+        <Field Name="MonthText">
+          <DataField>MonthText</DataField>
+        </Field>
+        <Field Name="DayText">
+          <DataField>DayText</DataField>
+        </Field>
+        <Field Name="DayText1">
+          <DataField>DayText1</DataField>
+        </Field>
+        <Field Name="DayText2">
+          <DataField>DayText2</DataField>
+        </Field>
+        <Field Name="Month1">
+          <DataField>Month1</DataField>
+        </Field>
+        <Field Name="Month2">
+          <DataField>Month2</DataField>
+        </Field>
+        <Field Name="year1">
+          <DataField>year1</DataField>
+        </Field>
+        <Field Name="year2">
+          <DataField>year2</DataField>
+        </Field>
+        <Field Name="year3">
+          <DataField>year3</DataField>
+        </Field>
+        <Field Name="year4">
+          <DataField>year4</DataField>
+        </Field>
+        <Field Name="AcPayee">
+          <DataField>AcPayee</DataField>
+        </Field>
+        <Field Name="CheckToAddr1">
+          <DataField>CheckToAddr1</DataField>
+        </Field>
+        <Field Name="CheckDateText1">
+          <DataField>CheckDateText1</DataField>
+        </Field>
+        <Field Name="DescriptionLine">
+          <DataField>DescriptionLine</DataField>
+        </Field>
+        <Field Name="decAmount">
+          <DataField>decAmount</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>
