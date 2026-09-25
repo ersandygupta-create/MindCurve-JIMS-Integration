@@ -79,6 +79,11 @@ pageextension 50020 "E3 Bank Acc. Ledger Entrie" extends "Bank Account Ledger En
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Value Date field.';
             }
+            field("Beneficiary Name"; Rec."Beneficiary Name")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Beneficiary Name';
+            }
         }
     }
     actions

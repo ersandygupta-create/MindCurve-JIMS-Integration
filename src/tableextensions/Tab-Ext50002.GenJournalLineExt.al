@@ -154,6 +154,11 @@ tableextension 50002 "E3 Gen. Journal Line Exts" extends "Gen. Journal Line"
                 end
             end;
         }
+        field(50113; "Beneficiary Name"; TExt[60])
+        {
+            caption = 'Beneficiary Name';
+            DataClassification = CustomerContent;
+        }
 
 
     }

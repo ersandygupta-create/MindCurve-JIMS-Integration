@@ -92,6 +92,11 @@ tableextension 50000 "E3 HIS Vendor Ext" extends Vendor
             Caption = 'Send Order Email';
             DataClassification = CustomerContent;
         }
+        field(50057; "Beneficiary Name"; TExt[60])
+        {
+            caption = 'Beneficiary Name';
+            DataClassification = CustomerContent;
+        }
         modify("Date Filter")
         {
             trigger OnAfterValidate()
