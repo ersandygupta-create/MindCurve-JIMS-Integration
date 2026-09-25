@@ -118,21 +118,34 @@ report 50044 "Axis Bank Check Print"
                 Year2 := COPYSTR(CheckDateText, 6, 1);
                 Year3 := COPYSTR(CheckDateText, 7, 1);
                 Year4 := COPYSTR(CheckDateText, 8, 1);
-                IF test <> '' THEN
-                    CheckToAddr[1] := Test;
+                IF Test10 <> '' THEN
+                    CheckToAddr[1] := Test10;
 
                 decAmount := 0;
 
                 recGenJnlLine2.RESET;
                 recGenJnlLine2.SETRANGE("Journal Template Name", GenJnlLine."Journal Template Name");
                 recGenJnlLine2.SETRANGE("Journal Batch Name", GenJnlLine."Journal Batch Name");
-                recGenJnlLine2.SETRANGE("Document No.", GenJnlLine."Document No.");
+                // recGenJnlLine2.SETRANGE("Document No.", GenJnlLine."Document No.");
                 recGenJnlLine2.SETRANGE("Posting Date", GenJnlLine."Posting Date");
+                recGenJnlLine2.SetRange("Cheque No.", "Cheque No.");
 
                 IF recGenJnlLine2.FINDSET THEN
                     REPEAT
                         decAmount += recGenJnlLine2.Amount;
                     UNTIL recGenJnlLine2.NEXT = 0;
+
+                // sandeep
+                recGenJnlLine3.RESET;
+                recGenJnlLine3.SETRANGE("Journal Template Name", GenJnlLine."Journal Template Name");
+                recGenJnlLine3.SETRANGE("Journal Batch Name", GenJnlLine."Journal Batch Name");
+                recGenJnlLine2.SETRANGE("Document No.", GenJnlLine."Document No.");
+                recGenJnlLine3.SETRANGE("Posting Date", GenJnlLine."Posting Date");
+
+                RecordCount := recGenJnlLine3.Count();
+                if RecordCount > 1 then
+                    CheckToAddr[1] := Test;
+
 
                 decAmount := ROUND(decAmount, 1, '<');
                 CheckAmountText := FORMAT(decAmount);
@@ -249,6 +262,8 @@ report 50044 "Axis Bank Check Print"
                         Caption = 'Beneficiary Name';
                         ApplicationArea = All;
                         ToolTip = 'Specifies the value of the BenName field.';
+
+
                     }
                     field(AcPayee; AcPayee)
                     {
@@ -258,16 +273,20 @@ report 50044 "Axis Bank Check Print"
                     }
 
                 }
+
             }
+
         }
+
 
         actions
         {
         }
 
+
         trigger OnInit()
         begin
-            Test := '';
+            //   Test := '';
         end;
 
         trigger OnOpenPage()
@@ -277,7 +296,7 @@ report 50044 "Axis Bank Check Print"
         begin
             BankAcc2.Init();
             UseCheckNo := '';
-            Test := '';
+            // Test := 'Yourself';
 
             DocumentNo := GenJnlLine.GetFilter("Document No.");
 
@@ -287,7 +306,7 @@ report 50044 "Axis Bank Check Print"
                 GenJnlLineBeneficiary.SetFilter("Beneficiary Name", '<>%1', '');
 
                 if GenJnlLineBeneficiary.FindFirst() then
-                    Test := GenJnlLineBeneficiary."Beneficiary Name";
+                    Test10 := GenJnlLineBeneficiary."Beneficiary Name";
             end;
 
             GenJnlLine2.RESET;
@@ -302,6 +321,11 @@ report 50044 "Axis Bank Check Print"
                         UseCheckNo := BankAcc2."Last Check No.";
                 end;
             end;
+        end;
+
+        trigger OnAfterGetRecord()
+        begin
+            Test := Test;
         end;
 
     }
@@ -695,6 +719,7 @@ report 50044 "Axis Bank Check Print"
         PreprintedStub: Boolean;
         TotalText: Text[10];
         Test: Text[200];
+        Test10: Text[200];
         DocDate: Date;
         i: Integer;
         Text062: Label 'G/L Account,Customer,Vendor,Bank Account';
@@ -736,6 +761,8 @@ report 50044 "Axis Bank Check Print"
         DayText1: Text;
         DayText2: Text;
         recGenJnlLine2: Record 81;
+        recGenJnlLine3: Record 81;
+        RecordCount: Integer;
         decAmount: Decimal;
         CheckReport: Report 1401;
         Test1: text[500];
