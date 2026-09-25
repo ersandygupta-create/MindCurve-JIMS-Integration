@@ -72,7 +72,7 @@ tableextension 50014 "E3 HIS Bank Ledger Entry" extends "Bank Account Ledger Ent
             DataClassification = ToBeClassified;
             Caption = 'Value Date';
         }
-        field(50131; "Beneficiary Name"; TExt[60])
+        field(50131; "Beneficiary Name"; Text[200])
         {
             caption = 'Beneficiary Name';
             DataClassification = CustomerContent;

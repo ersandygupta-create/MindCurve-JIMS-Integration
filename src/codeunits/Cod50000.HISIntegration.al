@@ -2087,18 +2087,18 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                        HISRevenueHeader."Record Type"::Revenue then
                         GenJournalLine.VALIDATE(
                             Amount,
-                            Abs(HISRevenueHeader.Discount))
+                            (HISRevenueHeader.Discount))
                     else
                         GenJournalLine.VALIDATE(
                             Amount,
-                            -Abs(HISRevenueHeader.Discount));
+                            -(HISRevenueHeader.Discount));
 
-                    GenJournalLine."Your Reference" :=
-                        HISRevenueHeader."Reference Invoice No.";
+                    GenJournalLine."Your Reference" := HISRevenueHeader."Reference Invoice No.";
+                    GenJournalLine."E3 HIS Document Type" := HISRevenueHeader."HIS Document Type";
 
-                    GenJournalLine.VALIDATE(
-                        "External Document No.",
-                        HISRevenueHeader."External Document No.");
+                    GenJournalLine.VALIDATE("External Document No.", HISRevenueHeader."External Document No.");
+                    GenJournalLine.Validate("Shortcut Dimension 1 Code", HISRevenueHeader."Shortcut Dimension 1 Code");
+                    GenJournalLine.Validate("Location Code", HISRevenueHeader."Location Code");
 
                     if IntegrationSetup."Rev./Rev.Cancel Direct Post" then
                         PostGenJnlLine.RunWithCheck(GenJournalLine)

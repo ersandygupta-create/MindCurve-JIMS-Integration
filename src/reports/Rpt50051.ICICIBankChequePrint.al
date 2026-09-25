@@ -65,7 +65,7 @@ report 50051 "ICICI Bank Check Print"
             column(CheckDateText1; CheckDateText)
             {
             }
-            column(DescriptionLine; DescriptionLine[1])
+            column(DescriptionLine; DescriptionLine[1] + ' ' + DescriptionLine[2])
             {
             }
             column(decAmount; CheckAmountText)
@@ -120,6 +120,8 @@ report 50051 "ICICI Bank Check Print"
                 IF test <> '' THEN
                     CheckToAddr[1] := Test;
 
+                decAmount := 0;
+
                 recGenJnlLine2.RESET;
                 recGenJnlLine2.SETRANGE("Journal Template Name", GenJnlLine."Journal Template Name");
                 recGenJnlLine2.SETRANGE("Journal Batch Name", GenJnlLine."Journal Batch Name");
@@ -133,7 +135,7 @@ report 50051 "ICICI Bank Check Print"
 
                 decAmount := ROUND(decAmount, 1, '<');
                 CheckAmountText := FORMAT(decAmount);
-
+                CheckAmountText := FORMAT(decAmount);
                 UseCheckNo := INCSTR(UseCheckNo);
 
                 BankAcc2.RESET;
@@ -284,6 +286,7 @@ report 50051 "ICICI Bank Check Print"
                 end;
             end;
         end;
+
     }
 
     labels
@@ -341,7 +344,10 @@ report 50051 "ICICI Bank Check Print"
         ExponentText[4] := Text1280001;
     end;
 
-    procedure FormatNoText(var NoText: array[2] of Text[80]; No: Decimal; CurrencyCode: Code[20])
+    procedure FormatNoText(
+       var NoText: array[2] of Text[80];
+       No: Decimal;
+       CurrencyCode: Code[20])
     var
         PrintExponent: Boolean;
         Ones: Integer;
@@ -349,73 +355,163 @@ report 50051 "ICICI Bank Check Print"
         Hundreds: Integer;
         Exponent: Integer;
         NoTextIndex: Integer;
-        DecimalPosition: Decimal;
-        Currency: Record Currency;
         TensDec: Integer;
         OnesDec: Integer;
+        RupeeAmount: Decimal;
+        PaisaAmount: Integer;
     begin
-        CLEAR(NoText);
+        Clear(NoText);
+
         NoTextIndex := 1;
         NoText[1] := '****';
 
-        IF No < 1 THEN
-            AddToNoText(NoText, NoTextIndex, PrintExponent, Text026)
-        ELSE
-            FOR Exponent := 4 DOWNTO 1 DO BEGIN
-                PrintExponent := FALSE;
-                IF No > 99999 THEN BEGIN
-                    Ones := No DIV (POWER(100, Exponent - 1) * 10);
+        // Keep original amount
+        RupeeAmount := Round(No, 1, '<');
+
+        // Calculate paisa from original amount
+        PaisaAmount := Round((No - RupeeAmount) * 100, 1, '<');
+
+        // -------------------------
+        // RUPEES
+        // -------------------------
+        if RupeeAmount < 1 then begin
+            AddToNoText(
+                NoText,
+                NoTextIndex,
+                PrintExponent,
+                Text026); // ZERO
+        end else begin
+            No := RupeeAmount;
+
+            for Exponent := 4 downto 1 do begin
+                PrintExponent := false;
+
+                if No > 99999 then begin
+                    Ones := No DIV (Power(100, Exponent - 1) * 10);
                     Hundreds := 0;
-                END ELSE BEGIN
-                    Ones := No DIV POWER(1000, Exponent - 1);
+                end else begin
+                    Ones := No DIV Power(1000, Exponent - 1);
                     Hundreds := Ones DIV 100;
-                END;
+                end;
+
                 Tens := (Ones MOD 100) DIV 10;
                 Ones := Ones MOD 10;
-                IF Hundreds > 0 THEN BEGIN
-                    AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[Hundreds]);
-                    AddToNoText(NoText, NoTextIndex, PrintExponent, Text027);
-                END;
-                IF Tens >= 2 THEN BEGIN
-                    AddToNoText(NoText, NoTextIndex, PrintExponent, TensText[Tens]);
-                    IF Ones > 0 THEN
-                        AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[Ones]);
-                END ELSE
-                    IF (Tens * 10 + Ones) > 0 THEN
-                        AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[Tens * 10 + Ones]);
-                IF PrintExponent AND (Exponent > 1) THEN
-                    AddToNoText(NoText, NoTextIndex, PrintExponent, ExponentText[Exponent]);
-                IF No > 99999 THEN
-                    No := No - (Hundreds * 100 + Tens * 10 + Ones) * POWER(100, Exponent - 1) * 10
-                ELSE
-                    No := No - (Hundreds * 100 + Tens * 10 + Ones) * POWER(1000, Exponent - 1);
-            END;
 
-        IF CurrencyCode <> '' THEN BEGIN
-            //Currency.GET(CurrencyCode);
-            AddToNoText(NoText, NoTextIndex, PrintExponent, 'RUPEES');//+ Currency."Currency Numeric Description");
-        END ELSE
-            AddToNoText(NoText, NoTextIndex, PrintExponent, 'RUPEES');
+                if Hundreds > 0 then begin
+                    AddToNoText(
+                        NoText,
+                        NoTextIndex,
+                        PrintExponent,
+                        OnesText[Hundreds]);
 
-        AddToNoText(NoText, NoTextIndex, PrintExponent, Text028);
-        // AddToNoText(NoText,NoTextIndex,PrintExponent,FORMAT(No * 100) + '/100');
+                    AddToNoText(
+                        NoText,
+                        NoTextIndex,
+                        PrintExponent,
+                        Text027); // HUNDRED
+                end;
 
-        TensDec := ((No * 100) MOD 100) DIV 10;
-        OnesDec := (No * 100) MOD 10;
-        IF TensDec >= 2 THEN BEGIN
-            AddToNoText(NoText, NoTextIndex, PrintExponent, TensText[TensDec]);
-            IF OnesDec > 0 THEN
-                AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[OnesDec]);
-        END ELSE
-            IF (TensDec * 10 + OnesDec) > 0 THEN
-                AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[TensDec * 10 + OnesDec])
-            ELSE
-                AddToNoText(NoText, NoTextIndex, PrintExponent, Text026);
-        IF (CurrencyCode <> '') THEN
-            AddToNoText(NoText, NoTextIndex, PrintExponent, ' PAISA ONLY')//+ Currency."Currency Decimal Description" + ' ONLY')
-        ELSE
-            AddToNoText(NoText, NoTextIndex, PrintExponent, ' PAISA ONLY');
+                if Tens >= 2 then begin
+                    AddToNoText(
+                        NoText,
+                        NoTextIndex,
+                        PrintExponent,
+                        TensText[Tens]);
 
+                    if Ones > 0 then
+                        AddToNoText(
+                            NoText,
+                            NoTextIndex,
+                            PrintExponent,
+                            OnesText[Ones]);
+                end else
+                    if (Tens * 10 + Ones) > 0 then
+                        AddToNoText(
+                            NoText,
+                            NoTextIndex,
+                            PrintExponent,
+                            OnesText[Tens * 10 + Ones]);
+
+                if PrintExponent and (Exponent > 1) then
+                    AddToNoText(
+                        NoText,
+                        NoTextIndex,
+                        PrintExponent,
+                        ExponentText[Exponent]);
+
+                if No > 99999 then
+                    No :=
+                        No -
+                        (Hundreds * 100 + Tens * 10 + Ones) *
+                        Power(100, Exponent - 1) * 10
+                else
+                    No :=
+                        No -
+                        (Hundreds * 100 + Tens * 10 + Ones) *
+                        Power(1000, Exponent - 1);
+            end;
+        end;
+
+        // -------------------------
+        // RUPEES
+        // -------------------------
+        AddToNoText(
+            NoText,
+            NoTextIndex,
+            PrintExponent,
+            'RUPEES');
+
+        // -------------------------
+        // AND
+        // -------------------------
+        AddToNoText(
+            NoText,
+            NoTextIndex,
+            PrintExponent,
+            Text028);
+
+        // -------------------------
+        // PAISA
+        // -------------------------
+        TensDec := PaisaAmount DIV 10;
+        OnesDec := PaisaAmount MOD 10;
+
+        if PaisaAmount = 0 then begin
+            AddToNoText(
+                NoText,
+                NoTextIndex,
+                PrintExponent,
+                Text026); // ZERO
+        end else begin
+            if TensDec >= 2 then begin
+                AddToNoText(
+                    NoText,
+                    NoTextIndex,
+                    PrintExponent,
+                    TensText[TensDec]);
+
+                if OnesDec > 0 then
+                    AddToNoText(
+                        NoText,
+                        NoTextIndex,
+                        PrintExponent,
+                        OnesText[OnesDec]);
+            end else
+                AddToNoText(
+                    NoText,
+                    NoTextIndex,
+                    PrintExponent,
+                    OnesText[TensDec * 10 + OnesDec]);
+        end;
+
+        // -------------------------
+        // ONLY
+        // -------------------------
+        AddToNoText(
+            NoText,
+            NoTextIndex,
+            PrintExponent,
+            'PAISA ONLY');
     end;
 
     local procedure GetAmtDecimalPosition(): Decimal
@@ -431,17 +527,36 @@ report 50051 "ICICI Bank Check Print"
         exit(1 / Currency."Amount Rounding Precision");
     end;
 
-    local procedure AddToNoText(var NoText: array[2] of Text[80]; var NoTextIndex: Integer; var PrintExponent: Boolean; AddText: Text[30])
+    local procedure AddToNoText(
+      var NoText: array[2] of Text[80];
+      var NoTextIndex: Integer;
+      var PrintExponent: Boolean;
+      AddText: Text[30])
     begin
         PrintExponent := true;
 
-        while StrLen(NoText[NoTextIndex] + ' ' + AddText) > MaxStrLen(NoText[1]) do begin
-            NoTextIndex := NoTextIndex + 1;
-            if NoTextIndex > ArrayLen(NoText) then
-                Error(Text029, AddText);
+        if AddText = '' then
+            exit;
+
+        if NoTextIndex = 0 then
+            NoTextIndex := 1;
+
+        if NoText[NoTextIndex] = '' then begin
+            NoText[NoTextIndex] := AddText;
+            exit;
         end;
 
-        NoText[NoTextIndex] := DelChr(NoText[NoTextIndex] + ' ' + AddText, '<');
+        if StrLen(NoText[NoTextIndex] + ' ' + AddText) <= MaxStrLen(NoText[NoTextIndex]) then
+            NoText[NoTextIndex] :=
+                DelChr(NoText[NoTextIndex] + ' ' + AddText, '<')
+        else begin
+            NoTextIndex := NoTextIndex + 1;
+
+            if NoTextIndex > ArrayLen(NoText) then
+                Error(Text029, AddText);
+
+            NoText[NoTextIndex] := AddText;
+        end;
     end;
 
     var
@@ -591,7 +706,7 @@ report 50051 "ICICI Bank Check Print"
         TDSCaptionLbl: Label 'TDS';
         BankChargeCaptionLbl: Label 'Bank Charge';
         TransportCaptionLbl: Label 'Transport';
-        BeneficiaryName: Text[50];
+        BeneficiaryName: Text[150];
         AcPayee: Boolean;
         TextAcPay: Text[30];
         CurrCheck: Code[20];

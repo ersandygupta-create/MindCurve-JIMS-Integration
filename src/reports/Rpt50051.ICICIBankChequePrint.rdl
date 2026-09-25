@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-12T12:10:43.0323806Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-09-25T06:28:16.3551043Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -387,7 +387,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>="********" + First(Fields!decAmount.Value, "DataSet_Result")</Value>
+                    <Value>="*****" &amp; Code.IndianFormat(First(Fields!decAmount.Value, "DataSet_Result"))</Value>
                     <Style>
                       <FontWeight>Bold</FontWeight>
                     </Style>
@@ -415,7 +415,7 @@
         <Height>1.97222in</Height>
         <Style />
       </Body>
-      <Width>7.97222in</Width>
+      <Width>7.77778in</Width>
       <Page>
         <PageHeight>11.69in</PageHeight>
         <PageWidth>8.27in</PageWidth>
@@ -460,6 +460,28 @@ Public Function BlankNegAndZero(ByVal Value As Decimal)
         Return ""
     end if
     Return Value
+End Function
+
+Function IndianFormat(ByVal value As Decimal) As String
+    Dim s As String = Math.Truncate(value).ToString()
+    Dim dec As String = "." &amp; CInt((value - Math.Truncate(value)) * 100).ToString("00")
+
+    If s.Length &lt;= 3 Then
+        Return s &amp; dec
+    End If
+
+    Dim last3 As String = s.Substring(s.Length - 3)
+    Dim rest As String = s.Substring(0, s.Length - 3)
+    Dim result As String = ""
+
+    While rest.Length &gt; 2
+        result = "," &amp; rest.Substring(rest.Length - 2) &amp; result
+        rest = rest.Substring(0, rest.Length - 2)
+    End While
+
+    result = rest &amp; result
+
+    Return result &amp; "," &amp; last3 &amp; dec
 End Function
 </Code>
   <Language>=User!Language</Language>

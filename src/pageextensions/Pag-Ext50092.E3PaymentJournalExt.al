@@ -30,7 +30,7 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
             {
                 ToolTip = 'Beneficiary Name';
                 ApplicationArea = All;
-                Editable = blnEdit;
+                //Editable = blnEdit;
             }
         }
 
