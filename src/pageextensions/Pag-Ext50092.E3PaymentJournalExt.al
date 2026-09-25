@@ -26,6 +26,12 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
                 ApplicationArea = All;
                 Caption = 'Advance Document No.';
             }
+            field("Beneficiary Name"; Rec."Beneficiary Name")
+            {
+                ToolTip = 'Beneficiary Name';
+                ApplicationArea = All;
+                Editable = blnEdit;
+            }
         }
 
         modify("Bal. Account No.")
@@ -34,6 +40,32 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
             begin
                 UpdateCardPaymentAction();
                 CurrPage.Update(false);
+            end;
+        }
+        modify("Account Type")
+        {
+            trigger OnAfterValidate()
+            begin
+                if rec."Account Type" = rec."Account Type"::Vendor then
+                    blnEdit := false;
+                if rec."Account Type" = rec."Account Type"::"G/L Account" then begin
+                    blnEdit := true;
+                    rec."Beneficiary Name" := '';
+                    rec.Modify();
+                end;
+
+                CurrPage.Update(false);
+
+            end;
+        }
+        modify("Account No.")
+        {
+            trigger OnAfterValidate()
+            begin
+                if rec."Account Type" = rec."Account Type"::Vendor then begin
+                    Vendor.get(rec."Account No.");
+                    rec."Beneficiary Name" := Vendor."Beneficiary Name";
+                end;
             end;
         }
     }
@@ -69,6 +101,11 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         UpdateCardPaymentAction();
     end;
 
+    trigger OnOpenPage()
+    begin
+        blnEdit := false;
+    end;
+
     local procedure UpdateCardPaymentAction()
     var
         BankAccount: Record "Bank Account";
@@ -90,6 +127,8 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
     end;
 
     var
+        Vendor: Record Vendor;
         ShowCardPayment: Boolean;
         CardPaymentReportID: Integer;
+        blnEdit: Boolean;
 }

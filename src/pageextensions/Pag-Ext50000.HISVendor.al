@@ -36,6 +36,11 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
             {
                 ApplicationArea = All;
             }
+            field("Beneficiary Name"; Rec."Beneficiary Name")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Beneficiary Name';
+            }
         }
         addafter(Name)
         {

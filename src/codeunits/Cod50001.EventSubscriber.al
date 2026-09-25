@@ -77,6 +77,7 @@ codeunit 50001 "E3 HIS Event Subscriber"
     begin
         BankAccountLedgerEntry."E3 UTR No." := GenJournalLine."E3 UTR No.";
         BankAccountLedgerEntry."E3 Narration" := GenJournalLine."E3 Narration";
+        BankAccountLedgerEntry."Beneficiary Name" := GenJournalLine."Beneficiary Name";
         if (GenJournalLine."Cheque No." <> '') then
             BankAccountLedgerEntry."E3 UTR No." := GenJournalLine."Cheque No."
         else

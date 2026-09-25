@@ -72,6 +72,11 @@ tableextension 50014 "E3 HIS Bank Ledger Entry" extends "Bank Account Ledger Ent
             DataClassification = ToBeClassified;
             Caption = 'Value Date';
         }
+        field(50131; "Beneficiary Name"; TExt[60])
+        {
+            caption = 'Beneficiary Name';
+            DataClassification = CustomerContent;
+        }
 
     }
     procedure E3SetBankReconciliationCandidatesFilter(BankAccReconciliation: Record "Bank Acc. Reconciliation")
