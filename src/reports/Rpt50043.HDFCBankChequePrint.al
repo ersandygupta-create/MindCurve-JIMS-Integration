@@ -76,6 +76,7 @@ report 50043 "HDFC Bank Check Print"
             var
                 BankAccount: Record 270;
             begin
+
                 IF "Cheque Date" <> 0D THEN
                     CheckDateText := FORMAT("Cheque Date", 0, 4)
                 ELSE
@@ -117,22 +118,37 @@ report 50043 "HDFC Bank Check Print"
                 Year2 := COPYSTR(CheckDateText, 6, 1);
                 Year3 := COPYSTR(CheckDateText, 7, 1);
                 Year4 := COPYSTR(CheckDateText, 8, 1);
-                IF test <> '' THEN
-                    CheckToAddr[1] := Test;
+                IF Test10 <> '' THEN
+                    CheckToAddr[1] := Test10;
 
                 decAmount := 0;
 
                 recGenJnlLine2.RESET;
                 recGenJnlLine2.SETRANGE("Journal Template Name", GenJnlLine."Journal Template Name");
                 recGenJnlLine2.SETRANGE("Journal Batch Name", GenJnlLine."Journal Batch Name");
-                recGenJnlLine2.SETRANGE("Document No.", GenJnlLine."Document No.");
+                // recGenJnlLine2.SETRANGE("Document No.", GenJnlLine."Document No.");
                 recGenJnlLine2.SETRANGE("Posting Date", GenJnlLine."Posting Date");
+                recGenJnlLine2.SetRange("Cheque No.", "Cheque No.");
 
                 IF recGenJnlLine2.FINDSET THEN
                     REPEAT
                         decAmount += recGenJnlLine2.Amount;
+                        // sandeep
+                        tdsAmount1 += GetUnpostedTDSAmount(recGenJnlLine2);
                     UNTIL recGenJnlLine2.NEXT = 0;
 
+                // sandeep
+                recGenJnlLine3.RESET;
+                recGenJnlLine3.SETRANGE("Journal Template Name", GenJnlLine."Journal Template Name");
+                recGenJnlLine3.SETRANGE("Journal Batch Name", GenJnlLine."Journal Batch Name");
+                recGenJnlLine2.SETRANGE("Document No.", GenJnlLine."Document No.");
+                recGenJnlLine3.SETRANGE("Posting Date", GenJnlLine."Posting Date");
+
+                RecordCount := recGenJnlLine3.Count();
+                if RecordCount > 1 then
+                    CheckToAddr[1] := Test;
+
+                decAmount := decAmount - tdsAmount1;
                 decAmount := ROUND(decAmount, 1, '<');
                 CheckAmountText := FORMAT(decAmount);
                 CheckAmountText := FORMAT(decAmount);
@@ -167,6 +183,7 @@ report 50043 "HDFC Bank Check Print"
                             GenJnlLine."Cheque Date" := GenJnlLine3."Cheque Date";
 
                         GenJnlLine."Bank Payment Type" := GenJnlLine."Bank Payment Type"::" ";
+                        GenJnlLine."Check Printed" := true;
                         GenJnlLine.MODIFY;
                     UNTIL GenJnlLine3.NEXT = 0;
                 END;
@@ -247,6 +264,8 @@ report 50043 "HDFC Bank Check Print"
                         Caption = 'Beneficiary Name';
                         ApplicationArea = All;
                         ToolTip = 'Specifies the value of the BenName field.';
+
+
                     }
                     field(AcPayee; AcPayee)
                     {
@@ -256,22 +275,41 @@ report 50043 "HDFC Bank Check Print"
                     }
 
                 }
+
             }
+
         }
+
 
         actions
         {
         }
 
+
         trigger OnInit()
         begin
-            Test := '';
+            //   Test := '';
         end;
 
         trigger OnOpenPage()
+        var
+            GenJnlLineBeneficiary: Record "Gen. Journal Line";
+            DocumentNo: Code[20];
         begin
             BankAcc2.Init();
             UseCheckNo := '';
+            // Test := 'Yourself';
+
+            DocumentNo := GenJnlLine.GetFilter("Document No.");
+
+            if DocumentNo <> '' then begin
+                GenJnlLineBeneficiary.Reset();
+                GenJnlLineBeneficiary.SetFilter("Document No.", DocumentNo);
+                GenJnlLineBeneficiary.SetFilter("Beneficiary Name", '<>%1', '');
+
+                if GenJnlLineBeneficiary.FindFirst() then
+                    Test10 := GenJnlLineBeneficiary."Beneficiary Name";
+            end;
 
             GenJnlLine2.RESET;
             GenJnlLine2.SETRANGE(
@@ -285,6 +323,11 @@ report 50043 "HDFC Bank Check Print"
                         UseCheckNo := BankAcc2."Last Check No.";
                 end;
             end;
+        end;
+
+        trigger OnAfterGetRecord()
+        begin
+            Test := Test;
         end;
 
     }
@@ -678,6 +721,7 @@ report 50043 "HDFC Bank Check Print"
         PreprintedStub: Boolean;
         TotalText: Text[10];
         Test: Text[200];
+        Test10: Text[200];
         DocDate: Date;
         i: Integer;
         Text062: Label 'G/L Account,Customer,Vendor,Bank Account';
@@ -719,7 +763,10 @@ report 50043 "HDFC Bank Check Print"
         DayText1: Text;
         DayText2: Text;
         recGenJnlLine2: Record 81;
+        recGenJnlLine3: Record 81;
+        RecordCount: Integer;
         decAmount: Decimal;
+        tdsAmount1: Decimal;
         CheckReport: Report 1401;
         Test1: text[500];
 
@@ -736,6 +783,24 @@ report 50043 "HDFC Bank Check Print"
     [IntegrationEvent(false, false)]
     local procedure OnAfterFormatNoText(var NoText: array[2] of Text[80]; No: Decimal; CurrencyCode: Code[10])
     begin
+    end;
+
+    procedure GetUnpostedTDSAmount(GenJournalLine: Record "Gen. Journal Line"): Decimal
+    var
+        TaxTransactionValue: Record "Tax Transaction Value";
+        TDSTotal: Decimal;
+    begin
+        // Filter by the RecordID of the unposted Gen. Journal Line
+        TaxTransactionValue.SetRange("Tax Record ID", GenJournalLine.RecordId());
+        TaxTransactionValue.SetRange("Value Type", TaxTransactionValue."Value Type"::COMPONENT);
+        TaxTransactionValue.SetRange("Value ID", 1); // Component ID for TDS
+
+        if TaxTransactionValue.FindSet() then
+            repeat
+                TDSTotal += TaxTransactionValue.Amount;
+            until TaxTransactionValue.Next() = 0;
+
+        exit(TDSTotal);
     end;
 }
 
