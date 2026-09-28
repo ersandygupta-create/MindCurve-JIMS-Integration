@@ -86,6 +86,10 @@ page 50175 "E3 GRN Work Sheet List"
                 begin
                     Rec.TestField("Document ID");
 
+                    if not Rec.Sync then
+                        Error('GRN %1 cannot be sent because Sync Boolean is False.', Rec."Document ID");
+
+
                     if not Confirm(
                          StrSubstNo('Do you want to send GRN %1 to the DB?', Rec."Document ID"))
                     then

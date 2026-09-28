@@ -52,9 +52,19 @@ pageextension 50004 "E3 HIS General Journal" extends "General Journal"
             field("E3 Validation Key"; Rec."E3 Validation Key")
             {
                 ApplicationArea = All;
-
             }
-
+            field("Document No"; Rec."Document No")
+            {
+                ApplicationArea = All;
+                Caption = 'Advance Document No.';
+                ToolTip = 'Specifies the document number for this payment journal line.';
+            }
+            field("Purchase Order No."; Rec."Purchase Order No.")
+            {
+                ApplicationArea = All;
+                Editable = false;
+                ToolTip = 'Specifies the related purchase order number.';
+            }
         }
     }
 }
