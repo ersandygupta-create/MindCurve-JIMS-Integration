@@ -36,11 +36,6 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
             {
                 ApplicationArea = All;
             }
-            field("Beneficiary Name"; Rec."Beneficiary Name")
-            {
-                ApplicationArea = all;
-                ToolTip = 'Beneficiary Name';
-            }
         }
         addafter(Name)
         {
@@ -50,33 +45,42 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
                 Caption = 'Name 2';
                 ToolTip = 'Specifies the value of the Name 2 field';
             }
-            field("Bank Integration"; Rec."Bank Integration")
-            {
-                ApplicationArea = Basic, Suite;
-                Caption = 'Bank Integration Enabled';
-                ToolTip = 'Indicates whether bank integration is enabled for this vendor.';
-            }
 
         }
-        addafter("E-Mail")
+        addlast(Content)
         {
-            field("Payment Advice E-mail"; Rec."Payment Advice E-mail")
+            group("E3 Vendor Attributes")
             {
-                ApplicationArea = All;
-                Caption = 'Cc Payment Advice Email';
-                ToolTip = 'Specifies the value of the Payment Advice E-mail field';
-            }
-            field("Order Email"; Rec."Order Email")
-            {
-                Caption = 'Order Email';
-                ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Order E-mail field';
-            }
-            field("Send Order Email"; Rec."Send Order Email")
-            {
-                Caption = 'Send Order Email';
-                ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Send Order E-mail field';
+                Caption = 'Vendor Attributes';
+                field("Beneficiary Name"; Rec."Beneficiary Name")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Beneficiary Name';
+                }
+                field("Bank Integration"; Rec."Bank Integration")
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Bank Integration Enabled';
+                    ToolTip = 'Indicates whether bank integration is enabled for this vendor.';
+                }
+                field("Payment Advice E-mail"; Rec."Payment Advice E-mail")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Cc Payment Advice Email';
+                    ToolTip = 'Specifies the value of the Payment Advice E-mail field';
+                }
+                field("Order Email"; Rec."Order Email")
+                {
+                    Caption = 'Order Email';
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Order E-mail field';
+                }
+                field("Send Order Email"; Rec."Send Order Email")
+                {
+                    Caption = 'Send Order Email';
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Send Order E-mail field';
+                }
             }
         }
     }

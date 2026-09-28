@@ -166,7 +166,7 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
         {
             Caption = 'Item Make Code';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Item Make Master".Code;
+            TableRelation = "E3 Item Make Master".Code where("Make Type" = filter('Medicine/Marketing'));
         }
         field(50016; "Voucher Type"; Code[20])
         {

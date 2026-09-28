@@ -247,10 +247,13 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     IndentHeader: Record "E3 Indent Header";
                     IndentLine: Record "E3 Indent Line";
                 begin
-                    PurchHeader.Reset();
                     PurchHeader.SetRange("Document Type", rec."Document Type");
                     PurchHeader.SetRange("No.", rec."Document No.");
                     if PurchHeader.FindFirst() then;
+                    if PurchHeader."Item Make Code" = '' then
+                        Error(
+                            'Item Make Code cannot be blank. Please enter the Item Make Code before creating the Indent Lines.');
+                    PurchHeader.Reset();
                     IndentHeader.Reset();
                     IndentHeader.SetRange(Status, IndentHeader.Status::Approved);
                     IndentHeader.SetRange(Released, true);

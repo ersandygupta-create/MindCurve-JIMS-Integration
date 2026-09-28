@@ -158,8 +158,15 @@ page 50014 "E3 Item Master List"
     }
 
     trigger OnOpenPage()
+    var
+        UserSetup: Record "User Setup";
     begin
         SetFieldEditability();
+
+        UserSetup.Get(UserId());
+        if not UserSetup."Item Insert" then
+            Error('You do not have permission to open Item Insert.');
+
     end;
 
     trigger OnAfterGetRecord()

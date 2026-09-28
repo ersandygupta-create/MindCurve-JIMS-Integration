@@ -1358,6 +1358,16 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                             RunPageMode = View;
                             ToolTip = 'Executes the RC All List.';
                         }
+                        action("E3 Approved RC Disc Details")
+                        {
+                            AccessByPermission = TableData "E3 RC Discount Line" = RIMD;
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'All Disc Aggreement List';
+                            Image = List;
+                            RunObject = Page "All App. RC Discount Line";
+                            RunPageMode = View;
+                            ToolTip = 'Executes the RC All List.';
+                        }
                     }
                 }
                 group(StockTransferSetup)

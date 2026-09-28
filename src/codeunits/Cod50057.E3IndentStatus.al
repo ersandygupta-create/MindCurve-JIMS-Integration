@@ -64,7 +64,10 @@ codeunit 50057 "E3 Indent Status Mgmt."
         ItemObj.Add('uom', IndentLineUpdateLog."Unit of Measure");
         ItemObj.Add('qty', IndentLineUpdateLog."Approved Qty");
         ItemObj.Add('indentnumber', IndentLineUpdateLog."Document No.");
-        ItemObj.Add('indentserialnumber', 0);
+        ItemObj.Add('indentserialnumber', CopyStr(
+        IndentLineUpdateLog."Entry No.",
+        StrLen(IndentLineUpdateLog."Shortcut Dimension 1 Code") + 1));
+
 
         ItemArray.Add(ItemObj);
 

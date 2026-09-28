@@ -5,7 +5,7 @@ page 50237 "E3 Closed Indent List"
     UsageCategory = Lists;
     SourceTable = "E3 Indent Line";
     Caption = 'Indent Summary';
-    //SourceTableView = where("Closed Indent" = const(true));
+    SourceTableView = where("PO Created" = const(true));
     InsertAllowed = false;
     ModifyAllowed = false;
     DeleteAllowed = false;

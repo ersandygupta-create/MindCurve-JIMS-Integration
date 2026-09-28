@@ -21,7 +21,7 @@ pageextension 50080 "E3 Item List Ext" extends "Item List"
                 ApplicationArea = All;
                 Editable = false;
             }
-            field("Margin Code"; Rec."Margin Code")
+            field("Margin Code"; Rec."E3 Margin Code")
             {
                 ApplicationArea = All;
             }
@@ -68,6 +68,7 @@ pageextension 50080 "E3 Item List Ext" extends "Item List"
                 Caption = 'Send All Items to Log';
                 Image = CreateDocument;
                 Promoted = true;
+                Visible = false;
                 PromotedCategory = Process;
 
                 trigger OnAction()
