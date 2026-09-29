@@ -257,6 +257,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Margin Name"; Rec."Margin Name")
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the value of E3 Margin Name field.';
                 }
                 field("Manual Code"; Rec."Manual Code")
