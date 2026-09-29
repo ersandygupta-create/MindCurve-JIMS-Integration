@@ -15,6 +15,7 @@ codeunit 50057 "E3 Indent Status Mgmt."
     var
         E3APISetup: Record "E3 Integration API Setup";
         IndentLine: Record "E3 Indent Line";
+        EntryNoText: Text;
 
     procedure SendIndentLineDetails(var IndentLineUpdateLog: Record "E3 Indent Line"): Boolean
     var
@@ -54,7 +55,14 @@ codeunit 50057 "E3 Indent Status Mgmt."
         // =========================
         Clear(ItemObj);
 
-        ItemObj.Add('docId', 0);
+        EntryNoText := Format(IndentLineUpdateLog."Entry No.");
+        if CopyStr(EntryNoText, 1, 4) = IndentLineUpdateLog."Shortcut Dimension 1 Code" then
+            EntryNoText := CopyStr(EntryNoText, 5)
+        else
+            if CopyStr(EntryNoText, 1, 3) = IndentLineUpdateLog."Shortcut Dimension 1 Code" then
+                EntryNoText := CopyStr(EntryNoText, 4);
+
+        ItemObj.Add('docId', EntryNoText);
         ItemObj.Add('v_SNo', Format(IndentLineUpdateLog."Line No."));
         ItemObj.Add('businessUnitCode', IndentLineUpdateLog."Shortcut Dimension 1 Code");
         ItemObj.Add('itemCode', IndentLineUpdateLog."No.");

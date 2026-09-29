@@ -33,6 +33,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
             field("Advance PO"; Rec."Advance PO")
             {
                 ApplicationArea = All;
+                Editable = CanEditCustomFields;
                 ToolTip = 'Specifies the value of the Advance PO field';
             }
             field("Advance PO Count"; Rec."Advance PO Count")
@@ -58,6 +59,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
             field("Exp. CN Value"; Rec."Exp. CN Value")
             {
                 ApplicationArea = All;
+                Editable = CanEditCustomFields;
                 ToolTip = 'Exp. CN Value';
             }
             field("Item Make Code"; Rec."Item Make Code")
@@ -66,6 +68,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 Caption = 'Item Make Code';
                 ToolTip = 'Specifies the unique code of the item make.';
                 ShowMandatory = true;
+                Editable = CanEditCustomFields;
             }
         }
         addbefore("No.")
@@ -170,6 +173,22 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
             Message('Purchase line %1 is partially receive so it line can not be canceled.', purchLine."Line No.");
     end;
 
+    var
+        CanEditCustomFields: Boolean;
 
+    trigger OnAfterGetCurrRecord()
+    begin
+        SetFieldEditable();
+    end;
+
+    trigger OnAfterGetRecord()
+    begin
+        SetFieldEditable();
+    end;
+
+    local procedure SetFieldEditable()
+    begin
+        CanEditCustomFields := not (Rec.Status in [Rec.Status::"Pending Approval", Rec.Status::Released]);
+    end;
 
 }

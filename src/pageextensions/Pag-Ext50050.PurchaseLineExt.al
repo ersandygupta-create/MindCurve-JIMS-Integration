@@ -5,7 +5,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
     {
         modify("Direct Unit Cost")
         {
-            Editable = IsLineEditable;
+            Editable = CanEdit;
             trigger OnAfterValidate()
             begin
                 if Rec."FOC" then
@@ -14,7 +14,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         }
         modify("No.")
         {
-            Editable = IsLineEditable;
+            Editable = CanEdit;
         }
         modify(Description)
         {
@@ -23,39 +23,63 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
 
         modify(Quantity)
         {
-            Editable = IsLineEditable;
+            Editable = CanEdit;
         }
         modify("Gen. Prod. Posting Group")
         {
-            Editable = IsLineEditable;
+            Editable = CanEdit;
         }
         modify("Location Code")
         {
-            Editable = IsLineEditable;
+            Editable = CanEdit;
         }
         modify("Unit of Measure Code")
         {
-            Editable = IsLineEditable;
+            Editable = CanEdit;
         }
         modify("Line Amount")
         {
-            Editable = IsLineEditable;
+            Editable = CanEdit;
         }
         modify("Line Discount %")
         {
-            Editable = IsLineEditable;
+            Editable = CanEdit;
         }
         modify("Line Discount Amount")
         {
-            Editable = IsLineEditable;
+            Editable = CanEdit;
         }
         modify("GST Assessable Value")
         {
-            Editable = IsLineEditable;
+            Editable = CanEdit;
         }
         modify("Custom Duty Amount")
         {
-            Editable = IsLineEditable;
+            Editable = CanEdit;
+        }
+        modify("GST Group Code")
+        {
+            Editable = CanEdit;
+        }
+        modify("HSN/SAC Code")
+        {
+            Editable = CanEdit;
+        }
+        modify(FOC)
+        {
+            Editable = CanEdit;
+        }
+        modify("Shortcut Dimension 1 Code")
+        {
+            Editable = CanEdit;
+        }
+        modify("Shortcut Dimension 2 Code")
+        {
+            Editable = CanEdit;
+        }
+        modify("GST Credit")
+        {
+            Editable = CanEdit;
         }
         addafter("TDS Section Code")
         {
@@ -63,45 +87,52 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
             {
                 ApplicationArea = All;
                 Caption = 'Item Make Code';
+                Editable = CanEditLineFields;
                 ToolTip = 'Specifies the unique code of the item make.';
             }
             field("Item Make Name"; Rec."Item Make Name")
             {
                 ApplicationArea = All;
                 Caption = 'Item Make Name';
+                Editable = CanEditLineFields;
                 ToolTip = 'Specifies the name of the item make.';
             }
             field("Free Qty"; Rec."Free Qty")
             {
                 ApplicationArea = All;
+                Editable = CanEditLineFields;
                 ToolTip = 'Specifies a value Free QTY.';
             }
             field(Critical; Rec.Critical)
             {
                 ApplicationArea = All;
                 Caption = 'Critical Item';
+                Editable = CanEditLineFields;
                 ToolTip = 'Specifies whether the item make is marked as critical.';
             }
             field(MRP; Rec.MRP)
             {
                 ApplicationArea = All;
+                //Editable = CanEditLineFields;
                 ToolTip = 'Specifies The Value MRP';
-                Editable = IsLineEditable;
+                Editable = CanEdit;
             }
             field("Qty. per Unit of Measure"; Rec."Qty. per Unit of Measure")
             {
                 ApplicationArea = All;
-                Editable = false;
+                Editable = CanEditLineFields;
             }
             field(Scheme; Rec.Scheme)
             {
                 ApplicationArea = All;
+                //Editable = CanEditLineFields;
                 ToolTip = 'Specifies a value Scheme';
-                Editable = IsLineEditable;
+                Editable = CanEdit;
             }
             field("Incl Free Qty in Sale Rate"; Rec."Incl Free Qty in Sale Rate")
             {
                 ApplicationArea = All;
+                Editable = CanEditLineFields;
                 ToolTip = 'Specifies The Value Incl Free Qty in Sale Rate';
             }
             field("Indent No."; Rec."Indent No.")
@@ -127,12 +158,14 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
             field("Margin Fix"; Rec."Margin Fix")
             {
                 ApplicationArea = All;
+                Editable = CanEditLineFields;
                 Caption = 'Type of RC';
                 ToolTip = 'Specifies the margin fixing method for the item.';
             }
             field("Line Remarks"; Rec."Line Remarks")
             {
                 ApplicationArea = All;
+                Editable = CanEditLineFields;
                 ToolTip = 'Specifies the Remarks for the item.';
             }
             field("Indent Line Remarks"; Rec."Indent Line Remarks")
@@ -250,9 +283,9 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     PurchHeader.SetRange("Document Type", rec."Document Type");
                     PurchHeader.SetRange("No.", rec."Document No.");
                     if PurchHeader.FindFirst() then;
-                    if PurchHeader."Item Make Code" = '' then
-                        Error(
-                            'Item Make Code cannot be blank. Please enter the Item Make Code before creating the Indent Lines.');
+                    // if PurchHeader."Item Make Code" = '' then
+                    //     Error(
+                    //         'Item Make Code cannot be blank. Please enter the Item Make Code before creating the Indent Lines.');
                     PurchHeader.Reset();
                     IndentHeader.Reset();
                     IndentHeader.SetRange(Status, IndentHeader.Status::Approved);
@@ -832,19 +865,43 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
     var
         IsLineEditable: Boolean;
         UserSetup: Record "User Setup";
+        CanEditLineFields: Boolean;
+        PurchHeader: Record "Purchase Header";
+        CanEdit: Boolean;
 
     trigger OnAfterGetCurrRecord()
     begin
-        if Rec."Indent Line Remarks" = '' then begin
-            IsLineEditable := true;
-        end else begin
-            IsLineEditable := false;
-            if UserSetup.Get(UserId) then
-                IsLineEditable := UserSetup."PO Line Modify";
-        end;
+        SetLineEditable();
+        // if Rec."Indent Line Remarks" = '' then begin
+        //     IsLineEditable := true;
+        // end else begin
+        //     IsLineEditable := false;
+        //     if UserSetup.Get(UserId) then
+        //         IsLineEditable := UserSetup."PO Line Modify";
+        // end;
     end;
 
+    trigger OnAfterGetRecord()
+    begin
+        SetLineEditable();
+    end;
 
+    local procedure SetLineEditable()
+    begin
+        CanEditLineFields := true;
+        IsLineEditable := true;
 
+        if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then
+            CanEditLineFields := not (PurchHeader.Status in [PurchHeader.Status::"Pending Approval", PurchHeader.Status::Released]);
+
+        if Rec."Indent Line Remarks" <> '' then begin
+            IsLineEditable := false;
+
+            if UserSetup.Get(UserId) then
+                IsLineEditable := UserSetup."PO Line Modify";
+
+            CanEdit := CanEditLineFields and IsLineEditable;
+        end;
+    end;
 
 }
