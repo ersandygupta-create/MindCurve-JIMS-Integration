@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-18T14:52:39.3694617Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-10-01T05:48:41.4413710Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -1633,7 +1633,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!EstimatedValue.Value)</Value>
+                                  <Value>=Sum(Fields!Estimated_Value_Receive.Value)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1987,7 +1987,11 @@
                 <TablixMember>
                   <Group Name="Details" />
                   <Visibility>
-                    <Hidden>=IIf(Fields!Line_No_.Value&lt;&gt;0,FALSE,TRUE)</Hidden>
+                    <Hidden>=IIf(
+    Fields!Quantity_Received.Value = 0,
+    TRUE,
+    IIf(Fields!Line_No_.Value &lt;&gt; 0, FALSE, TRUE)
+)</Hidden>
                   </Visibility>
                 </TablixMember>
                 <TablixMember>

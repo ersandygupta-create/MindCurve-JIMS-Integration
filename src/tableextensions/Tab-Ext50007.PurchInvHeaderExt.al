@@ -64,6 +64,11 @@ tableextension 50007 "E3 HIS Purch. Inv. Header" extends "Purch. Inv. Header"
             Caption = 'Print Caption';
             DataClassification = CustomerContent;
         }
+        field(50020; Sync; Boolean)
+        {
+            Caption = 'Sync';
+            DataClassification = CustomerContent;
+        }
 
     }
 }

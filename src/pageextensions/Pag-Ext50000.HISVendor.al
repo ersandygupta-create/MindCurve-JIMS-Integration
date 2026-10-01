@@ -190,6 +190,12 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
 
     end;
 
+    trigger OnQueryClosePage(CloseAction: Action): Boolean
+    begin
+        Rec.ValidateGSTVendorType();
+        exit(true);
+    end;
+
     var
         OrderAddress: Record "Order Address";
         PurchPayable: Record "Purchases & Payables Setup";

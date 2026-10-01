@@ -65,11 +65,16 @@ codeunit 50007 "E3 Gate Entry Transfer"
         //-----------------------------------------
         GateEntryHeader.Status := GateEntryHeader.Status::Posted;
         GateEntryHeader.Modify(true);
+
+        // Delete only the current Gate Entry lines
         GateEntryLine.Reset();
         GateEntryLine.SetRange("Document No.", GateEntryHeader."Document No.");
         if GateEntryLine.FindSet() then
             GateEntryLine.DeleteAll();
-        GateEntryHeader.DeleteAll();
+
+        // Delete only the current Gate Entry Header
+        GateEntryHeader.Delete(true);
+
         Message('Shipment %1 posted successfully and inward entry created.', ShipmentNo);
     end;
 

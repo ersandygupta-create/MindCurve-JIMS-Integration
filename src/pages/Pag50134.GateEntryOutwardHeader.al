@@ -32,6 +32,11 @@ page 50134 "E3 Gate Entry Outward Header"
                     ToolTip = 'Specifies the value of the Document No. field';
                     ApplicationArea = All;
                     Editable = false;
+                    trigger OnAssistEdit()
+                    begin
+                        if Rec.AssistEdit(xRec) then
+                            CurrPage.Update();
+                    end;
                 }
                 field("Purpose Code"; Rec."Purpose Code")
                 {
@@ -280,11 +285,11 @@ page 50134 "E3 Gate Entry Outward Header"
             if ResponsibiltyCenter.Find('-') then;
         end;
         Rec."Entry Type" := Rec."Entry Type"::Outward;
-        PurchasesPayablesSetup.Get();
-        PurchasesPayablesSetup.TestField("Gate Entry Nos.");
+        // PurchasesPayablesSetup.Get();
+        // PurchasesPayablesSetup.TestField("Gate Entry Nos.");
 
-        Rec."No. Series" := PurchasesPayablesSetup."Gate Entry Nos.";
-        Rec."Document No." := NoSeries.GetNextNo(Rec."No. Series", WorkDate(), true);
+        // Rec."No. Series" := PurchasesPayablesSetup."Gate Entry Nos.";
+        // Rec."Document No." := NoSeries.GetNextNo(Rec."No. Series", WorkDate(), true);
         Rec."Shortcut Dimension 1 Code" := ResponsibiltyCenter."Global Dimension 1 Code";
     end;
 

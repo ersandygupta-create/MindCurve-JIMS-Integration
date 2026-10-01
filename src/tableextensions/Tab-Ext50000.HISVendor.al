@@ -175,5 +175,10 @@ tableextension 50000 "E3 HIS Vendor Ext" extends Vendor
                 Rec."No.");
     end;
 
+    procedure ValidateGSTVendorType()
+    begin
+        if "GST Vendor Type" = "GST Vendor Type"::" " then
+            Error('GST Vendor Type must be selected.');
+    end;
 
 }

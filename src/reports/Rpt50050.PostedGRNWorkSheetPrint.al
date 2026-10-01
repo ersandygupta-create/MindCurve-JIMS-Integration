@@ -207,6 +207,9 @@ report 50050 "E3 GRN Work Sheet"
             column(Vendor_Post_Code; PostCode)
             {
             }
+            column(Posting_Description; PostingDescription)
+            {
+            }
             dataitem(Line; "E3 GRN Work Sheet Line")
             {
                 DataItemLink = "Document ID" = field("Document ID");
@@ -404,6 +407,19 @@ report 50050 "E3 GRN Work Sheet"
                             LocationPhoneNo := Location."Phone No.";
                             LocationGSTIN := Location."GST Registration No.";
                         end;
+
+                        Clear(PostingDescription);
+
+                        if Header."E-Way Bill No." <> '' then begin
+                            PurchaseHeader.Reset();
+                            PurchaseHeader.SetRange(
+                                "Document Type",
+                                PurchaseHeader."Document Type"::Order);
+                            PurchaseHeader.SetRange("No.", Header."E-Way Bill No.");
+
+                            if PurchaseHeader.FindFirst() then
+                                PostingDescription := PurchaseHeader."Posting Description";
+                        end;
                     end;
 
                 end;
@@ -432,6 +448,8 @@ report 50050 "E3 GRN Work Sheet"
         LocationName: Text[100];
         LocName2: Text[50];
         LocName3: Text[50];
+        PurchaseHeader: Record "Purchase Header";
+        PostingDescription: Text[100];
 
 
     trigger OnInitReport()

@@ -41,6 +41,9 @@ pageextension 50105 "E3 Posted Sales Invoice" extends 143
                     HISIntegrationMgt: Codeunit "E3 Sale Invoice Cons. Mgmt.";
                 begin
                     Rec.TestField("No.");
+                    if not Rec.Sync then
+                        Error('Sales %1 cannot be sent because Sync Boolean is False.', Rec."No.");
+
 
                     if not Confirm(
                          StrSubstNo('Do you want to send Invoice %1 to the DB?', Rec."No."))

@@ -15,6 +15,7 @@ page 50159 "E3 To Destination Type"
                 field(Code; Rec.Code)
                 {
                     ApplicationArea = All;
+                    editable = false;
                     trigger OnAssistEdit()
                     begin
                         if Rec.AssistEdit(xRec) then

@@ -87,27 +87,27 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
             {
                 ApplicationArea = All;
                 Caption = 'Item Make Code';
-                Editable = CanEditLineFields;
+                Editable = CanEdit;
                 ToolTip = 'Specifies the unique code of the item make.';
             }
             field("Item Make Name"; Rec."Item Make Name")
             {
                 ApplicationArea = All;
                 Caption = 'Item Make Name';
-                Editable = CanEditLineFields;
+                Editable = CanEdit;
                 ToolTip = 'Specifies the name of the item make.';
             }
             field("Free Qty"; Rec."Free Qty")
             {
                 ApplicationArea = All;
-                Editable = CanEditLineFields;
+                Editable = CanEdit;
                 ToolTip = 'Specifies a value Free QTY.';
             }
             field(Critical; Rec.Critical)
             {
                 ApplicationArea = All;
                 Caption = 'Critical Item';
-                Editable = CanEditLineFields;
+                Editable = CanEdit;
                 ToolTip = 'Specifies whether the item make is marked as critical.';
             }
             field(MRP; Rec.MRP)
@@ -120,7 +120,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
             field("Qty. per Unit of Measure"; Rec."Qty. per Unit of Measure")
             {
                 ApplicationArea = All;
-                Editable = CanEditLineFields;
+                Editable = CanEdit;
             }
             field(Scheme; Rec.Scheme)
             {
@@ -132,7 +132,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
             field("Incl Free Qty in Sale Rate"; Rec."Incl Free Qty in Sale Rate")
             {
                 ApplicationArea = All;
-                Editable = CanEditLineFields;
+                Editable = CanEdit;
                 ToolTip = 'Specifies The Value Incl Free Qty in Sale Rate';
             }
             field("Indent No."; Rec."Indent No.")
@@ -158,14 +158,14 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
             field("Margin Fix"; Rec."Margin Fix")
             {
                 ApplicationArea = All;
-                Editable = CanEditLineFields;
+                Editable = CanEdit;
                 Caption = 'Type of RC';
                 ToolTip = 'Specifies the margin fixing method for the item.';
             }
             field("Line Remarks"; Rec."Line Remarks")
             {
                 ApplicationArea = All;
-                Editable = CanEditLineFields;
+                //Editable = CanEdit;
                 ToolTip = 'Specifies the Remarks for the item.';
             }
             field("Indent Line Remarks"; Rec."Indent Line Remarks")
@@ -888,20 +888,25 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
 
     local procedure SetLineEditable()
     begin
-        CanEditLineFields := true;
+        CanEditLineFields := false;
         IsLineEditable := true;
 
-        if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then
-            CanEditLineFields := not (PurchHeader.Status in [PurchHeader.Status::"Pending Approval", PurchHeader.Status::Released]);
+        // Purchase Header Status
+        if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then begin
+            if PurchHeader.Status = PurchHeader.Status::Open then
+                CanEditLineFields := true;
+        end;
 
+        // Indent Line Remarks / User Setup condition
         if Rec."Indent Line Remarks" <> '' then begin
             IsLineEditable := false;
 
             if UserSetup.Get(UserId) then
                 IsLineEditable := UserSetup."PO Line Modify";
-
-            CanEdit := CanEditLineFields and IsLineEditable;
         end;
+
+        // Final editable condition
+        CanEdit := CanEditLineFields and IsLineEditable;
     end;
 
 }

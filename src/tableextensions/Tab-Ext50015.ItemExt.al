@@ -946,4 +946,68 @@ tableextension 50015 "E3 HIS Item" extends Item
                 Rec."No.");
     end;
 
+    procedure CheckMandatoryFields()
+    begin
+        // Common mandatory fields for ALL Item Types
+        if "GST Group Code" = '' then
+            Error('GST Group Code must be entered.');
+
+        if "HSN/SAC Code" = '' then
+            Error('HSN/SAC Code must be entered.');
+
+        if "Purch. Unit of Measure" = '' then
+            Error('Purch. Unit of Measure must be entered.');
+
+        if "Sales Unit of Measure" = '' then
+            Error('Sales Unit of Measure must be entered.');
+
+        if Packing = '' then
+            Error('Packing must be entered.');
+
+        if "Item Group Code" = '' then
+            Error('Item Group Code must be entered.');
+
+        if "Category Code" = '' then
+            Error('Category Code must be entered.');
+
+        if not IsActive then
+            Error('IsActive must be enabled.');
+
+        // Additional mandatory fields only for Item Type = 11 (Pharmacy)
+        if "Item Type" = '11' then begin
+
+            if "Marketing Company Code" = '' then
+                Error(
+                    'Marketing Company Code must be entered when Item Type is Pharmacy.');
+
+            if "Item Make Code" = '' then
+                Error(
+                    'Marketing Company/Brand make Code must be entered when Item Type is Pharmacy.');
+
+            if "Medicine Manufacturer Code" = '' then
+                Error(
+                    'Medicine Manufacturer Code must be entered when Item Type is Pharmacy.');
+
+            if "Margin Fix" = "Margin Fix"::" " then
+                Error(
+                    'Type of RC must be entered when Item Type is Pharmacy.');
+
+            if "E3 Margin Code" = '' then
+                Error(
+                    'Margin Code must be entered when Item Type is Pharmacy.');
+
+            if not "Incl Free Qty in Sale Rate" then
+                Error(
+                    'Incl Free Qty in Sale Rate must be enabled when Item Type is Pharmacy.');
+
+            if not "Sale Discount Allow" then
+                Error(
+                    'Sale Discount Allow must be enabled when Item Type is Pharmacy.');
+
+            if not "Sale Returnable Item" then
+                Error(
+                    'Sale Returnable Item must be enabled when Item Type is Pharmacy.');
+        end;
+    end;
+
 }

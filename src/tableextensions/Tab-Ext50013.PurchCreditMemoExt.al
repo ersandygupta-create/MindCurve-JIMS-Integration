@@ -43,5 +43,10 @@ tableextension 50013 "E3 HIS Purch. Credit Memo" extends "Purch. Cr. Memo Hdr."
             Caption = 'Print Caption';
             DataClassification = CustomerContent;
         }
+        field(50020; Sync; Boolean)
+        {
+            Caption = 'Sync';
+            DataClassification = CustomerContent;
+        }
     }
 }

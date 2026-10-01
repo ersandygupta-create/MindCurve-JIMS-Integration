@@ -33,7 +33,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
             field("Advance PO"; Rec."Advance PO")
             {
                 ApplicationArea = All;
-                Editable = CanEditCustomFields;
+                //Editable = CanEditCustomFields;
                 ToolTip = 'Specifies the value of the Advance PO field';
             }
             field("Advance PO Count"; Rec."Advance PO Count")

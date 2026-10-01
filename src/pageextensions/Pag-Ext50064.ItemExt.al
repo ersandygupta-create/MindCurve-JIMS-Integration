@@ -23,6 +23,14 @@ pageextension 50064 "Item Ext" extends "Item Card"
         {
             ShowMandatory = true;
         }
+        modify("Gen. Prod. Posting Group")
+        {
+            editable = false;
+        }
+        modify("Inventory Posting Group")
+        {
+            editable = false;
+        }
         addafter(Description)
         {
             field(Name; Rec.Name)
@@ -149,6 +157,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 field("Medicine Manufacturer Code"; Rec."Medicine Manufacturer Code")
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the value of Medicine Manufacturer Code field.';
                 }
                 field("Medicine Manufacturer Name"; Rec."Medicine Manufacturer Name")
@@ -258,6 +267,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 {
                     ApplicationArea = All;
                     ShowMandatory = true;
+                    Editable = false;
                     ToolTip = 'Specifies the value of E3 Margin Name field.';
                 }
                 field("Manual Code"; Rec."Manual Code")
@@ -527,6 +537,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 {
                     ApplicationArea = All;
                     Caption = 'Margin Code';
+                    //ShowMandatory = true;
                     ToolTip = 'Specifies the margin code for the item.';
                 }
                 field("Margin Amount"; Rec."Margin Amount")
@@ -572,7 +583,8 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     begin
                         // Get the vendor record for this address
                         if ItemRec.Get(Rec."No.") then
-                            E3IntegrationMgmt.ManualSendToJIMS(ItemRec);
+                            ItemRec.CheckMandatoryFields();
+                        E3IntegrationMgmt.ManualSendToJIMS(ItemRec);
                         ItemRec."Item Sync Status" := true;
                         ItemRec.Modify(true);
                     end;
@@ -643,8 +655,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     begin
         Rec.TestField("Base Unit of Measure");
-        //Rec.TestField("GST Group Code");
-        //Rec.TestField("HSN/SAC Code");
+        Rec.CheckMandatoryFields();
         exit(true);
     end;
 

@@ -111,9 +111,11 @@ report 50002 "GST Sales Invoice Print"
 
             }
             column(Customer_GST_Reg__No_; GSTNoCust)
-
             {
 
+            }
+            column(Customer_PAN_No; CustomerPANNo)
+            {
             }
             column(State; State)
             {
@@ -253,6 +255,9 @@ report 50002 "GST Sales Invoice Print"
             {
             }
             column(AwardText; AwardText)
+            {
+            }
+            column(VoucherTypeCaption; VoucherTypeCaption)
             {
             }
             column(CustomerTINSELL; '')// CustomerRec."T.I.N. No.")
@@ -544,6 +549,7 @@ report 50002 "GST Sales Invoice Print"
                             Cust_rec.Reset();
                             Cust_rec.SetRange("No.", "Sales Invoice Line"."Bill-to Customer No.");
                             if Cust_rec.FindFirst() then begin
+                                CustomerPANNo := Cust_rec."P.A.N. No.";
                                 CustPostRec.Reset();
                                 CustPostRec.SetRange(Code, Cust_rec."Customer Posting Group");
                                 if CustPostRec.FindFirst() then
@@ -687,6 +693,13 @@ report 50002 "GST Sales Invoice Print"
                 SIL: Record "SALES INVOICE LINE";
                 SalesCommentLine: Record "Sales Comment Line";
             begin
+                Clear(VoucherTypeCaption);
+
+                VoucherTypeRec.Reset();
+                VoucherTypeRec.SetRange(Code, "Sales Header"."Voucher Type");
+
+                if VoucherTypeRec.FindFirst() then
+                    VoucherTypeCaption := VoucherTypeRec."Print Caption";
                 SaleComment := '';
                 SalesCommentLine.SetRange("Document Type", SalesCommentLine."Document Type"::"Posted Invoice");
                 SalesCommentLine.SetRange("No.", "Sales Header"."No.");
@@ -1004,7 +1017,7 @@ report 50002 "GST Sales Invoice Print"
         IGST18: Decimal;
         IGST28: Decimal;
         fromFunction: Boolean;
-
+        CustomerPANNo: Code[10];
         IGST_recrate: Decimal;
         Qrinstream: InStream;
         qrboolean: Boolean;
@@ -1087,6 +1100,8 @@ report 50002 "GST Sales Invoice Print"
         BankAccountNo: Code[50];
         IFSCCode: Code[20];
         Branch: Text[50];
+        VoucherTypeRec: Record "E3 Voucher Type";
+        VoucherTypeCaption: Text[100];
 
     procedure SetType(LocalSalesType: Text)
     begin

@@ -262,17 +262,20 @@ page 50169 "E3 GRN Work Sheet"
                 {
                     ApplicationArea = All;
                     Caption = 'Sale Rate';
+                    ShowMandatory = true;
                     ToolTip = 'Specifies the sale rate.';
                 }
                 field(skuSaleRate; Rec."SKU Sale Rate")
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true;
                     Caption = 'SKU Sale Rate';
                     ToolTip = 'Specifies the SKU sale rate.';
                 }
                 field(staffSaleRate; Rec."Staff Sale Rate")
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true;
                     Caption = 'Staff Sale Rate';
                     ToolTip = 'Specifies the staff sale rate.';
                 }

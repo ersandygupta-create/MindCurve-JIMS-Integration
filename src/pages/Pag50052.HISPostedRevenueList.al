@@ -52,7 +52,7 @@ page 50052 "E3 Posted HIS Revenue List"
                 field(Discount; Rec.Discount)
                 {
                     ApplicationArea = All;
-                    Caption = 'Discount';
+                    Caption = 'Round Off';
                     ToolTip = 'Specifies the value of the Discount field.';
                 }
                 field("Tax Amount"; Rec."Tax Amount")

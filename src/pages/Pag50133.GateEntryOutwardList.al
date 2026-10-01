@@ -7,7 +7,7 @@ page 50133 "E3 Gate Entry Outward List"
     CardPageId = "E3 Gate Entry Outward Header";
     InsertAllowed = false;
     SourceTable = "E3 Gate Entry Header";
-    SourceTableView = sorting("Entry No.") where("Entry Type" = filter(Outward));
+    SourceTableView = sorting("Document No.") where("Entry Type" = filter(Outward));
     UsageCategory = Lists;
 
     layout

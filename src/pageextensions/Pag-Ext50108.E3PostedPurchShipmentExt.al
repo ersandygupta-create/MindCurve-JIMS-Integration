@@ -17,7 +17,10 @@ pageextension 50108 "E3 Posted Purch. Ship Ext" extends "Posted Return Shipments
                 var
                     HISIntegrationMgt: Codeunit "E3 Purch. Shipment Cons. Mgmt.";
                 begin
-                    // Validate selected shipment
+
+                    if not Rec.Sync then
+                        Error('Purchase Return %1 cannot be sent because Sync Boolean is False.', Rec."No.");
+
                     if Rec."No." = '' then
                         Error('Posted Return Shipments No. cannot be blank.');
                     HISIntegrationMgt.SendPurchaseShipmentDetails(Rec."No.");

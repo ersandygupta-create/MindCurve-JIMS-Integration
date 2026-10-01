@@ -229,16 +229,16 @@ table 50013 "E3 Gate Entry Header"
         if "Posting Date" = 0D then
             "Posting Date" := WorkDate();
 
-        if "Document No." = '' then begin
-            PurchasesPayablesSetup.Get();
-            PurchasesPayablesSetup.TestField("Gate Entry Nos.");
+        // if "Document No." = '' then begin
+        //     PurchasesPayablesSetup.Get();
+        //     PurchasesPayablesSetup.TestField("Gate Entry Nos.");
 
-            Rec."No. Series" := PurchasesPayablesSetup."Gate Entry Nos.";
+        //     Rec."No. Series" := PurchasesPayablesSetup."Gate Entry Nos.";
 
-            "Document No." :=
-                NoSeries.GetNextNo(Rec."No. Series", WorkDate(), true);
+        //     "Document No." :=
+        //         NoSeries.GetNextNo(Rec."No. Series", WorkDate(), true);
 
-        end;
+        //end;
     end;
 
     // trigger OnModify()
@@ -249,5 +249,25 @@ table 50013 "E3 Gate Entry Header"
     //             'Gate Pass %1 is pending approval and cannot be modified.',
     //             Rec."Document No.");
     // end;
+
+    procedure AssistEdit(GateEntryHeader: Record "E3 Gate Entry Header"): Boolean
+    var
+        PurchasesPayablesSetup: Record "Purchases & Payables Setup";
+        NoSeries: Codeunit "No. Series";
+    begin
+        PurchasesPayablesSetup.Get();
+        PurchasesPayablesSetup.TestField("Gate Entry Nos.");
+
+        if NoSeries.LookupRelatedNoSeries(
+            PurchasesPayablesSetup."Gate Entry Nos.",
+            GateEntryHeader."No. Series",
+            "No. Series")
+        then begin
+            "Document No." := NoSeries.GetNextNo("No. Series", Today, true);
+            exit(true);
+        end;
+
+        exit(false);
+    end;
 
 }

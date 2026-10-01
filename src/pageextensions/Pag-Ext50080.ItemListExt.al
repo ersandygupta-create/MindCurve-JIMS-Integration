@@ -45,6 +45,24 @@ pageextension 50080 "E3 Item List Ext" extends "Item List"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the Composition Name for the item.';
             }
+            field("Category Name"; Rec."Category Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Category Name';
+                ToolTip = 'Specifies the category name of the item.';
+            }
+            field("Medicine SubCategory Name"; Rec."Medicine SubCategory Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Medicine SubCategory Name';
+                ToolTip = 'Specifies the medicine subcategory name of the item.';
+            }
+            field("Item Type Name"; Rec."Item Type Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Item Type Name';
+                ToolTip = 'Specifies the item type name of the item.';
+            }
         }
     }
 
