@@ -75,7 +75,7 @@ page 50156 "E3 Indent Line API"
                 {
                     Caption = 'Item Make Code';
                 }
-                field(remarks; Rec.Remarks)
+                field(remarks; Rec."Quotation Remarks")
                 {
                     Caption = 'Remarks';
                 }

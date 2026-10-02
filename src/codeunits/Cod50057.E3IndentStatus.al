@@ -39,6 +39,7 @@ codeunit 50057 "E3 Indent Status Mgmt."
         JsonResponse: Text;
         ResponseMsg: Text;
         J: Integer;
+        HasData: Boolean;
     begin
         E3APISetup.Get();
 
@@ -53,29 +54,50 @@ codeunit 50057 "E3 Indent Status Mgmt."
         // =========================
         // REQUEST BODY (ARRAY FORMAT)
         // =========================
-        Clear(ItemObj);
+        Clear(ItemArray);
 
-        EntryNoText := Format(IndentLineUpdateLog."Entry No.");
-        if CopyStr(EntryNoText, 1, 4) = IndentLineUpdateLog."Shortcut Dimension 1 Code" then
-            EntryNoText := CopyStr(EntryNoText, 5)
-        else
-            if CopyStr(EntryNoText, 1, 3) = IndentLineUpdateLog."Shortcut Dimension 1 Code" then
-                EntryNoText := CopyStr(EntryNoText, 4);
+        IndentLine.Reset();
+        IndentLine.SetRange("Document No.", IndentLineUpdateLog."Document No.");
+        IndentLine.SetRange(IsSent, false);
+        IndentLine.SetFilter("Short Qty Requisition", '<>%1', 0);
+        if IndentLine.FindSet() then begin
+            repeat
+                Clear(ItemObj);
 
-        ItemObj.Add('docId', EntryNoText);
-        ItemObj.Add('v_SNo', Format(IndentLineUpdateLog."Line No."));
-        ItemObj.Add('businessUnitCode', IndentLineUpdateLog."Shortcut Dimension 1 Code");
-        ItemObj.Add('itemCode', IndentLineUpdateLog."No.");
-        ItemObj.Add('dm_itemCode', 0);
-        ItemObj.Add('status', format(IndentLineUpdateLog.Remarks));
-        ItemObj.Add('remark', IndentLineUpdateLog.Remarks);
-        ItemObj.Add('uom', IndentLineUpdateLog."Unit of Measure");
-        ItemObj.Add('qty', IndentLineUpdateLog."Approved Qty");
-        ItemObj.Add('indentnumber', IndentLineUpdateLog."Document No.");
-        ItemObj.Add('indentserialnumber', IndentLineUpdateLog."Entry No.");
+                EntryNoText := Format(IndentLine."Entry No.");
+
+                if CopyStr(EntryNoText, 1,
+                    StrLen(IndentLine."Shortcut Dimension 1 Code")
+                ) = IndentLine."Shortcut Dimension 1 Code" then
+                    EntryNoText :=
+                        CopyStr(
+                            EntryNoText,
+                            StrLen(IndentLine."Shortcut Dimension 1 Code") + 1
+                        );
+                ItemObj.Add('docId', EntryNoText);
+                ItemObj.Add('v_SNo', Format(IndentLine."Line No."));
+                ItemObj.Add('businessUnitCode', IndentLine."Shortcut Dimension 1 Code");
+                ItemObj.Add('itemCode', IndentLine."No.");
+                ItemObj.Add('dm_itemCode', 0);
+                ItemObj.Add('status', 'Short Qty');
+                ItemObj.Add('remark', IndentLine.Remarks);
+                ItemObj.Add('uom', IndentLine."Unit of Measure");
+                ItemObj.Add('qty', IndentLine."Short Qty Requisition");
+                ItemObj.Add('indentnumber', IndentLine."Document No.");
+                ItemObj.Add('indentserialnumber', Format(IndentLine."Entry No."));
+
+                ItemArray.Add(ItemObj);
+
+                HasData := true;
+
+            until IndentLine.Next() = 0;
+        end;
+
+        if not HasData then
+            exit(false);
 
 
-        ItemArray.Add(ItemObj);
+        //ItemArray.Add(ItemObj);
 
         Clear(RootObj);
         RootObj.Add('header', ItemArray);
