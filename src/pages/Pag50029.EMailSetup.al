@@ -26,6 +26,11 @@ page 50029 "E3 HIS E-Mail Setup"
                         ToolTip = 'Specifies the value of the Order Report ID field';
                         ApplicationArea = All;
                     }
+                    field("PR Order Report ID:"; Rec."PR Order Report ID")
+                    {
+                        ToolTip = 'Specifies the value of the PR Order Report ID field';
+                        ApplicationArea = All;
+                    }
                 }
                 group("CC E-Mail")
                 {
@@ -62,6 +67,16 @@ page 50029 "E3 HIS E-Mail Setup"
             group("Order EMail Body")
             {
                 field("Order E-Mail Body"; Rec."Order E-Mail Body")
+                {
+                    ApplicationArea = Basic, Suite;
+                    ShowCaption = false;
+                    Editable = true;
+                    MultiLine = true;
+                }
+            }
+            group("PR Order EMail Body")
+            {
+                field("PR Order E-Mail Body"; Rec."PR Order E-Mail Body")
                 {
                     ApplicationArea = Basic, Suite;
                     ShowCaption = false;

@@ -45,6 +45,10 @@ pageextension 50057 "E3 HIS Purchase Order List" extends "Purchase Order List"
 
                     if PurchaseHeader.FindSet() then
                         repeat
+                            if PurchaseHeader."Document Type" <> PurchaseHeader."Document Type"::Order then
+                                Error(
+                                    'Document %1 is not a Purchase Order.',
+                                    PurchaseHeader."No.");
                             if PurchaseHeader."E3 Send E-Mail" then
                                 Error(
                                     'Purchase Order %1 mail already sent.',

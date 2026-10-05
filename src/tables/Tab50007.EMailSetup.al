@@ -43,6 +43,17 @@ table 50007 "E3 HIS E-Mail Setup"
             Caption = 'Order E-Mail Body';
             DataClassification = CustomerContent;
         }
+        field(8; "PR Order Report ID"; Integer)
+        {
+            Caption = 'PR Order Report ID';
+            TableRelation = AllObjWithCaption."Object ID" WHERE("Object Type" = CONST(Report));
+            DataClassification = CustomerContent;
+        }
+        field(9; "PR Order E-Mail Body"; Text[1000])
+        {
+            Caption = 'PROrder E-Mail Body';
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

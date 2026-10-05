@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-10-01T11:18:38.5166099Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-10-05T06:21:30.0964862Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -2130,7 +2130,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!LineAmount_SalesLine.Value - (Fields!LineDiscountAmount_SalesLine.Value+Fields!CGSTAmt.Value+Fields!SGSTAmt.Value+Fields!IGSTAmt.Value)</Value>
+                                                    <Value>=Fields!LineAmount_SalesLine.Value</Value>
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>6pt</FontSize>
@@ -2418,7 +2418,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Sum(Fields!LineAmount_SalesLine.Value)-(Sum(Fields!Line_Discount_Amount.Value)+Sum(Fields!CGSTAmt.Value)+Sum(Fields!SGSTAmt.Value)+Sum(Fields!IGSTAmt.Value))</Value>
+                                                    <Value>=Sum(Fields!LineAmount_SalesLine.Value)</Value>
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>6pt</FontSize>
@@ -3459,7 +3459,7 @@
                                                             <Paragraph>
                                                               <TextRuns>
                                                                 <TextRun>
-                                                                  <Value>=sum(IIf(((Fields!LineAmount_SalesLine.Value-ABS(Fields!Line_Discount_Amount.Value))+Fields!CGSTAmt.Value+Fields!SGSTAmt.Value+Fields!IGSTAmt.Value)&lt;&gt;0,((Fields!LineAmount_SalesLine.Value-ABS(Fields!Line_Discount_Amount.Value))+Fields!CGSTAmt.Value+Fields!SGSTAmt.Value+Fields!IGSTAmt.Value)," "))</Value>
+                                                                  <Value>=sum(Fields!LineAmount_SalesLine.Value)</Value>
                                                                   <Style>
                                                                     <FontFamily>Tahoma</FontFamily>
                                                                     <FontSize>6pt</FontSize>
@@ -4728,7 +4728,7 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                       <Value>=First(Fields!LocationName.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>14pt</FontSize>
+                        <FontSize>11pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -4751,7 +4751,7 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                       <Value>=First(Fields!LocationName2.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>8pt</FontSize>
+                        <FontSize>7pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -4774,7 +4774,7 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                       <Value>=First(Fields!LocationName3.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>8pt</FontSize>
+                        <FontSize>7pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -4797,7 +4797,7 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                       <Value>=First(Fields!LocAddress.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>8pt</FontSize>
+                        <FontSize>7pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -4819,7 +4819,7 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                       <Value>="PAN : " &amp; First(Fields!CompInfoPANNo.Value, "DataSet_Result") &amp; ", " &amp; "GST No. : " &amp; First(Fields!CompInfoGSTRegNo.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>8pt</FontSize>
+                        <FontSize>7pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -4840,7 +4840,21 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                       <Value>="Ph. No. : "+First(Fields!PhoneNo.Value, "DataSet_Result")+" ,E-mail : "+First(Fields!Email.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
+                        <FontSize>6pt</FontSize>
+                      </Style>
+                    </TextRun>
+                    <TextRun>
+                      <Value xml:space="preserve"> </Value>
+                      <Style>
+                        <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
+                      </Style>
+                    </TextRun>
+                    <TextRun>
+                      <Value>="DL No. : " &amp; First(Fields!LocDLNo.Value, "DataSet_Result")</Value>
+                      <Style>
+                        <FontFamily>Tahoma</FontFamily>
+                        <FontSize>6pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -4865,7 +4879,7 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
               </Paragraphs>
               <Top>0.19466in</Top>
               <Left>0.09383cm</Left>
-              <Height>0.84361in</Height>
+              <Height>0.94083in</Height>
               <Width>7.91837in</Width>
               <Style>
                 <Border>
@@ -4909,7 +4923,7 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                       <Value>  Invoice Date. : </Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>7pt</FontSize>
+                        <FontSize>6pt</FontSize>
                         <Format>dd MMM yyyy</Format>
                       </Style>
                     </TextRun>
@@ -4917,7 +4931,7 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                       <Value>=First(Fields!PostingDate.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>7pt</FontSize>
+                        <FontSize>6pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <Format>dd-MM-yyyy</Format>
                       </Style>
@@ -4926,9 +4940,9 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                   <Style />
                 </Paragraph>
               </Paragraphs>
-              <Top>1.23896in</Top>
+              <Top>1.28063in</Top>
               <Left>0.0316in</Left>
-              <Height>0.15972in</Height>
+              <Height>0.11805in</Height>
               <Width>4.18565in</Width>
               <ZIndex>1</ZIndex>
               <Style>
@@ -5206,14 +5220,14 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                       <Value>  Invoice No. </Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>7pt</FontSize>
+                        <FontSize>6pt</FontSize>
                       </Style>
                     </TextRun>
                     <TextRun>
                       <Value>=":  "+Code.GetData(2,1)</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>7pt</FontSize>
+                        <FontSize>6pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -5221,9 +5235,9 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                   <Style />
                 </Paragraph>
               </Paragraphs>
-              <Top>1.03827in</Top>
+              <Top>1.13549in</Top>
               <Left>0.0316in</Left>
-              <Height>0.20069in</Height>
+              <Height>0.14513in</Height>
               <Width>4.18565in</Width>
               <ZIndex>7</ZIndex>
               <Style>
@@ -5231,26 +5245,6 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                   <Style>Solid</Style>
                   <Width>0.75pt</Width>
                 </Border>
-                <TopBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </TopBorder>
-                <BottomBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </BottomBorder>
-                <LeftBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </LeftBorder>
-                <RightBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </RightBorder>
                 <VerticalAlign>Middle</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
@@ -5894,14 +5888,14 @@ Value</Value>
                       <Value>  Posting Date. </Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>7pt</FontSize>
+                        <FontSize>6pt</FontSize>
                       </Style>
                     </TextRun>
                     <TextRun>
                       <Value>=First(Fields!Posting_Date.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>7pt</FontSize>
+                        <FontSize>6pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <Format>dd-MM-yyyy</Format>
                       </Style>
@@ -5910,9 +5904,9 @@ Value</Value>
                   <Style />
                 </Paragraph>
               </Paragraphs>
-              <Top>1.23896in</Top>
+              <Top>1.28063in</Top>
               <Left>4.21725in</Left>
-              <Height>0.15972in</Height>
+              <Height>0.11805in</Height>
               <Width>3.73807in</Width>
               <ZIndex>19</ZIndex>
               <Style>
@@ -5920,26 +5914,6 @@ Value</Value>
                   <Style>Solid</Style>
                   <Width>0.75pt</Width>
                 </Border>
-                <TopBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </TopBorder>
-                <BottomBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </BottomBorder>
-                <LeftBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </LeftBorder>
-                <RightBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </RightBorder>
                 <VerticalAlign>Middle</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
@@ -5958,14 +5932,14 @@ Value</Value>
                       <Value>  Ext Document Date. </Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>7pt</FontSize>
+                        <FontSize>6pt</FontSize>
                       </Style>
                     </TextRun>
                     <TextRun>
                       <Value>=First(Fields!PostingDate.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>7pt</FontSize>
+                        <FontSize>6pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <Format>dd-MM-yyyy</Format>
                       </Style>
@@ -5984,26 +5958,6 @@ Value</Value>
                   <Style>Solid</Style>
                   <Width>0.75pt</Width>
                 </Border>
-                <TopBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </TopBorder>
-                <BottomBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </BottomBorder>
-                <LeftBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </LeftBorder>
-                <RightBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </RightBorder>
                 <VerticalAlign>Middle</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
@@ -6021,14 +5975,14 @@ Value</Value>
                       <Value>  Ext. Document No. </Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>7pt</FontSize>
+                        <FontSize>6pt</FontSize>
                       </Style>
                     </TextRun>
                     <TextRun>
-                      <Value>=":"+code.getdata(65,1)</Value>
+                      <Value>=": "+ code.getdata(65,1)</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>7pt</FontSize>
+                        <FontSize>6pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
@@ -6036,9 +5990,9 @@ Value</Value>
                   <Style />
                 </Paragraph>
               </Paragraphs>
-              <Top>1.03827in</Top>
-              <Left>4.21725in</Left>
-              <Height>0.20069in</Height>
+              <Top>1.13549in</Top>
+              <Left>4.21727in</Left>
+              <Height>0.14513in</Height>
               <Width>3.73807in</Width>
               <ZIndex>21</ZIndex>
               <Style>
@@ -6046,26 +6000,6 @@ Value</Value>
                   <Style>Solid</Style>
                   <Width>0.75pt</Width>
                 </Border>
-                <TopBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </TopBorder>
-                <BottomBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </BottomBorder>
-                <LeftBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </LeftBorder>
-                <RightBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </RightBorder>
                 <VerticalAlign>Middle</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
@@ -7113,6 +7047,9 @@ nZkzZ2aRd9hAS1FTgBQkN6m0AQQIyZU14ZGLhx56qHXjjTdmkWmDAZh3vaPnrFmzKtLIOoD0gazs1QZ1
         </Field>
         <Field Name="LocationName3">
           <DataField>LocationName3</DataField>
+        </Field>
+        <Field Name="LocDLNo">
+          <DataField>LocDLNo</DataField>
         </Field>
         <Field Name="LocationGSTNo">
           <DataField>LocationGSTNo</DataField>

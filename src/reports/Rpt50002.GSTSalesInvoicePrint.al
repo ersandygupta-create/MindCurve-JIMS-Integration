@@ -69,6 +69,7 @@ report 50002 "GST Sales Invoice Print"
             column(LocationName; LocationName) { }
             column(LocationName2; LocationName2) { }
             column(LocationName3; LocationName3) { }
+            column(LocDLNo; LocDLNo) { }
             column(LocationGSTNo; LocationGSTNo)
             {
 
@@ -757,6 +758,7 @@ report 50002 "GST Sales Invoice Print"
                 LocationName3 := LocationRec."Name 3";
                 LocationGSTNo := LocationRec."GST Registration No.";
                 LocAddress := LocationRec.Address + ',' + LocationRec."Address 2" + ',' + LocationRec.City + ' ,' + LocationRec."Post Code";
+                LocDLNo := LocationRec."W/S DL No.";
                 Clear(ShipStateName);
                 Clear(BillStateName);
                 Clear(GSTCodeBill);
@@ -1073,8 +1075,8 @@ report 50002 "GST Sales Invoice Print"
         LocationName: Text[100];
         LocationName2: Text[100];
         LocationName3: Text[100];
+        LocDLNo: Text[60];
         predisc: Decimal;
-
         Generalled_rec: Record "General Ledger Setup";
         schdisc: Decimal;
         repldisc: Decimal;

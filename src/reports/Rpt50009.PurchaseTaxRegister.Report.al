@@ -425,6 +425,7 @@ report 50009 "Purchase Tax Register"
         ExcelBuf.AddColumn("Purch. Inv. Line"."Shortcut Dimension 2 Code", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//Dimension2
         ExcelBuf.AddColumn("Purch. Inv. Line"."Document No.", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//Document No
         ExcelBuf.AddColumn("Purch. Inv. Line"."Receipt No.", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddColumn(PurchInvHeader."Document Date", false, '', false, false, false, '', ExcelBuf."Cell Type"::Date);
         PurchInvHeader.Get("Purch. Inv. Line"."Document No.");
 
         ExcelBuf.AddColumn('Purchase Invoice', false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//Document Type
@@ -433,28 +434,90 @@ report 50009 "Purchase Tax Register"
         ChrItemNo := '';
         OrigianlDocNo := '';
         OrigianlDocDate := 0D;
-        DetailedGSTLedgerEntry.Reset;
-        DetailedGSTLedgerEntry.SetRange("Entry Type", DetailedGSTLedgerEntry."Entry Type"::"Initial Entry");
-        DetailedGSTLedgerEntry.SetRange("Transaction Type", DetailedGSTLedgerEntry."Transaction Type"::Purchase);
-        DetailedGSTLedgerEntry.SetRange("Document Type", DetailedGSTLedgerEntry."Document Type"::Invoice);
-        DetailedGSTLedgerEntry.SetRange("Document No.", "Purch. Inv. Line"."Document No.");
-        DetailedGSTLedgerEntry.SetRange("Document Line No.", "Purch. Inv. Line"."Line No.");
-        if DetailedGSTLedgerEntry.FindSet then
-            OrigianlDocDate := DetailedGSTLedgerEntry."Posting Date";
-        OrigianlDocNo := DetailedGSTLedgerEntry."Original Invoice No.";
-        if (DetailedGSTLedgerEntry."GST Component Code" = 'CGST') or (DetailedGSTLedgerEntry."GST Component Code" = 'IGST') or (DetailedGSTLedgerEntry."GST Component Code" = 'SGST') then
-            ChrItemNo := DetailedGSTLedgerEntry."No.";
 
-        if "Purch. Inv. Line".Type = "Purch. Inv. Line".Type::"Charge (Item)" then
-            ExcelBuf.AddColumn(ChrItemNo, false, '', false, false, false, '', ExcelBuf."Cell Type"::Text)//ItemNo
-        else
-            ExcelBuf.AddColumn("Purch. Inv. Line"."No.", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//ItemNo
+        DetailedGSTLedgerEntry.Reset();
+        DetailedGSTLedgerEntry.SetRange(
+            "Entry Type",
+            DetailedGSTLedgerEntry."Entry Type"::"Initial Entry"
+        );
+        DetailedGSTLedgerEntry.SetRange(
+            "Transaction Type",
+            DetailedGSTLedgerEntry."Transaction Type"::Purchase
+        );
+        DetailedGSTLedgerEntry.SetRange(
+            "Document Type",
+            DetailedGSTLedgerEntry."Document Type"::Invoice
+        );
+        DetailedGSTLedgerEntry.SetRange(
+            "Document No.",
+            "Purch. Inv. Line"."Document No."
+        );
+        DetailedGSTLedgerEntry.SetRange(
+            "Document Line No.",
+            "Purch. Inv. Line"."Line No."
+        );
+
+        if DetailedGSTLedgerEntry.FindSet() then begin
+            repeat
+                if OrigianlDocDate = 0D then
+                    OrigianlDocDate := DetailedGSTLedgerEntry."Posting Date";
+
+                if OrigianlDocNo = '' then
+                    OrigianlDocNo := DetailedGSTLedgerEntry."Original Invoice No.";
+
+                if (DetailedGSTLedgerEntry."GST Component Code" = 'CGST') or
+                   (DetailedGSTLedgerEntry."GST Component Code" = 'IGST') or
+                   (DetailedGSTLedgerEntry."GST Component Code" = 'SGST') or
+                   (DetailedGSTLedgerEntry."GST Component Code" = 'UTGST') then begin
+                    if ChrItemNo = '' then
+                        ChrItemNo := DetailedGSTLedgerEntry."No.";
+                end;
+            until DetailedGSTLedgerEntry.Next() = 0;
+        end;
 
         if "Purch. Inv. Line".Type = "Purch. Inv. Line".Type::"Charge (Item)" then begin
-            if Item.Get(ChrItemNo) then
-                ExcelBuf.AddColumn(Item.Description + '' + Item."Description 2", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text)//ItemName
-        end else
-            ExcelBuf.AddColumn("Purch. Inv. Line".Description + '' + "Purch. Inv. Line"."Description 2", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//ItemName
+            if ChrItemNo <> '' then
+                ExcelBuf.AddColumn(
+                    ChrItemNo,
+                    false, '', false, false, false, '',
+                    ExcelBuf."Cell Type"::Text
+                )
+            else
+                ExcelBuf.AddColumn(
+                    "Purch. Inv. Line"."No.",
+                    false, '', false, false, false, '',
+                    ExcelBuf."Cell Type"::Text
+                );
+        end
+        else
+            ExcelBuf.AddColumn(
+                "Purch. Inv. Line"."No.",
+                false, '', false, false, false, '',
+                ExcelBuf."Cell Type"::Text
+            );
+
+        if "Purch. Inv. Line".Type = "Purch. Inv. Line".Type::"Charge (Item)" then begin
+            if (ChrItemNo <> '') and Item.Get(ChrItemNo) then
+                ExcelBuf.AddColumn(
+                    Item.Description + ' ' + Item."Description 2",
+                    false, '', false, false, false, '',
+                    ExcelBuf."Cell Type"::Text
+                )
+            else
+                ExcelBuf.AddColumn(
+                    "Purch. Inv. Line".Description + ' ' +
+                    "Purch. Inv. Line"."Description 2",
+                    false, '', false, false, false, '',
+                    ExcelBuf."Cell Type"::Text
+                );
+        end
+        else
+            ExcelBuf.AddColumn(
+                "Purch. Inv. Line".Description + ' ' +
+                "Purch. Inv. Line"."Description 2",
+                false, '', false, false, false, '',
+                ExcelBuf."Cell Type"::Text
+            );
 
         ExcelBuf.AddColumn(("Purch. Inv. Line"."Posting Date"), false, '', false, false, false, '', ExcelBuf."Cell Type"::Date);//Posting Date
         IF PurchInvHeader."Vendor Invoice No." <> '' then
@@ -653,6 +716,7 @@ report 50009 "Purchase Tax Register"
         ExcelBuf.AddColumn("Purch. Cr. Memo Line"."Shortcut Dimension 2 Code", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//Dimension2
         ExcelBuf.AddColumn("Purch. Cr. Memo Line"."Document No.", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//Document No
         ExcelBuf.AddColumn("Purch. Cr. Memo Line"."Return Shipment No.", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddColumn(PurchCrMemoHdr."Document Date", false, '', false, false, false, '', ExcelBuf."Cell Type"::Date);//Doc Date
         PurchCrMemoHdr.Get("Purch. Cr. Memo Line"."Document No.");
 
         ExcelBuf.AddColumn('Purchase Credit Note', false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//Document Type
@@ -661,28 +725,90 @@ report 50009 "Purchase Tax Register"
         ChrItemNo := '';
         OrigianlDocNo := '';
         OrigianlDocDate := 0D;
-        DetailedGSTLedgerEntry.Reset;
-        DetailedGSTLedgerEntry.SetRange("Entry Type", DetailedGSTLedgerEntry."Entry Type"::"Initial Entry");
-        DetailedGSTLedgerEntry.SetRange("Transaction Type", DetailedGSTLedgerEntry."Transaction Type"::Purchase);
-        DetailedGSTLedgerEntry.SetRange("Document Type", DetailedGSTLedgerEntry."Document Type"::"Credit Memo");
-        DetailedGSTLedgerEntry.SetRange("Document No.", "Purch. Cr. Memo Line"."Document No.");
-        DetailedGSTLedgerEntry.SetRange("Document Line No.", "Purch. Cr. Memo Line"."Line No.");
-        if DetailedGSTLedgerEntry.FindSet then
-            OrigianlDocDate := DetailedGSTLedgerEntry."Posting Date";
-        OrigianlDocNo := DetailedGSTLedgerEntry."Original Invoice No.";
-        if (DetailedGSTLedgerEntry."GST Component Code" = 'CGST') or (DetailedGSTLedgerEntry."GST Component Code" = 'IGST') or (DetailedGSTLedgerEntry."GST Component Code" = 'SGST') then
-            ChrItemNo := DetailedGSTLedgerEntry."No.";
 
-        if "Purch. Cr. Memo Line".Type = "Purch. Cr. Memo Line".Type::"Charge (Item)" then
-            ExcelBuf.AddColumn(ChrItemNo, false, '', false, false, false, '', ExcelBuf."Cell Type"::Text)//ItemNo
-        else
-            ExcelBuf.AddColumn("Purch. Cr. Memo Line"."No.", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//ItemNo
+        DetailedGSTLedgerEntry.Reset();
+        DetailedGSTLedgerEntry.SetRange(
+            "Entry Type",
+            DetailedGSTLedgerEntry."Entry Type"::"Initial Entry"
+        );
+        DetailedGSTLedgerEntry.SetRange(
+            "Transaction Type",
+            DetailedGSTLedgerEntry."Transaction Type"::Purchase
+        );
+        DetailedGSTLedgerEntry.SetRange(
+            "Document Type",
+            DetailedGSTLedgerEntry."Document Type"::"Credit Memo"
+        );
+        DetailedGSTLedgerEntry.SetRange(
+            "Document No.",
+            "Purch. Cr. Memo Line"."Document No."
+        );
+        DetailedGSTLedgerEntry.SetRange(
+            "Document Line No.",
+            "Purch. Cr. Memo Line"."Line No."
+        );
+
+        if DetailedGSTLedgerEntry.FindSet() then begin
+            repeat
+                if OrigianlDocDate = 0D then
+                    OrigianlDocDate := DetailedGSTLedgerEntry."Posting Date";
+
+                if OrigianlDocNo = '' then
+                    OrigianlDocNo := DetailedGSTLedgerEntry."Original Invoice No.";
+
+                if (DetailedGSTLedgerEntry."GST Component Code" = 'CGST') or
+                   (DetailedGSTLedgerEntry."GST Component Code" = 'IGST') or
+                   (DetailedGSTLedgerEntry."GST Component Code" = 'SGST') or
+                   (DetailedGSTLedgerEntry."GST Component Code" = 'UTGST') then begin
+                    if ChrItemNo = '' then
+                        ChrItemNo := DetailedGSTLedgerEntry."No.";
+                end;
+            until DetailedGSTLedgerEntry.Next() = 0;
+        end;
 
         if "Purch. Cr. Memo Line".Type = "Purch. Cr. Memo Line".Type::"Charge (Item)" then begin
-            if Item.Get(ChrItemNo) then
-                ExcelBuf.AddColumn(Item.Description + '' + Item."Description 2", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text)//ItemName
-        end else
-            ExcelBuf.AddColumn("Purch. Cr. Memo Line".Description + '' + "Purch. Cr. Memo Line"."Description 2", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//ItemName
+            if ChrItemNo <> '' then
+                ExcelBuf.AddColumn(
+                    ChrItemNo,
+                    false, '', false, false, false, '',
+                    ExcelBuf."Cell Type"::Text
+                )
+            else
+                ExcelBuf.AddColumn(
+                    "Purch. Cr. Memo Line"."No.",
+                    false, '', false, false, false, '',
+                    ExcelBuf."Cell Type"::Text
+                );
+        end
+        else
+            ExcelBuf.AddColumn(
+                "Purch. Cr. Memo Line"."No.",
+                false, '', false, false, false, '',
+                ExcelBuf."Cell Type"::Text
+            );
+
+        if "Purch. Cr. Memo Line".Type = "Purch. Cr. Memo Line".Type::"Charge (Item)" then begin
+            if (ChrItemNo <> '') and Item.Get(ChrItemNo) then
+                ExcelBuf.AddColumn(
+                    Item.Description + ' ' + Item."Description 2",
+                    false, '', false, false, false, '',
+                    ExcelBuf."Cell Type"::Text
+                )
+            else
+                ExcelBuf.AddColumn(
+                    "Purch. Cr. Memo Line".Description + ' ' +
+                    "Purch. Cr. Memo Line"."Description 2",
+                    false, '', false, false, false, '',
+                    ExcelBuf."Cell Type"::Text
+                );
+        end
+        else
+            ExcelBuf.AddColumn(
+                "Purch. Cr. Memo Line".Description + ' ' +
+                "Purch. Cr. Memo Line"."Description 2",
+                false, '', false, false, false, '',
+                ExcelBuf."Cell Type"::Text
+            );
 
         ExcelBuf.AddColumn(("Purch. Cr. Memo Line"."Posting Date"), false, '', false, false, false, '', ExcelBuf."Cell Type"::Date);//Posting Date
         IF PurchCrMemoHdr."Vendor Cr. Memo No." <> '' then

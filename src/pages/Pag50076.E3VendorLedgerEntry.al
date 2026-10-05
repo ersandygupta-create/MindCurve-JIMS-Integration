@@ -707,11 +707,27 @@ page 50076 "E3 Vendor Ledger Entries"
     end;
 
     trigger OnOpenPage()
+    var
+        UserSetup: Record "User Setup";
+        ResponsibilityCenter: Record "Responsibility Center";
     begin
         UpdateAmountToPay();
         Rec.SetFilter("Due Date", '..%1', Today());
         Rec.SetRange("On Hold", '');
         rec.CalcFields("Remaining Amount");
+
+        if not UserSetup.Get(UserId) then
+            exit;
+
+        if UserSetup."Purchase Resp. Ctr. Filter" = '' then
+            exit;
+        if ResponsibilityCenter.Get(UserSetup."Purchase Resp. Ctr. Filter") then begin
+            if ResponsibilityCenter."Global Dimension 1 Code" <> '' then
+                Rec.SetRange(
+                    "Global Dimension 1 Code",
+                    ResponsibilityCenter."Global Dimension 1 Code"
+                );
+        end;
     end;
 
     local procedure UpdateAmountToPay()

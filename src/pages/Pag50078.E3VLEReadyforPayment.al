@@ -470,7 +470,7 @@ page 50078 "E3 VLE Ready for Payment"
 
                     //ExportPaymentFile.Run();
                     VendorLedgerEntry.SetRange("Ready for Payment", true);
-                    //CurrPage.SetSelectionFilter(VendorLedgerEntry);//ak
+                    CurrPage.SetSelectionFilter(VendorLedgerEntry);//ak
                     if CreatePayment.RunModal() = ACTION::OK then begin
                         CreatePayment.MakeGenJnlLines(VendorLedgerEntry);
                         GetBatchRecords(GenJournalBatch, CreatePayment);
@@ -702,6 +702,26 @@ page 50078 "E3 VLE Ready for Payment"
 
         }
     }
+    trigger OnOpenPage()
+    var
+        UserSetup: Record "User Setup";
+        ResponsibilityCenter: Record "Responsibility Center";
+    begin
+        if not UserSetup.Get(UserId) then
+            exit;
+
+        if UserSetup."Purchase Resp. Ctr. Filter" = '' then
+            exit;
+
+        if ResponsibilityCenter.Get(UserSetup."Purchase Resp. Ctr. Filter") then begin
+            if ResponsibilityCenter."Global Dimension 1 Code" <> '' then
+                Rec.SetRange(
+                    "Global Dimension 1 Code",
+                    ResponsibilityCenter."Global Dimension 1 Code"
+                );
+        end;
+    end;
+
     var
         CalcRunningVendBalance: Codeunit "Calc. Running Vend. Balance";
         Navigate: Page Navigate;
