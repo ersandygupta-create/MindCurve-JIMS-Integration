@@ -125,6 +125,12 @@ report 50021 "Purchase Invoice Print GST"
                     column(CompanyInfoBankAccNo; CompanyInfo."Bank Account No.")
                     {
                     }
+                    column(Location_Name; LocationName) { }
+                    column(Location_Name2; LocationName2) { }
+                    column(Location_Name3; LocationName3) { }
+                    column(Location_Address; LocationAddress) { }
+                    column(Location_PhoneNo; LocationPhoneNo) { }
+                    column(Location_Email; LocationEmail) { }
                     column(PayVendNo_PurchInvHeader; "Purch. Inv. Header"."Pay-to Vendor No.")
                     {
                     }
@@ -371,6 +377,9 @@ report 50021 "Purchase Invoice Print GST"
                         {
                         }
                         column(LineNo_PurchInvLine; "Purch. Inv. Line"."Line No.")
+                        {
+                        }
+                        column(GSTGroupCode; "Purch. Inv. Line"."GST Group Code")
                         {
                         }
                         column(AllowVATDisctxt; AllowVATDisctxt)
@@ -781,6 +790,23 @@ report 50021 "Purchase Invoice Print GST"
                 IsGSTApplicable := CheckGSTDoc("Purch. Inv. Line");
                 Vendor.Get("Buy-from Vendor No.");
 
+                Clear(LocationName);
+                Clear(LocationName2);
+                Clear(LocationName3);
+                Clear(LocationAddress);
+                Clear(LocationPhoneNo);
+                Clear(LocationEmail);
+
+                if "Location Code" <> '' then
+                    if Location.Get("Location Code") then begin
+                        LocationName := Location.Name;
+                        LocationName2 := Location."Name 2";
+                        LocationName3 := Location."Name 3";
+                        LocationAddress := Location.Address + ', ' + Location."Address 2" + ', ' + Location.City + ', ' + Location."Post Code";
+                        LocationPhoneNo := Location."Phone No.";
+                        LocationEmail := Location."E-Mail";
+                    end;
+
                 if RespCenter.Get("Responsibility Center") then begin
                     FormatAddr.RespCenter(CompanyAddr, RespCenter);
                     CompanyInfo."Phone No." := RespCenter."Phone No.";
@@ -1066,6 +1092,13 @@ report 50021 "Purchase Invoice Print GST"
         VendorBankIFSC: Code[20];
         VendorBankSWIFT: Code[20];
         VendorBankAccount: Record "Vendor Bank Account";
+        Location: Record Location;
+        LocationName2: Text[100];
+        LocationName3: Text[100];
+        LocationName: Text[100];
+        LocationAddress: Text[100];
+        LocationPhoneNo: Text[30];
+        LocationEmail: Text[80];
 
     procedure InitializeRequest(NewNoOfCopies: Integer; NewShowInternalInfo: Boolean; NewLogInteraction: Boolean)
     begin

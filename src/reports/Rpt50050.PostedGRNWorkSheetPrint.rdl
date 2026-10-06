@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-30T11:45:46.2659931Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-10-06T07:28:11.6746059Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -113,7 +113,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>GOODS RECEIPT NOTE (GRN)</Value>
+                    <Value>GRN WORK SHEET</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontWeight>Bold</FontWeight>
@@ -669,7 +669,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>PO Date             </Value>
+                    <Value>Challan No.      </Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -735,7 +735,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Challan No.         </Value>
+                    <Value />
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -872,11 +872,10 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!Voucher_Date.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!Purchase_Challan_No.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
-                      <Format>dd-MMM-yy</Format>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -943,7 +942,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!Purchase_Challan_No.Value, "DataSet_Result")</Value>
+                    <Value />
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -1021,7 +1020,7 @@
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.25in</Height>
+                  <Height>0.20833in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -1541,7 +1540,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.25in</Height>
+                  <Height>0.1875in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -3144,7 +3143,7 @@
             <DataSetName>DataSet_Result</DataSetName>
             <Top>2.34374in</Top>
             <Left>0in</Left>
-            <Height>2in</Height>
+            <Height>1.89583in</Height>
             <Width>7.5729in</Width>
             <ZIndex>27</ZIndex>
             <Style>
@@ -3640,7 +3639,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>:  </Value>
+                    <Value xml:space="preserve">  </Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>

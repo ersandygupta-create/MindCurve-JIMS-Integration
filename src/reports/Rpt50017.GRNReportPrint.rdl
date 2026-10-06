@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-08T13:02:31.9100148Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-10-06T07:30:06.6696739Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -735,7 +735,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Capex Type         :</Value>
+                    <Value>Challan No           :</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -3421,6 +3421,9 @@ End Function
         </Field>
         <Field Name="DelTerms">
           <DataField>DelTerms</DataField>
+        </Field>
+        <Field Name="VendorInvoiceNo">
+          <DataField>VendorInvoiceNo</DataField>
         </Field>
         <Field Name="VedrEmail">
           <DataField>VedrEmail</DataField>

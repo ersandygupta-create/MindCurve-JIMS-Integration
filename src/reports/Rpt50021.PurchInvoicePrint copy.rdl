@@ -4540,14 +4540,13 @@
         <Height>8.51729cm</Height>
         <Style />
       </Body>
-      <Width>17.88758cm</Width>
+      <Width>18.82244cm</Width>
       <Page>
         <PageHeader>
-          <Height>6.91332cm</Height>
+          <Height>6.36651cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <ReportItems>
             <Textbox Name="PurchInvHeaderVATRegNo1">
-              <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
               <Paragraphs>
                 <Paragraph>
@@ -4588,9 +4587,6 @@
               <Height>22.31581pt</Height>
               <Width>5.78512cm</Width>
               <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
                 <VerticalAlign>Middle</VerticalAlign>
               </Style>
             </Textbox>
@@ -4763,7 +4759,6 @@
               </Style>
             </Textbox>
             <Textbox Name="ShipmentMethodDesc2">
-              <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
               <Paragraphs>
                 <Paragraph>
@@ -4798,9 +4793,6 @@
               <Width>5.8084cm</Width>
               <ZIndex>5</ZIndex>
               <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
                 <VerticalAlign>Middle</VerticalAlign>
                 <PaddingRight>0.0625in</PaddingRight>
               </Style>
@@ -5283,7 +5275,6 @@
               </Style>
             </Textbox>
             <Textbox Name="ShipmentMethodDesc4">
-              <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
               <Paragraphs>
                 <Paragraph>
@@ -5314,7 +5305,7 @@
               </Paragraphs>
               <Top>5.67937cm</Top>
               <Left>3.22836cm</Left>
-              <Height>26.47798pt</Height>
+              <Height>19.47798pt</Height>
               <Width>5.84749cm</Width>
               <ZIndex>14</ZIndex>
               <Style>
@@ -5351,7 +5342,7 @@
               </Paragraphs>
               <Top>5.67584cm</Top>
               <Left>0.05001cm</Left>
-              <Height>26.57805pt</Height>
+              <Height>19.57805pt</Height>
               <Width>3.17835cm</Width>
               <ZIndex>15</ZIndex>
               <Style>
@@ -5621,7 +5612,7 @@
               </Paragraphs>
               <Top>5.66095cm</Top>
               <Left>9.07157cm</Left>
-              <Height>27.00013pt</Height>
+              <Height>20.00013pt</Height>
               <Width>3.0506cm</Width>
               <ZIndex>22</ZIndex>
               <Style>
@@ -5673,7 +5664,7 @@
               </Paragraphs>
               <Top>5.66907cm</Top>
               <Left>12.12217cm</Left>
-              <Height>26.76995pt</Height>
+              <Height>19.76995pt</Height>
               <Width>5.75549cm</Width>
               <ZIndex>23</ZIndex>
               <Style>

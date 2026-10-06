@@ -660,6 +660,11 @@ table 50062 "E3 GRN Work Sheet"
             Caption = 'Receipt Created';
             DataClassification = CustomerContent;
         }
+        field(18136; FOC; Boolean)
+        {
+            Caption = 'FOC';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
@@ -741,6 +746,7 @@ table 50062 "E3 GRN Work Sheet"
                 "GST Jurisdiction Type" := PurchLine."GST Jurisdiction Type";
                 "Item Make Code" := PurchLine."Item Make Code";
                 "Item Make Name" := PurchLine."Item Make Name";
+                FOC := PurchLine.FOC;
                 "GST Type Code" := Format(PurchLine."GST Vendor Type");
                 "Shortcut Dimension 1 Code" := PurchLine."Shortcut Dimension 1 Code";
                 Validate("Department Code", PurchLine."Location Code");
@@ -887,10 +893,14 @@ table 50062 "E3 GRN Work Sheet"
     begin
         "Net Qty Received" := "Receipt Qty" - "Rejected Qty";
 
-        if "Qty. per Unit of Measure" <> 0 then
-            "Rec SKU QTY" := ("Net Qty Received" + "Free Qty") * "Qty. per Unit of Measure"
-        else
-            "Rec SKU QTY" := "Net Qty Received" * "Qty. per Unit of Measure";
+        if FOC then
+            "Rec SKU QTY" := 0
+        else begin
+            if "Qty. per Unit of Measure" <> 0 then
+                "Rec SKU QTY" := ("Net Qty Received" + "Free Qty") * "Qty. per Unit of Measure"
+            else
+                "Rec SKU QTY" := "Net Qty Received" * "Qty. per Unit of Measure";
+        end;
 
         if "Net Qty Received" <> 0 then
             "Line Gross" := Rate * ("Net Qty Received") //ak

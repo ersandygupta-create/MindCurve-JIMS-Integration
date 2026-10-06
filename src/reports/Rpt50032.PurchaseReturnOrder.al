@@ -31,9 +31,9 @@ report 50032 "E3 Purchase Return Order"
             column(Buy_from_Address_2; "Buy-from Address 2") { }
             column(Buy_from_City; "Buy-from City") { }
             column(Buy_from_Post_Code; "Buy-from Post Code") { }
-
             column(Vendor_Invoice_No_; "Vendor Invoice No.") { }
-
+            Column(VendorcrMemoNo; "Vendor Cr. Memo No.") { }
+            column(PrintCaption; "Print Caption") { }
             column(LocationCode; "Location Code") { }
             column(PaymentTermsCode; "Payment Terms Code") { }
 
@@ -92,6 +92,8 @@ report 50032 "E3 Purchase Return Order"
             column(Currency_Code; CdCurrencyCode) { }
             column(PreparedByUserName; PreparedByUserName) { }
             column(ApprovedByUserName; ApprovedByUserName) { }
+            column(DepartmentName; DepartmentName) { }
+            column(PostingDescription; "Posting Description") { }
             dataitem(PurchaseLine; "Purchase Line")
             {
                 DataItemLink =
@@ -111,10 +113,12 @@ report 50032 "E3 Purchase Return Order"
                 column(Quantity; Quantity) { }
                 column(UnitPrice; "Direct Unit Cost") { }
                 column(GST_Group_Code; "GST Group Code") { }
+                column(HSN_SAC_Code; "HSN/SAC Code") { }
                 column(LineDiscountPer; "Line Discount %") { }
                 column(LineDiscountAmount; "Line Discount Amount") { }
                 column(LineAmount; "Line Amount") { }
                 column(Amount; Amount) { }
+                column(Item_Make_Name; "Item make Name") { }
                 column(MRP; MRP) { }
                 column(Batch_No_; "Batch No.") { }
                 column(Expiry_Date; "Expiry Date") { }
@@ -185,29 +189,35 @@ report 50032 "E3 Purchase Return Order"
                 Clear(IGST_Amt);
                 Clear(AmtWords);
 
+                Clear(DepartmentName);
+
+                if GeneralLedgerSetup.Get() then begin
+                    if "Shortcut Dimension 2 Code" <> '' then begin
+                        DimensionValue.Reset();
+                        DimensionValue.SetRange(
+                            "Dimension Code",
+                            GeneralLedgerSetup."Global Dimension 2 Code");
+                        DimensionValue.SetRange(Code, "Shortcut Dimension 2 Code");
+
+                        if DimensionValue.FindFirst() then
+                            DepartmentName := DimensionValue.Name;
+                    end;
+                end;
+
                 Clear(PreparedByUserName);
 
                 if PreparedByUser.Get(SystemCreatedBy) then
                     PreparedByUserName := PreparedByUser."User Name";
 
-                Clear(ApprovedByUserName);
+                ApprovedByUserName := '';
 
                 ApprovalEntry.Reset();
                 ApprovalEntry.SetRange("Table ID", Database::"Purchase Header");
                 ApprovalEntry.SetRange("Document No.", "No.");
-                ApprovalEntry.SetRange("Document Type", "Document Type");
                 ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-                ApprovalEntry.SetCurrentKey("Sequence No.");
-                ApprovalEntry.SetAscending("Sequence No.", false);
-
-                if ApprovalEntry.FindFirst() then begin
-                    Clear(ApprovedByUser);
-
-                    if ApprovedByUser.Get(ApprovalEntry."Approver ID") then
-                        ApprovedByUserName := ApprovedByUser."User Name"
-                    else
-                        ApprovedByUserName := ApprovalEntry."Approver ID";
-                end;
+                if ApprovalEntry.FindLast() then
+                    ApprovedByUserName := ApprovalEntry."Last Modified By User ID";
+                //end;
 
                 decAmountoVendor := 0;
 
@@ -349,6 +359,9 @@ report 50032 "E3 Purchase Return Order"
         ApprovalEntry: Record "Approval Entry";
         PreparedByUser: Record User;
         ApprovedByUser: Record User;
+        GeneralLedgerSetup: Record "General Ledger Setup";
+        DimensionValue: Record "Dimension Value";
+        DepartmentName: Text[100];
 
 
     local procedure GetGSTAmounts(PurchHeader: Record "Purchase Header")
@@ -426,6 +439,7 @@ report 50032 "E3 Purchase Return Order"
             GSTRoundingPrecision := 1;
         exit(GSTRoundingPrecision);
     end;
+
 
 
 }

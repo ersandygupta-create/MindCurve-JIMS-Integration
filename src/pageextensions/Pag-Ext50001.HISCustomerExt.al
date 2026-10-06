@@ -11,6 +11,11 @@ pageextension 50001 "E3 HIS Customer Card" extends "Customer Card"
                 Style = StrongAccent;
                 StyleExpr = true;
             }
+            field("DL No."; Rec."DL No.")
+            {
+                ApplicationArea = All;
+                toolTip = 'Specifies the value of the DL No. field';
+            }
         }
     }
 

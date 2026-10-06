@@ -56,6 +56,9 @@ report 50017 "GRN Report Print"
             column(DelTerms; "Purch. Rcpt. Header"."E3 Delivery Terms")
             {
             }
+            column("VendorInvoiceNo"; "Purch. Rcpt. Header"."Vendor Invoice No.")
+            {
+            }
             column(VedrEmail; Vendor."E-Mail")
             {
             }

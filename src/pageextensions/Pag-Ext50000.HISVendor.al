@@ -35,6 +35,7 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
             field("DL No."; Rec."DL No.")
             {
                 ApplicationArea = All;
+                toolTip = 'Specifies the value of the DL No. field';
             }
         }
         addafter(Name)

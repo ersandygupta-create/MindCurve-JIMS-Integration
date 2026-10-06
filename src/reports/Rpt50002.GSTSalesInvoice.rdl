@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-10-05T06:21:30.0964862Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-10-06T07:51:38.2518785Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -1629,6 +1629,7 @@
                                         <CellContents>
                                           <Textbox Name="Description_SalesInvoiceLine2">
                                             <rd:DefaultName>Description_SalesInvoiceLine</rd:DefaultName>
+                                            <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
@@ -1675,8 +1676,10 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
+                                          <rd:Selected>true</rd:Selected>
                                           <Textbox Name="UnitofMeasure_SalesInvoiceLine3">
                                             <rd:DefaultName>UnitofMeasure_SalesInvoiceLine</rd:DefaultName>
+                                            <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
@@ -2130,7 +2133,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!LineAmount_SalesLine.Value</Value>
+                                                    <Value>=Fields!Quantity.Value * Fields!UnitPrice.Value</Value>
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>6pt</FontSize>
@@ -2418,7 +2421,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Sum(Fields!LineAmount_SalesLine.Value)</Value>
+                                                    <Value>=sum(Fields!Quantity.Value * Fields!UnitPrice.Value)</Value>
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>6pt</FontSize>
@@ -3285,10 +3288,11 @@
                                                             <Paragraph>
                                                               <TextRuns>
                                                                 <TextRun>
-                                                                  <Value>=Sum(Fields!LineAmount_SalesLine.Value)</Value>
+                                                                  <Value>=sum(Fields!Quantity.Value * Fields!UnitPrice.Value)</Value>
                                                                   <Style>
                                                                     <FontFamily>Tahoma</FontFamily>
                                                                     <FontSize>6pt</FontSize>
+                                                                    <FontWeight>Normal</FontWeight>
                                                                     <Format>#,##0.00</Format>
                                                                   </Style>
                                                                 </TextRun>
@@ -3807,7 +3811,7 @@
                                                             <Paragraph>
                                                               <TextRuns>
                                                                 <TextRun>
-                                                                  <Value>=Fields!amounttoCustomer.Value</Value>
+                                                                  <Value>=sum(Fields!Quantity.Value * Fields!UnitPrice.Value) - sum(Fields!Line_Discount_Amount.Value) + sum(Fields!CGSTAmt.Value+Fields!IGSTAmt.Value+Fields!SGSTAmt.Value)</Value>
                                                                   <Style>
                                                                     <FontFamily>Tahoma</FontFamily>
                                                                     <FontSize>6pt</FontSize>
