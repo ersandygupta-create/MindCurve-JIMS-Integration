@@ -57,7 +57,8 @@ codeunit 50057 "E3 Indent Status Mgmt."
         Clear(ItemArray);
 
         IndentLine.Reset();
-        IndentLine.SetRange("Document No.", IndentLineUpdateLog."Document No.");
+        IndentLine.SetRange("Purchase Order No.", IndentLineUpdateLog."Purchase Order No.");
+        //IndentLine.SetRange("Line No.", IndentLineUpdateLog."Line No.");
         IndentLine.SetRange(IsSent, false);
         //IndentLine.SetFilter("Short Qty Requisition", '<>%1', 0);
         if IndentLine.FindSet() then //begin
@@ -79,10 +80,26 @@ codeunit 50057 "E3 Indent Status Mgmt."
                 ItemObj.Add('businessUnitCode', IndentLine."Shortcut Dimension 1 Code");
                 ItemObj.Add('itemCode', IndentLine."No.");
                 ItemObj.Add('dm_itemCode', 0);
-                ItemObj.Add('status', GetIndentStatus(IndentLine));
-                ItemObj.Add('remark', GetIndentRemark(IndentLine));
+                if (IndentLine."Purchase Order No." <> '') and
+                (IndentLine."Short Qty Requisition" = 0) and
+                (IndentLine.Remarks = 'PO Qty') and
+                (IndentLine."Qty Per Purch. Unit of Measure" <> 0) then begin
+
+                    ItemObj.Add('status', 'Completed');
+                    ItemObj.Add(
+                        'remark',
+                        Format(IndentLine."Qty Per Purch. Unit of Measure") +
+                        ' * Qty Per Purch. Unit of Measure ' +
+                        Format(IndentLine."Requested Qty") +
+                        ' PO QTY'
+                    );
+                end
+                else begin
+                    ItemObj.Add('status', GetIndentStatus(IndentLine));
+                    ItemObj.Add('remark', GetIndentRemark(IndentLine));
+                end;
                 ItemObj.Add('uom', IndentLine."Unit of Measure");
-                ItemObj.Add('qty', (IndentLine."Requested Qty") - (IndentLine."Short Qty Requisition"));
+                ItemObj.Add('qty', GetIndentQty(IndentLine));
                 ItemObj.Add('indentnumber', IndentLine."Document No.");
                 ItemObj.Add('indentserialnumber', Format(IndentLine."Entry No."));
 
@@ -186,73 +203,35 @@ codeunit 50057 "E3 Indent Status Mgmt."
 
 
     local procedure GetIndentRemark(var IndentLine: Record "E3 Indent Line"): Text
-    var
-        ConversionShortQty: Decimal;
-        POQty: Decimal;
-        FreeQty: Decimal;
-        QtyPerPurchUnit: Decimal;
     begin
-        // CASE 1: FULL
         if (IndentLine."Purchase Order No." <> '') and
            (IndentLine."Short Qty Requisition" = 0) and
-           (IndentLine.Remarks <> 'PO Qty') and
-           (IndentLine.Remarks <> 'Free Qty') then
-            exit('Full');
+           (IndentLine.Remarks = 'PO Qty') and
+           (IndentLine."Qty Per Purch. Unit of Measure" <> 0) then
+            exit('Qty Per Purch. Unit of Measure * Requested QTY PO QTY');
 
-        // CASE 2: PO QTY + SHORTCLOSE QTY
-        if (IndentLine."Purchase Order No." <> '') and
-           (IndentLine."Short Qty Requisition" > 0) and
-           (IndentLine.Remarks <> 'PO Qty') and
-           (IndentLine.Remarks <> 'Free Qty') then
-            exit(
-                Format(IndentLine."PO Qty") +
-                ' PO Qty + ' +
-                Format(IndentLine."Short Qty Requisition") +
-                ' Shortclose Qty'
-            );
-
-
-        // CASE 3: PO QTY
-        if (IndentLine."Purchase Order No." <> '') and
-           (IndentLine.Remarks = 'PO Qty') then begin
-
-            ConversionShortQty := IndentLine."Short Qty Requisition";
-            POQty := IndentLine."PO Qty";
-            QtyPerPurchUnit := IndentLine."Qty Per Purch. Unit of Measure";
-
-            exit(
-                Format(ConversionShortQty) +
-                ' Conversion Short Qty + ' +
-                Format(POQty) +
-                '*' +
-                Format(QtyPerPurchUnit) +
-                ' PO Qty'
-            );
-        end;
-
-
-        // CASE 4: FREE QTY
-        if (IndentLine."Purchase Order No." <> '') and
-           (IndentLine.Remarks = 'Free Qty') then begin
-
-            ConversionShortQty := IndentLine."Short Qty Requisition";
-            POQty := IndentLine."PO Qty";
-            FreeQty := IndentLine."Requested Qty";
-            QtyPerPurchUnit := IndentLine."Qty Per Purch. Unit of Measure";
-
-            exit(
-                Format(ConversionShortQty) +
-                ' Conversion Short Qty + ' +
-                Format(POQty) +
-                '*' +
-                Format(QtyPerPurchUnit) +
-                ' PO Qty + ' +
-                Format(FreeQty) +
-                '*' +
-                Format(QtyPerPurchUnit) +
-                ' Free Qty'
-            );
-        end;
         exit(IndentLine.Remarks);
+    end;
+
+    local procedure GetIndentQty(var IndentLine: Record "E3 Indent Line"): Decimal
+    var
+        IndentLine2: Record "E3 Indent Line";
+        TotalQty: Decimal;
+    begin
+        TotalQty := IndentLine."Requested Qty";
+
+        if IndentLine.Remarks = 'Free Qty' then begin
+            IndentLine2.Reset();
+            IndentLine2.SetRange("Purchase Order No.", IndentLine."Purchase Order No.");
+            //IndentLine2.SetRange("No.", IndentLine."No.");
+            IndentLine2.SetRange(Remarks, 'Free Qty');
+
+            if IndentLine2.FindSet() then
+                repeat
+                    TotalQty += IndentLine2."Requested Qty";
+                until IndentLine2.Next() = 0;
+        end;
+
+        exit(TotalQty);
     end;
 }
