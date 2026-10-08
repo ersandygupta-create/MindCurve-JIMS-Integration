@@ -581,6 +581,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         TotalQty: Decimal;
         FirstIndentLine: Record "E3 Indent Line";
     begin
+
         // 1. Initial base filters
         IndentLine.Reset();
         IndentLine.SetRange("Released Stock Issue Purchase", true);
@@ -588,7 +589,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         IndentLine.SetRange("PO Created", false);
 
         // 2. Handle blank ItemMakeCode scenario
-        if ItemMakeCode = '' then begin
+        if ((ItemMakeCode = '') AND (PurchHeader."Blank Make Code" = false)) then begin
             if IndentLine.FindFirst() then begin
                 ItemMakeCode := IndentLine."Item Make Code";
 
@@ -609,7 +610,9 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         IndentLine.SetRange("PO Created", false);
 
         if ItemMakeCode <> '' then
-            IndentLine.SetRange("Item Make Code", ItemMakeCode);
+            IndentLine.SetRange("Item Make Code", ItemMakeCode)
+        else
+            indentline.SetRange("Item Make Code", '');
 
         if IndentLine.IsEmpty() then
             Error('No indent lines are available for grouping.');
