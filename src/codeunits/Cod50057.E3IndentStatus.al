@@ -89,7 +89,7 @@ codeunit 50057 "E3 Indent Status Mgmt."
                     ItemObj.Add(
                         'remark',
                         Format(IndentLine."Qty Per Purch. Unit of Measure") +
-                        ' * Qty Per Purch. Unit of Measure ' +
+                        ' Qty Per Purch. Unit of Measure *' +
                         Format(IndentLine."Requested Qty") +
                         ' PO QTY'
                     );

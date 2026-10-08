@@ -683,7 +683,7 @@ table 50062 "E3 GRN Work Sheet"
             "GRN Date" := Today;
 
         if "V Prefix" = '' then
-            "V Prefix" := CopyStr(Format(Date2DMY("GRN Date", 3)), 3, 2);
+            "V Prefix" := CopyStr(Format(Date2DMY(Today(), 3)), 3, 2);
 
         //Rec.TestField("Invoice Qty");
         Rec."GRN Date" := WorkDate();

@@ -98,6 +98,7 @@ page 50156 "E3 Indent Line API"
     begin
         if Rec.HasFilter() then begin
             Rec."Document No." := Rec.GetFilter("Document No.");
+            Rec."SNo." := Rec."Line No.";
         end;
     end;
 
@@ -105,6 +106,7 @@ page 50156 "E3 Indent Line API"
     begin
         if Rec.HasFilter() then begin
             Rec."Document No." := Rec.GetFilter("Document No.");
+            Rec."SNo." := Rec."Line No.";
         end;
     end;
 }
