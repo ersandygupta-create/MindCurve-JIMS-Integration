@@ -484,6 +484,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 {
                     ApplicationArea = All;
                     ShowMandatory = true;
+                    Editable = Rec.Status <> Rec.Status::Approved;
                     ToolTip = 'Specifies the value of Packing field.';
                 }
 
@@ -583,7 +584,12 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     begin
                         // Get the vendor record for this address
                         if ItemRec.Get(Rec."No.") then
-                            ItemRec.CheckMandatoryFields();
+                            if ItemRec.Status <> ItemRec.Status::Approved then begin
+                                Error(
+                                    'Item %1 cannot be sent to JIMS because its Status is not Approved.',
+                                    ItemRec."No.");
+                            end;
+                        ItemRec.CheckMandatoryFields();
                         E3IntegrationMgmt.ManualSendToJIMS(ItemRec);
                         ItemRec."Item Sync Status" := true;
                         ItemRec.Modify(true);

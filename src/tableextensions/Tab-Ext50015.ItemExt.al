@@ -793,7 +793,6 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Formulary Drug';
             DataClassification = CustomerContent;
         }
-
         field(50101; "Non-Formulary"; Boolean)
         {
             Caption = 'Non-Formulary';
@@ -804,19 +803,16 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Anti TB';
             DataClassification = CustomerContent;
         }
-
         field(50103; Antibiotic; Boolean)
         {
             Caption = 'Antibiotic';
             DataClassification = CustomerContent;
         }
-
         field(50104; Capex; Boolean)
         {
             Caption = 'Capex';
             DataClassification = CustomerContent;
         }
-
         field(50105; "PO Mandatory"; Boolean)
         {
             Caption = 'PO Mandatory';
@@ -867,7 +863,10 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Item Sync Status';
             DataClassification = CustomerContent;
         }
-
+        field(50113; Status; Enum "Approval Status")
+        {
+            Caption = 'Status';
+        }
     }
     trigger OnBeforeRename()
     begin

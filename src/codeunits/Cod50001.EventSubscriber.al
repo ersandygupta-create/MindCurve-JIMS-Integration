@@ -666,4 +666,28 @@ codeunit 50001 "E3 HIS Event Subscriber"
         Item.CheckMandatoryFields();
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnApproveApprovalRequest', '', false, false)]
+    local procedure OnApproveApprovalRequest(var ApprovalEntry: Record "Approval Entry")
+    var
+        RecRef: RecordRef;
+        Item: Record Item;
+    begin
+        if ApprovalEntry.Status <> ApprovalEntry.Status::Approved then
+            exit;
+
+        if not RecRef.Get(ApprovalEntry."Record ID to Approve") then
+            exit;
+
+        if RecRef.Number <> Database::Item then
+            exit;
+
+        RecRef.SetTable(Item);
+
+        if Item.Status <> Item.Status::Approved then begin
+            Item.Status := Item.Status::Approved;
+            Item.Modify(true);
+        end;
+    end;
+
+
 }
