@@ -81,9 +81,9 @@ codeunit 50057 "E3 Indent Status Mgmt."
                 ItemObj.Add('itemCode', IndentLine."No.");
                 ItemObj.Add('dm_itemCode', 0);
                 if (IndentLine."Purchase Order No." <> '') and
-                (IndentLine."Short Qty Requisition" = 0) and
-                (IndentLine.Remarks = 'PO Qty') and
-                (IndentLine."Qty Per Purch. Unit of Measure" <> 0) then begin
+   (IndentLine."Short Qty Requisition" = 0) and
+   (IndentLine.Remarks = 'PO Qty') and
+   (IndentLine."Qty Per Purch. Unit of Measure" <> 0) then begin
 
                     ItemObj.Add('status', 'Completed');
                     ItemObj.Add(
@@ -93,11 +93,28 @@ codeunit 50057 "E3 Indent Status Mgmt."
                         Format(IndentLine."Requested Qty") +
                         ' PO QTY'
                     );
-                end
-                else begin
-                    ItemObj.Add('status', GetIndentStatus(IndentLine));
-                    ItemObj.Add('remark', GetIndentRemark(IndentLine));
-                end;
+
+                end else
+                    if (IndentLine."Purchase Order No." <> '') and
+                       (IndentLine."Short Qty Requisition" <> 0) and
+                       (IndentLine.Remarks = 'PO Qty') and
+                       (IndentLine."Qty Per Purch. Unit of Measure" <> 0) then begin
+
+                        ItemObj.Add('status', 'Completed');
+                        ItemObj.Add(
+                            'remark',
+                            Format(IndentLine."Qty Per Purch. Unit of Measure") +
+                            ' Qty Per Purch. Unit of Measure *' +
+                            Format(IndentLine."Requested Qty") +
+                            ' PO QTY + ' +
+                            Format(IndentLine."Short Qty Requisition") +
+                            ' Short Qty'
+                        );
+
+                    end else begin
+                        ItemObj.Add('status', GetIndentStatus(IndentLine));
+                        ItemObj.Add('remark', GetIndentRemark(IndentLine));
+                    end;
                 ItemObj.Add('uom', IndentLine."Unit of Measure");
                 ItemObj.Add('qty', GetIndentQty(IndentLine));
                 ItemObj.Add('indentnumber', IndentLine."Document No.");
