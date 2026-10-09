@@ -63,6 +63,18 @@ pageextension 50080 "E3 Item List Ext" extends "Item List"
                 Caption = 'Item Type Name';
                 ToolTip = 'Specifies the item type name of the item.';
             }
+            field("HSN/SAC Code"; Rec."HSN/SAC Code")
+            {
+                ApplicationArea = All;
+                Caption = 'HSN/SAC Code';
+                ToolTip = 'Specifies the HSN/SAC Code of the item.';
+            }
+            field("Strength Name"; Rec."Strength Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Strength Name';
+                ToolTip = 'Specifies the Strength Name of the item.';
+            }
         }
     }
 
