@@ -70,13 +70,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 ShowMandatory = true;
                 Editable = CanEditCustomFields;
             }
-            field(blankmakecode; Rec."Blank Make Code")
-            {
-                ApplicationArea = All;
-                Caption = 'Blank Make Code';
-                ToolTip = 'Specifies the Blank Make Code.';
-                Editable = true;
-            }
+
         }
         addbefore("No.")
         {

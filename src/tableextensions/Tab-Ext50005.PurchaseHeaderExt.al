@@ -167,11 +167,7 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Caption = 'Item Make Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Make Master".Code where("Make Type" = filter('Medicine/Marketing'));
-            trigger OnValidate()
-            begin
-                if ("Blank Make Code" = true) and ("Item Make Code" <> '') then
-                    Error('Blank Make code should be false');
-            end;
+
         }
         field(50016; "Voucher Type"; Code[20])
         {
@@ -289,16 +285,7 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Caption = 'Submit Doc. No.';
             DataClassification = CustomerContent;
         }
-        field(81104; "Blank Make Code"; boolean)
-        {
-            Caption = 'Blank Make Code';
-            DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                if ("Blank Make Code" = true) and ("Item Make Code" <> '') then
-                    Error('Item Make code should be blank');
-            end;
-        }
+
 
     }
 
