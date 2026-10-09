@@ -572,7 +572,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
     local procedure GroupIndentLines(var ItemMakeCode: Code[20]; PurchHeader: Record "Purchase Header")
     var
         IndentLine: Record "E3 Indent Line";
-        SelectedIndentLine: Record "E3 Indent Line" temporary; // MUST BE TEMPORARY
+        SelectedIndentLine: Record "E3 Indent Line" temporary;
         SelectedLines: Record "E3 Indent Line" temporary;
         CurrentLine: Record "E3 Indent Line" temporary;
         GetGroupingIndentLinesPage: Page "E3 Get Groupping Indent Lines";
@@ -580,67 +580,70 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         GroupKey: Text;
         TotalQty: Decimal;
         FirstIndentLine: Record "E3 Indent Line";
+        CommonMakeCode: Code[20];
+        IsFirstLine: Boolean;
     begin
-
-        // 1. Initial base filters
+        // 1. Initial base filters (DO NOT filter by Item Make Code here)
         IndentLine.Reset();
         IndentLine.SetRange("Released Stock Issue Purchase", true);
         IndentLine.SetFilter(Remarks, 'PO Qty|Free Qty');
         IndentLine.SetRange("PO Created", false);
-
-        // 2. Handle blank ItemMakeCode scenario
-        if ((ItemMakeCode = '') AND (PurchHeader."Blank Make Code" = false)) then begin
-            if IndentLine.FindFirst() then begin
-                ItemMakeCode := IndentLine."Item Make Code";
-
-                // Update Purchase Header with the extracted code
-                PurchHeader.Validate("Item Make Code", ItemMakeCode);
-                PurchHeader.Modify(true);
-            end;
-        end;
+        if PurchHeader."Item Make Code" <> '' then
+            IndentLine.SetRange("Item Make Code", PurchHeader."Item Make Code");
+        if IndentLine.IsEmpty() then
+            Error('No indent lines are available for grouping.');
 
         // Release SQL write lock before running modal page
         CurrPage.SaveRecord();
         Commit();
 
-        // Re-apply base filters AND the Make Code filter
-        IndentLine.Reset();
-        IndentLine.SetRange("Released Stock Issue Purchase", true);
-        IndentLine.SetFilter(Remarks, 'PO Qty|Free Qty');
-        IndentLine.SetRange("PO Created", false);
-
-        if ItemMakeCode <> '' then
-            IndentLine.SetRange("Item Make Code", ItemMakeCode)
-        else
-            indentline.SetRange("Item Make Code", '');
-
-        if IndentLine.IsEmpty() then
-            Error('No indent lines are available for grouping.');
-
-        // 3. Open lookup page showing ONLY filtered records
+        // 2. Open lookup page showing ALL unfiltered records
         GetGroupingIndentLinesPage.SetTableView(IndentLine);
         GetGroupingIndentLinesPage.LookupMode(true);
 
         if GetGroupingIndentLinesPage.RunModal() <> Action::LookupOK then
             exit;
 
-        // 4. Fetch ONLY user-selected lines into the temporary variable
+        // 3. Fetch ONLY user-selected lines into the temporary buffer
         GetGroupingIndentLinesPage.GetSelectedLines(SelectedIndentLine);
 
         if not SelectedIndentLine.FindSet() then
             exit;
 
-        // Copy marked selection into processing buffers
+        // 4. Validate that all selected lines have the exact same Item Make Code
+        IsFirstLine := true;
+        CommonMakeCode := '';
+
         repeat
+            if IsFirstLine then begin
+                CommonMakeCode := SelectedIndentLine."Item Make Code";
+                IsFirstLine := false;
+            end else begin
+                if SelectedIndentLine."Item Make Code" <> CommonMakeCode then
+                    Error('Selected indent lines must have the same Item Make Code. Found different codes: %1 and %2.', CommonMakeCode, SelectedIndentLine."Item Make Code");
+            end;
+
+            // Populate processing buffers
             SelectedLines := SelectedIndentLine;
             SelectedLines.Insert();
             CurrentLine := SelectedIndentLine;
             CurrentLine.Insert();
         until SelectedIndentLine.Next() = 0;
 
+        //  if CommonMakeCode = '' then
+        //    Error('The selected indent lines do not have a valid Item Make Code assigned.');
+
+        // 5. Update Purchase Header with the verified Make Code
+        ItemMakeCode := CommonMakeCode;
+        if (CommonMakeCode <> '') then begin
+            PurchHeader.Validate("Item Make Code", ItemMakeCode);
+            PurchHeader.Modify(true);
+        end;
+
+
         CurrentLine.Reset();
 
-        // 5. Group selected lines by Item No., Description, and Remarks
+        // 6. Group selected lines by Item No., Description, and Remarks
         if CurrentLine.FindSet() then
             repeat
                 GroupKey := CurrentLine."No." + '|' + CurrentLine.Description + '|' + CurrentLine.Remarks;
