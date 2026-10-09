@@ -326,7 +326,16 @@ permissionset 50000 "E3 HIS Permission"
     tabledata "E3 Settlement Process Setup" = RIMD,
     page "E3 Settlement Process Setup" = X,
     table "E3 PO Order Terms & Conditions" = X,
-    tabledata "E3 PO Order Terms & Conditions" = RIMD;
+    tabledata "E3 PO Order Terms & Conditions" = RIMD,
+    table "E3 Pharmacy Sale Header" = X,
+    tabledata "E3 Pharmacy Sale Header" = RIMD,
+    table "E3 Pharmacy Sale Lines" = X,
+    tabledata "E3 Pharmacy Sale Lines" = RIMD,
+    page "E3 Pharmacy Sales List" = X,
+    page "E3 Pharmacy Sales Card" = X,
+    page "E3 Pharmacy Sales Lines" = X,
+    page "E3 Pharmacy Sales API" = X,
+    page "E3 Pharmacy Sales Lines API" = X;
 
 
 

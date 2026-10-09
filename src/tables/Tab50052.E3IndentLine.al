@@ -597,6 +597,7 @@ table 50052 "E3 Indent Line"
     trigger OnModify()
     begin
         UpdateHeaderValues();
+
     end;
 
     local procedure UpdateHeaderValues()

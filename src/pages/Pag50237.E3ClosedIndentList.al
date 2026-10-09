@@ -136,6 +136,13 @@ page 50237 "E3 Closed Indent List"
                     Editable = false;
                     ToolTip = 'Specifies additional remarks for the indent line.';
                 }
+                field(IndentRemarks; Rec."Quotation Remarks")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    Caption = 'Indent Remarks';
+                    ToolTip = 'Specifies additional remarks for the indent line.';
+                }
                 field("Entry No."; Rec."Entry No.")
                 {
                     ApplicationArea = All;

@@ -868,6 +868,30 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         ToolTip = 'Create a Organization Receipt List';
                     }
                 }
+                group("E3 Pharmacy Sales Entries")
+                {
+                    Caption = 'Pharmacy Sales Entries';
+                    action("E3 Pharmacy Sales Invoice")
+                    {
+                        AccessByPermission = TableData "E3 Pharmacy Sale Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Create Pharmacy Sales Entries';
+                        Image = Archive;
+                        RunObject = Page "E3 Pharmacy Sales List";
+                        RunPageMode = Create;
+                        ToolTip = 'Executes the Create Pharmacy Sales Entries action.';
+                    }
+                    action("E3 Created Pharmacy Sales Entries")
+                    {
+                        AccessByPermission = TableData "E3 Pharmacy Sale Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Image = Archive;
+                        RunObject = Page "E3 Posted Pharmacy Sales List";
+                        RunPageMode = Create;
+                        ToolTip = 'Executes the Created Pharmacy Sales action.';
+                        Caption = 'Created Pharmacy Sales Entries';
+                    }
+                }
             }
         }
 

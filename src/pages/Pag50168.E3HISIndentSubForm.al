@@ -101,6 +101,13 @@ page 50168 "E3 HIS Indent Line Subform"
                     ApplicationArea = All;
                     Editable = IsLineEditable;
                 }
+                field(IndentRemarks; Rec."Quotation Remarks")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    Caption = 'Indent Remarks';
+                    ToolTip = 'Specifies additional remarks for the indent line.';
+                }
                 field("Entry No."; Rec."Entry No.")
                 {
                     ApplicationArea = All;
