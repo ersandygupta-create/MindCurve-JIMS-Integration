@@ -660,10 +660,21 @@ codeunit 50001 "E3 HIS Event Subscriber"
         PurchRcptHeader."Vendor Invoice No." := PurchaseHeader."Vendor Invoice No.";
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnSendItemForApproval', '', false, false)]
-    local procedure OnSendItemForApproval(var Item: Record Item)
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnAfterCheckItemApprovalsWorkflowEnabled', '', false, false)]
+    local procedure OnCheckItemApprovalsWorkflowEnabled(var Item: Record Item)
+    var
     begin
+        // 1. Run mandatory fields check
         Item.CheckMandatoryFields();
+
+        // 2. Validate Item Make Code rule
+
     end;
+
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnBeforeSendItemForApproval', '', false, false)]
+    // local procedure OnSendItemForApproval(var Item: Record Item)
+    // begin
+    //     Item.CheckMandatoryFields();
+    // end;
 
 }
