@@ -335,7 +335,14 @@ permissionset 50000 "E3 HIS Permission"
     page "E3 Pharmacy Sales Card" = X,
     page "E3 Pharmacy Sales Lines" = X,
     page "E3 Pharmacy Sales API" = X,
-    page "E3 Pharmacy Sales Lines API" = X;
+    page "E3 Pharmacy Sales Lines API" = X,
+    table "E3 Transfer Header" = X,
+    tabledata "E3 Transfer Header" = RIMD,
+    table "E3 Transfer Line" = X,
+    tabledata "E3 Transfer Line" = RIMD,
+    page "E3 Transfer List" = X,
+    page "E3 Transfer Card" = X,
+    page "E3 Transfer Lines" = X;
 
 
 

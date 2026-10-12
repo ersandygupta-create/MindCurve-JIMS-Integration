@@ -892,6 +892,30 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         Caption = 'Created Pharmacy Sales Entries';
                     }
                 }
+                group("E3 Transfer Entries")
+                {
+                    Caption = 'Transfer Entries';
+                    action("E3 Transfer Entries List")
+                    {
+                        AccessByPermission = TableData "E3 Transfer Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Create Transfer Entries';
+                        Image = Archive;
+                        RunObject = Page "E3 Transfer List";
+                        RunPageMode = Create;
+                        ToolTip = 'Executes the Create Transfer Entries action.';
+                    }
+                    action("E3 Created Transfer Entries")
+                    {
+                        AccessByPermission = TableData "E3 Transfer Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Image = Archive;
+                        RunObject = Page "E3 Posted Transfer List";
+                        RunPageMode = Create;
+                        ToolTip = 'Executes the Created Transfer action.';
+                        Caption = 'Created Transfer Entries';
+                    }
+                }
             }
         }
 
