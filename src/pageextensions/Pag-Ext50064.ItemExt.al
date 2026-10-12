@@ -46,6 +46,12 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 ToolTip = 'Specifies the Composition Name for the item.';
                 Editable = false;
             }
+            field(Status; Rec.Status)
+            {
+                ApplicationArea = All;
+                Editable = false;
+                ToolTip = 'Specifies the Status for the item.';
+            }
         }
         addlast(content)
         {
