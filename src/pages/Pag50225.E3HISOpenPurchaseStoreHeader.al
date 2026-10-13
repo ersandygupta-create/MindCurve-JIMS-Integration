@@ -301,44 +301,30 @@ page 50225 "E3 HIS Receipt Indent Card"
         RCLine: Record "E3 Rate Contract Line";
         IndentLine: Record "E3 Indent Line";
     begin
-        IndentLine.Reset();
-        IndentLine.SetRange("Document No.", Rec."Document No.");
-        IndentLine.SetRange(Type, IndentLine.Type::Item);
+        RCLine.Reset();
 
         if RCLine.FindSet() then
             repeat
                 if RCLine."Product No." <> '' then begin
-                    RCLine.Reset();
-                    RCLine.SetRange("Product No.", IndentLine."No.");
-                    RCLine.SetRange("Make Code", IndentLine."Item Make Code");
-                    RCLine.SetCurrentKey(SystemCreatedAt);
-                    RCLine.SetAscending(SystemCreatedAt, false);
 
-                    if RCLine.FindFirst() then begin
-                        if IndentLine.Remarks = 'Free Qty' then //begin
-                            IndentLine.Validate("Unit Cost", 0);
-                    end else begin
+                    IndentLine.Reset();
+                    IndentLine.SetRange("Document No.", Rec."Document No.");
+                    IndentLine.SetRange(Type, IndentLine.Type::Item);
+                    IndentLine.SetRange("No.", RCLine."Product No.");
+                    IndentLine.SetRange("Item Make Code", RCLine."Make Code");
+                    if IndentLine.FindFirst() then begin
+
                         IndentLine.Validate("Unit Cost", RCLine.Price);
+                        IndentLine.Validate(MRP, RCLine.MRP);
+                        IndentLine.Validate(Scheme, RCLine.Scheme);
+                        IndentLine.Validate("Created PO Qty", RCLine.Quantity);
+                        IndentLine.Validate("Free Qty", RCLine."Free Qty");
+                        IndentLine.Validate("PO Qty", RCLine."PO Qty");
+                        IndentLine."Incl Free Qty in Sale Rate" := RCLine."Incl Free Qty in Sale Rate";
+
+                        IndentLine.Modify(true);
                     end;
-
-                    // IndentLine.Reset();
-                    // IndentLine.SetRange("Document No.", Rec."Document No.");
-                    // IndentLine.SetRange(Type, IndentLine.Type::Item);
-                    // IndentLine.SetRange("No.", RCLine."Product No.");
-                    // IndentLine.SetRange("Item Make Code", RCLine."Make Code");
-                    // if IndentLine.FindFirst() then begin
-
-                    IndentLine.Validate("Unit Cost", RCLine.Price);
-                    IndentLine.Validate(MRP, RCLine.MRP);
-                    IndentLine.Validate(Scheme, RCLine.Scheme);
-                    IndentLine.Validate("Created PO Qty", RCLine.Quantity);
-                    IndentLine.Validate("Free Qty", RCLine."Free Qty");
-                    IndentLine.Validate("PO Qty", RCLine."PO Qty");
-                    IndentLine."Incl Free Qty in Sale Rate" := RCLine."Incl Free Qty in Sale Rate";
-
-                    IndentLine.Modify(true);
                 end;
-            //end;
             until RCLine.Next() = 0;
     end;
 

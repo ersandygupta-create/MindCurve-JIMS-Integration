@@ -305,8 +305,9 @@ page 50134 "E3 Gate Entry Outward Header"
 
     local procedure SetPageEditable()
     begin
-        IsEditable := Rec.Status <> Rec.Status::"Pending Approval";
-        IsEditable := Rec.Status <> Rec.Status::Approved;
+        IsEditable :=
+         (Rec.Status <> Rec.Status::"Pending Approval") and
+         (Rec.Status <> Rec.Status::Approved);
     end;
 
     var
