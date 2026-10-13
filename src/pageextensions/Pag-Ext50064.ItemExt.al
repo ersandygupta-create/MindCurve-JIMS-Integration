@@ -2,6 +2,38 @@ pageextension 50064 "Item Ext" extends "Item Card"
 {
     layout
     {
+        modify(Item)
+        {
+            Editable = IsPageEditable;
+        }
+        modify(Inventory)
+        {
+            Editable = IsPageEditable;
+        }
+        modify("Costs & Posting")
+        {
+            Editable = IsPageEditable;
+        }
+        modify("Prices & Sales")
+        {
+            Editable = IsPageEditable;
+        }
+        modify(Replenishment)
+        {
+            Editable = IsPageEditable;
+        }
+        modify(Planning)
+        {
+            Editable = IsPageEditable;
+        }
+        modify(ItemTracking)
+        {
+            Editable = IsPageEditable;
+        }
+        modify(Warehouse)
+        {
+            Editable = IsPageEditable;
+        }
         modify(Description)
         {
             Editable = false;
@@ -57,6 +89,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
         {
             group("JIMS Attributes")
             {
+                Editable = IsPageEditable;
                 field("Item Type"; Rec."Item Type")
                 {
                     ApplicationArea = All;
@@ -331,6 +364,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
         {
             group("JIMS Other Attributes")
             {
+                Editable = IsPageEditable;
                 field(IsActive; Rec.IsActive)
                 {
                     ApplicationArea = All;
@@ -661,6 +695,32 @@ pageextension 50064 "Item Ext" extends "Item Card"
                     UpdateCompositionName();
                 end;
             }
+            action(ReopenItem)
+            {
+                Caption = 'Reopen';
+                ApplicationArea = All;
+                ToolTip = 'Reopen the approved item and change its status to Created.';
+                Image = ReOpen;
+                Promoted = true;
+                PromotedCategory = Process;
+
+                Enabled = Rec.Status = Rec.Status::Approved;
+
+                trigger OnAction()
+                begin
+                    if Rec.Status <> Rec.Status::Approved then
+                        Error('Only approved items can be reopened.');
+
+                    if Confirm(
+                        'Do you want to reopen this item and change its status to Created?',
+                        false)
+                    then begin
+                        Rec.Status := Rec.Status::Created;
+                        Rec.Modify(true);
+                        CurrPage.Update(false);
+                    end;
+                end;
+            }
         }
     }
 
@@ -703,5 +763,25 @@ pageextension 50064 "Item Ext" extends "Item Card"
         Rec.Modify(true);
 
         CurrPage.Update(false);
+    end;
+
+    trigger OnAfterGetRecord()
+    begin
+        UpdateEditableState();
+    end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        UpdateEditableState();
+    end;
+
+    var
+        IsPageEditable: Boolean;
+
+    local procedure UpdateEditableState()
+    begin
+        IsPageEditable :=
+            (Rec.Status <> Rec.Status::Approved) and
+            (Rec.Status <> Rec.Status::"Pending Approval");
     end;
 }

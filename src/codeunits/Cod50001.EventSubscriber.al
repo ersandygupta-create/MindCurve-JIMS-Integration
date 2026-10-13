@@ -671,15 +671,45 @@ codeunit 50001 "E3 HIS Event Subscriber"
 
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnSendItemForApproval', '', false, false)]
+    local procedure OnSendItemForApproval(var Item: Record Item)
+    var
+        ApprovalEntry: Record "Approval Entry";
+        ItemRecordId: RecordId;
+        HasOpenApproval: Boolean;
+    begin
+        ItemRecordId := Item.RecordId;
+
+        ApprovalEntry.Reset();
+        ApprovalEntry.SetRange("Record ID to Approve", ItemRecordId);
+
+        if ApprovalEntry.FindSet() then begin
+            repeat
+                if ApprovalEntry.Status = ApprovalEntry.Status::Open then
+                    HasOpenApproval := true;
+            until ApprovalEntry.Next() = 0;
+
+            if HasOpenApproval then
+                Item.Status := Item.Status::"Pending Approval"
+            else
+                Item.Status := Item.Status::Approved;
+
+            Item.Modify(true);
+        end else begin
+            // No approval entries found yet; keep the Item pending approval.
+            Item.Status := Item.Status::"Pending Approval";
+            Item.Modify(true);
+        end;
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnApproveApprovalRequest', '', false, false)]
-    local procedure OnApproveApprovalRequest(var ApprovalEntry: Record "Approval Entry")
+    local procedure UpdateItemStatusFromLastApprovalEntry(
+    var ApprovalEntry: Record "Approval Entry")
     var
         RecRef: RecordRef;
         Item: Record Item;
+        LastApprovalEntry: Record "Approval Entry";
     begin
-        if ApprovalEntry.Status <> ApprovalEntry.Status::Approved then
-            exit;
-
         if not RecRef.Get(ApprovalEntry."Record ID to Approve") then
             exit;
 
@@ -688,11 +718,71 @@ codeunit 50001 "E3 HIS Event Subscriber"
 
         RecRef.SetTable(Item);
 
-        if Item.Status <> Item.Status::Approved then begin
-            Item.Status := Item.Status::Approved;
+        // Find the latest approval entry for this Item
+        LastApprovalEntry.Reset();
+        LastApprovalEntry.SetRange(
+            "Record ID to Approve",
+            ApprovalEntry."Record ID to Approve");
+
+        LastApprovalEntry.SetCurrentKey("Entry No.");
+
+        if LastApprovalEntry.FindLast() then begin
+            // Map the latest Approval Entry status to Item status
+            case LastApprovalEntry.Status of
+                LastApprovalEntry.Status::Open:
+                    Item.Status := Item.Status::"Pending Approval";
+
+                LastApprovalEntry.Status::Approved:
+                    Item.Status := Item.Status::Approved;
+
+                LastApprovalEntry.Status::Rejected:
+                    Item.Status := Item.Status::Rejected;
+
+                LastApprovalEntry.Status::Canceled:
+                    Item.Status := Item.Status::Created;
+            end;
+
             Item.Modify(true);
         end;
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnCancelItemApprovalRequest', '', false, false)]
+    local procedure OnCancelItemApprovalRequest(var Item: Record Item)
+    var
+        ApprovalEntry: Record "Approval Entry";
+    begin
+        // Find the approval entries for this Item
+        ApprovalEntry.Reset();
+        ApprovalEntry.SetRange("Record ID to Approve", Item.RecordId);
+        ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Canceled);
 
+        // If an Open approval entry exists after cancellation,
+        // reset the Item status to Created
+        if ApprovalEntry.FindFirst() then begin
+            Item.Status := Item.Status::Created;
+            Item.Modify(true);
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnRejectApprovalRequest', '', false, false)]
+    local procedure UpdateItemStatusOnApprovalRejection(
+        var ApprovalEntry: Record "Approval Entry")
+    var
+        RecRef: RecordRef;
+        Item: Record Item;
+    begin
+        // Get the record for which approval was requested
+        if not RecRef.Get(ApprovalEntry."Record ID to Approve") then
+            exit;
+
+        // Continue only for Item records
+        if RecRef.Number <> Database::Item then
+            exit;
+
+        RecRef.SetTable(Item);
+
+        // Update Item status when approval is rejected
+        Item.Status := Item.Status::Rejected;
+        Item.Modify(true);
+    end;
 }

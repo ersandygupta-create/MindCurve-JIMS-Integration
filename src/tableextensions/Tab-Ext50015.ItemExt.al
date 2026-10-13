@@ -863,7 +863,7 @@ tableextension 50015 "E3 HIS Item" extends Item
             Caption = 'Item Sync Status';
             DataClassification = CustomerContent;
         }
-        field(50113; Status; Enum "Approval Status")
+        field(50113; Status; Enum "E3 Approval Status")
         {
             Caption = 'Status';
         }

@@ -253,5 +253,11 @@ tableextension 50027 "E3 Uset Setup Ext" extends "User Setup"
             Caption = 'Voucher Type Master Editable';
             DataClassification = CustomerContent;
         }
+        field(50048; "Cancel Indent Allowed"; Boolean)
+        {
+            Caption = 'Cancel Indent Allowed';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies whether the user is allowed to cancel indent lines.';
+        }
     }
 }

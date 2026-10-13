@@ -75,6 +75,11 @@ pageextension 50080 "E3 Item List Ext" extends "Item List"
                 Caption = 'Strength Name';
                 ToolTip = 'Specifies the Strength Name of the item.';
             }
+            field(Status; Rec.Status)
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the Status of the item.';
+            }
         }
     }
 

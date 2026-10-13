@@ -1447,6 +1447,20 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
 
                     }
                 }
+                group(AllIndentLineList)
+                {
+                    Caption = 'All Indent Line List';
+                    action("E3 All Indent Line List")
+                    {
+                        AccessByPermission = TableData "E3 Indent Line" = RIMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'All Indent Line List';
+                        Image = List;
+                        RunObject = Page "E3 All Indent List";
+                        RunPageMode = View;
+                        ToolTip = 'Executes the All Indent Line List.';
+                    }
+                }
             }
         }
     }

@@ -248,6 +248,15 @@ page 50206 "E3 Advanced User Control Setup"
                         ToolTip = 'Specifies whether Purchase Disc Agreement is enabled.';
                     }
                 }
+                group(IndentControls)
+                {
+                    Caption = 'Indent Controls';
+                    field("Cancel Indent Allowed"; Rec."Cancel Indent Allowed")
+                    {
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies whether the user is allowed to cancel indent lines.';
+                    }
+                }
             }
         }
     }
