@@ -6,6 +6,7 @@ page 50215 "E3 Organization Receipt List"
     ApplicationArea = All;
     UsageCategory = Lists;
     CardPageId = "E3 Organization Receipt";
+    SourceTableView = where(IsCreated = const(false));
 
     layout
     {

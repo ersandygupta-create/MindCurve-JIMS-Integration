@@ -55,49 +55,41 @@ table 50085 "E3 Bill Application"
         field(10; "Disallowed Reg. Wise"; Decimal)
         {
             Caption = 'Disallowed Reg. Wise';
-            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
         }
         field(11; "Disallowed Billable"; Decimal)
         {
             Caption = 'Disallowed Billable';
-            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
         }
         field(12; "Disallowed Security"; Decimal)
         {
             Caption = 'Disallowed Security';
-            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
         }
         field(13; "TDS Amount"; Decimal)
         {
             Caption = 'TDS Amount';
-            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
         }
         field(14; "Total Received From TPA"; Decimal)
         {
             Caption = 'Total Received From TPA';
-            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
         }
         field(15; "Excess Billable"; Decimal)
         {
             Caption = 'Excess Billable';
-            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
         }
         field(16; "Balance TPA Due"; Decimal)
         {
             Caption = 'Balance TPA Due';
-            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
         }
-        field(17; "Net Received From TPA"; Decimal)
+        field(17; "Med PRF"; Decimal)
         {
-            Caption = 'Net Received From TPA';
-            DecimalPlaces = 0 : 5;
+            Caption = 'Med PRF';
             DataClassification = CustomerContent;
         }
         field(18; "Admission Date"; Date)
@@ -136,6 +128,16 @@ table 50085 "E3 Bill Application"
             Caption = 'Document No.';
             DataClassification = CustomerContent;
             TableRelation = "E3 Organization Receipt";
+        }
+        field(25; "Receipt No."; Code[50])
+        {
+            Caption = 'Receipt No.';
+            DataClassification = CustomerContent;
+        }
+        field(26; "Customer Name"; Text[100])
+        {
+            Caption = 'Customer';
+            DataClassification = CustomerContent;
         }
     }
     keys

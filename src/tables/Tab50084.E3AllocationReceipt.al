@@ -32,27 +32,22 @@ table 50084 "E3 Allocation Receipt"
         {
             Caption = 'Receipt No.';
             DataClassification = CustomerContent;
-            TableRelation = "E3 Organization Receipt"."Document No." where("HIS Document Type" = const('Collection'));
+            // TableRelation = "E3 Organization Receipt"."Document No." where("HIS Document Type" = const('Settlement'));
 
-            trigger OnValidate()
-            var
-                HISStaging: Record "E3 Organization Receipt";
-            begin
-                if "Receipt No." = '' then begin
-                    "Receipt Date" := 0D;
-                    "Receipt Amount" := 0;
-                    exit;
-                end;
+            // trigger OnValidate()
+            // var
+            //     PostedOrgReceipt: Record "E3 Organization Receipt";
+            // begin
+            //     if "Receipt No." = '' then
+            //         exit;
 
-                HISStaging.Reset();
-                HISStaging.SetRange("Document No.", "Receipt No.");
-                HISStaging.SetRange("HIS Document Type", 'Collection');
-
-                if HISStaging.FindFirst() then begin
-                    "Receipt Date" := HISStaging."Document Date";
-                    "Receipt Amount" := HISStaging."Received Amount";
-                end;
-            end;
+            //     if PostedOrgReceipt.Get("Receipt No.") then begin
+            //         // Automatically fill header details
+            //         Rec."Receipt No." := PostedOrgReceipt."Document No.";
+            //         Rec."Receipt Date" := PostedOrgReceipt."Document Date";
+            //         Rec."HIS Document Type" := PostedOrgReceipt."HIS Document Type";
+            //     end;
+            // end;
         }
         field(6; "Receipt Date"; Date)
         {

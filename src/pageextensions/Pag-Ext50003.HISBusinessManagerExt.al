@@ -859,11 +859,21 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                     Caption = 'Settlement Data Process';
                     action("Settlement")
                     {
-                        AccessByPermission = TableData "E3 Indent Sale/Purchase Header" = IMD;
+                        AccessByPermission = TableData "E3 Organization Receipt" = IMD;
                         ApplicationArea = Basic, Suite;
-                        Caption = 'D365 Settlement Data Process';
+                        Caption = 'Create Settlement Data Process';
                         Image = Create;
                         RunObject = Page "E3 Organization Receipt List";
+                        RunPageMode = Create;
+                        ToolTip = 'Create a Organization Receipt List';
+                    }
+                    action("PosetdSettlement")
+                    {
+                        AccessByPermission = TableData "E3 Organization Receipt" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Posted Settlement Data';
+                        Image = Create;
+                        RunObject = Page "E3 Posted Org. Receipt List";
                         RunPageMode = Create;
                         ToolTip = 'Create a Organization Receipt List';
                     }

@@ -2,6 +2,8 @@ table 50083 "E3 Organization Receipt"
 {
     Caption = 'Organization Receipt';
     DataClassification = CustomerContent;
+    DrillDownPageId = "E3 Get Orgnization Receipt";
+    LookupPageId = "E3 Get Orgnization Receipt";
 
     fields
     {
@@ -30,8 +32,11 @@ table 50083 "E3 Organization Receipt"
         field(5; "Received Amount"; Decimal)
         {
             Caption = 'Received Amount';
-            DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateBalance();
+            end;
         }
         field(6; "Account Type"; Enum "Gen. Journal Account Type")
         {
@@ -139,13 +144,44 @@ table 50083 "E3 Organization Receipt"
             Caption = 'Created Date Time';
             DataClassification = CustomerContent;
         }
+        field(17; "Allocation Amount"; Decimal)
+        {
+            Caption = 'Allocation Amount';
+            FieldClass = FlowField;
+            CalcFormula = Sum("E3 Allocation Receipt"."Allocated Amount"
+        WHERE("Receipt No." = FIELD("Document No.")));
+            Editable = false;
+            trigger OnValidate()
+            begin
+                UpdateBalance();
+            end;
+        }
+        field(18; Balance; Decimal)
+        {
+            Caption = 'Balance';
+            DataClassification = CustomerContent;
+        }
+        field(19; "Allocation Status"; Enum "E3 Allocation Status")
+        {
+            Caption = 'Status';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
     {
-        key(PK; "Entry No.")
+        key(PK; "Entry No.", "Document No.")
         {
             Clustered = true;
         }
     }
+    local procedure UpdateBalance()
+    begin
+        Balance := "Received Amount" - "Allocation Amount";
+
+        if "Allocation Amount" >= "Received Amount" then
+            "Allocation Status" := "Allocation Status"::"Fully Allocate"
+        else
+            "Allocation Status" := "Allocation Status"::"Partial Allocate";
+    end;
 }

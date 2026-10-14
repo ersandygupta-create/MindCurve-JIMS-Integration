@@ -73,6 +73,7 @@ page 50216 "E3 Organization Receipt"
             part(AllocationReceipt; "E3 Allocation Receipt List")
             {
                 ApplicationArea = All;
+                Visible = false;
 
                 SubPageLink =
                         "Receipt No." = FIELD("Document No.");
@@ -81,9 +82,10 @@ page 50216 "E3 Organization Receipt"
             part(BillApplication; "E3 Bill Application List")
             {
                 ApplicationArea = All;
+                Visible = false;
 
                 SubPageLink =
-                        "Customer Code" = FIELD("Account No.");
+                        "Receipt No." = FIELD("Document No.");
             }
         }
     }

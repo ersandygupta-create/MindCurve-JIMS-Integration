@@ -15,31 +15,56 @@ page 50218 "E3 Bill Application List"
                 field("Entry No."; Rec."Entry No.")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the entry number.';
+                }
+                field("Receipt No."; Rec."Receipt No.")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the Receipt No.';
+                }
+                field("Customer Code"; Rec."Customer Code")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the customer code.';
+                }
+                field("Customer Name"; Rec."Customer Name")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the Customer Name.';
                 }
                 field("Bill No"; Rec."Bill No")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the bill number.';
                 }
                 field("Bill Date"; Rec."Bill Date")
                 {
                     ApplicationArea = All;
+                    Editable = false;
+                    Caption = 'Posting Date';
                     ToolTip = 'Specifies the bill date.';
                 }
                 field("Patient Name"; Rec."Patient Name")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the patient name.';
                 }
                 field(UHIDNo; Rec.UHIDNo)
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the UHID number.';
                 }
                 field("Bill Amount"; Rec."Bill Amount")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies the bill amount.';
                 }
                 field("Payment Received"; Rec."Payment Received")
@@ -67,6 +92,12 @@ page 50218 "E3 Bill Application List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the billable disallowed amount.';
                 }
+                field("Med PRF"; Rec."Med PRF")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the Med PRF.';
+                }
                 field("Disallowed Security"; Rec."Disallowed Security")
                 {
                     ApplicationArea = All;
@@ -92,11 +123,6 @@ page 50218 "E3 Bill Application List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the balance TPA due.';
                 }
-                field("Net Received From TPA"; Rec."Net Received From TPA")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the net amount received from TPA.';
-                }
                 field("Admission Date"; Rec."Admission Date")
                 {
                     ApplicationArea = All;
@@ -117,16 +143,32 @@ page 50218 "E3 Bill Application List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the registration number.';
                 }
-                field("Customer Code"; Rec."Customer Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the customer code.';
-                }
                 field("Insurance Co."; Rec."Insurance Co.")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the insurance company.';
                 }
+            }
+        }
+    }
+    actions
+    {
+        area(Processing)
+        {
+            action(BillApplicationData)
+            {
+                ApplicationArea = All;
+                Caption = 'Get Data';
+                Image = GetLines;
+                ToolTip = 'Retrieve receipt data for the selected customer and insert it into Bill Application.';
+
+                trigger OnAction()
+                begin
+                    Report.RunModal(
+                        Report::"E3 Bill Application Import",
+                        true,
+                        false);
+                end;
             }
         }
     }
