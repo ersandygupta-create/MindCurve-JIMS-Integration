@@ -149,6 +149,12 @@ table 50001 "E3 HIS Integartion Setup"
             Caption = 'Settlement Process Enabled';
             DataClassification = CustomerContent;
         }
+        field(28; "Settlement Nos."; Code[20])
+        {
+            Caption = 'Settlement Nos.';
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
     }
     keys
     {

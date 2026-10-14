@@ -72,16 +72,6 @@ page 50218 "E3 Bill Application List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the payment received.';
                 }
-                field("Receipt From Patient Against Bill"; Rec."Receipt From Patient Against Bill")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the receipt received from the patient against the bill.';
-                }
-                field("Disallowed Service Wise"; Rec."Disallowed Service Wise")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the service-wise disallowed amount.';
-                }
                 field("Disallowed Reg. Wise"; Rec."Disallowed Reg. Wise")
                 {
                     ApplicationArea = All;
@@ -118,36 +108,6 @@ page 50218 "E3 Bill Application List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the excess billable amount.';
                 }
-                field("Balance TPA Due"; Rec."Balance TPA Due")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the balance TPA due.';
-                }
-                field("Admission Date"; Rec."Admission Date")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the admission date.';
-                }
-                field("Discharged Date"; Rec."Discharged Date")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the discharged date.';
-                }
-                field("Patient Type"; Rec."Patient Type")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the patient type.';
-                }
-                field("Reg No."; Rec."Reg No.")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the registration number.';
-                }
-                field("Insurance Co."; Rec."Insurance Co.")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the insurance company.';
-                }
             }
         }
     }
@@ -172,4 +132,28 @@ page 50218 "E3 Bill Application List"
             }
         }
     }
+    trigger OnAfterGetRecord()
+    begin
+        UpdateMedPRF();
+    end;
+
+    local procedure UpdateMedPRF()
+    var
+        RevenueLine: Record "E3 HIS Revenue Line";
+        MedPRFCode: Record "E3 Med PRF";
+        TotalMedPRF: Decimal;
+    begin
+        TotalMedPRF := 0;
+
+        RevenueLine.Reset();
+        RevenueLine.SetRange("Document No.", Rec."Bill No");
+
+        if RevenueLine.FindSet() then
+            repeat
+                if MedPRFCode.Get(RevenueLine."Service Item Code") then
+                    TotalMedPRF += RevenueLine.Amount;
+            until RevenueLine.Next() = 0;
+
+        Rec."Med PRF" := TotalMedPRF;
+    end;
 }

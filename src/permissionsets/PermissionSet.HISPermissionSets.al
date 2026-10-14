@@ -342,7 +342,10 @@ permissionset 50000 "E3 HIS Permission"
     tabledata "E3 Transfer Line" = RIMD,
     page "E3 Transfer List" = X,
     page "E3 Transfer Card" = X,
-    page "E3 Transfer Lines" = X;
+    page "E3 Transfer Lines" = X,
+    table "E3 Med PRF" = X,
+    tabledata "E3 Med PRF" = RIMD,
+    page "E3 Med PRF List" = X;
 
 
 

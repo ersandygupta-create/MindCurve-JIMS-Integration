@@ -38,6 +38,11 @@ page 50175 "E3 GRN Work Sheet List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the supplier code.';
                 }
+                field("Supplier Name"; Rec."Supplier Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Supplier Name.';
+                }
                 field("Department Name"; Rec."Department Name")
                 {
                     ApplicationArea = All;
@@ -144,4 +149,16 @@ page 50175 "E3 GRN Work Sheet List"
             }
         }
     }
+    trigger OnAfterGetRecord()
+    var
+        VendorRec: Record Vendor;
+    begin
+        if Rec."Supplier Code" <> '' then begin
+            if VendorRec.Get(Rec."Supplier Code") then
+                Rec."Supplier Name" := VendorRec.Name
+            else
+                Rec."Supplier Name" := '';
+        end else
+            Rec."Supplier Name" := '';
+    end;
 }

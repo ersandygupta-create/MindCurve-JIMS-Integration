@@ -166,6 +166,11 @@ table 50083 "E3 Organization Receipt"
             Caption = 'Status';
             DataClassification = CustomerContent;
         }
+        field(20; "No. Series"; Code[20])
+        {
+            Caption = 'No. Series';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
@@ -175,13 +180,51 @@ table 50083 "E3 Organization Receipt"
             Clustered = true;
         }
     }
+    trigger OnInsert()
+    var
+        IntegrationSetup: Record "E3 HIS Integartion Setup";
+        NoSeries: Codeunit "No. Series";
+    begin
+        if "Document No." = '' then begin
+            IntegrationSetup.Get();
+            IntegrationSetup.TestField("Settlement Nos.");
+
+            "Document No." :=
+                NoSeries.GetNextNo(IntegrationSetup."Settlement Nos.", WorkDate());
+        end;
+    end;
+
+    procedure AssistEdit(OldORHeader: Record "E3 Organization Receipt"): Boolean
+    var
+        IntegrationSetup: Record "E3 HIS Integartion Setup";
+        NoSeries: Codeunit "No. Series";
+        ORHeader: Record "E3 Organization Receipt";
+    begin
+        ORHeader := Rec;
+
+        IntegrationSetup.Get();
+        IntegrationSetup.TestField("Settlement Nos.");
+
+        if NoSeries.LookupRelatedNoSeries(
+            IntegrationSetup."Settlement Nos.",
+            OldORHeader."No. Series",
+            ORHeader."No. Series")
+        then begin
+            ORHeader."Document No." := NoSeries.GetNextNo(ORHeader."No. Series");
+            Rec := ORHeader;
+            exit(true);
+        end;
+
+        exit(false);
+    end;
+
     local procedure UpdateBalance()
     begin
         Balance := "Received Amount" - "Allocation Amount";
 
-        if "Allocation Amount" >= "Received Amount" then
-            "Allocation Status" := "Allocation Status"::"Fully Allocate"
-        else
-            "Allocation Status" := "Allocation Status"::"Partial Allocate";
+        // if "Allocation Amount" >= "Received Amount" then
+        //     "Allocation Status" := "Allocation Status"::"Fully Allocate"
+        // else
+        //     "Allocation Status" := "Allocation Status"::"Partial Allocate";
     end;
 }

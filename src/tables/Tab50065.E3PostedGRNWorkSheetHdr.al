@@ -39,6 +39,20 @@ table 50065 "E3 GRN Work Sheet Header"
         {
             Caption = 'Supplier Code';
             DataClassification = CustomerContent;
+            TableRelation = Vendor."No.";
+
+            trigger OnValidate()
+            var
+                VendorRec: Record Vendor;
+            begin
+                if "Supplier Code" <> '' then begin
+                    if VendorRec.Get("Supplier Code") then
+                        "Supplier Name" := VendorRec.Name
+                    else
+                        "Supplier Name" := '';
+                end else
+                    "Supplier Name" := '';
+            end;
         }
         field(8; "Place of Supply"; Text[100])
         {
@@ -206,6 +220,11 @@ table 50065 "E3 GRN Work Sheet Header"
         field(44; Sync; Boolean)
         {
             Caption = 'Sync';
+            DataClassification = CustomerContent;
+        }
+        field(45; "Supplier Name"; Text[100])
+        {
+            Caption = 'Supplier Name';
             DataClassification = CustomerContent;
         }
 

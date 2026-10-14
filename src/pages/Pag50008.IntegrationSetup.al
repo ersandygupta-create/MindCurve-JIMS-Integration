@@ -130,6 +130,15 @@ page 50008 "E3 Integration Setup"
                     ToolTip = 'Specifies the value of the Inter Unit Sales Enabled';
                 }
             }
+            group(NumberSeries)
+            {
+                Caption = 'Number Series';
+                field("Settlement Nos."; Rec."Settlement Nos.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies a value Settlement Nos.';
+                }
+            }
             group("Log Details")
             {
                 field(SystemCreatedBy; Rec.SystemCreatedBy)

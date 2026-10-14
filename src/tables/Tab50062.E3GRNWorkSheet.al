@@ -938,7 +938,7 @@ table 50062 "E3 GRN Work Sheet"
         if ("Indent SKU Qty" <> 0) and ("Free Qty" = 0) then
             "Staff Sale Rate" := Rate + ((Rate * ("CGST %" + "SGST %" + "IGST %" + "UGST %")) / 100)
         else
-            if "Free Qty" <> 0 then
+            if ("Free Qty" <> 0) and ("Rec SKU QTY" <> 0) then
                 "Staff Sale Rate" := (("Line Gross" / "Rec SKU Qty") * "Qty. per Unit of Measure") * (1 + ("CGST %" + "SGST %" + "IGST %" + "UGST %") / 100)
             else
                 "Staff Sale Rate" := 0;
@@ -1664,16 +1664,16 @@ table 50062 "E3 GRN Work Sheet"
                     "Item Tracking Code" := Item."Item Tracking Code";
                 end;
 
-                if Item.Get(PurchLine."No.") then begin
-                    if ItemUOM.Get(Item."No.", Item."Purch. Unit of Measure") then
-                        Validate("Rec SKU QTY", (PurchLine.Quantity + PurchLine."Free Qty") * ItemUOM."Qty. per Unit of Measure")
-                    else
-                        Validate("Rec SKU QTY", PurchLine.Quantity + PurchLine."Free Qty");
+                if Item.Get(PurchLine."No.") then //begin
+                    // if ItemUOM.Get(Item."No.", Item."Purch. Unit of Measure") then
+                    //     Validate("Rec SKU QTY", (PurchLine.Quantity + PurchLine."Free Qty") * ItemUOM."Qty. per Unit of Measure")
+                    // else
+                    //     Validate("Rec SKU QTY", PurchLine.Quantity + PurchLine."Free Qty");
                     if Item."Item Tracking Code" = '' then
                         "Lot Assigned" := true
                     else
                         "Lot Assigned" := false;
-                end;
+                // end;
 
 
                 CalculateLandedValue();

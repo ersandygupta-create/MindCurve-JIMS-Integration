@@ -877,6 +877,16 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         RunPageMode = Create;
                         ToolTip = 'Create a Organization Receipt List';
                     }
+                    action("SettlSetups")
+                    {
+                        AccessByPermission = TableData "E3 Med PRF" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Med PRF List';
+                        Image = Create;
+                        RunObject = Page "E3 Med PRF List";
+                        RunPageMode = Create;
+                        ToolTip = 'Create a Med PRF List';
+                    }
                 }
                 group("E3 Pharmacy Sales Entries")
                 {

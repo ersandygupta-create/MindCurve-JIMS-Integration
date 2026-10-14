@@ -147,18 +147,24 @@ report 50017 "GRN Report Print"
                     LotNo := '';
                     ExpirationDate := 0D;
 
-                    if ("Purch. Rcpt. Header"."Currency Code" = 'INR') or ("Purch. Rcpt. Header"."Currency Code" = '') then begin
+                    if ("Purch. Rcpt. Header"."Currency Code" = 'INR') or
+                       ("Purch. Rcpt. Header"."Currency Code" = '') then begin
+
                         GSTGroupCode := "Purch. Rcpt. Line"."GST Group Code";
-                        if (StrLen(GSTGroupCode) < 3) then
-                            GSTGroupCode := GSTGroupCode
-                        else
+
+                        if StrLen(GSTGroupCode) >= 3 then
                             GSTGroupCode := CopyStr(GSTGroupCode, 1, 2);
 
-                        if (GSTGroupCode <> '') then
-                            Evaluate(EvlDecimal, GSTGroupCode);
+                        // Convert only when the value is numeric
+                        if (GSTGroupCode <> '') and
+                           Evaluate(EvlDecimal, GSTGroupCode) then
+                            GSTPer := EvlDecimal
+                        else
+                            GSTPer := 0;
 
-                        GSTPer := EvlDecimal;
-                        LineGST := ("Purch. Rcpt. Line"."Unit Cost" * "Purch. Rcpt. Line".Quantity * GSTPer) / 100;
+                        LineGST :=
+                            ("Purch. Rcpt. Line"."Unit Cost" *
+                             "Purch. Rcpt. Line".Quantity * GSTPer) / 100;
                     end else begin
                         LineGST := 0;
                         GSTPer := 0;

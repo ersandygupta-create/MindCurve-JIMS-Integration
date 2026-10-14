@@ -39,6 +39,11 @@ page 50217 "E3 Allocation Receipt List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the HIS document type.';
                 }
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Shortcut Dimension 1 Code.';
+                }
                 field("Customer Code"; Rec."Customer Code")
                 {
                     ApplicationArea = All;

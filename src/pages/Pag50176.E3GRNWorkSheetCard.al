@@ -52,6 +52,11 @@ page 50176 "E3 GRN Work Sheet Header"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the supplier code.';
                 }
+                field("Supplier Name"; Rec."Supplier Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Supplier Name.';
+                }
                 field("Place of Supply"; Rec."Place of Supply")
                 {
                     ApplicationArea = All;
@@ -250,4 +255,16 @@ page 50176 "E3 GRN Work Sheet Header"
             }
         }
     }
+    trigger OnAfterGetRecord()
+    var
+        VendorRec: Record Vendor;
+    begin
+        if Rec."Supplier Code" <> '' then begin
+            if VendorRec.Get(Rec."Supplier Code") then
+                Rec."Supplier Name" := VendorRec.Name
+            else
+                Rec."Supplier Name" := '';
+        end else
+            Rec."Supplier Name" := '';
+    end;
 }

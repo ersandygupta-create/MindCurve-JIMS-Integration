@@ -17,22 +17,33 @@ page 50216 "E3 Organization Receipt"
                 {
                     ApplicationArea = All;
                     Editable = false;
+                    Visible = false;
                     ToolTip = 'Specifies the entry number.';
+                }
+                field("Document No."; Rec."Document No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the document number.';
+                    trigger OnAssistEdit()
+                    begin
+                        if Rec.AssistEdit(xRec) then
+                            CurrPage.Update();
+                    end;
                 }
                 field("HIS Document Type"; Rec."HIS Document Type")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the HIS document type.';
                 }
-                field("Document No."; Rec."Document No.")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the document number.';
-                }
                 field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the document date.';
+                }
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Shortcut Dimension 1 Code.';
                 }
                 field("Received Amount"; Rec."Received Amount")
                 {

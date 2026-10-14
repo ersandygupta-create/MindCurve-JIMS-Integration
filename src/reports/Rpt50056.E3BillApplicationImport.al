@@ -34,7 +34,7 @@ report 50056 "E3 Bill Application Import"
                     {
                         ApplicationArea = All;
                         Caption = 'Customer Code';
-                        ToolTip = 'Select the customer whose allocation receipts should be imported.';
+                        ToolTip = 'Select the customer whose allocation receipts and customer ledger entries should be imported.';
                         TableRelation = "E3 Allocation Receipt"."Customer Code";
                     }
                 }
@@ -45,13 +45,18 @@ report 50056 "E3 Bill Application Import"
     var
         CustomerCode: Code[20];
         AllocationReceipt: Record "E3 Allocation Receipt";
+        CustomerLedgerEntry: Record "Cust. Ledger Entry";
         BillApplication: Record "E3 Bill Application";
+        LastBillApplication: Record "E3 Bill Application";
+        NextEntryNo: Integer;
         InsertedCount: Integer;
 
     local procedure InsertBillApplication()
     begin
         if CustomerCode = '' then
             Error('Please select a Customer Code.');
+
+        InsertedCount := 0;
 
         AllocationReceipt.Reset();
         AllocationReceipt.SetRange("Customer Code", CustomerCode);
@@ -62,30 +67,53 @@ report 50056 "E3 Bill Application Import"
                 CustomerCode);
 
         repeat
-            // Prevent duplicate receipt entries for this customer.
-            BillApplication.Reset();
-            BillApplication.SetRange(
-                "Receipt No.", AllocationReceipt."Receipt No.");
-            BillApplication.SetRange(
-                "Customer Code", AllocationReceipt."Customer Code");
+            CustomerLedgerEntry.Reset();
+            CustomerLedgerEntry.SetRange("Customer No.", CustomerCode);
+            CustomerLedgerEntry.SetFilter("Remaining Amount", '<>%1', 0);
 
-            if not BillApplication.FindFirst() then begin
-                BillApplication.Init();
+            if CustomerLedgerEntry.FindSet() then
+                repeat
+                    BillApplication.Reset();
+                    BillApplication.SetRange(
+                        "Receipt No.", AllocationReceipt."Receipt No.");
+                    BillApplication.SetRange(
+                        "Customer Code", CustomerCode);
+                    BillApplication.SetRange(
+                        "Bill No", CustomerLedgerEntry."Document No.");
 
-                // Entry No. is AutoIncrement; do not assign it manually.
-                BillApplication."Receipt No." := AllocationReceipt."Receipt No.";
-                BillApplication."Customer Code" := AllocationReceipt."Customer Code";
-                BillApplication."Customer Name" := AllocationReceipt."Customer Name";
-                BillApplication."Bill Date" := AllocationReceipt."Receipt Date";
-                BillApplication."Bill Amount" := AllocationReceipt."Allocated Amount";
+                    if not BillApplication.FindFirst() then begin
+                        // Get the next Entry No.
+                        LastBillApplication.Reset();
+                        LastBillApplication.LockTable();
 
-                BillApplication.Insert(true);
-                InsertedCount += 1;
-            end;
+                        if LastBillApplication.FindLast() then
+                            NextEntryNo :=
+                                LastBillApplication."Entry No." + 1
+                        else
+                            NextEntryNo := 1;
+
+                        // Initialize and insert the record.
+                        BillApplication.Init();
+                        BillApplication."Entry No." := NextEntryNo;
+                        BillApplication."Receipt No." := AllocationReceipt."Receipt No.";
+                        BillApplication."Customer Code" := CustomerLedgerEntry."Customer No.";
+                        BillApplication."Customer Name" := AllocationReceipt."Customer Name";
+                        BillApplication."Bill No" := CustomerLedgerEntry."Document No.";
+                        BillApplication."Bill Date" := CustomerLedgerEntry."Document Date";
+                        BillApplication."UHIDNo" := CustomerLedgerEntry."E3 UHID";
+                        CustomerLedgerEntry.CalcFields("Remaining Amount");
+                        BillApplication."Bill Amount" := CustomerLedgerEntry."Remaining Amount";
+
+                        BillApplication.Insert(true);
+                        InsertedCount += 1;
+                    end;
+                until CustomerLedgerEntry.Next() = 0;
+
         until AllocationReceipt.Next() = 0;
 
         Message(
             '%1 Bill Application record(s) inserted for Customer %2.',
-            InsertedCount, CustomerCode);
+            InsertedCount,
+            CustomerCode);
     end;
 }
