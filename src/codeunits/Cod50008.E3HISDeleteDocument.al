@@ -56,12 +56,6 @@ codeunit 50008 "E3 HIS Delete Document"
                     BankAccountLedgerEntry.DeleteAll();
 
 
-                HISSettlementEntry.Reset();
-                HISSettlementEntry.SetRange("HIS Document Type", DeleteDocument."HIS Document Type");
-                HISSettlementEntry.SetRange("Document No.", DeleteDocument."Document No.");
-                HISSettlementEntry.SetRange("Document Date", DeleteDocument."Posting Date");
-                if HISSettlementEntry.FindFirst() then
-                    HISSettlementEntry.DeleteAll();
 
                 HISRevenueEntry.Reset();
                 HISRevenueEntry.SetRange("HIS Document Type", DeleteDocument."HIS Document Type");
@@ -197,7 +191,6 @@ codeunit 50008 "E3 HIS Delete Document"
         VendorLedgerEntry: Record "Vendor Ledger Entry";
         DetailedVendLedgEntry: Record "Detailed Vendor Ledg. Entry";
         BankAccountLedgerEntry: Record "Bank Account Ledger Entry";
-        HISSettlementEntry: Record "E3 HIS Settlement Staging";
         HISRevenueEntry: Record "E3 HIS Revenue Staging Table";
         HISConsumptionEntry: Record "E3 HIS Consumption Entries";
         HISRevenueHeader: Record "E3 HIS Revenue Header";

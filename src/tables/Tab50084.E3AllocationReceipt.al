@@ -84,24 +84,30 @@ table 50084 "E3 Allocation Receipt"
             Clustered = true;
         }
     }
+
     local procedure UpdateAllocationStatus()
     var
         OrganizationReceipt: Record "E3 Organization Receipt";
         AllocationReceipt: Record "E3 Allocation Receipt";
         TotalAllocatedAmount: Decimal;
     begin
-        if "Receipt No." = '' then
+        if "Document No." = '' then
             exit;
 
-        if not OrganizationReceipt.Get("Receipt No.") then
-            Error(
-                'Organization Receipt %1 does not exist.',
-                "Receipt No.");
+        // Find Organization Receipt by Document No.
+        OrganizationReceipt.Reset();
+        OrganizationReceipt.SetRange("Document No.", "Document No.");
 
-        // Calculate the total allocated amount for this receipt.
+        if not OrganizationReceipt.FindFirst() then
+            Error(
+                'Organization Receipt with Document No. %1 does not exist.',
+                "Document No.");
+
+        // Sum allocations for this organization receipt.
         AllocationReceipt.Reset();
-        AllocationReceipt.SetRange("Receipt No.", "Document No.");
-        //AllocationReceipt.CalcSums("Allocated Amount");
+        AllocationReceipt.SetRange("Document No.", "Document No.");
+        AllocationReceipt.SetFilter("Entry No.", '<>%1', "Entry No.");
+        AllocationReceipt.CalcSums("Allocated Amount");
 
         TotalAllocatedAmount :=
             AllocationReceipt."Allocated Amount" + "Allocated Amount";
@@ -109,12 +115,12 @@ table 50084 "E3 Allocation Receipt"
         // Do not allow allocation above the received amount.
         if TotalAllocatedAmount > OrganizationReceipt."Received Amount" then
             Error(
-                'Allocated Amount %1 exceeds the Received Amount %2 for Receipt No. %3.',
+                'Total Allocated Amount %1 exceeds Received Amount %2 for Document No. %3.',
                 TotalAllocatedAmount,
                 OrganizationReceipt."Received Amount",
-                "Receipt No.");
+                "Document No.");
 
-        // Update status in Organization Receipt.
+        // Update allocation status.
         if TotalAllocatedAmount = OrganizationReceipt."Received Amount" then
             OrganizationReceipt."Allocation Status" :=
                 OrganizationReceipt."Allocation Status"::"Fully Allocate"
@@ -124,4 +130,5 @@ table 50084 "E3 Allocation Receipt"
 
         OrganizationReceipt.Modify(true);
     end;
+
 }

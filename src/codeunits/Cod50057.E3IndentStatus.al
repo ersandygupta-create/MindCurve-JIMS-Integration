@@ -61,7 +61,7 @@ codeunit 50057 "E3 Indent Status Mgmt."
             repeat
                 // Skip only a matching Free Qty line.
                 if (not ShouldSkipFreeQtyLine(IndentLine)) and
-                   (IndentLine.Remarks <> '') then begin
+                   (IndentLine.Remarks <> '') and (IndentLine."SNo." <> 0) then begin
                     Clear(ItemObj);
 
                     EntryNoText := Format(IndentLine."Entry No.");

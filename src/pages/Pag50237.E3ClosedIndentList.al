@@ -186,19 +186,27 @@ page 50237 "E3 Closed Indent List"
     {
         area(Processing)
         {
+
             action(SendToStatusAPI)
             {
                 ApplicationArea = All;
                 Caption = 'Send to Status API';
-                ToolTip = 'Sends the selected indent line status to the Status API.';
+                ToolTip = 'Sends the selected indent line statuses to the Status API.';
                 Image = SendTo;
 
                 trigger OnAction()
                 var
                     IndentStatusMgmt: Codeunit "E3 Indent Status Mgmt.";
                     IndentLineRec: Record "E3 Indent Line";
+                    SuccessCount: Integer;
+                    AlreadySentCount: Integer;
+                    FailedCount: Integer;
+                    ErrorMessage: Text;
                 begin
                     CurrPage.SetSelectionFilter(IndentLineRec);
+
+                    // if IndentLineRec."SNo." <> 0 then
+                    //     Error('S.No. cannot be 0. Please select a valid indent line.');
 
                     if IndentLineRec.IsEmpty() then
                         Error('Please select at least one indent line.');
@@ -206,21 +214,35 @@ page 50237 "E3 Closed Indent List"
                     if IndentLineRec.FindSet() then
                         repeat
                             if IndentLineRec."IsSent" then
-                                Error(
-                                    'Indent %1, S.No. %2 has already been sent.',
-                                    IndentLineRec."Document No.",
-                                    IndentLineRec."SNo.");
+                                AlreadySentCount += 1
+                            else begin
+                                ClearLastError();
 
-                            if not IndentStatusMgmt.SendIndentLineDetails(IndentLineRec) then
-                                Error(
-                                    'Failed to send Indent %1, S.No. %2. Please check the Response field.',
-                                    IndentLineRec."Document No.",
-                                    IndentLineRec."SNo.");
+                                if IndentStatusMgmt.SendIndentLineDetails(IndentLineRec) then
+                                    SuccessCount += 1
+                                else begin
+                                    FailedCount += 1;
+                                    ErrorMessage += StrSubstNo(
+                                        'Indent %1, S.No. %2 failed to send.',
+                                        IndentLineRec."Document No.",
+                                        IndentLineRec."SNo.") + '\';
+                                end;
+                            end;
                         until IndentLineRec.Next() = 0;
 
-                    Message('Indent status sent successfully.');
+                    Message(
+                        'Selected indent lines processed.\' +
+                        'Successfully sent: %1\' +
+                        'Already sent (skipped): %2\' +
+                        'Failed: %3\%4',
+                        SuccessCount,
+                        AlreadySentCount,
+                        FailedCount,
+                        ErrorMessage);
+
                     CurrPage.Update(false);
                 end;
+
             }
         }
     }

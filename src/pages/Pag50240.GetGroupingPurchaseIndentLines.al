@@ -7,7 +7,7 @@ page 50240 "E3 Get Groupping Indent Lines"
     InsertAllowed = false;
     DeleteAllowed = false;
     ModifyAllowed = false;
-    SourceTableView = sorting("Document No.", "Line No.") order(descending) where("Released Stock Issue Purchase" = const(true), Remarks = filter('PO Qty' | 'Free Qty'));
+    SourceTableView = sorting("Document No.", "Line No.") order(descending) where("Released Stock Issue Purchase" = const(true), Remarks = filter('PO Qty' | 'Free Qty'), "Cancel Indent Remark" = filter(''));
 
     layout
     {

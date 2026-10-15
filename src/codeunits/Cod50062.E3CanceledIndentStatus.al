@@ -16,7 +16,7 @@ codeunit 50062 "E3 Canceled Indent Status Mgmt"
         IndentLine: Record "E3 Indent Line";
         EntryNoText: Text;
 
-    procedure SendIndentLineDetails(var IndentLineUpdateLog: Record "E3 Indent Line"): Boolean
+    procedure SendIndentCancelLineDetails(var IndentLineUpdateLog: Record "E3 Indent Line"): Boolean
     var
         HttpWebClient: HttpClient;
         HttpWebContent: HttpContent;
@@ -59,9 +59,8 @@ codeunit 50062 "E3 Canceled Indent Status Mgmt"
 
         if IndentLine.FindSet() then
             repeat
-                // Skip only a matching Free Qty line.
-                if (not ShouldSkipFreeQtyLine(IndentLine)) and
-                   (IndentLine.Remarks <> '') then begin
+                if (IndentLine."Cancel Indent Remark" <> '') and
+                    (IndentLine."SNo." <> 0) then begin
                     Clear(ItemObj);
 
                     EntryNoText := Format(IndentLine."Entry No.");
@@ -82,41 +81,12 @@ codeunit 50062 "E3 Canceled Indent Status Mgmt"
                     ItemObj.Add('businessUnitCode', IndentLine."Shortcut Dimension 1 Code");
                     ItemObj.Add('itemCode', IndentLine."No.");
                     ItemObj.Add('dm_itemCode', 0);
-
-                    if (IndentLine."Document No." <> '') and
-                       (IndentLine."Short Qty Requisition" = 0) and
-                       (IndentLine.Remarks = 'PO Qty') and
-                       (IndentLine."Qty Per Purch. Unit of Measure" <> 0) then begin
-
-                        ItemObj.Add('status', 'Completed');
-                        ItemObj.Add(
-                            'remark',
-                            GetPOQtyRemark(IndentLine));
-
-                    end else
-                        if (IndentLine."Document No." <> '') and
-                           (IndentLine."Short Qty Requisition" <> 0) and
-                           (IndentLine.Remarks = 'PO Qty') and
-                           (IndentLine."Qty Per Purch. Unit of Measure" <> 0) then begin
-
-                            ItemObj.Add('status', 'Completed');
-                            ItemObj.Add('remark', GetPOQtyRemark(IndentLine));
-
-                        end else begin
-                            ItemObj.Add(
-                                'status',
-                                GetIndentStatus(IndentLine));
-                            ItemObj.Add(
-                                'remark',
-                                GetIndentRemark(IndentLine));
-                        end;
-
+                    ItemObj.Add('status', 'Cancelled');
+                    ItemObj.Add('remark', IndentLine."Cancel Indent Remark");
                     ItemObj.Add('uom', IndentLine."Unit of Measure");
-                    ItemObj.Add('qty', GetIndentQty(IndentLine));
+                    ItemObj.Add('qty', IndentLine."Requested Qty");
                     ItemObj.Add('indentnumber', IndentLine."Document No.");
-                    ItemObj.Add(
-                        'indentserialnumber',
-                        Format(IndentLine."Entry No."));
+                    ItemObj.Add('indentserialnumber', Format(IndentLine."Entry No."));
 
                     ItemArray.Add(ItemObj);
                     HasData := true;
@@ -217,145 +187,4 @@ codeunit 50062 "E3 Canceled Indent Status Mgmt"
             exit(false);
         end;
     end;
-
-    local procedure GetIndentStatus(
-        var IndentLine: Record "E3 Indent Line"): Text
-    begin
-        if IndentLine."Document No." <> '' then
-            exit('Completed');
-
-        exit('Pending');
-    end;
-
-    local procedure GetIndentRemark(
-        var IndentLine: Record "E3 Indent Line"): Text
-    var
-        FreeQty: Decimal;
-        RemarkText: Text;
-    begin
-        if (IndentLine."Document No." <> '') and
-           (IndentLine.Remarks = 'PO Qty') then begin
-
-            RemarkText :=
-                Format(IndentLine."Requested Qty") + ' PO QTY';
-
-            FreeQty := GetMatchingFreeQty(IndentLine);
-
-            if FreeQty <> 0 then
-                RemarkText +=
-                    ' * ' + Format(FreeQty) + ' Free QTY';
-
-            if IndentLine."Short Qty Requisition" <> 0 then
-                RemarkText +=
-                    ' + ' +
-                    Format(IndentLine."Short Qty Requisition") +
-                    ' Short Qty';
-
-            exit(RemarkText);
-        end;
-
-        exit(IndentLine.Remarks);
-    end;
-
-    local procedure GetPOQtyRemark(
-        var IndentLine: Record "E3 Indent Line"): Text
-    var
-        FreeQty: Decimal;
-        RemarkText: Text;
-        RejectQty: Decimal;
-    begin
-        RemarkText :=
-            Format(IndentLine."Qty Per Purch. Unit of Measure") +
-            '*' +
-            Format(IndentLine."Requested Qty") +
-            ' PO QTY';
-
-        FreeQty := GetMatchingFreeQty(IndentLine);
-
-        if FreeQty <> 0 then
-            RemarkText +=
-                ' + ' + Format(FreeQty) + ' Free QTY';
-
-        if IndentLine."Short Qty Requisition" <> 0 then
-            RemarkText +=
-                ' + ' +
-                Format(IndentLine."Short Qty Requisition") +
-                ' Short Qty';
-        RejectQty := GetMatchingRejectQty(IndentLine);
-
-        if RejectQty <> 0 then
-            RemarkText += ' + ' + Format(RejectQty) + ' Reject Qty';
-        exit(RemarkText);
-    end;
-
-    local procedure GetMatchingFreeQty(
-        var IndentLine: Record "E3 Indent Line"): Decimal
-    var
-        IndentLine2: Record "E3 Indent Line";
-        FreeQty: Decimal;
-    begin
-        IndentLine2.Reset();
-        IndentLine2.SetRange("Document No.", IndentLine."Document No.");
-        IndentLine2.SetRange("SNo.", IndentLine."SNo.");
-        IndentLine2.SetRange(Remarks, 'Free Qty');
-
-        if IndentLine2.FindSet() then
-            repeat
-                FreeQty += IndentLine2."Requested Qty";
-            until IndentLine2.Next() = 0;
-
-        exit(FreeQty);
-    end;
-
-    local procedure GetIndentQty(
-        var IndentLine: Record "E3 Indent Line"): Decimal
-    begin
-        // Combine quantities only for the PO Qty line.
-        if (IndentLine.Remarks = 'PO Qty') and
-           (IndentLine."Document No." <> '') then
-            exit(
-                IndentLine."Requested Qty" +
-                GetMatchingFreeQty(IndentLine));
-
-        // Keep existing quantity for all other lines.
-        exit(IndentLine."Requested Qty");
-    end;
-
-    local procedure ShouldSkipFreeQtyLine(
-    var IndentLine: Record "E3 Indent Line"): Boolean
-    var
-        IndentLine2: Record "E3 Indent Line";
-    begin
-        if ((IndentLine.Remarks <> 'Free Qty') and
-            (IndentLine.Remarks <> 'Reject Qty')) or
-           (IndentLine."Document No." = '') then
-            exit(false);
-
-        IndentLine2.Reset();
-        IndentLine2.SetRange("Document No.", IndentLine."Document No.");
-        IndentLine2.SetRange("SNo.", IndentLine."SNo.");
-        IndentLine2.SetRange(Remarks, 'PO Qty');
-
-        exit(IndentLine2.FindFirst());
-    end;
-
-    local procedure GetMatchingRejectQty(
-    var IndentLine: Record "E3 Indent Line"): Decimal
-    var
-        IndentLine2: Record "E3 Indent Line";
-        RejectQty: Decimal;
-    begin
-        IndentLine2.Reset();
-        IndentLine2.SetRange("Document No.", IndentLine."Document No.");
-        IndentLine2.SetRange("SNo.", IndentLine."SNo.");
-        IndentLine2.SetRange(Remarks, 'Reject Qty');
-
-        if IndentLine2.FindSet() then
-            repeat
-                RejectQty += IndentLine2."Requested Qty";
-            until IndentLine2.Next() = 0;
-
-        exit(RejectQty);
-    end;
-
 }
