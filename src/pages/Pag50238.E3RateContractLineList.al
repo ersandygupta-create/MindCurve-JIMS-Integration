@@ -22,6 +22,11 @@ page 50238 "E3 Rate Contract Line Lists"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the type of product.';
                 }
+                field("Document No."; Rec."Document No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Document No.';
+                }
                 field("Product No."; Rec."Product No.")
                 {
                     ApplicationArea = All;
@@ -31,6 +36,16 @@ page 50238 "E3 Rate Contract Line Lists"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the product description.';
+                }
+                field("Make Code H"; Rec."Make Code H")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Make Code';
+                }
+                field("Make Name H"; Rec."Make Name H")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Make Name';
                 }
                 field("Unit of Measure Code"; Rec."Unit of Measure Code")
                 {
@@ -101,6 +116,12 @@ page 50238 "E3 Rate Contract Line Lists"
                     Editable = false;
                     ToolTip = 'Specifies remarks for the Margin % line.';
 
+                }
+                field("Approval Date"; Rec."Approval Date")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Approval Date';
                 }
             }
         }

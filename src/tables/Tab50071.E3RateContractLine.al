@@ -185,6 +185,21 @@ table 50071 "E3 Rate Contract Line"
             Caption = 'PO Qty';
             DataClassification = CustomerContent;
         }
+        field(20; "Approval Date"; Date)
+        {
+            caption = 'Approval Date';
+            TableRelation = "E3 Rate Contract Header"."Approve Date" where("Document No." = field("Document No."));
+        }
+        field(21; "Make Code H"; Code[20])
+        {
+            caption = 'Make Code';
+            TableRelation = "E3 Rate Contract Header"."Make Code" where("Document No." = field("Document No."));
+        }
+        field(22; "Make Name H"; Date)
+        {
+            caption = 'Make Name';
+            TableRelation = "E3 Rate Contract Header"."Make Name" where("Document No." = field("Document No."));
+        }
     }
 
     keys
