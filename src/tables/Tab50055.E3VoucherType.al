@@ -161,6 +161,7 @@ table 50055 "E3 Voucher Type"
         {
             Caption = 'Finance Doc. No.';
             DataClassification = CustomerContent;
+            TableRelation = "No. Series".Code;
         }
     }
 

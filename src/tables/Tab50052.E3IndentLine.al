@@ -567,6 +567,11 @@ table 50052 "E3 Indent Line"
     ));
 
         }
+        field(80288; "Indent Date"; Date)
+        {
+            FieldClass = FlowField;
+            CalcFormula = lookup("E3 Indent Header"."Request Date" where("Document No." = field("Document No.")));
+        }
     }
 
     keys

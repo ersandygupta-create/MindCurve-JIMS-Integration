@@ -8,6 +8,7 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
             {
                 ToolTip = 'Submit to finance';
                 ApplicationArea = All;
+
             }
             field("Submit Doc No."; Rec."Submit Doc No.")
             {

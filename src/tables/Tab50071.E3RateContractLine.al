@@ -187,18 +187,22 @@ table 50071 "E3 Rate Contract Line"
         }
         field(20; "Approval Date"; Date)
         {
+            FieldClass = FlowField;
             caption = 'Approval Date';
-            TableRelation = "E3 Rate Contract Header"."Approve Date" where("Document No." = field("Document No."));
+            CalcFormula = lookup("E3 Rate Contract Header"."Approve Date" where("Document No." = field("Document No.")));
         }
         field(21; "Make Code H"; Code[20])
         {
+            FieldClass = FlowField;
             caption = 'Make Code';
-            TableRelation = "E3 Rate Contract Header"."Make Code" where("Document No." = field("Document No."));
+
+            CalcFormula = lookup("E3 Rate Contract Header"."Make Code" where("Document No." = field("Document No.")));
         }
-        field(22; "Make Name H"; Date)
+        field(22; "Make Name H"; Text[100])
         {
+            FieldClass = FlowField;
             caption = 'Make Name';
-            TableRelation = "E3 Rate Contract Header"."Make Name" where("Document No." = field("Document No."));
+            CalcFormula = lookup("E3 Rate Contract Header"."Make Name" where("Document No." = field("Document No.")));
         }
     }
 

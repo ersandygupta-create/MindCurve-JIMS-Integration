@@ -24,6 +24,12 @@ page 50240 "E3 Get Groupping Indent Lines"
                     Visible = true;
                     ToolTip = 'Specifies the quotation document number.';
                 }
+                field("Indent Date"; Rec."Indent Date")
+                {
+                    ApplicationArea = all;
+                    Caption = 'Indent Date';
+                    ToolTip = 'Indent Date';
+                }
                 field("Item Make Code"; Rec."Item Make Code")
                 {
                     ApplicationArea = All;
