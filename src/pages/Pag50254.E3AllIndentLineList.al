@@ -179,6 +179,16 @@ page 50254 "E3 All Indent List"
                     Caption = 'Cancel Indent Remark';
                     ToolTip = 'Specifies the remark entered when the indent line is cancelled.';
                 }
+                field(IsSent; Rec.IsSent)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the IsSent from API.';
+                }
+                field(Response; Rec.Response)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the field API Response.';
+                }
             }
         }
     }
@@ -197,23 +207,110 @@ page 50254 "E3 All Indent List"
                 Visible = CancelIndentAllowed;
 
                 trigger OnAction()
+                var
+                    SelectedIndentLine: Record "E3 Indent Line";
+                    CancelledCount: Integer;
+                    SkippedCount: Integer;
                 begin
-                    if Rec."Cancel Indent Remark" <> '' then
-                        Error('The indent line is already cancelled or has a cancellation remark.');
+                    CurrPage.SetSelectionFilter(SelectedIndentLine);
+
+                    // if SelectedIndentLine."SNo." <> 0 then
+                    //     Error('S.No. cannot be 0. Please select a valid indent line.');
+
+                    if SelectedIndentLine.IsEmpty() then
+                        Error('Please select at least one indent line.');
+
                     if not Confirm(
-                        'Do you want to cancel this indent line?',
+                        'Do you want to cancel all selected indent lines?',
                         false)
                     then
                         exit;
 
-                    Rec."Cancel Indent Remark" := 'Indent Cancelled';
-                    Rec.Modify(true);
+                    CancelledCount := 0;
+                    SkippedCount := 0;
+
+                    if SelectedIndentLine.FindSet() then
+                        repeat
+                            if SelectedIndentLine."Cancel Indent Remark" <> '' then
+                                SkippedCount += 1
+                            else begin
+                                SelectedIndentLine."Cancel Indent Remark" :=
+                                    CopyStr(
+                                        'Indent Cancelled ' +
+                                        Format(SelectedIndentLine."Requested Qty") +
+                                        ' qty',
+                                        1,
+                                        MaxStrLen(
+                                            SelectedIndentLine."Cancel Indent Remark"));
+
+                                SelectedIndentLine.Modify(true);
+                                CancelledCount += 1;
+                            end;
+                        until SelectedIndentLine.Next() = 0;
 
                     CurrPage.Update(false);
 
-                    Message('Indent cancellation remark updated successfully.');
+                    Message(
+                        'Cancellation completed.\Cancelled: %1\Skipped (already cancelled): %2',
+                        CancelledCount,
+                        SkippedCount);
                 end;
+            }
+            action("Send Data to DB")
+            {
+                Caption = 'Send Data to DB';
+                ApplicationArea = All;
+                Image = SendTo;
+                Visible = CancelIndentAllowed;
+                ToolTip = 'Send the selected indent lines to the Send To JIMS API.';
 
+                trigger OnAction()
+                var
+                    SelectedIndentLine: Record "E3 Indent Line";
+                    IndentCancelStatusMgmt: Codeunit "E3 Canceled Indent Status Mgmt";
+                    SentCount: Integer;
+                    FailedCount: Integer;
+                    SkippedCount: Integer;
+                begin
+                    CurrPage.SetSelectionFilter(SelectedIndentLine);
+
+                    // if SelectedIndentLine."SNo." <> 0 then
+                    //     Error('S.No. cannot be 0. Please select a valid indent line.');
+
+                    if SelectedIndentLine.IsEmpty() then
+                        Error('Please select at least one indent line.');
+
+                    if not Confirm(
+                        'Do you want to send the selected cancellation records to JIMS?',
+                        false)
+                    then
+                        exit;
+
+                    SentCount := 0;
+                    FailedCount := 0;
+                    SkippedCount := 0;
+
+                    if SelectedIndentLine.FindSet() then
+                        repeat
+                            if (SelectedIndentLine."Cancel Indent Remark" = '') or
+                               (SelectedIndentLine."SNo." = 0)
+                            then
+                                SkippedCount += 1
+                            else
+                                if IndentCancelStatusMgmt.SendIndentCancelLineDetails(
+                                    SelectedIndentLine)
+                                then
+                                    SentCount += 1
+                                else
+                                    FailedCount += 1;
+                        until SelectedIndentLine.Next() = 0;
+
+                    Message(
+                        'JIMS processing completed.\Successfully sent: %1\Failed: %2\Skipped (blank remark or SNo. = 0): %3',
+                        SentCount,
+                        FailedCount,
+                        SkippedCount);
+                end;
             }
         }
     }

@@ -171,7 +171,7 @@ report 50008 "Account Ledger Report Excel"
         Vendor_lRec: Record Vendor;
         Customer_lRec: Record Customer;
         FixedAsset_lRec: Record "Fixed Asset";
-        Settlement: Record "E3 HIS Settlement Staging";
+    //Settlement: Record "E3 HIS Settlement Staging";
     begin
         ExcelBuffer_gRecTmp.NewRow;
         ExcelBuffer_gRecTmp.AddColumn("G/L Entry"."Posting Date", false, '', false, false, false, '', ExcelBuffer_gRecTmp."Cell Type"::Date);            //Posting Date
@@ -197,12 +197,12 @@ report 50008 "Account Ledger Report Excel"
                             ExcelBuffer_gRecTmp.AddColumn(FixedAsset_lRec.Description, false, '', false, false, false, '', ExcelBuffer_gRecTmp."Cell Type"::Text)          //Source Name
                     end else
                         ExcelBuffer_gRecTmp.AddColumn('', false, '', false, false, false, '', ExcelBuffer_gRecTmp."Cell Type"::Text);                                    //Source Name
-        Settlement.Reset();
-        Settlement.SetRange("Document No.", "G/L Entry"."Document No.");
-        if Settlement.FindFirst() then
-            ExcelBuffer_gRecTmp.AddColumn(Settlement."Payer Name", false, '', false, false, false, '', ExcelBuffer_gRecTmp."Cell Type"::Text)
-        else
-            ExcelBuffer_gRecTmp.AddColumn('', false, '', false, false, false, '', ExcelBuffer_gRecTmp."Cell Type"::Text);//
+                                                                                                                                                                         // Settlement.Reset();
+                                                                                                                                                                         // Settlement.SetRange("Document No.", "G/L Entry"."Document No.");
+                                                                                                                                                                         // if Settlement.FindFirst() then
+                                                                                                                                                                         //     ExcelBuffer_gRecTmp.AddColumn(Settlement."Payer Name", false, '', false, false, false, '', ExcelBuffer_gRecTmp."Cell Type"::Text)
+                                                                                                                                                                         // else
+        ExcelBuffer_gRecTmp.AddColumn('', false, '', false, false, false, '', ExcelBuffer_gRecTmp."Cell Type"::Text);//
         if "G/L Entry"."Debit Amount" <> 0 then
             ExcelBuffer_gRecTmp.AddColumn("G/L Entry"."Debit Amount", false, '', false, false, false, '#,##0.00', ExcelBuffer_gRecTmp."Cell Type"::Number)  //Debit Amount
         else

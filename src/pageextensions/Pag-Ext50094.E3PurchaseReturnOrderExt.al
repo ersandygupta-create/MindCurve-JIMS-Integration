@@ -19,6 +19,11 @@ pageextension 50094 "E3 Purchase Return Order Ext" extends "Purchase Return Orde
                 ToolTip = 'Specifies the unique code of the item make.';
                 ShowMandatory = true;
             }
+            field("Reason Code"; Rec."Reason Code")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies a value Reason Code field.';
+            }
         }
     }
 

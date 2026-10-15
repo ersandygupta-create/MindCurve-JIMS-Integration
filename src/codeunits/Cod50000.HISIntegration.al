@@ -847,165 +847,6 @@ codeunit 50000 "E3 HIS Integration Mgmt."
     end;
     //ak
 
-    procedure SettHISDocumentDateValidation(HISSettlementStaging: Record "E3 HIS Settlement Staging"): Boolean
-    var
-        AllowPostingDate: Record "HIS Allow Posting Date";
-        DocDate: Date;
-    begin
-        DocDate := HISSettlementStaging."Document Date";
-
-        AllowPostingDate.Reset();
-        AllowPostingDate.SetRange("Code Unit Name", '50017');
-
-        AllowPostingDate.SetFilter("From Date", '<=%1', DocDate);
-        AllowPostingDate.SetFilter("To Date", '>=%1', DocDate);
-
-        if not AllowPostingDate.FindFirst() then begin
-            message('Document Date %1 is not allowed. Allowed date range not defined for %2.', DocDate, '50017 Table Allow Integration Setup From date and To Date');
-            EXIT(TRUE);
-        end
-        else
-            EXIT(FALSE);
-    end;
-
-
-    procedure SettlementValidation()
-    var
-        SettlementStaging: Record "E3 HIS Settlement Staging";
-        GLAccountMapping: Record "E3 HIS GL Accounts Mapping";
-        CustMappingSetup: Record "E3 HIS Customer Mapping";
-        SettSetupMissing: Text[60];
-        HisDocumentType: Text[60];
-    begin
-        SettlementStaging.Reset();
-        SettlementStaging.SetRange("General Entries Created", false);
-        if SettlementStaging.FindSet() then
-            repeat
-                SettlementStaging."Error Description" := '';
-                SettSetupMissing := '';
-                HisDocumentType := '';
-                CustMappingSetup.Reset();
-                CustMappingSetup.SetRange("HIS Code", SettlementStaging."Bal. Account No");
-                if not CustMappingSetup.FindFirst() then
-                    SettSetupMissing := Text.StrSubstNo('Customer %1 setup missing', SettlementStaging."Bal. Account No");
-                if SettlementStaging."Bal. Account No" = '' then
-                    SettSetupMissing := 'Customer can not be blank';
-                GLAccountMapping.Reset();
-                GLAccountMapping.SetRange(Type, GLAccountMapping.Type::Settlement);
-                GLAccountMapping.SetRange("Service/Station Head", SettlementStaging."HIS Document Type");
-                if not GLAccountMapping.FindFirst() then
-                    HisDocumentType := text.StrSubstNo('Settlement Type %1 setup missing', SettlementStaging."HIS Document Type");
-                if SettlementStaging."HIS Document Type" = '' then
-                    HisDocumentType := 'Sett type can not be blank';
-                SettlementStaging."Error Description" := SettSetupMissing + ' ' + HisDocumentType;
-                SettlementStaging.Modify(true);
-            until SettlementStaging.Next() = 0;
-
-    end;
-
-    procedure InitGenJnlLineSettlementStaging()
-    var
-        GenJournalLine: Record "Gen. Journal Line";
-        HISGLAccountMapping: Record "E3 HIS GL Accounts Mapping";
-        intLineNo: Integer;
-        MOPLbl: Label 'MOP Setup not found for Mode of payment %1.';
-        DocumentTypeLbl: Label 'Setup not found for Document Type %1.';
-    begin
-        IntegrationSetup.GET();
-        IntegrationSetup.TESTFIELD("Integration Enabled", TRUE);
-        IntegrationSetup.TESTFIELD("Revenue Creation Enabled", TRUE);
-        IntegrationSetup.TESTFIELD("Vendor Gen. Bus. Posting Group");
-        IntegrationSetup.TESTFIELD("Custom Gen. Bus. Posting Group");
-
-        IntegrationSetupLine.Reset();
-        IntegrationSetupLine.SetRange(Type, IntegrationSetupLine.Type::Revenue);
-        IntegrationSetupLine.FindFirst();
-        IntegrationSetupLine.TestField("General Journal Template Code");
-        IntegrationSetupLine.TestField("General Journal Batch Code");
-
-        IF NOT (IntegrationSetup."Integration Enabled") AND (IntegrationSetup."Revenue Creation Enabled") THEN
-            EXIT;
-
-        //SettlementValidation();
-        //Commit();
-
-        HISSettlementStaging.RESET();
-        HISSettlementStaging.SETFILTER(HISSettlementStaging."General Entries Created", '%1', FALSE);
-        HISSettlementStaging.SETFILTER(HISSettlementStaging.Amount, '<>%1', 0);
-        //HISSettlementStaging.SetFilter("Error Description", '%1', '');
-        //HISRevenueStaging.SETFILTER(HISRevenueStaging."Account No.", '<>%1', '');
-        IF HISSettlementStaging.FINDSET() THEN
-            if not SettHISDocumentDateValidation(HISSettlementStaging) then begin
-                REPEAT
-                    GenJournalLine.RESET();
-                    GenJournalLine.SETRANGE("Journal Template Name", IntegrationSetupLine."General Journal Template Code");
-                    GenJournalLine.SETRANGE("Journal Batch Name", IntegrationSetupLine."General Journal Batch Code");
-                    IF GenJournalLine.FINDLAST() THEN
-                        intLineNo := GenJournalLine."Line No."
-                    ELSE
-                        intLineNo := 10000;
-
-                    GenJournalLine.INIT();
-                    GenJournalLine.VALIDATE(GenJournalLine."Journal Template Name", IntegrationSetupLine."General Journal Template Code");
-                    GenJournalLine.VALIDATE(GenJournalLine."Journal Batch Name", IntegrationSetupLine."General Journal Batch Code");
-                    intLineNo += 10000;
-                    GenJournalLine."Line No." := intLineNo;
-                    GenJournalLine.VALIDATE("Document Type", HISSettlementStaging."Document Type");
-                    GenJournalLine.VALIDATE("Document No.", HISSettlementStaging."Document No.");
-                    GenJournalLine.VALIDATE("Posting Date", HISSettlementStaging."Document Date");
-
-                    HISGLAccountMapping.Reset();
-                    HISGLAccountMapping.SetRange(Type, HISGLAccountMapping.Type::Settlement);
-                    HISGLAccountMapping.SetRange("MOP Code", HISSettlementStaging."HIS Document Type");
-                    if HISGLAccountMapping.FindFirst() then begin
-
-                        GenJournalLine.VALIDATE("Account Type", HISGLAccountMapping."Account Type");
-                        GenJournalLine.VALIDATE("Account No.", HISGLAccountMapping."Account No.");
-                    end ELSE
-                        Error(MOPLbl, HISSettlementStaging."HIS Document Type");//ak
-
-                    GenJournalLine.VALIDATE(Amount, HISSettlementStaging.Amount);
-                    //GenJournalLine.VALIDATE("Bal. Account Type", GenJournalLine."Bal. Account Type"::"G/L Account");
-                    GenJournalLine.VALIDATE("Cheque Date", HISSettlementStaging."Cheque Date");
-                    GenJournalLine.VALIDATE("Cheque No.", COPYSTR(HISSettlementStaging."Cheque No.", 1, 10));
-                    GenJournalLine.validate("Bal. Account Type", HISSettlementStaging."Bal. Account Type");
-                    GenJournalLine.validate("Bal. Account No.", HISSettlementStaging."Bal. Account No");
-                    if HISSettlementStaging."Shortcut Dimension 1 Code" <> '' then begin
-                        GenJournalLine.VALIDATE("Location Code", HISSettlementStaging."Shortcut Dimension 1 Code");
-                        GenJournalLine.VALIDATE("Shortcut Dimension 1 Code", HISSettlementStaging."Shortcut Dimension 1 Code");
-                    end;
-
-                    if HISSettlementStaging."Shortcut Dimension 2 Code" <> '' then
-                        GenJournalLine.VALIDATE("Shortcut Dimension 2 Code", GetMappedDimension(HISSettlementStaging."Shortcut Dimension 2 Code"));
-
-                    GenJournalLine.VALIDATE("External Document No.", HISSettlementStaging."External Document No.");
-                    GenJournalLine."E3 Narration" := COPYSTR(HISSettlementStaging."Line Narration", 1, 50);
-                    GenJournalLine."E3 HIS Module" := HISSettlementStaging."HIS Module";
-                    GenJournalLine."E3 HIS Document Type" := COPYSTR(HISSettlementStaging."HIS Document Type", 1, 60);
-                    GenJournalLine."E3 UTR No." := HISSettlementStaging."Cheque No.";
-                    GenJournalLine."E3 Sub Group Code" := HISSettlementStaging."Sub Group";
-                    GenJournalLine."E3 Receipt No." := COPYSTR(HISSettlementStaging."Receipt No.", 1, 20);
-                    GenJournalLine."E3 UHID" := HISSettlementStaging.UHID;
-                    GenJournalLine."E3 Validation Key" := HISSettlementStaging."Validation HIS Key";
-                    GenJournalLine."E3 Store Code" := HISSettlementStaging."Store Code";
-                    GenJournalLine."E3 Patient Name" := HISSettlementStaging."Patient Name";
-                    GenJournalLine."E3 Transaction Type" := HISSettlementStaging.TRANSACTION_TYPE;
-                    GenJournalLine."E3 Sponsor Code" := HISSettlementStaging."Sponsor Code";
-                    GenJournalLine."E3 Sponsor Name" := HISSettlementStaging."Sponsor Name";
-
-                    GenJournalLine.INSERT();
-
-                    HISSettlementStaging."Created By" := USERID;
-                    HISSettlementStaging."Created Date Time" := CURRENTDATETIME;
-                    HISSettlementStaging."General Entries Created" := TRUE;
-                    HISSettlementStaging.MODIFY();
-                UNTIL HISSettlementStaging.NEXT() = 0;
-
-            end;
-    end;
-
-    //ak
-
     procedure InitGenJnlLinesUnBilledEntries()
     var
         GenJournalLine: Record "Gen. Journal Line";
@@ -1167,7 +1008,7 @@ codeunit 50000 "E3 HIS Integration Mgmt."
                 GenJournalLine.VALIDATE("External Document No.", HISDoctorPayoutEntries."External Document No.");
                 GenJournalLine."E3 Narration" := COPYSTR(HISDoctorPayoutEntries."Line Narration", 1, 50);
                 GenJournalLine."E3 HIS Document Type" := COPYSTR(HISDoctorPayoutEntries."HIS Document Type", 1, 60);
-                GenJournalLine."E3 UHID" := HISSettlementStaging.UHID;
+                GenJournalLine."E3 UHID" := HISDoctorPayoutEntries.UHID;
                 GenJournalLine."E3 Encounter No." := HISDoctorPayoutEntries."Encounter No.";
                 GenJournalLine."E3 Receipt No." := HISDoctorPayoutEntries."IP No.";
                 GenJournalLine."E3 Patient Name" := HISDoctorPayoutEntries."Patient Name";
@@ -2908,7 +2749,6 @@ codeunit 50000 "E3 HIS Integration Mgmt."
         myInt: Integer;
         GSTState: Code[2];
         SamePANErr: Label 'From postion 3 to 12 in GST Registration No. should be same as it is in PAN No. so delete and then update it.';
-        HISSettlementStaging: Record "E3 HIS Settlement Staging";
         HISDoctorPayoutEntries: Record "E3 HIS Doctor Payout";
         UnBilledEntries: Record "E3 UnBilled Service Revenue";
 

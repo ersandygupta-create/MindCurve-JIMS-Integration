@@ -771,18 +771,29 @@ codeunit 50001 "E3 HIS Event Subscriber"
         RecRef: RecordRef;
         Item: Record Item;
     begin
-        // Get the record for which approval was requested
         if not RecRef.Get(ApprovalEntry."Record ID to Approve") then
             exit;
 
-        // Continue only for Item records
         if RecRef.Number <> Database::Item then
             exit;
 
         RecRef.SetTable(Item);
 
-        // Update Item status when approval is rejected
         Item.Status := Item.Status::Rejected;
         Item.Modify(true);
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnBeforeReleasePurchaseDoc', '', false, false)]
+    local procedure OnBeforeReleasePurchaseDoc(
+        var PurchaseHeader: Record "Purchase Header";
+        PreviewMode: Boolean;
+        var SkipCheckReleaseRestrictions: Boolean;
+        var IsHandled: Boolean;
+        SkipWhseRequestOperations: Boolean)
+    begin
+        if PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::"Return Order"
+        then
+            PurchaseHeader.TestField("Reason Code");
+    end;
+
 }
