@@ -219,8 +219,12 @@ table 50071 "E3 Rate Contract Line"
     begin
         If ("Document No." = '') then
             exit;
-        if RCHdr.Get("Document No.") then
+        if RCHdr.Get("Document No.") then begin
             "Type Of RC" := "Type Of RC";
+            "Make Code" := RCHdr."Make Code";
+        end;
+
+
     end;
 
     local procedure CalculateMargin()

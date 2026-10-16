@@ -511,9 +511,8 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     PRC.SetRange("Product No.", PurchLine."No.");
                     PRC.SetRange("Make Code", PurchLine."Item Make Code");
                     PRC.SetCurrentKey(SystemCreatedAt);
-                    PRC.SetAscending(SystemCreatedAt, false);
-
-                    if PRC.find('-') then begin
+                    PRC.SetAscending(SystemCreatedAt, True);
+                    if PRC.FindLast() then begin
                         if PurchLine.FOC then begin
                             PurchLine.Validate("Direct Unit Cost", 0);
                         end else begin

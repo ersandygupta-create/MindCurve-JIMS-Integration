@@ -125,7 +125,7 @@ page 50183 "E3 Rate Contract Card"
             part(Lines; "E3 Rate Contract Subpage")
             {
                 ApplicationArea = All;
-                SubPageLink = "Document No." = field("Document No.");
+                SubPageLink = "Document No." = field("Document No."), "Make Code" = field("Make Code");
             }
         }
     }

@@ -111,6 +111,18 @@ page 50106 "E3Posted Gate Ent Outward List"
                     ToolTip = 'Specifies the value of the Remarks field';
                     ApplicationArea = All;
                 }
+                field(SystemModifiedBy; Rec.SystemModifiedBy)
+                {
+                    ToolTip = 'Approved By';
+                    Caption = 'Approved by';
+                    ApplicationArea = All;
+                }
+                field(SystemCreatedAt; Rec.SystemCreatedAt)
+                {
+                    ToolTip = 'Approved DateTime';
+                    Caption = 'Approved DateTime';
+                    ApplicationArea = All;
+                }
             }
         }
     }

@@ -59,7 +59,9 @@ table 50084 "E3 Allocation Receipt"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                UpdateAllocationStatus();
+                //  UpdateAllocationStatus();
+                checkAllocationLimit();
+                updateAllocatedAmount(Rec."Receipt No.");
             end;
         }
         field(9; "Document No."; Code[50])
@@ -129,6 +131,50 @@ table 50084 "E3 Allocation Receipt"
                 OrganizationReceipt."Allocation Status"::"Partial Allocate";
 
         OrganizationReceipt.Modify(true);
+    end;
+
+    local procedure updateAllocatedAmount(receiptNo: code[50])
+    var
+        AllocationReceipt: Record "E3 Allocation Receipt";
+        OrgReceipt: Record "E3 Organization Receipt";
+        AllocatedAmt: Decimal;
+    begin
+        AllocatedAmt := 0;
+        AllocationReceipt.Reset();
+        AllocationReceipt.SetRange("Receipt No.", receiptNo);
+        if AllocationReceipt.FindSet() then
+            repeat
+                if AllocationReceipt."Entry No." = Rec."Entry No." then
+                    AllocatedAmt += Rec."Allocated Amount"
+                else
+                    AllocatedAmt += AllocationReceipt."Allocated Amount";
+            until AllocationReceipt.Next() = 0;
+
+        OrgReceipt.Reset();
+        OrgReceipt.SetRange("Document No.", receiptNo);
+        if OrgReceipt.Find('-') then begin
+            OrgReceipt."Allocation Amount" := AllocatedAmt;
+            OrgReceipt.Balance := OrgReceipt."Received Amount" - OrgReceipt."Allocation Amount";
+            if (OrgReceipt.Balance = 0) then
+                OrgReceipt."Allocation Status" := "E3 Allocation Status"::"Fully Allocate"
+            else
+                OrgReceipt."Allocation Status" := "E3 Allocation Status"::"Partial Allocate";
+            OrgReceipt.Modify(false);
+            //CurrPage.Update(false);
+        end;
+    end;
+
+    local procedure checkAllocationLimit()
+    var
+        OrgReceipt: Record "E3 Organization Receipt";
+    begin
+        OrgReceipt.Reset();
+        ;
+        OrgReceipt.SetRange("Document No.", rec."Receipt No.");
+        if OrgReceipt.FindFirst() then
+            if (OrgReceipt.Balance < rec."Allocated Amount") then
+                Error('Amount can not be greater than %1 .', OrgReceipt.Balance);
+
     end;
 
 }

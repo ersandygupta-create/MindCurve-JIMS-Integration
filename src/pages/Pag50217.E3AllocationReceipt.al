@@ -5,7 +5,7 @@ page 50217 "E3 Allocation Receipt List"
     SourceTable = "E3 Allocation Receipt";
     ApplicationArea = All;
     UsageCategory = Lists;
-    DeleteAllowed = false;
+    DeleteAllowed = true;
 
     layout
     {
@@ -58,10 +58,17 @@ page 50217 "E3 Allocation Receipt List"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the allocated amount.';
+                    trigger OnValidate()
+                    begin
+
+                    end;
+
                 }
             }
         }
+
     }
+
     actions
     {
         area(Processing)
@@ -76,18 +83,73 @@ page 50217 "E3 Allocation Receipt List"
                 ToolTip = 'Select an organization receipt and populate the allocation receipt line.';
 
                 trigger OnAction()
+                var
+                    receiptNo: Code[50];
                 begin
-                    GetOrganizationReceipt();
+                    receiptNo := Rec.GetRangeMin("Receipt No.");
+                    GetOrganizationReceipt(receiptNo);
                 end;
             }
         }
     }
-    local procedure GetOrganizationReceipt()
+    trigger OnAfterGetCurrRecord()
+    begin
+        CurrPage.Update(false);
+        // updateAllocatedAmount(Rec."Receipt No.");
+    end;
+
+    trigger OnModifyRecord(): Boolean
+    begin
+        CurrPage.Update(false);
+    end;
+
+    /* trigger OnNewRecord(BelowxRec: Boolean)
+     begin
+         updateAllocatedAmount(Rec."Receipt No.");
+     end;
+
+     trigger OnNextRecord(Steps: Integer): Integer
+     begin
+         updateAllocatedAmount(Rec."Receipt No.");
+     end;
+ */
+    /* local procedure updateAllocatedAmount(receiptNo: code[50])
+     var
+         AllocationReceipt: Record "E3 Allocation Receipt";
+         OrgReceipt: Record "E3 Organization Receipt";
+         AllocatedAmt: Decimal;
+     begin
+         AllocatedAmt := 0;
+         AllocationReceipt.Reset();
+         AllocationReceipt.SetRange("Receipt No.", receiptNo);
+         if AllocationReceipt.FindSet() then
+             repeat
+                 AllocatedAmt += AllocationReceipt."Allocated Amount";
+             until AllocationReceipt.Next() = 0;
+
+         OrgReceipt.Reset();
+         OrgReceipt.SetRange("Document No.", receiptNo);
+         if OrgReceipt.Find('-') then begin
+             OrgReceipt."Allocation Amount" := AllocatedAmt;
+             OrgReceipt.Balance := OrgReceipt."Received Amount" - AllocatedAmt;
+             if (OrgReceipt.Balance = 0) then
+                 OrgReceipt."Allocation Status" := "E3 Allocation Status"::"Fully Allocate"
+             else
+                 OrgReceipt."Allocation Status" := "E3 Allocation Status"::"Partial Allocate";
+             OrgReceipt.Modify(true);
+             CurrPage.Update(false);
+         end;
+     end;
+ */
+    local procedure GetOrganizationReceipt(ReceiptNo: Code[50])
     var
         OrgReceipt: Record "E3 Organization Receipt";
         GetOrgReceiptPage: Page "E3 Get Orgnization Receipt";
+        AllocationReceipt: Record "E3 Allocation Receipt";
     begin
         OrgReceipt.Reset();
+        OrgReceipt.SetRange("Document No.", ReceiptNo);
+        OrgReceipt.SetFilter(Balance, '<>%1', 0);
 
         if OrgReceipt.IsEmpty() then
             Error('No organization receipts are available.');
@@ -100,20 +162,22 @@ page 50217 "E3 Allocation Receipt List"
 
             if OrgReceipt.FindFirst() then begin
                 // Create Allocation Receipt record if it does not exist
-                if Rec."Entry No." = 0 then begin
-                    Rec.Init();
-                    Rec.Insert(true);
-                end;
+                //if Rec."Entry No." = 0 then begin
+                AllocationReceipt.Init();
+                AllocationReceipt.Validate("Receipt No.", OrgReceipt."Document No.");
+                AllocationReceipt.Validate("Receipt Date", OrgReceipt."Document Date");
+                AllocationReceipt.Validate("Receipt Amount", OrgReceipt."Received Amount");
+                AllocationReceipt.Validate("HIS Document Type", OrgReceipt."HIS Document Type");
+                AllocationReceipt.Validate("Shortcut Dimension 1 Code", OrgReceipt."Shortcut Dimension 1 Code");
+                AllocationReceipt.Insert(true);
+                //end;
 
                 // Update Allocation Receipt table
-                Rec.Validate("Receipt No.", OrgReceipt."Document No.");
-                Rec.Validate("Receipt Date", OrgReceipt."Document Date");
-                Rec.Validate("Receipt Amount", OrgReceipt."Received Amount");
-                Rec.Validate("HIS Document Type", OrgReceipt."HIS Document Type");
-                Rec.Modify(true);
+
+                //Rec.Modify(true);
 
                 // Update Organization Receipt status
-                if OrgReceipt."Allocation Amount" = 0 then
+                /*if OrgReceipt."Allocation Amount" = 0 then
                     OrgReceipt.Validate("Allocation Status", OrgReceipt."Allocation Status"::" ")
                 else
                     if OrgReceipt."Allocation Amount" >= OrgReceipt."Received Amount" then
@@ -126,7 +190,7 @@ page 50217 "E3 Allocation Receipt List"
                             OrgReceipt."Allocation Status"::"Partial Allocate");
 
                 OrgReceipt.Modify(true);
-
+*/
                 CurrPage.Update(false);
             end;
         end;
