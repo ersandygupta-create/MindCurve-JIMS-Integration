@@ -196,11 +196,12 @@ page 50254 "E3 All Indent List"
     {
         area(Processing)
         {
+
             action("Cancel Indent")
             {
                 ApplicationArea = All;
                 Caption = 'Cancel Indent';
-                ToolTip = 'Cancel the selected indent line and record the cancellation remark.';
+                ToolTip = 'Cancel selected indent lines and enter a cancellation reason.';
                 Image = Cancel;
                 Promoted = true;
                 PromotedCategory = Process;
@@ -209,16 +210,25 @@ page 50254 "E3 All Indent List"
                 trigger OnAction()
                 var
                     SelectedIndentLine: Record "E3 Indent Line";
+                    CancelIndentDialog: Page "E3 Cancel Indent Dialog";
+                    CancelReason: Text[250];
+                    CancellationRemark: Text;
                     CancelledCount: Integer;
                     SkippedCount: Integer;
                 begin
                     CurrPage.SetSelectionFilter(SelectedIndentLine);
 
-                    // if SelectedIndentLine."SNo." <> 0 then
-                    //     Error('S.No. cannot be 0. Please select a valid indent line.');
-
                     if SelectedIndentLine.IsEmpty() then
                         Error('Please select at least one indent line.');
+
+                    // Open popup to enter cancellation details
+                    if CancelIndentDialog.RunModal() <> Action::OK then
+                        exit;
+
+                    CancelReason := CancelIndentDialog.GetCancelReason();
+
+                    if CancelReason = '' then
+                        Error('Please enter a cancellation reason.');
 
                     if not Confirm(
                         'Do you want to cancel all selected indent lines?',
@@ -229,16 +239,20 @@ page 50254 "E3 All Indent List"
                     CancelledCount := 0;
                     SkippedCount := 0;
 
-                    if SelectedIndentLine.FindSet() then
+                    if SelectedIndentLine.FindSet(true) then
                         repeat
                             if SelectedIndentLine."Cancel Indent Remark" <> '' then
                                 SkippedCount += 1
                             else begin
+                                CancellationRemark :=
+                                    StrSubstNo(
+                                        '%1 - Indent Cancelled %2 qty',
+                                        CancelReason,
+                                        SelectedIndentLine."Requested Qty");
+
                                 SelectedIndentLine."Cancel Indent Remark" :=
                                     CopyStr(
-                                        'Indent Cancelled ' +
-                                        Format(SelectedIndentLine."Requested Qty") +
-                                        ' qty',
+                                        CancellationRemark,
                                         1,
                                         MaxStrLen(
                                             SelectedIndentLine."Cancel Indent Remark"));
@@ -251,7 +265,9 @@ page 50254 "E3 All Indent List"
                     CurrPage.Update(false);
 
                     Message(
-                        'Cancellation completed.\Cancelled: %1\Skipped (already cancelled): %2',
+                        'Cancellation completed.\' +
+                        'Cancelled: %1\' +
+                        'Skipped (already cancelled): %2',
                         CancelledCount,
                         SkippedCount);
                 end;
