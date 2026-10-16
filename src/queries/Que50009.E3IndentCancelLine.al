@@ -12,6 +12,7 @@ query 50009 "E3 Indent Cancel API"
     {
         dataitem(IndentLine; "E3 Indent Line")
         {
+            DataItemTableFilter = "Cancel Indent Remark" = filter(<> '');
             column(documentNo; "Document No.")
             {
             }
@@ -67,12 +68,6 @@ query 50009 "E3 Indent Cancel API"
             {
             }
             column(buCode; "Shortcut Dimension 1 Code")
-            {
-            }
-            column(criticalItem; "Critical Item")
-            {
-            }
-            column(purchaseOrderNo; "Purchase Order No.")
             {
             }
             column(cancelIndentRemark; "Cancel Indent Remark")
