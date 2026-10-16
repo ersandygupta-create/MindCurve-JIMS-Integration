@@ -248,8 +248,8 @@ page 50134 "E3 Gate Entry Outward Header"
 
                 trigger OnAction()
                 begin
-                    if Rec.Status <> Rec.Status::"Pending Approval" then
-                        Error('Only documents with Pending Approval status can be reopened.');
+                    if (Rec.Status <> Rec.Status::"Pending Approval") and (Rec.Status <> Rec.Status::Approved) then
+                        Error('Only documents with Pending Approval and Approved status can be reopened.');
 
                     if not Confirm(
                         'Do you want to reopen Gate Entry %1?',
