@@ -179,6 +179,16 @@ page 50237 "E3 Closed Indent List"
                     Editable = false;
                     ToolTip = 'Specifies the Purchase Order Line no of indent line.';
                 }
+                field(IsSent; Rec.IsSent)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'IsSent';
+                }
+                field(Response; Rec.Response)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Response';
+                }
             }
         }
     }
