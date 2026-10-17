@@ -1,5 +1,7 @@
 report 50017 "GRN Report Print"
 {
+    UsageCategory = ReportsAndAnalysis;
+    ApplicationArea = All;
     DefaultLayout = RDLC;
     RDLCLayout = './src/reports/Rpt50017.GRNReportPrint.rdl';
     Caption = 'GRN Report Print';
@@ -92,6 +94,9 @@ report 50017 "GRN Report Print"
             column(ExpirationDate; ExpirationDate)
             {
             }
+            column(Vendor_Invoice_No_; VendorInvoiceNoVar)
+            {
+            }
             dataitem("Purch. Rcpt. Line"; "Purch. Rcpt. Line")
             {
                 DataItemLink = "Document No." = FIELD("No.");
@@ -140,18 +145,20 @@ report 50017 "GRN Report Print"
                 }
                 trigger OnAfterGetRecord()
                 begin
+                    VendorInvoiceNoVar := '';
+                    PurchHeader.Reset();
+                    if PurchHeader.Get(PurchHeader."Document Type"::Order, "Order No.") then
+                        VendorInvoiceNoVar := PurchHeader."Vendor Invoice No.";
                     LineGST := 0;
                     GSTPer := 0;
                     GSTGroupCode := '';
                     EvlDecimal := 0;
                     LotNo := '';
                     ExpirationDate := 0D;
-
                     if ("Purch. Rcpt. Header"."Currency Code" = 'INR') or
                        ("Purch. Rcpt. Header"."Currency Code" = '') then begin
 
                         GSTGroupCode := "Purch. Rcpt. Line"."GST Group Code";
-
                         if StrLen(GSTGroupCode) >= 3 then
                             GSTGroupCode := CopyStr(GSTGroupCode, 1, 2);
 
@@ -174,7 +181,6 @@ report 50017 "GRN Report Print"
                     ItemLedgerEntry.SetRange("Document No.", "Purch. Rcpt. Line"."Document No.");
                     ItemLedgerEntry.SetRange("Document Line No.", "Purch. Rcpt. Line"."Line No.");
                     ItemLedgerEntry.SetRange("Item No.", "Purch. Rcpt. Line"."No.");
-
                     if ItemLedgerEntry.FindFirst() then begin
                         LotNo := ItemLedgerEntry."Lot No.";
                         ExpirationDate := ItemLedgerEntry."Expiration Date";
@@ -185,9 +191,9 @@ report 50017 "GRN Report Print"
 
             trigger OnAfterGetRecord()
             begin
-                Vendor.RESET;
+                Vendor.RESET();
                 Vendor.SETRANGE("No.", "Buy-from Vendor No.");
-                IF Vendor.FINDFIRST THEN BEGIN
+                IF Vendor.FINDFIRST() THEN BEGIN
                     VendorCode := Vendor."No.";
                     VendorName := Vendor.Name;
                     VendorGSTIN := Vendor."GST Registration No.";
@@ -196,10 +202,8 @@ report 50017 "GRN Report Print"
                     VendorAddress := Vendor.Address + ' ' + Vendor."Address 2";
                     City := Vendor.City;
                     PostCode := Vendor."Post Code";
-
                     if userc.Get(SystemCreatedBy) then;
                     if userm.Get(SystemModifiedBy) then;
-
                     if (PurchaseHeader."Posting Date" < CompanyInformation."Transaction Date") then
                         RecCompanyName := CompanyInformation."Old Comapany Name"
                     else
@@ -209,35 +213,33 @@ report 50017 "GRN Report Print"
                 // sandeep
 
                 txtdescruption := '';
-                DimensionValue.RESET;
+                DimensionValue.RESET();
                 DimensionValue.SETRANGE("Dimension Code", '%1', 'DEPT');
                 DimensionValue.SETRANGE(Code, "Shortcut Dimension 2 Code");
-                IF DimensionValue.FINDFIRST THEN BEGIN
+                IF DimensionValue.FINDFIRST() THEN
                     txtdescruption := DimensionValue.Name;
-                END;
 
                 LocationAdd := '';
-                LocationEmail := '';
-                LocationPhoneNo := '';
+                //LocationEmail := '';
+                //LocationPhoneNo := '';
                 LocationGSTIN := '';
                 LocationName := '';
                 LocName2 := '';
                 LocName3 := '';
                 IF "Purch. Rcpt. Header"."Location Code" <> '' THEN BEGIN
-                    Location.RESET;
+                    Location.RESET();
                     Location.SETRANGE(Code, "Purch. Rcpt. Header"."Location Code");
-                    IF Location.FINDFIRST THEN BEGIN
+                    IF Location.FINDFIRST() THEN BEGIN
                         LocationName := Location.Name;
                         LocName2 := Location."Name 2";
                         LocName3 := Location."Name 3";
                         LocationAdd := Location.Address + ', ' + Location."Address 2" + ', ' + Location.City + ', ' + FORMAT(Location."Post Code");
-                        LocationEmail := Location."E-Mail";
-                        LocationPhoneNo := Location."Phone No.";
+                        //LocationEmail := Location."E-Mail";
+                        //LocationPhoneNo := Location."Phone No.";
                         LocationGSTIN := Location."GST Registration No.";
                         //LocationWebsite := Location."Home Page";
                     END;
                 end;
-
             end;
 
         }
@@ -262,7 +264,7 @@ report 50017 "GRN Report Print"
 
     trigger OnPreReport()
     begin
-        CompanyInformation.RESET;
+        CompanyInformation.RESET();
         CompanyInformation.GET();
         CompanyInformation.CALCFIELDS(Picture);
         CompName := CompanyInformation.Name;
@@ -271,41 +273,40 @@ report 50017 "GRN Report Print"
 
     var
         CompanyInformation: Record 79;
-        CompName: Text;
         Vendor: Record 23;
+        PurchaseHeader: Record 38;
+        DimensionValue: Record 349;
+        userc: Record User;
+        userm: Record User;
+        Location: Record Location;
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        PurchHeader: Record "Purchase Header";
+        CompName: Text;
         VendorCode: Code[20];
         VendorName: Text;
-        COMPANNo: Code[10];
-        VendorPANNo: Code[10];
-        VendorGSTIN: Code[15];
+        COMPANNo: Code[20];
+        VendorPANNo: Code[20];
+        VendorGSTIN: Code[20];
         VendorAddress: Text;
         City: Text[50];
-        PostCode: Code[10];
+        PostCode: Code[20];
         LineGST: Decimal;
         GSTGroupCode: Code[20];
         EvlDecimal: Decimal;
         GSTPer: Decimal;
         VendorEmail: Text;
-        PurchaseHeader: Record 38;
-        AmttoVendr: Decimal;
-        DimensionValue: Record 349;
+        //AmttoVendr: Decimal;
         txtdescruption: Text;
-        userc: Record User;
-        userm: Record User;
-        Location: Record Location;
         LocationName: Text[100];
         LocName2: Text[100];
         LocName3: Text[100];
-        LocationEmail: Code[100];
-        LocationPhoneNo: Code[50];
-        LocationGSTIN: Code[15];
-        LocationWebsite: Text[200];
+        //LocationEmail: Code[100];
+        //LocationPhoneNo: Code[50];
+        LocationGSTIN: Code[20];
+        //LocationWebsite: Text[200];
         LocationAdd: Code[200];
         RecCompanyName: Code[100];
-        ItemLedgerEntry: Record "Item Ledger Entry";
         LotNo: Code[50];
         ExpirationDate: Date;
-
-
+        VendorInvoiceNoVar: Code[35];
 }
-
