@@ -3,14 +3,34 @@ codeunit 50032 "E3 Medicine Comp Master Mgmt."
 
     TableNo = "Job Queue Entry";
 
+
     trigger OnRun()
+    var
+        MedicineCompMastRec: Record "E3 Medicine Component Master";
     begin
         if not E3APISetup.Get() then
             exit;
 
         if not E3APISetup."Integration Enabled" then
             exit;
+
+        if not E3APISetup."Medicine Component API Enabled" then
+            exit;
+
+        MedicineCompMastRec.Reset();
+        MedicineCompMastRec.SetRange(IsSent, false);
+
+        if MedicineCompMastRec.FindSet() then
+            repeat
+                ClearLastError();
+
+                if SendMedicineCompMastDetails(MedicineCompMastRec) then begin
+                    MedicineCompMastRec."First Sent" := true;
+                    MedicineCompMastRec.Modify(true);
+                end;
+            until MedicineCompMastRec.Next() = 0;
     end;
+
 
     var
         E3APISetup: Record "E3 Integration API Setup";

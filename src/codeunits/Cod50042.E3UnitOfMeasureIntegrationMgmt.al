@@ -4,12 +4,34 @@ codeunit 50042 "E3 Unit Of Measure Mgmt."
     TableNo = "Job Queue Entry";
 
     trigger OnRun()
+    var
+        UOMLogRec: Record "E3 Unit Of Measure Update Log";
     begin
         if not E3APISetup.Get() then
             exit;
 
         if not E3APISetup."Integration Enabled" then
             exit;
+
+        if not E3APISetup."UOM API Enabled" then
+            exit;
+
+        // Insert missing UOM records into the log
+        InsertUOMToLog(UOMLogRec);
+
+        // Send Pending and Error records
+        UOMLogRec.Reset();
+        UOMLogRec.SetFilter("Sync Status", '%1|%2',
+            UOMLogRec."Sync Status"::" ",
+            UOMLogRec."Sync Status"::Error);
+
+        if UOMLogRec.FindSet() then
+            repeat
+                ClearLastError();
+
+                // Send UOM record to the API
+                SendUOMDetails(UOMLogRec);
+            until UOMLogRec.Next() = 0;
     end;
 
     procedure SendtoUOMLog(var E3UOMUpdateLog: Record "E3 Unit Of Measure Update Log")
