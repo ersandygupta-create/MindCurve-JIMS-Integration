@@ -116,4 +116,9 @@ report 50056 "E3 Bill Application Import"
             InsertedCount,
             CustomerCode);
     end;
+
+    procedure SetCustomerFilter(NewCustomerCode: Code[20])
+    begin
+        CustomerCode := NewCustomerCode;
+    end;
 }

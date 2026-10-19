@@ -159,6 +159,11 @@ tableextension 50002 "E3 Gen. Journal Line Exts" extends "Gen. Journal Line"
             caption = 'Beneficiary Name';
             DataClassification = CustomerContent;
         }
+        field(50114; "VLE Doc No."; Code[20])
+        {
+            caption = 'VLE doc no';
+            DataClassification = CustomerContent;
+        }
 
 
     }

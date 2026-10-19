@@ -249,7 +249,7 @@ table 50071 "E3 Rate Contract Line"
         if MRP = 0 then
             exit;
 
-        CurrentMakeCode := "Make Code";
+        //  CurrentMakeCode := "Make Code";
 
         if CurrentMakeCode = '' then
             if RCHdr.Get("Document No.") then

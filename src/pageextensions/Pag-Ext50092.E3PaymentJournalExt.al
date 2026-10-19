@@ -2,6 +2,14 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
 {
     layout
     {
+        modify(Amount)
+        {
+            Editable = isEdit;
+        }
+        modify("Amount (LCY)")
+        {
+            Editable = isEdit;
+        }
         addafter("Cheque No.")
         {
             field("E3 Narration"; Rec."E3 Narration")
@@ -113,11 +121,34 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
     trigger OnAfterGetRecord()
     begin
         UpdateCardPaymentAction();
+
+
+    end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        AmountEdit();
     end;
 
     trigger OnOpenPage()
     begin
         blnEdit := false;
+        isEdit := true;
+    end;
+
+    local procedure AmountEdit()
+    var
+        vendLedgerEntry: Record "Vendor Ledger Entry";
+    begin
+        if (rec."VLE Doc No." <> '') then begin
+            vendLedgerEntry.Reset();
+            vendLedgerEntry.SetRange("Document No.", rec."VLE Doc No.");
+            if vendLedgerEntry.Find('-') then
+                isEdit := false;
+        end
+        else
+            isEdit := true;
+
     end;
 
     local procedure UpdateCardPaymentAction()
@@ -145,4 +176,5 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         ShowCardPayment: Boolean;
         CardPaymentReportID: Integer;
         blnEdit: Boolean;
+        isEdit: Boolean;
 }

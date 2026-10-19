@@ -171,6 +171,14 @@ table 50083 "E3 Organization Receipt"
             Caption = 'No. Series';
             DataClassification = CustomerContent;
         }
+        field(21; "Selected Allocation Entry No."; Integer)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(22; "Selected Customer CodeCode"; code[20])
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

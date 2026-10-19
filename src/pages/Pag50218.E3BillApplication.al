@@ -123,11 +123,32 @@ page 50218 "E3 Bill Application List"
                 ToolTip = 'Retrieve receipt data for the selected customer and insert it into Bill Application.';
 
                 trigger OnAction()
+                var
+                    BillAppImportReport: Report "E3 Bill Application Import";
+                    SelectedCustomerCode: Code[20];
+                    receiptNo: Code[50];
+                    EntryNo: Integer;
+                    AllocationReceipt: Record "E3 Allocation Receipt";
+
                 begin
-                    Report.RunModal(
-                        Report::"E3 Bill Application Import",
-                        true,
-                        false);
+                    receiptNo := Rec.GetRangeMin("Receipt No.");
+                    EntryNo := Rec.GetRangeMin("Allocation Receipt Entry No.");
+                    // Call the public function on Subpage 1 (AllocationReceipt) to get the highlighted customer code
+                    AllocationReceipt.Reset();
+                    AllocationReceipt.SetRange("Entry No.", EntryNo);
+                    AllocationReceipt.SetRange("Receipt No.", receiptNo);
+                    if AllocationReceipt.Find('-') then;
+                    SelectedCustomerCode := AllocationReceipt."Customer Code";
+                    if SelectedCustomerCode = '' then
+                        Error('Please select a customer row in the Allocation Receipt subpage first.');
+
+                    // Pass the customer code into the report
+                    BillAppImportReport.SetCustomerFilter(SelectedCustomerCode);
+                    BillAppImportReport.RunModal();
+                    // Report.RunModal(
+                    //     Report::"E3 Bill Application Import",
+                    //     true,
+                    //     false);
                 end;
             }
         }

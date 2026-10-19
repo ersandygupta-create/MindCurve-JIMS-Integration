@@ -240,6 +240,7 @@ page 50077 "Create Bank Payment"
                     TempVendorPaymentBuffer."Vendor Ledg. Entry No." := VendorLedgerEntry."Entry No.";
                     TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type" := VendorLedgerEntry."Document Type";
                     TempVendorPaymentBuffer."Remit-to Code" := VendorLedgerEntry."Remit-to Code";
+                    TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. No." := VendorLedgerEntry."Document No.";
 
                     if CheckCalcPmtDiscGenJnlVend(VendorLedgerEntry."Amount to Pay", VendorLedgerEntry, 0, false) then
                         PaymentAmt := -(VendorLedgerEntry."Amount to Pay" - VendorLedgerEntry.GetRemainingPmtDiscPossible(PostingDate))
@@ -317,6 +318,7 @@ page 50077 "Create Bank Payment"
                 GenJnlLine.Validate("Account No.", TempVendorPaymentBuffer."Vendor No.");
                 if Vendor."No." <> TempVendorPaymentBuffer."Vendor No." then Vendor.Get(TempVendorPaymentBuffer."Vendor No.");
                 GenJnlLine.Description := Vendor.Name;
+                GenJnlLine."VLE Doc No." := TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. No.";
                 GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"Bank Account";
                 GenJnlLine.Validate("Bal. Account No.", BalAccountNo);
                 GenJnlLine.Validate("Currency Code", TempVendorPaymentBuffer."Currency Code");
@@ -335,6 +337,7 @@ page 50077 "Create Bank Payment"
                 GenJnlLine.Validate("Payment Method Code", TempVendorPaymentBuffer."Payment Method Code");
                 GenJnlLine."Remit-to Code" := TempVendorPaymentBuffer."Remit-to Code";
                 GenJnlLine."Bank Integration" := true;
+                GenJnlLine."Applies-to ID" := '';
                 TempVendorPaymentBuffer.CopyFieldsToGenJournalLine(GenJnlLine);
                 OnBeforeUpdateGnlJnlLineDimensionsFromVendorPayment(GenJnlLine, TempVendorPaymentBuffer);
                 UpdateDimensions(GenJnlLine, TempVendorPaymentBuffer);

@@ -92,55 +92,39 @@ page 50217 "E3 Allocation Receipt List"
             }
         }
     }
-    trigger OnAfterGetCurrRecord()
-    begin
-        CurrPage.Update(false);
-        // updateAllocatedAmount(Rec."Receipt No.");
-    end;
+
 
     trigger OnModifyRecord(): Boolean
     begin
         CurrPage.Update(false);
     end;
 
-    /* trigger OnNewRecord(BelowxRec: Boolean)
-     begin
-         updateAllocatedAmount(Rec."Receipt No.");
-     end;
+    trigger OnAfterGetCurrRecord()
+    var
+        OrgReceipt: Record "E3 Organization Receipt";
+    begin
+        //  CurrPage.Update(false);
+        if Rec."Receipt No." = '' then
+            exit;
 
-     trigger OnNextRecord(Steps: Integer): Integer
-     begin
-         updateAllocatedAmount(Rec."Receipt No.");
-     end;
- */
-    /* local procedure updateAllocatedAmount(receiptNo: code[50])
-     var
-         AllocationReceipt: Record "E3 Allocation Receipt";
-         OrgReceipt: Record "E3 Organization Receipt";
-         AllocatedAmt: Decimal;
-     begin
-         AllocatedAmt := 0;
-         AllocationReceipt.Reset();
-         AllocationReceipt.SetRange("Receipt No.", receiptNo);
-         if AllocationReceipt.FindSet() then
-             repeat
-                 AllocatedAmt += AllocationReceipt."Allocated Amount";
-             until AllocationReceipt.Next() = 0;
+        // Find the parent header and update its tracking field with the current line's ID
+        OrgReceipt.Reset();
+        OrgReceipt.SetRange("Document No.", rec."Receipt No.");
+        if OrgReceipt.Find('-') then begin
+            if ((OrgReceipt."Selected Allocation Entry No." <> Rec."Entry No.")
+                and (OrgReceipt."Selected Customer CodeCode" <> Rec."Customer Code")) then begin
+                OrgReceipt."Selected Allocation Entry No." := Rec."Entry No.";
+                OrgReceipt."Selected Customer CodeCode" := rec."Customer Code";
+                OrgReceipt.Modify(false);
 
-         OrgReceipt.Reset();
-         OrgReceipt.SetRange("Document No.", receiptNo);
-         if OrgReceipt.Find('-') then begin
-             OrgReceipt."Allocation Amount" := AllocatedAmt;
-             OrgReceipt.Balance := OrgReceipt."Received Amount" - AllocatedAmt;
-             if (OrgReceipt.Balance = 0) then
-                 OrgReceipt."Allocation Status" := "E3 Allocation Status"::"Fully Allocate"
-             else
-                 OrgReceipt."Allocation Status" := "E3 Allocation Status"::"Partial Allocate";
-             OrgReceipt.Modify(true);
-             CurrPage.Update(false);
-         end;
-     end;
- */
+                // Optional: Force the second subpage to update/sync its view
+                // CurrPage.Update(false); 
+            end;
+        end;
+        CurrPage.Update(false);
+    end;
+
+
     local procedure GetOrganizationReceipt(ReceiptNo: Code[50])
     var
         OrgReceipt: Record "E3 Organization Receipt";
@@ -194,5 +178,10 @@ page 50217 "E3 Allocation Receipt List"
                 CurrPage.Update(false);
             end;
         end;
+    end;
+
+    procedure GetSelectedCustomerCode(): Code[20]
+    begin
+        exit(Rec."Customer Code");
     end;
 }

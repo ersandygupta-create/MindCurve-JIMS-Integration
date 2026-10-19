@@ -105,6 +105,7 @@ page 50256 "E3 Posted Organization Receipt"
 
                 SubPageLink =
                         "Receipt No." = FIELD("Document No.");
+                UpdatePropagation = Both;
             }
 
             part(BillApplication; "E3 Bill Application List")
@@ -112,7 +113,9 @@ page 50256 "E3 Posted Organization Receipt"
                 ApplicationArea = All;
 
                 SubPageLink =
-                        "Receipt No." = FIELD("Document No.");
+                       "Receipt No." = field("Document No."),
+                       "Allocation Receipt Entry No." = field("Selected Allocation Entry No.");
+                UpdatePropagation = Both;
             }
         }
     }

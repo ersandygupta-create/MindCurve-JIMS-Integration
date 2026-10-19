@@ -96,7 +96,8 @@ page 50216 "E3 Organization Receipt"
                 Visible = false;
 
                 SubPageLink =
-                        "Receipt No." = FIELD("Document No.");
+                        "Receipt No." = FIELD("Document No."),
+                        "Allocation Receipt Entry No." = field("Selected Allocation Entry No.");
             }
         }
     }

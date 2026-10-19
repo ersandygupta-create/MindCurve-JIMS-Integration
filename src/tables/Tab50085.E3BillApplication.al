@@ -137,6 +137,12 @@ table 50085 "E3 Bill Application"
             ValidateTableRelation = false;
             DataClassification = CustomerContent;
         }
+        field(21; "Allocation Receipt Entry No."; Integer)
+        {
+            Caption = 'Entry No.';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {
