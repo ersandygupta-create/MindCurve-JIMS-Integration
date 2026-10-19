@@ -24,6 +24,7 @@ codeunit 50040 "E3 HSN/SAC Mgmt."
 
         if HSNLog.FindSet() then
             repeat
+                ClearLastError();
                 SendHSNSACDetails(HSNLog);
             until HSNLog.Next() = 0;
     end;

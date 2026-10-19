@@ -9,7 +9,22 @@ codeunit 50062 "E3 Canceled Indent Status Mgmt"
 
         if not E3APISetup."Integration Enabled" then
             exit;
+
+        if not E3APISetup."Indent Status API Enabled" then
+            exit;
+
+        IndentLine.Reset();
+        IndentLine.SetRange(IsSent, false);
+        IndentLine.SetFilter("Cancel Indent Remark", '<>%1', '');
+        IndentLine.SetFilter("SNo.", '<>%1', 0);
+
+        if IndentLine.FindSet(true) then
+            repeat
+                ClearLastError();
+                SendIndentCancelLineDetails(IndentLine);
+            until IndentLine.Next() = 0;
     end;
+
 
     var
         E3APISetup: Record "E3 Integration API Setup";

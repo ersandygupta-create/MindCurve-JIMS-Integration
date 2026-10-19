@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-10-06T07:30:06.6696739Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-10-17T05:38:41.7829672Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -39,6 +39,7 @@
                     <Value>=First(Fields!LocationName.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -92,9 +93,10 @@
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Left>0.02778in</Left>
+            <Top>0.74084cm</Top>
+            <Left>0.35759in</Left>
             <Height>0.8125in</Height>
-            <Width>5.72916in</Width>
+            <Width>4.39589in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -125,8 +127,8 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>0.8125in</Top>
-            <Left>0.02778in</Left>
+            <Top>1.10417in</Top>
+            <Left>0.35759in</Left>
             <Height>0.20833in</Height>
             <Width>7.5729in</Width>
             <ZIndex>1</ZIndex>
@@ -162,14 +164,15 @@
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.09028in</Top>
-            <Left>0.02778in</Left>
+            <Top>1.38195in</Top>
+            <Left>0.35759in</Left>
             <Height>0.16667in</Height>
             <Width>1in</Width>
             <ZIndex>2</ZIndex>
@@ -195,14 +198,15 @@
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.25695in</Top>
-            <Left>0.02778in</Left>
+            <Top>1.54862in</Top>
+            <Left>0.35759in</Left>
             <Height>0.16667in</Height>
             <Width>1in</Width>
             <ZIndex>3</ZIndex>
@@ -228,14 +232,15 @@
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.43055in</Top>
-            <Left>0.02778in</Left>
+            <Top>1.72222in</Top>
+            <Left>0.35759in</Left>
             <Height>0.16667in</Height>
             <Width>1in</Width>
             <ZIndex>4</ZIndex>
@@ -261,14 +266,15 @@
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.60069in</Top>
-            <Left>0.02778in</Left>
+            <Top>1.89236in</Top>
+            <Left>0.35759in</Left>
             <Height>0.16667in</Height>
             <Width>1in</Width>
             <ZIndex>5</ZIndex>
@@ -294,14 +300,15 @@
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.76736in</Top>
-            <Left>0.02778in</Left>
+            <Top>2.05903in</Top>
+            <Left>0.35759in</Left>
             <Height>0.16667in</Height>
             <Width>1in</Width>
             <ZIndex>6</ZIndex>
@@ -327,14 +334,15 @@
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.94096in</Top>
-            <Left>0.02778in</Left>
+            <Top>2.23263in</Top>
+            <Left>0.35759in</Left>
             <Height>0.16667in</Height>
             <Width>1in</Width>
             <ZIndex>7</ZIndex>
@@ -366,8 +374,8 @@
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.09028in</Top>
-            <Left>1.04167in</Left>
+            <Top>1.38195in</Top>
+            <Left>1.37148in</Left>
             <Height>0.16667in</Height>
             <Width>3.382in</Width>
             <ZIndex>8</ZIndex>
@@ -399,8 +407,8 @@
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.25695in</Top>
-            <Left>1.04167in</Left>
+            <Top>1.54862in</Top>
+            <Left>1.37148in</Left>
             <Height>0.16667in</Height>
             <Width>3.382in</Width>
             <ZIndex>9</ZIndex>
@@ -432,8 +440,8 @@
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.43055in</Top>
-            <Left>1.04167in</Left>
+            <Top>1.72222in</Top>
+            <Left>1.37148in</Left>
             <Height>0.16667in</Height>
             <Width>3.382in</Width>
             <ZIndex>10</ZIndex>
@@ -455,7 +463,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!City.Value, "DataSet_Result") + " - " + First(Fields!PostCode.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!City.Value, "DataSet_Result") &amp; First(Fields!PostCode.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -465,8 +473,8 @@
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.60069in</Top>
-            <Left>1.04167in</Left>
+            <Top>1.89236in</Top>
+            <Left>1.37148in</Left>
             <Height>0.16667in</Height>
             <Width>3.382in</Width>
             <ZIndex>11</ZIndex>
@@ -498,8 +506,8 @@
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.76736in</Top>
-            <Left>1.04167in</Left>
+            <Top>2.05903in</Top>
+            <Left>1.37148in</Left>
             <Height>0.16667in</Height>
             <Width>3.382in</Width>
             <ZIndex>12</ZIndex>
@@ -531,8 +539,8 @@
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.94096in</Top>
-            <Left>1.04167in</Left>
+            <Top>2.23263in</Top>
+            <Left>1.37148in</Left>
             <Height>0.16667in</Height>
             <Width>3.382in</Width>
             <ZIndex>13</ZIndex>
@@ -554,26 +562,19 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>GRN No</Value>
+                    <Value>GRN No              :</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
-                  <TextRun>
-                    <Value>              :</Value>
-                    <Style>
-                      <FontFamily>Segoe UI</FontFamily>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                  </TextRun>
                 </TextRuns>
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.09028in</Top>
-            <Left>5.1736in</Left>
+            <Top>1.38195in</Top>
+            <Left>5.50341in</Left>
             <Height>0.16667in</Height>
             <Width>1in</Width>
             <ZIndex>14</ZIndex>
@@ -595,26 +596,19 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>GRN Date</Value>
+                    <Value>GRN Date            :</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
-                  <TextRun>
-                    <Value>            :</Value>
-                    <Style>
-                      <FontFamily>Segoe UI</FontFamily>
-                      <FontSize>8pt</FontSize>
-                    </Style>
-                  </TextRun>
                 </TextRuns>
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.25695in</Top>
-            <Left>5.1736in</Left>
+            <Top>1.54862in</Top>
+            <Left>5.50341in</Left>
             <Height>0.16667in</Height>
             <Width>1in</Width>
             <ZIndex>15</ZIndex>
@@ -640,14 +634,15 @@
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.43055in</Top>
-            <Left>5.1736in</Left>
+            <Top>1.72222in</Top>
+            <Left>5.50341in</Left>
             <Height>0.16667in</Height>
             <Width>1in</Width>
             <ZIndex>16</ZIndex>
@@ -673,14 +668,15 @@
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.61111in</Top>
-            <Left>5.1736in</Left>
+            <Top>1.90278in</Top>
+            <Left>5.50341in</Left>
             <Height>0.15625in</Height>
             <Width>1in</Width>
             <ZIndex>17</ZIndex>
@@ -706,14 +702,15 @@
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.76736in</Top>
-            <Left>5.1736in</Left>
+            <Top>2.05903in</Top>
+            <Left>5.50341in</Left>
             <Height>0.16667in</Height>
             <Width>1in</Width>
             <ZIndex>18</ZIndex>
@@ -739,14 +736,15 @@
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.94096in</Top>
-            <Left>5.1736in</Left>
+            <Top>2.23263in</Top>
+            <Left>5.50341in</Left>
             <Height>0.16667in</Height>
             <Width>1in</Width>
             <ZIndex>19</ZIndex>
@@ -780,8 +778,8 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>1.09202in</Top>
-            <Left>6.1736in</Left>
+            <Top>1.38369in</Top>
+            <Left>6.50341in</Left>
             <Height>0.16667in</Height>
             <Width>1.42708in</Width>
             <ZIndex>20</ZIndex>
@@ -789,6 +787,7 @@
               <Border>
                 <Style>None</Style>
               </Border>
+              <VerticalAlign>Bottom</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -816,8 +815,8 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>1.25695in</Top>
-            <Left>6.1736in</Left>
+            <Top>1.54862in</Top>
+            <Left>6.50341in</Left>
             <Height>0.16667in</Height>
             <Width>1.42708in</Width>
             <ZIndex>21</ZIndex>
@@ -849,8 +848,8 @@
                 <Style />
               </Paragraph>
             </Paragraphs>
-            <Top>1.43055in</Top>
-            <Left>6.1736in</Left>
+            <Top>1.72222in</Top>
+            <Left>6.50341in</Left>
             <Height>0.16667in</Height>
             <Width>1.42708in</Width>
             <ZIndex>22</ZIndex>
@@ -885,8 +884,8 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>1.60069in</Top>
-            <Left>6.1736in</Left>
+            <Top>1.89236in</Top>
+            <Left>6.50341in</Left>
             <Height>0.16667in</Height>
             <Width>1.42708in</Width>
             <ZIndex>23</ZIndex>
@@ -920,8 +919,8 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>1.76736in</Top>
-            <Left>6.1736in</Left>
+            <Top>2.05903in</Top>
+            <Left>6.50341in</Left>
             <Height>0.16667in</Height>
             <Width>1.42708in</Width>
             <ZIndex>24</ZIndex>
@@ -943,7 +942,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!CapexType.Value, "DataSet_Result")</Value>
+                    <Value>=Fields!VendorInvoiceNo.Value</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -955,8 +954,8 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>1.93403in</Top>
-            <Left>6.1736in</Left>
+            <Top>2.2257in</Top>
+            <Left>6.50341in</Left>
             <Height>0.15971in</Height>
             <Width>1.42708in</Width>
             <ZIndex>25</ZIndex>
@@ -971,8 +970,8 @@
             </Style>
           </Textbox>
           <Line Name="Line1">
-            <Top>2.16318in</Top>
-            <Left>0.02778in</Left>
+            <Top>2.45485in</Top>
+            <Left>0.35759in</Left>
             <Height>0in</Height>
             <Width>7.5729in</Width>
             <ZIndex>26</ZIndex>
@@ -2006,6 +2005,7 @@
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <Format>'₹'#,0.00;('₹'#,0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2198,6 +2198,7 @@
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <Format>'₹'#,0.00;('₹'#,0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2390,6 +2391,7 @@
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <Format>'₹'#,0.00;('₹'#,0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2735,6 +2737,7 @@
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <Format>'₹'#,0.00;('₹'#,0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3294,8 +3297,8 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Top>2.23263in</Top>
-            <Left>0.02778in</Left>
+            <Top>2.5243in</Top>
+            <Left>0.35759in</Left>
             <Height>2in</Height>
             <Width>7.5729in</Width>
             <ZIndex>27</ZIndex>
@@ -3310,10 +3313,10 @@
             <Value>=First(Fields!CompanyLogo.Value, "DataSet_Result")</Value>
             <MIMEType>image/jpeg</MIMEType>
             <Sizing>FitProportional</Sizing>
-            <Top>0.03347in</Top>
-            <Left>6.51736in</Left>
-            <Height>0.72347in</Height>
-            <Width>1.08332in</Width>
+            <Top>0.32514in</Top>
+            <Left>4.82292in</Left>
+            <Height>0.65849in</Height>
+            <Width>3.10757in</Width>
             <ZIndex>28</ZIndex>
             <ToolTip>=First(Fields!CompanyLogo.Value, "DataSet_Result")</ToolTip>
             <Style>
@@ -3323,10 +3326,10 @@
             </Style>
           </Image>
         </ReportItems>
-        <Height>4.26388in</Height>
+        <Height>11.69in</Height>
         <Style />
       </Body>
-      <Width>7.60068in</Width>
+      <Width>8.27in</Width>
       <Page>
         <PageHeight>11.69in</PageHeight>
         <PageWidth>8.27in</PageWidth>
@@ -3457,6 +3460,9 @@ End Function
         </Field>
         <Field Name="ExpirationDate">
           <DataField>ExpirationDate</DataField>
+        </Field>
+        <Field Name="Vendor_Invoice_No_">
+          <DataField>Vendor_Invoice_No_</DataField>
         </Field>
         <Field Name="ItemNo">
           <DataField>ItemNo</DataField>

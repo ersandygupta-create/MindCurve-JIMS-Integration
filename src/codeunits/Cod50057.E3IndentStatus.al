@@ -2,6 +2,7 @@ codeunit 50057 "E3 Indent Status Mgmt."
 {
     TableNo = "Job Queue Entry";
 
+
     trigger OnRun()
     begin
         if not E3APISetup.Get() then
@@ -9,7 +10,22 @@ codeunit 50057 "E3 Indent Status Mgmt."
 
         if not E3APISetup."Integration Enabled" then
             exit;
+
+        if not E3APISetup."Indent Status API Enabled" then
+            exit;
+
+        IndentLine.Reset();
+        IndentLine.SetRange(IsSent, false);
+        IndentLine.SetFilter(Remarks, '<>%1', '');
+        IndentLine.SetFilter("SNo.", '<>%1', 0);
+
+        if IndentLine.FindSet(true) then
+            repeat
+                ClearLastError();
+                SendIndentLineDetails(IndentLine);
+            until IndentLine.Next() = 0;
     end;
+
 
     var
         E3APISetup: Record "E3 Integration API Setup";

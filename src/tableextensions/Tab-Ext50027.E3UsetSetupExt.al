@@ -259,5 +259,35 @@ tableextension 50027 "E3 Uset Setup Ext" extends "User Setup"
             DataClassification = CustomerContent;
             ToolTip = 'Specifies whether the user is allowed to cancel indent lines.';
         }
+        field(50049; "Vendor Bank Insert"; Boolean)
+        {
+            Caption = 'Vendor Bank Insert';
+            DataClassification = CustomerContent;
+        }
+        field(50050; "Vendor Bank Modify"; Boolean)
+        {
+            Caption = 'Vendor Bank Modify';
+            DataClassification = CustomerContent;
+        }
+        field(50051; "Vendor Bank Delete"; Boolean)
+        {
+            Caption = 'Vendor Bank Delete';
+            DataClassification = CustomerContent;
+        }
+        field(50052; "Order Address Insert"; Boolean)
+        {
+            Caption = 'Order Address Insert';
+            DataClassification = CustomerContent;
+        }
+        field(50053; "Order Address Modify"; Boolean)
+        {
+            Caption = 'Order Address Modify';
+            DataClassification = CustomerContent;
+        }
+        field(50054; "Order Address Delete"; Boolean)
+        {
+            Caption = 'Order Address Delete';
+            DataClassification = CustomerContent;
+        }
     }
 }
