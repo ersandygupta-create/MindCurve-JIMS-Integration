@@ -136,6 +136,7 @@ table 50062 "E3 GRN Work Sheet"
             Caption = 'MRP';
             DataClassification = CustomerContent;
             DecimalPlaces = 2 : 2;
+            BlankZero = true;
             trigger OnValidate()
             begin
                 CalculateLandedValue();
