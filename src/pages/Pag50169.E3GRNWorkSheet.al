@@ -264,6 +264,7 @@ page 50169 "E3 GRN Work Sheet"
                     Caption = 'Sale Rate';
                     ShowMandatory = true;
                     ToolTip = 'Specifies the sale rate.';
+
                 }
                 field(skuSaleRate; Rec."SKU Sale Rate")
                 {
