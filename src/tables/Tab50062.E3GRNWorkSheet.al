@@ -136,6 +136,7 @@ table 50062 "E3 GRN Work Sheet"
             Caption = 'MRP';
             DataClassification = CustomerContent;
             DecimalPlaces = 2 : 2;
+            BlankZero = true;
             trigger OnValidate()
             begin
                 CalculateLandedValue();
@@ -180,7 +181,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Sale Rate';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+            BlankZero = true;
             trigger OnValidate()
             begin
                 if "Sale Rate" > MRP then begin
@@ -205,7 +206,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'SKU Sale Rate';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+            BlankZero = true;
             trigger OnValidate()
             begin
                 CalculateLandedValue();
@@ -216,6 +217,7 @@ table 50062 "E3 GRN Work Sheet"
             Caption = 'Staff Sale Rate';
             DataClassification = CustomerContent;
             DecimalPlaces = 2 : 2;
+            BlankZero = true;
             trigger OnValidate()
             begin
                 CalculateLandedValue();
