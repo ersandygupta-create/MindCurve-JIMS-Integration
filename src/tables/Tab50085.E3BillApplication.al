@@ -143,10 +143,17 @@ table 50085 "E3 Bill Application"
             Editable = false;
             DataClassification = CustomerContent;
         }
+        field(22; "JV Created"; Boolean)
+        {
+            Caption = 'JV Created';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {
         key(PK; "Entry No.")
+
         {
             Clustered = true;
         }

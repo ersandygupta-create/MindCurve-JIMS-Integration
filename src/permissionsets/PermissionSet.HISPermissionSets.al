@@ -4,9 +4,7 @@ permissionset 50000 "E3 HIS Permission"
     Caption = 'HIS Permission Sets', MaxLength = 30;
     Permissions = table "E3 HIS Consumption Entries" = X,
         tabledata "E3 Deleted G/L Entry" = RIMD,
-        tabledata "A" = rimd,
-        tabledata "B" = rimd,
-        tabledata "C" = rimd,
+
         tabledata "E3 HIS Consumption Entries" = RIMD,
         tabledata "E3 HIS Customer Mapping" = RIMD,
         tabledata "E3 HIS Delete Document" = RIMD,
@@ -21,6 +19,7 @@ permissionset 50000 "E3 HIS Permission"
         tabledata "E3 HIS Revenue Line" = RIMD,
         tabledata "E3 HIS Revenue Staging Table" = RIMD,
         tabledata "E3 HIS UOM Mapping" = RIMD,
+        tabledata "E3 Settlement Mapping Setup" = RIMD,
         table "E3 Deleted G/L Entry" = X,
         table "E3 HIS Customer Mapping" = X,
         table "E3 HIS Delete Document" = X,
@@ -31,9 +30,8 @@ permissionset 50000 "E3 HIS Permission"
         table "E3 HIS Item Mapping" = X,
         table "E3 HIS Master Staging" = X,
         table "E3 HIS Pharmacy Entries" = X,
-        table "A" = X,
-        table "B" = X,
-        table "C" = X,
+        table "E3 Settlement Mapping Setup" = x,
+
         table "E3 HIS Revenue Header" = X,
         table "E3 HIS Revenue Line" = X,
         table "E3 HIS Revenue Staging Table" = X,

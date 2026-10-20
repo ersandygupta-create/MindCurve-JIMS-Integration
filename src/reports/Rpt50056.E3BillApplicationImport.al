@@ -36,6 +36,21 @@ report 50056 "E3 Bill Application Import"
                         Caption = 'Customer Code';
                         ToolTip = 'Select the customer whose allocation receipts and customer ledger entries should be imported.';
                         TableRelation = "E3 Allocation Receipt"."Customer Code";
+                        Editable = false;
+                    }
+                    field(ReceiptNo; ReceiptNo)
+                    {
+                        ApplicationArea = all;
+                        ToolTip = 'Receipt No';
+                        Visible = false;
+                        Caption = 'Receipt No.';
+                    }
+                    field(EntryNo; EntryNo)
+                    {
+                        ApplicationArea = all;
+                        ToolTip = 'Entry No.';
+                        Visible = false;
+                        Caption = 'Entry No.';
                     }
                 }
             }
@@ -45,6 +60,8 @@ report 50056 "E3 Bill Application Import"
     var
         CustomerCode: Code[20];
         AllocationReceipt: Record "E3 Allocation Receipt";
+        ReceiptNo: Code[20];
+        EntryNo: Integer;
         CustomerLedgerEntry: Record "Cust. Ledger Entry";
         BillApplication: Record "E3 Bill Application";
         LastBillApplication: Record "E3 Bill Application";
@@ -60,6 +77,8 @@ report 50056 "E3 Bill Application Import"
 
         AllocationReceipt.Reset();
         AllocationReceipt.SetRange("Customer Code", CustomerCode);
+        AllocationReceipt.SetRange("Receipt No.", ReceiptNo);
+        AllocationReceipt.SetRange("Entry No.", EntryNo);
 
         if not AllocationReceipt.FindSet() then
             Error(
@@ -96,6 +115,7 @@ report 50056 "E3 Bill Application Import"
                         BillApplication.Init();
                         BillApplication."Entry No." := NextEntryNo;
                         BillApplication."Receipt No." := AllocationReceipt."Receipt No.";
+                        BillApplication."Allocation Receipt Entry No." := EntryNo;
                         BillApplication."Customer Code" := CustomerLedgerEntry."Customer No.";
                         BillApplication."Customer Name" := AllocationReceipt."Customer Name";
                         BillApplication."Bill No" := CustomerLedgerEntry."Document No.";
@@ -120,5 +140,15 @@ report 50056 "E3 Bill Application Import"
     procedure SetCustomerFilter(NewCustomerCode: Code[20])
     begin
         CustomerCode := NewCustomerCode;
+    end;
+
+    procedure SetReceiptNo(NewReceiptNo: Code[50])
+    begin
+        ReceiptNo := NewReceiptNo;
+    end;
+
+    procedure SetEntryNo(NewEntryNo: Integer)
+    begin
+        EntryNo := NewEntryNo;
     end;
 }

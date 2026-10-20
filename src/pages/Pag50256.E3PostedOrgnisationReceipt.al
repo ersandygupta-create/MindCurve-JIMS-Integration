@@ -114,7 +114,7 @@ page 50256 "E3 Posted Organization Receipt"
 
                 SubPageLink =
                        "Receipt No." = field("Document No."),
-                       "Allocation Receipt Entry No." = field("Selected Allocation Entry No.");
+                "Allocation Receipt Entry No." = field("Selected Allocation Entry No.");
                 UpdatePropagation = Both;
             }
         }
@@ -160,4 +160,65 @@ page 50256 "E3 Posted Organization Receipt"
             }
         }
     }
+    trigger OnAfterGetCurrRecord()
+    begin
+        FilterSubpageC(Rec."Selected Allocation Entry No.");
+    end;
+
+    procedure FilterSubpageC(EntryNo: Integer)
+    begin
+        CurrPage.BillApplication.Page.SetAllocationFilter(Rec."Document No.", EntryNo);
+    end;
+    // trigger OnAfterGetCurrRecord()
+    // begin
+    //     FilterSubpageC(Rec."Selected Allocation Entry No.");
+    // end;
+
+
+
+
+    // procedure FilterSubpageC(EntryNo: Integer)
+    // begin
+    //     CurrPage.BillApplication.Page.SetAllocationFilter(Rec."Document No.", EntryNo);
+    // end;
+
+    procedure SetCustomerFilter(DocNo: Code[20]; AllocationEntryNo: Integer)
+    begin
+        Rec.Reset();
+        Rec.SetRange("Document No.", DocNo);
+        Rec.SetRange("Selected Allocation Entry No.", AllocationEntryNo);
+        CurrPage.Update(false);
+    end;
+
+    procedure SetAllocationFilter(DocNo: Code[20]; AllocationEntryNo: Integer)
+    begin
+        Rec.Reset();
+        Rec.SetRange("Document No.", DocNo);
+        Rec.SetRange("Selected Allocation Entry No.", AllocationEntryNo);
+        CurrPage.Update(false);
+    end;
+
+    // trigger OnAfterGetCurrRecord()
+    // begin
+    //     // Every time Subpage C refreshes, update its filter directly from Table A
+    //    // UpdateAllocationFilter();
+    // end;
+
+    procedure UpdateAllocationFilter()
+    var
+        RecordA: Record "E3 Organization Receipt";
+        DocNo: Code[20];
+    begin
+        DocNo := Rec.GetFilter("Document No.");
+        if DocNo = '' then
+            DocNo := Rec."Document No.";
+
+        if DocNo <> '' then begin
+            // if RecordA.Get(DocNo) then begin
+            // Directly filter Table C based on Table A's active tracking field
+            Rec.SetRange("Document No.", DocNo);
+            Rec.SetRange("Selected Allocation Entry No.", RecordA."Selected Allocation Entry No.");
+            //end;
+        end;
+    end;
 }

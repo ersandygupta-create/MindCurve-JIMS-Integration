@@ -88,6 +88,25 @@ page 50217 "E3 Allocation Receipt List"
                 begin
                     receiptNo := Rec.GetRangeMin("Receipt No.");
                     GetOrganizationReceipt(receiptNo);
+                    //CurrPage.Update(true);
+                end;
+            }
+            action(SelectAllocation)
+            {
+                ApplicationArea = All;
+                Caption = 'Select Allocation';
+                Image = Checkmark;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+
+                trigger OnAction()
+                begin
+                    if Rec."Receipt No." = '' then
+                        exit;
+
+                    // Pass control to the parent card to update state and refresh Subpage C
+                    CurrPage.Update(true);
                 end;
             }
         }
@@ -103,26 +122,26 @@ page 50217 "E3 Allocation Receipt List"
     var
         OrgReceipt: Record "E3 Organization Receipt";
     begin
-        //  CurrPage.Update(false);
         if Rec."Receipt No." = '' then
             exit;
-
-        // Find the parent header and update its tracking field with the current line's ID
         OrgReceipt.Reset();
-        OrgReceipt.SetRange("Document No.", rec."Receipt No.");
+        OrgReceipt.SetRange("Document No.", Rec."Receipt No.");
         if OrgReceipt.Find('-') then begin
-            if ((OrgReceipt."Selected Allocation Entry No." <> Rec."Entry No.")
-                and (OrgReceipt."Selected Customer CodeCode" <> Rec."Customer Code")) then begin
+            // Update parent table A tracking fields so subpage C knows which line is currently active
+            if (OrgReceipt."Selected Allocation Entry No." <> Rec."Entry No.") or
+               (OrgReceipt."Selected Customer Codecode" <> Rec."Customer Code") then begin
                 OrgReceipt."Selected Allocation Entry No." := Rec."Entry No.";
-                OrgReceipt."Selected Customer CodeCode" := rec."Customer Code";
+                OrgReceipt."Selected Customer Codecode" := Rec."Customer Code";
                 OrgReceipt.Modify(false);
 
-                // Optional: Force the second subpage to update/sync its view
-                // CurrPage.Update(false); 
+                // Forces parent page buffers to refresh UI immediately
+
             end;
         end;
         CurrPage.Update(false);
+
     end;
+
 
 
     local procedure GetOrganizationReceipt(ReceiptNo: Code[50])
@@ -175,7 +194,7 @@ page 50217 "E3 Allocation Receipt List"
 
                 OrgReceipt.Modify(true);
 */
-                CurrPage.Update(false);
+                //  CurrPage.Update(false);
             end;
         end;
     end;

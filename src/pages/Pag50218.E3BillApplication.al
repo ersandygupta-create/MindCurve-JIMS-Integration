@@ -125,34 +125,151 @@ page 50218 "E3 Bill Application List"
                 trigger OnAction()
                 var
                     BillAppImportReport: Report "E3 Bill Application Import";
-                    SelectedCustomerCode: Code[20];
-                    receiptNo: Code[50];
-                    EntryNo: Integer;
-                    AllocationReceipt: Record "E3 Allocation Receipt";
-
+                    OrgReceipt: Record "E3 Organization Receipt";
+                    DocNo: Code[50];
                 begin
-                    receiptNo := Rec.GetRangeMin("Receipt No.");
-                    EntryNo := Rec.GetRangeMin("Allocation Receipt Entry No.");
-                    // Call the public function on Subpage 1 (AllocationReceipt) to get the highlighted customer code
-                    AllocationReceipt.Reset();
-                    AllocationReceipt.SetRange("Entry No.", EntryNo);
-                    AllocationReceipt.SetRange("Receipt No.", receiptNo);
-                    if AllocationReceipt.Find('-') then;
-                    SelectedCustomerCode := AllocationReceipt."Customer Code";
-                    if SelectedCustomerCode = '' then
-                        Error('Please select a customer row in the Allocation Receipt subpage first.');
+                    DocNo := Rec.GetFilter("Receipt No.");
+                    if DocNo = '' then
+                        DocNo := Rec."Receipt No.";
+
+                    // Correctly fetch the header record using SetRange instead of .Get()
+                    OrgReceipt.Reset();
+                    OrgReceipt.SetRange("Document No.", DocNo);
+                    if not OrgReceipt.FindFirst() then
+                        exit;
+
+                    if OrgReceipt."Selected Allocation Entry No." = 0 then
+                        error('Please select a line in Subpage Allocation Receipt.');
 
                     // Pass the customer code into the report
-                    BillAppImportReport.SetCustomerFilter(SelectedCustomerCode);
+                    BillAppImportReport.SetCustomerFilter(OrgReceipt."Selected Customer CodeCode");
+                    BillAppImportReport.SetEntryNo(OrgReceipt."Selected Allocation Entry No.");
+                    BillAppImportReport.SetReceiptNo(OrgReceipt."Document No.");
                     BillAppImportReport.RunModal();
-                    // Report.RunModal(
-                    //     Report::"E3 Bill Application Import",
-                    //     true,
-                    //     false);
                 end;
             }
+            action(CreateJV)
+            {
+                ApplicationArea = All;
+                Caption = 'Create JV';
+                Image = PostBatch;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                ToolTip = 'Create Journal Voucher entries for the selected bill application records.';
+
+                trigger OnAction()
+                var
+                    BillApp: Record "E3 Bill Application";
+                    GenJnlLine: Record "Gen. Journal Line";
+                    MappingSetup: Record "E3 Settlement Mapping Setup";
+                    OrgReceipt: Record "E3 Organization Receipt";
+                    GenJnlBatch: Record "Gen. Journal Batch";
+                    LineNo: Integer;
+                    TemplateName: Code[10];
+                    BatchName: Code[10];
+                    TotalDebit: Decimal;
+                begin
+                    // 1. Get selected records
+                    CurrPage.SetSelectionFilter(BillApp);
+                    if not BillApp.FindSet() then
+                        error('Please select at least one record.');
+
+                    // 2. Fetch Setup Mappings
+                    MappingSetup.Get();
+
+                    // Define your General Journal Template and Batch name here (adjust as needed)
+                    TemplateName := 'JV-BU11';
+                    BatchName := 'DEFAULT';
+
+                    GenJnlBatch.Get(TemplateName, BatchName);
+
+                    // Find last line no to append properly
+                    GenJnlLine.Reset();
+                    GenJnlLine.SetRange("Journal Template Name", TemplateName);
+                    GenJnlLine.SetRange("Journal Batch Name", BatchName);
+                    if GenJnlLine.FindLast() then
+                        LineNo := GenJnlLine."Line No." + 10000
+                    else
+                        LineNo := 10000;
+
+                    // 3. Loop through each selected bill application record
+                    repeat
+                        // if BillApp."JV Created" then
+                        //     continue;
+                        // Optional: Get parent organization receipt for the Balance Account / Document details
+                        OrgReceipt.Reset();
+                        OrgReceipt.SetRange("Document No.", BillApp."Receipt No.");
+                        if not OrgReceipt.FindFirst() then
+                            Clear(OrgReceipt);
+
+                        // --- LINE 1: Balance A/c No (Dr) ---
+                        if BillApp."Payment Received" <> 0 then
+                            CreateGenJnlLine(TemplateName, BatchName, LineNo, GenJnlLine."Document Type"::Payment,
+                                BillApp."Document No.", GenJnlLine."Account Type"::"Bank Account", OrgReceipt."Account No.",
+                                BillApp."Payment Received", 0, BillApp."Customer Code", BillApp."Bill No");
+
+
+                        // --- LINE 2: Disallowed Reg. Wise (Dr) ---
+                        if BillApp."Disallowed Reg. Wise" <> 0 then
+                            CreateGenJnlLine(TemplateName, BatchName, LineNo, GenJnlLine."Document Type"::Payment,
+                                BillApp."Document No.", GenJnlLine."Account Type"::"G/L Account", MappingSetup."Disallowed Reg. Wise Account",
+                                BillApp."Disallowed Reg. Wise", 0, BillApp."Customer Code", BillApp."Bill No");
+
+
+                        // --- LINE 3: Disallowed Billable (Dr) ---
+                        if BillApp."Disallowed Billable" <> 0 then
+                            CreateGenJnlLine(TemplateName, BatchName, LineNo, GenJnlLine."Document Type"::Payment,
+                                BillApp."Document No.", GenJnlLine."Account Type"::"G/L Account", MappingSetup."Disallowed Billable Account",
+                                BillApp."Disallowed Billable", 0, BillApp."Customer Code", BillApp."Bill No");
+
+
+                        // --- LINE 4: Disallowed Security (Dr) ---
+                        if BillApp."Disallowed Security" <> 0 then
+                            CreateGenJnlLine(TemplateName, BatchName, LineNo, GenJnlLine."Document Type"::Payment,
+                                BillApp."Document No.", GenJnlLine."Account Type"::"G/L Account", MappingSetup."Disallowed Security Account",
+                                BillApp."Disallowed Security", 0, BillApp."Customer Code", BillApp."Bill No");
+
+
+                        // --- LINE 5: TDS Amount (Dr) ---
+                        if BillApp."TDS Amount" <> 0 then
+                            CreateGenJnlLine(TemplateName, BatchName, LineNo, GenJnlLine."Document Type"::Payment,
+                                BillApp."Document No.", GenJnlLine."Account Type"::"G/L Account", MappingSetup."TDS Account No.",
+                                BillApp."TDS Amount", 0, BillApp."Customer Code", BillApp."Bill No");
+
+                        if BillApp."Excess Billable" <> 0 then
+                            CreateGenJnlLine(TemplateName, BatchName, LineNo, GenJnlLine."Document Type"::Payment,
+                                BillApp."Document No.", GenJnlLine."Account Type"::"G/L Account", MappingSetup."Excess Billable Account",
+                                BillApp."Excess Billable", 0, BillApp."Customer Code", BillApp."Bill No");
+
+
+                        // --- LINE 6: Customer CU00008 (Cr) ---
+                        // Total Credit amount equals the sum of all debits
+
+
+
+                        TotalDebit := BillApp."Payment Received" + BillApp."Disallowed Reg. Wise" +
+                                      BillApp."Disallowed Billable" + BillApp."Disallowed Security" + BillApp."TDS Amount" - BillApp."Excess Billable";
+
+                        if TotalDebit <> 0 then
+                            CreateGenJnlLine(TemplateName, BatchName, LineNo, GenJnlLine."Document Type"::Payment,
+                                BillApp."Document No.", GenJnlLine."Account Type"::Customer, BillApp."Customer Code",
+                                0, TotalDebit, BillApp."Customer Code", BillApp."Bill No");
+                        ;
+
+                        BillApp."JV Created" := true;
+                        BillApp.Modify(false);
+                    until BillApp.Next() = 0;
+
+
+                    Message('Journal Voucher lines have been successfully created.');
+                end;
+            }
+
         }
+
     }
+
     trigger OnAfterGetRecord()
     begin
         UpdateMedPRF();
@@ -176,5 +293,79 @@ page 50218 "E3 Bill Application List"
             until RevenueLine.Next() = 0;
 
         Rec."Med PRF" := TotalMedPRF;
+    end;
+
+    procedure SetCustomerFilter(DocNo: Code[20]; AllocationEntryNo: Integer)
+    begin
+        Rec.Reset();
+        Rec.SetRange("Document No.", DocNo);
+        Rec.SetRange("Allocation Receipt Entry No.", AllocationEntryNo);
+        CurrPage.Update(false);
+    end;
+
+    procedure SetAllocationFilter(DocNo: Code[20]; AllocationEntryNo: Integer)
+    begin
+        Rec.Reset();
+        Rec.SetRange("Receipt No.", DocNo);
+        Rec.SetRange("Allocation Receipt Entry No.", AllocationEntryNo);
+        CurrPage.Update(false);
+    end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        UpdateAllocationFilter();
+    end;
+
+    procedure UpdateAllocationFilter()
+    var
+        RecordA: Record "E3 Organization Receipt";
+        DocNo: Code[20];
+    begin
+        DocNo := Rec.GetFilter("Document No.");
+        if DocNo = '' then
+            DocNo := Rec."Receipt No.";
+        if DocNo = '' then
+            DocNo := Rec."Document No.";
+
+        if DocNo <> '' then begin
+            RecordA.Reset();
+            RecordA.SetRange("Document No.", DocNo);
+            if RecordA.FindFirst() then begin
+                // Filter Table C correctly using SetRange instead of .Get()
+                Rec.SetRange("Receipt No.", DocNo);
+                Rec.SetRange("Allocation Receipt Entry No.", RecordA."Selected Allocation Entry No.");
+            end;
+        end;
+    end;
+    // Helper procedure to insert Gen. Journal Lines cleanly
+    local procedure CreateGenJnlLine(TemplateName: Code[10]; BatchName: Code[10]; var LineNo: Integer;
+        DocType: Enum "Gen. Journal Document Type"; DocNo: Code[50]; AccType: Enum "Gen. Journal Account Type";
+        AccNo: Code[20]; Amt: Decimal; AmtLCY: Decimal; CustNo: Code[20]; DescriptionText: Text[100])
+    var
+        GenJnlLine: Record "Gen. Journal Line";
+    begin
+        GenJnlLine.Init();
+        GenJnlLine."Journal Template Name" := TemplateName;
+        GenJnlLine."Journal Batch Name" := BatchName;
+        GenJnlLine."Line No." := LineNo;
+        GenJnlLine."Document Type" := DocType;
+        GenJnlLine."Document No." := DocNo;
+        GenJnlLine."Posting Date" := WorkDate();
+        GenJnlLine."Account Type" := AccType;
+        GenJnlLine."Account No." := AccNo;
+        GenJnlLine.Description := CopyStr(DescriptionText, 1, MaxStrLen(GenJnlLine.Description));
+
+        if Amt > 0 then
+            GenJnlLine.Amount := Amt
+        else
+            GenJnlLine.Amount := -1 * AmtLCY;
+
+        // If account type is Customer, map balancing/customer details appropriately
+        // if AccType = AccType::Customer then
+        //     GenJnlLine."Bal. Account No." := CustNo;
+        GenJnlLine.Validate(Amount);
+
+        GenJnlLine.Insert(true);
+        LineNo += 10000;
     end;
 }
