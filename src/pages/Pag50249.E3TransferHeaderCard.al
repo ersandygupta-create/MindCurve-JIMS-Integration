@@ -80,25 +80,17 @@ page 50249 "E3 Transfer Card"
             action(PostTransfer)
             {
                 ApplicationArea = All;
-                Caption = 'Post Transfer';
+                Caption = 'Create Transfer Entries';
                 ToolTip = 'Posts the Item Reclassification Journal for this transfer.';
                 Image = Post;
                 Promoted = true;
                 PromotedCategory = Process;
-
-                Enabled = Rec."Is Created" and not Rec."Is Posted";
 
                 trigger OnAction()
                 var
                     TransferJournalMgmt: Codeunit "E3 Transfer Journal Mgmt.";
                 begin
                     Rec.TestField("Entry Number");
-
-                    if Rec."Is Posted" then
-                        Error('Transfer %1 has already been posted.', Rec."Entry Number");
-
-                    if not Rec."Is Created" then
-                        Error('Create the Item Reclassification Journal before posting the transfer.');
 
                     if not Confirm(
                         'Do you want to post the Item Reclassification Journal for Transfer %1?',
@@ -107,7 +99,7 @@ page 50249 "E3 Transfer Card"
                     then
                         exit;
 
-                    TransferJournalMgmt.CreateItemReclassificationJournal(Rec."Entry Number");
+                    TransferJournalMgmt.PostItemReclassificationJournal(Rec."Entry Number");
 
                     CurrPage.Update(false);
                 end;
