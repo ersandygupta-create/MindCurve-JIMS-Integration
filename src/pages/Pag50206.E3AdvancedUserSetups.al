@@ -298,6 +298,15 @@ page 50206 "E3 Advanced User Control Setup"
                     ToolTip = 'Specifies whether the user is allowed to cancel indent lines.';
                 }
             }
+            group(GateEntryDiscard)
+            {
+                Caption = 'Gate Entry Controls';
+                field("Gate Entry Discard"; Rec."Gate Entry Discard")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the user is allowed to Gate Entry Discard.';
+                }
+            }
         }
     }
 }

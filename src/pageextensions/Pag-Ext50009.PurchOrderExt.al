@@ -70,6 +70,10 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 ShowMandatory = true;
                 Editable = CanEditCustomFields;
             }
+            field("Reason Code"; Rec."Reason Code")
+            {
+                ApplicationArea = All;
+            }
 
         }
         addbefore("No.")
@@ -122,6 +126,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 var
                     purchaseline: record "Purchase Line";
                 begin
+                    Rec.TestField("Reason Code");
                     purchaseline.reset();
                     purchaseline.SetRange("Document Type", rec."Document Type");
                     purchaseline.SetRange("Document No.", Rec."No.");
