@@ -30,5 +30,9 @@ enum 50010 "E3 Gate Pass Status"
     {
         Caption = 'Cancelled';
     }
+    value(7; Discard)
+    {
+        Caption = 'Discard';
+    }
 
 }

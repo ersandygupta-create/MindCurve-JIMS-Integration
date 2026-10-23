@@ -2,6 +2,30 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
 {
     layout
     {
+        modify(General)
+        {
+            Editable = IsPageEditable;
+        }
+        modify("Address & Contact")
+        {
+            Editable = IsPageEditable;
+        }
+        modify(Invoicing)
+        {
+            Editable = IsPageEditable;
+        }
+        modify(Payments)
+        {
+            Editable = IsPageEditable;
+        }
+        modify(Receiving)
+        {
+            Editable = IsPageEditable;
+        }
+        modify("Tax Information")
+        {
+            Editable = IsPageEditable;
+        }
         addlast(General)
         {
             field("E3 HIS Code"; Rec."E3 HIS Code")
@@ -53,6 +77,7 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
             group("E3 Vendor Attributes")
             {
                 Caption = 'Vendor Attributes';
+                Editable = IsPageEditable;
                 field("Beneficiary Name"; Rec."Beneficiary Name")
                 {
                     ApplicationArea = all;
@@ -138,7 +163,28 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
                 Image = Report;
                 RunObject = report "Vendor Payment Report";
                 RunPageMode = Edit;
+            }
+            action(MarkAsCreated)
+            {
+                ApplicationArea = All;
+                Caption = 'Reopen';
+                ToolTip = 'Change the Vendor status from Approved to Created.';
+                Image = ReOpen;
+                Promoted = true;
+                PromotedCategory = Process;
+                Enabled = Rec.Status = Rec.Status::Approved;
+                trigger OnAction()
+                begin
+                    if Rec.Status <> Rec.Status::Approved then
+                        Error('Only Approved vendors can be marked as Created.');
 
+                    Rec.Status := Rec.Status::Created;
+                    Rec.Modify(true);
+
+                    CurrPage.Update(false);
+
+                    Message('Vendor status has been changed to Created.');
+                end;
             }
         }
     }
@@ -201,6 +247,28 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
         Rec.ValidateGSTVendorType();
         exit(true);
     end;
+
+
+    trigger OnAfterGetRecord()
+    begin
+        UpdateEditableState();
+    end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        UpdateEditableState();
+    end;
+
+    var
+        IsPageEditable: Boolean;
+
+    local procedure UpdateEditableState()
+    begin
+        IsPageEditable :=
+            (Rec.Status <> Rec.Status::Approved) and
+            (Rec.Status <> Rec.Status::"Pending Approval");
+    end;
+
 
     var
         OrderAddress: Record "Order Address";

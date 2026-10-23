@@ -164,7 +164,10 @@ tableextension 50002 "E3 Gen. Journal Line Exts" extends "Gen. Journal Line"
             caption = 'VLE doc no';
             DataClassification = CustomerContent;
         }
-
-
+        field(50115; Status; Enum "E3 Approval Status")
+        {
+            Caption = 'Status';
+            DataClassification = CustomerContent;
+        }
     }
 }

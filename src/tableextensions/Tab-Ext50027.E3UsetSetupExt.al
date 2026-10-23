@@ -299,5 +299,10 @@ tableextension 50027 "E3 Uset Setup Ext" extends "User Setup"
             Caption = 'Item Sub Table Modify';
             DataClassification = CustomerContent;
         }
+        field(50057; "Gate Entry Discard"; Boolean)
+        {
+            Caption = 'Gate Entry Discard';
+            DataClassification = CustomerContent;
+        }
     }
 }

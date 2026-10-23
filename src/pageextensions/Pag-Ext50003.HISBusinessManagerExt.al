@@ -842,6 +842,20 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                             ToolTip = 'Create a new Gate Entry Outward for Vendor.';
                         }
                     }
+                    group(GateEntryDiscard)
+                    {
+                        Caption = 'Gate Entry Discard';
+                        action("E3 Gate Entry Discard")
+                        {
+                            AccessByPermission = TableData "E3 Gate Entry Header" = IMD;
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Discard Gate Entry Outward';
+                            Image = Archive;
+                            RunObject = Page "E3 Discard GE Outward List";
+                            RunPageMode = Create;
+                            ToolTip = 'Create a Discard Gate Entry Outward.';
+                        }
+                    }
                 }
                 group(UnBilledRevenue)
                 {

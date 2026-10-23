@@ -10,6 +10,10 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         {
             Editable = isEdit;
         }
+        modify(Control1)
+        {
+            Editable = IsEditable;
+        }
         addafter("Cheque No.")
         {
             field("E3 Narration"; Rec."E3 Narration")
@@ -21,6 +25,12 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
             {
                 ApplicationArea = All;
                 Editable = true;
+            }
+            field(Status; Rec.Status)
+            {
+                ApplicationArea = All;
+                Editable = false;
+                ToolTip = 'Specifies a value status field.';
             }
         }
 
@@ -121,7 +131,7 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
     trigger OnAfterGetRecord()
     begin
         UpdateCardPaymentAction();
-
+        SetPageEditable();
 
     end;
 
@@ -134,6 +144,7 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
     begin
         blnEdit := false;
         isEdit := true;
+        SetPageEditable();
     end;
 
     local procedure AmountEdit()
@@ -171,10 +182,18 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         ShowCardPayment := CardPaymentReportID <> 0;
     end;
 
+    local procedure SetPageEditable()
+    begin
+        IsEditable :=
+         (Rec.Status <> Rec.Status::"Pending Approval") and
+         (Rec.Status <> Rec.Status::Approved);
+    end;
+
     var
         Vendor: Record Vendor;
         ShowCardPayment: Boolean;
         CardPaymentReportID: Integer;
         blnEdit: Boolean;
         isEdit: Boolean;
+        IsEditable: Boolean;
 }

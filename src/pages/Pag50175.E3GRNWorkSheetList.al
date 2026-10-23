@@ -102,7 +102,7 @@ page 50175 "E3 GRN Work Sheet List"
 
                     if GRNWorkSheetMgmt.SendGRNWorkSheetDetails(Rec."Document ID") then begin
                         Message('GRN %1 has been sent successfully.', Rec."Document ID");
-                        CurrPage.Update(true);
+                        CurrPage.Update(false);
                     end else
                         Error('Failed to send GRN %1. Please check the Response field.', Rec."Document ID");
                 end;

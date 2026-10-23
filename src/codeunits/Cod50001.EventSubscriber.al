@@ -796,68 +796,41 @@ codeunit 50001 "E3 HIS Event Subscriber"
             PurchaseHeader.TestField("Reason Code");
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnSendVendorForApproval', '', false, false)]
-    local procedure OnSendVendorForApproval(var Vendor: Record Vendor)
-    var
-        ApprovalEntry: Record "Approval Entry";
-        VendorRecordId: RecordId;
-        HasOpenApproval: Boolean;
-    begin
-        VendorRecordId := Vendor.RecordId;
-
-        ApprovalEntry.Reset();
-        ApprovalEntry.SetRange("Record ID to Approve", VendorRecordId);
-
-        if ApprovalEntry.FindSet() then begin
-            repeat
-                if ApprovalEntry.Status = ApprovalEntry.Status::Open then
-                    HasOpenApproval := true;
-            until ApprovalEntry.Next() = 0;
-
-            if HasOpenApproval then
-                Vendor.Status := Vendor.Status::"Pending Approval"
-            else
-                Vendor.Status := Vendor.Status::Approved;
-
-            Vendor.Modify(true);
-        end else begin
-            Vendor.Status := Vendor.Status::"Pending Approval";
-            Vendor.Modify(true);
-        end;
-    end;
-
-
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnApproveApprovalRequest', '', false, false)]
     local procedure UpdateVendorStatusFromApprovalEntry(
-        var ApprovalEntry: Record "Approval Entry")
+    var ApprovalEntry: Record "Approval Entry")
     var
         RecRef: RecordRef;
         Vendor: Record Vendor;
         LastApprovalEntry: Record "Approval Entry";
+        VendorRecordId: RecordId;
     begin
-        if not RecRef.Get(ApprovalEntry."Record ID to Approve") then
+        VendorRecordId := ApprovalEntry."Record ID to Approve";
+
+        if not RecRef.Get(VendorRecordId) then
             exit;
 
         if RecRef.Number <> Database::Vendor then
             exit;
 
         RecRef.SetTable(Vendor);
-        LastApprovalEntry.Reset();
-        LastApprovalEntry.SetRange("Record ID to Approve", ApprovalEntry."Record ID to Approve");
 
+        // Read the latest Vendor record before updating it.
+        if not Vendor.Get(Vendor."No.") then
+            exit;
+
+        LastApprovalEntry.Reset();
+        LastApprovalEntry.SetRange("Record ID to Approve", VendorRecordId);
         LastApprovalEntry.SetCurrentKey("Entry No.");
 
         if LastApprovalEntry.FindLast() then begin
             case LastApprovalEntry.Status of
                 LastApprovalEntry.Status::Open:
                     Vendor.Status := Vendor.Status::"Pending Approval";
-
                 LastApprovalEntry.Status::Approved:
                     Vendor.Status := Vendor.Status::Approved;
-
                 LastApprovalEntry.Status::Rejected:
                     Vendor.Status := Vendor.Status::Rejected;
-
                 LastApprovalEntry.Status::Canceled:
                     Vendor.Status := Vendor.Status::Created;
             end;
@@ -866,5 +839,49 @@ codeunit 50001 "E3 HIS Event Subscriber"
         end;
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnApproveApprovalRequest', '', false, false)]
+    local procedure UpdateGenJournalLineStatusFromApprovalEntry(
+        var ApprovalEntry: Record "Approval Entry")
+    var
+        RecRef: RecordRef;
+        GenJournalLine: Record "Gen. Journal Line";
+        LastApprovalEntry: Record "Approval Entry";
+    begin
+        if not RecRef.Get(ApprovalEntry."Record ID to Approve") then
+            exit;
+
+        if RecRef.Number <> Database::"Gen. Journal Line" then
+            exit;
+
+        RecRef.SetTable(GenJournalLine);
+
+        LastApprovalEntry.Reset();
+        LastApprovalEntry.SetRange(
+            "Record ID to Approve",
+            ApprovalEntry."Record ID to Approve");
+        LastApprovalEntry.SetCurrentKey("Entry No.");
+
+        if LastApprovalEntry.FindLast() then begin
+            case LastApprovalEntry.Status of
+                LastApprovalEntry.Status::Open:
+                    GenJournalLine.Status :=
+                        GenJournalLine.Status::"Pending Approval";
+
+                LastApprovalEntry.Status::Approved:
+                    GenJournalLine.Status :=
+                        GenJournalLine.Status::Approved;
+
+                LastApprovalEntry.Status::Rejected:
+                    GenJournalLine.Status :=
+                        GenJournalLine.Status::Rejected;
+
+                LastApprovalEntry.Status::Canceled:
+                    GenJournalLine.Status :=
+                        GenJournalLine.Status::Created;
+            end;
+
+            GenJournalLine.Modify(true);
+        end;
+    end;
 
 }
