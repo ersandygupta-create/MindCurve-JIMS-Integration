@@ -206,41 +206,47 @@ page 50218 "E3 Bill Application List"
                         // --- LINE 1: Balance A/c No (Dr) ---
                         if BillApp."Payment Received" <> 0 then
                             CreateGenJnlLine(TemplateName, BatchName, LineNo, GenJnlLine."Document Type"::Payment,
-                                BillApp."Document No.", GenJnlLine."Account Type"::"Bank Account", OrgReceipt."Account No.",
-                                BillApp."Payment Received", 0, BillApp."Customer Code", BillApp."Bill No");
+                                BillApp."Document No.", GenJnlLine."Account Type"::"G/L Account", OrgReceipt."Account No.",
+                                BillApp."Payment Received", 0, BillApp."Customer Code", BillApp."Bill No", OrgReceipt."Shortcut Dimension 1 Code"
+                                , BillApp."Patient Name", BillApp.UHIDNo, OrgReceipt."Instrument No.", OrgReceipt."Document No.");
 
 
                         // --- LINE 2: Disallowed Reg. Wise (Dr) ---
                         if BillApp."Disallowed Reg. Wise" <> 0 then
                             CreateGenJnlLine(TemplateName, BatchName, LineNo, GenJnlLine."Document Type"::Payment,
                                 BillApp."Document No.", GenJnlLine."Account Type"::"G/L Account", MappingSetup."Disallowed Reg. Wise Account",
-                                BillApp."Disallowed Reg. Wise", 0, BillApp."Customer Code", BillApp."Bill No");
+                                BillApp."Disallowed Reg. Wise", 0, BillApp."Customer Code", BillApp."Bill No", OrgReceipt."Shortcut Dimension 1 Code"
+                                , BillApp."Patient Name", BillApp.UHIDNo, OrgReceipt."Instrument No.", OrgReceipt."Document No.");
 
 
                         // --- LINE 3: Disallowed Billable (Dr) ---
                         if BillApp."Disallowed Billable" <> 0 then
                             CreateGenJnlLine(TemplateName, BatchName, LineNo, GenJnlLine."Document Type"::Payment,
                                 BillApp."Document No.", GenJnlLine."Account Type"::"G/L Account", MappingSetup."Disallowed Billable Account",
-                                BillApp."Disallowed Billable", 0, BillApp."Customer Code", BillApp."Bill No");
+                                BillApp."Disallowed Billable", 0, BillApp."Customer Code", BillApp."Bill No", OrgReceipt."Shortcut Dimension 1 Code"
+                                , BillApp."Patient Name", BillApp.UHIDNo, OrgReceipt."Instrument No.", OrgReceipt."Document No.");
 
 
                         // --- LINE 4: Disallowed Security (Dr) ---
                         if BillApp."Disallowed Security" <> 0 then
                             CreateGenJnlLine(TemplateName, BatchName, LineNo, GenJnlLine."Document Type"::Payment,
                                 BillApp."Document No.", GenJnlLine."Account Type"::"G/L Account", MappingSetup."Disallowed Security Account",
-                                BillApp."Disallowed Security", 0, BillApp."Customer Code", BillApp."Bill No");
+                                BillApp."Disallowed Security", 0, BillApp."Customer Code", BillApp."Bill No", OrgReceipt."Shortcut Dimension 1 Code"
+                                , BillApp."Patient Name", BillApp.UHIDNo, OrgReceipt."Instrument No.", OrgReceipt."Document No.");
 
 
                         // --- LINE 5: TDS Amount (Dr) ---
                         if BillApp."TDS Amount" <> 0 then
                             CreateGenJnlLine(TemplateName, BatchName, LineNo, GenJnlLine."Document Type"::Payment,
                                 BillApp."Document No.", GenJnlLine."Account Type"::"G/L Account", MappingSetup."TDS Account No.",
-                                BillApp."TDS Amount", 0, BillApp."Customer Code", BillApp."Bill No");
+                                BillApp."TDS Amount", 0, BillApp."Customer Code", BillApp."Bill No", OrgReceipt."Shortcut Dimension 1 Code"
+                                , BillApp."Patient Name", BillApp.UHIDNo, OrgReceipt."Instrument No.", OrgReceipt."Document No.");
 
                         if BillApp."Excess Billable" <> 0 then
                             CreateGenJnlLine(TemplateName, BatchName, LineNo, GenJnlLine."Document Type"::Payment,
                                 BillApp."Document No.", GenJnlLine."Account Type"::"G/L Account", MappingSetup."Excess Billable Account",
-                                BillApp."Excess Billable", 0, BillApp."Customer Code", BillApp."Bill No");
+                                0, BillApp."Excess Billable", BillApp."Customer Code", BillApp."Bill No", OrgReceipt."Shortcut Dimension 1 Code"
+                                , BillApp."Patient Name", BillApp.UHIDNo, OrgReceipt."Instrument No.", OrgReceipt."Document No.");
 
 
                         // --- LINE 6: Customer CU00008 (Cr) ---
@@ -254,8 +260,8 @@ page 50218 "E3 Bill Application List"
                         if TotalDebit <> 0 then
                             CreateGenJnlLine(TemplateName, BatchName, LineNo, GenJnlLine."Document Type"::Payment,
                                 BillApp."Document No.", GenJnlLine."Account Type"::Customer, BillApp."Customer Code",
-                                0, TotalDebit, BillApp."Customer Code", BillApp."Bill No");
-                        ;
+                                0, TotalDebit, BillApp."Customer Code", BillApp."Bill No", OrgReceipt."Shortcut Dimension 1 Code"
+                                , BillApp."Patient Name", BillApp.UHIDNo, OrgReceipt."Instrument No.", OrgReceipt."Document No.");
 
                         BillApp."JV Created" := true;
                         BillApp.Modify(false);
@@ -340,7 +346,8 @@ page 50218 "E3 Bill Application List"
     // Helper procedure to insert Gen. Journal Lines cleanly
     local procedure CreateGenJnlLine(TemplateName: Code[10]; BatchName: Code[10]; var LineNo: Integer;
         DocType: Enum "Gen. Journal Document Type"; DocNo: Code[50]; AccType: Enum "Gen. Journal Account Type";
-        AccNo: Code[20]; Amt: Decimal; AmtLCY: Decimal; CustNo: Code[20]; DescriptionText: Text[100])
+        AccNo: Code[20]; Amt: Decimal; AmtLCY: Decimal; CustNo: Code[20]; DescriptionText: Text[100]; BU: Code[20];
+        PatientName: text[100]; UHID: Code[50]; UTNo: Code[50]; ReceiptNo: Code[50])
     var
         GenJnlLine: Record "Gen. Journal Line";
     begin
@@ -349,10 +356,16 @@ page 50218 "E3 Bill Application List"
         GenJnlLine."Journal Batch Name" := BatchName;
         GenJnlLine."Line No." := LineNo;
         GenJnlLine."Document Type" := DocType;
-        GenJnlLine."Document No." := DocNo;
+        GenJnlLine."Document No." := ReceiptNo;
         GenJnlLine."Posting Date" := WorkDate();
+        GenJnlLine.Validate("Shortcut Dimension 1 Code", BU);
+        GenJnlLine.Validate("Location Code", BU);
         GenJnlLine."Account Type" := AccType;
         GenJnlLine."Account No." := AccNo;
+        GenJnlLine."E3 Patient Name" := PatientName;
+        GenJnlLine."E3 UTR No." := UTNo;
+        GenJnlLine."E3 UHID" := UHID;
+        GenJnlLine."External Document No." := DescriptionText;
         GenJnlLine.Description := CopyStr(DescriptionText, 1, MaxStrLen(GenJnlLine.Description));
 
         if Amt > 0 then

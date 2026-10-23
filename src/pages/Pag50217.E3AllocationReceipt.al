@@ -170,7 +170,7 @@ page 50217 "E3 Allocation Receipt List"
                 AllocationReceipt.Validate("Receipt No.", OrgReceipt."Document No.");
                 AllocationReceipt.Validate("Receipt Date", OrgReceipt."Document Date");
                 AllocationReceipt.Validate("Receipt Amount", OrgReceipt."Received Amount");
-                AllocationReceipt.Validate("HIS Document Type", OrgReceipt."HIS Document Type");
+                AllocationReceipt.Validate("HIS Document Type", format(OrgReceipt."HIS Document Type"));
                 AllocationReceipt.Validate("Shortcut Dimension 1 Code", OrgReceipt."Shortcut Dimension 1 Code");
                 AllocationReceipt.Insert(true);
                 //end;
