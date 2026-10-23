@@ -884,4 +884,26 @@ codeunit 50001 "E3 HIS Event Subscriber"
         end;
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPostPurchaseDoc', '', false, false)]
+    local procedure OnBeforePostPurchaseDoc(var PurchaseHeader: Record "Purchase Header"; var GenJnlPostLine: Codeunit "Gen. Jnl.-Post Line"; PurchRcpHdrNo: Code[20]; RetShptHdrNo: Code[20]; PurchInvHdrNo: Code[20]; PurchCrMemoHdrNo: Code[20]; CommitIsSupressed: Boolean)
+
+    var
+        PurchaseLine: Record "Purchase Line";
+    begin
+        // Loop through lines of the order being posted and ensure Qty. to Receive accounts for Short Close
+        PurchaseLine.SetRange("Document Type", PurchaseHeader."Document Type");
+        PurchaseLine.SetRange("Document No.", PurchaseHeader."No.");
+        if PurchaseLine.FindSet() then
+            repeat
+                if PurchaseLine."Short Close Qty" > 0 then begin
+                    PurchaseLine."Qty. to Receive" := PurchaseLine."Outstanding Quantity" - PurchaseLine."Short Close Qty";
+                    if PurchaseLine."Qty. to Receive" < 0 then
+                        PurchaseLine."Qty. to Receive" := 0;
+
+                    PurchaseLine."Qty. to Receive (Base)" := PurchaseLine."Qty. to Receive" * PurchaseLine."Qty. per Unit of Measure";
+                    PurchaseLine."Outstanding Quantity" := PurchaseLine."Qty. to Receive";
+                    PurchaseLine.Modify();
+                end;
+            until PurchaseLine.Next() = 0;
+    end;
 }

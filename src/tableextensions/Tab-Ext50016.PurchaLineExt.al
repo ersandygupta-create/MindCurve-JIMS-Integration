@@ -157,7 +157,8 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             trigger OnValidate()
             begin
                 if rec."Short Close Qty" > rec."Outstanding Quantity" then
-                    Error(format('Short Close qty %1 can not exceed outstanding qty %2.', Rec."Short Close Qty", rec."Outstanding Quantity"));
+                    Error('Short Close qty %1 can not exceed outstanding qty %2.', Rec."Short Close Qty", rec."Outstanding Quantity");
+
             end;
         }
         modify("No.")

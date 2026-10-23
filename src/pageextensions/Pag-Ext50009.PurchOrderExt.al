@@ -187,6 +187,8 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
         PurchaseLine.Validate("Outstanding Qty. (Base)");
         PurchaseLine."Outstanding Quantity" := PurchaseLine."Outstanding Quantity" - purchLine."Short Close Qty";
         PurchaseLine.Validate("Outstanding Quantity");
+        PurchaseLine."Qty. to Receive" := PurchaseLine."Outstanding Quantity";
+        PurchaseLine."Qty. to Receive (Base)" := PurchaseLine."Outstanding Quantity";
         PurchaseLine.Modify(true);
     end;
 

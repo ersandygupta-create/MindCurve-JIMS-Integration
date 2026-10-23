@@ -251,6 +251,8 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                         purchLine.Validate("Outstanding Quantity");
                         purchLine."Outstanding Qty. (Base)" := purchLine."Outstanding Qty. (Base)" - purchLine."Short Close Qty";
                         purchLine.Validate("Outstanding Qty. (Base)");
+                        purchLine."Qty. to Receive" := purchline."Outstanding Quantity";
+                        purchLine."Qty. to Receive (Base)" := purchLine."Outstanding Quantity";
                         purchLine.Modify(true);
                         Message('Purchase line %1 has been short closed.', rec."Line No.");
                     end else
@@ -258,6 +260,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 end;
             }
             action(CanclePoLine)
+
             {
                 ApplicationArea = all;
                 Caption = 'Cancel PO line';
