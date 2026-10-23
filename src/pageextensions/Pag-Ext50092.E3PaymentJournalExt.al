@@ -30,6 +30,7 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
             {
                 ApplicationArea = All;
                 Editable = false;
+                //Visible = false;
                 ToolTip = 'Specifies a value status field.';
             }
         }
