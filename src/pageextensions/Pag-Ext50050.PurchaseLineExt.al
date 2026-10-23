@@ -81,6 +81,13 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         {
             Editable = CanEdit;
         }
+        addafter(Quantity)
+        {
+            field("Short Close Qty"; Rec."Short Close Qty")
+            {
+                ApplicationArea = All;
+            }
+        }
         addafter("TDS Section Code")
         {
             field("Item Make Code"; Rec."Item Make Code")
@@ -225,6 +232,30 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     Page.Run(Page::"E3 GRN Work Sheet", GRNWorkSheet);
                 end;
 
+            }
+            action(ShortClosePoLine)
+            {
+                ApplicationArea = all;
+                Caption = 'Short Close PO line';
+                Image = Close;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Short Close PO Line';
+                trigger OnAction()
+                var
+                    purchLine: Record "Purchase Line";
+                begin
+                    if rec."Short Close Qty" <> 0 then begin
+                        purchLine := Rec;
+                        purchLine."Outstanding Quantity" := purchLine."Outstanding Quantity" - purchline."Short Close Qty";
+                        purchLine.Validate("Outstanding Quantity");
+                        purchLine."Outstanding Qty. (Base)" := purchLine."Outstanding Qty. (Base)" - purchLine."Short Close Qty";
+                        purchLine.Validate("Outstanding Qty. (Base)");
+                        purchLine.Modify(true);
+                        Message('Purchase line %1 has been short closed.', rec."Line No.");
+                    end else
+                        Message('Purchase line %1 has not short close qty.', rec."Line No.");
+                end;
             }
             action(CanclePoLine)
             {

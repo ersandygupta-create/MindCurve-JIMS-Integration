@@ -133,6 +133,32 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                     Message('Purchase Order has been canceled from indent;');
                 end;
             }
+            action("Short Close PO")
+            {
+                ApplicationArea = All;
+                Caption = 'Short Close PO';
+                Image = Close;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Short close Purchase Order.';
+
+                trigger OnAction()
+                var
+                    purchaseline: record "Purchase Line";
+                begin
+                    purchaseline.reset();
+                    purchaseline.SetRange("Document Type", rec."Document Type");
+                    purchaseline.SetRange("Document No.", Rec."No.");
+                    purchaseline.SetFilter("Short Close Qty", '<>%1', 0);
+                    purchaseline.SetFilter("Outstanding Quantity", '<>%1', 0);
+                    if purchaseline.FindSet() then
+                        repeat
+                            ShortCloseQty(purchaseline);
+                        until purchaseline.Next() = 0;
+
+                    Message('Purchase Order has been Short closed.');
+                end;
+            }
         }
     }
 
@@ -144,6 +170,19 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
 
         if not UserSetup."Purchase Order" then
             Error('You do not have permission to open Purchase Order.');
+    end;
+
+    local procedure ShortCloseQty(var purchLine: Record "Purchase Line")
+    var
+        PurchaseLine: Record "Purchase Line";
+    begin
+        PurchaseLine := purchLine;
+
+        PurchaseLine."Outstanding Qty. (Base)" := PurchaseLine."Outstanding Qty. (Base)" - purchLine."Short Close Qty";
+        PurchaseLine.Validate("Outstanding Qty. (Base)");
+        PurchaseLine."Outstanding Quantity" := PurchaseLine."Outstanding Quantity" - purchLine."Short Close Qty";
+        PurchaseLine.Validate("Outstanding Quantity");
+        PurchaseLine.Modify(true);
     end;
 
     local procedure cancleIndentLine(var purchLine: Record "Purchase Line")
