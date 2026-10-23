@@ -840,48 +840,31 @@ codeunit 50001 "E3 HIS Event Subscriber"
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnApproveApprovalRequest', '', false, false)]
-    local procedure UpdateGenJournalLineStatusFromApprovalEntry(
-        var ApprovalEntry: Record "Approval Entry")
+    local procedure UpdateGenJournalLineStatusFromApprovalEntry(var ApprovalEntry: Record "Approval Entry")
     var
         RecRef: RecordRef;
         GenJournalLine: Record "Gen. Journal Line";
-        LastApprovalEntry: Record "Approval Entry";
+        PendingApprovalEntry: Record "Approval Entry";
     begin
+        // Get the record for which approval was requested
         if not RecRef.Get(ApprovalEntry."Record ID to Approve") then
             exit;
 
+        // Process only General Journal Lines
         if RecRef.Number <> Database::"Gen. Journal Line" then
             exit;
 
         RecRef.SetTable(GenJournalLine);
 
-        LastApprovalEntry.Reset();
-        LastApprovalEntry.SetRange(
-            "Record ID to Approve",
-            ApprovalEntry."Record ID to Approve");
-        LastApprovalEntry.SetCurrentKey("Entry No.");
-
-        if LastApprovalEntry.FindLast() then begin
-            case LastApprovalEntry.Status of
-                LastApprovalEntry.Status::Open:
-                    GenJournalLine.Status :=
-                        GenJournalLine.Status::"Pending Approval";
-
-                LastApprovalEntry.Status::Approved:
-                    GenJournalLine.Status :=
-                        GenJournalLine.Status::Approved;
-
-                LastApprovalEntry.Status::Rejected:
-                    GenJournalLine.Status :=
-                        GenJournalLine.Status::Rejected;
-
-                LastApprovalEntry.Status::Canceled:
-                    GenJournalLine.Status :=
-                        GenJournalLine.Status::Created;
-            end;
-
-            GenJournalLine.Modify(true);
-        end;
+        // Check whether any approval is still pending
+        PendingApprovalEntry.Reset();
+        PendingApprovalEntry.SetRange("Record ID to Approve", ApprovalEntry."Record ID to Approve");
+        PendingApprovalEntry.SetRange(Status, PendingApprovalEntry.Status::Open);
+        if PendingApprovalEntry.FindFirst() then
+            GenJournalLine.Status := GenJournalLine.Status::"Pending Approval"
+        else
+            GenJournalLine.Status := GenJournalLine.Status::Approved;
+        GenJournalLine.Modify(true);
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPostPurchaseDoc', '', false, false)]

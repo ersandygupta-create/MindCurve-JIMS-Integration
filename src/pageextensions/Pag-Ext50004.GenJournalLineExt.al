@@ -38,7 +38,6 @@ pageextension 50004 "E3 HIS General Journal" extends "General Journal"
                 ApplicationArea = All;
 
             }
-
             field("E3 UHID"; Rec."E3 UHID")
             {
                 ApplicationArea = All;
