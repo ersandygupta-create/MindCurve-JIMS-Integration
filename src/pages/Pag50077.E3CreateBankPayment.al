@@ -324,7 +324,16 @@ page 50077 "Create Bank Payment"
                 GenJnlLine.Validate("Currency Code", TempVendorPaymentBuffer."Currency Code");
                 GenJnlLine."Message to Recipient" := GetMessageToRecipient(TempVendorPaymentBuffer, DocumentsToApply);
                 GenJnlLine."Bank Payment Type" := BankPaymentType;
-                GenJnlLine."Applies-to ID" := GenJnlLine."Document No.";
+
+                // ---------------------------------------------------------------------
+                // FIX: Match Applies-to ID with VendorLedgerEntry."Applies-to ID"
+                // and keep Applies-to Doc. Type / No. blank for multi-entry application
+                // ---------------------------------------------------------------------
+                GenJnlLine."Applies-to ID" := TempVendorPaymentBuffer."Document No.";
+                GenJnlLine."Applies-to Doc. Type" := GenJnlLine."Applies-to Doc. Type"::" ";
+                GenJnlLine."Applies-to Doc. No." := '';
+                // ---------------------------------------------------------------------
+
                 GenJnlLine."Source Code" := GenJournalTemplate."Source Code";
                 GenJnlLine."Reason Code" := GenJournalBatch."Reason Code";
                 GenJnlLine."Source Line No." := TempVendorPaymentBuffer."Vendor Ledg. Entry No.";
@@ -332,18 +341,87 @@ page 50077 "Create Bank Payment"
                 GenJnlLine."Shortcut Dimension 2 Code" := TempVendorPaymentBuffer."Global Dimension 2 Code";
                 GenJnlLine."Dimension Set ID" := TempVendorPaymentBuffer."Dimension Set ID";
                 GenJnlLine.Validate(Amount, TempVendorPaymentBuffer.Amount);
-                GenJnlLine."Applies-to Doc. Type" := TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type";
-                GenJnlLine."Applies-to Doc. No." := TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. No.";
                 GenJnlLine.Validate("Payment Method Code", TempVendorPaymentBuffer."Payment Method Code");
                 GenJnlLine."Remit-to Code" := TempVendorPaymentBuffer."Remit-to Code";
                 GenJnlLine."Bank Integration" := true;
-                GenJnlLine."Applies-to ID" := '';
+
                 TempVendorPaymentBuffer.CopyFieldsToGenJournalLine(GenJnlLine);
                 OnBeforeUpdateGnlJnlLineDimensionsFromVendorPayment(GenJnlLine, TempVendorPaymentBuffer);
                 UpdateDimensions(GenJnlLine, TempVendorPaymentBuffer);
+
                 GenJnlLine.Insert();
             until TempVendorPaymentBuffer.Next() = 0;
     end;
+
+    // local procedure CopyTempPaymentBufferToGenJournalLines(var TempVendorPaymentBuffer: Record "Vendor Payment Buffer" temporary; var GenJnlLine: Record "Gen. Journal Line"; DocumentsToApply: List of [Text])
+    // var
+    //     Vendor: Record Vendor;
+    //     GenJournalTemplate: Record "Gen. Journal Template";
+    //     GenJournalBatch: Record "Gen. Journal Batch";
+    //     LastLineNo: Integer;
+    // begin
+    //     GenJnlLine.LockTable();
+    //     GenJournalBatch.Get(JournalTemplateName, JournalBatchName);
+    //     GenJournalTemplate.Get(JournalTemplateName);
+    //     GenJnlLine.SetRange("Journal Template Name", JournalTemplateName);
+    //     GenJnlLine.SetRange("Journal Batch Name", JournalBatchName);
+    //     if GenJnlLine.FindLast() then begin
+    //         LastLineNo := GenJnlLine."Line No.";
+    //         GenJnlLine.Init();
+    //     end;
+    //     TempVendorPaymentBuffer.Reset();
+    //     TempVendorPaymentBuffer.SetCurrentKey("Document No.");
+    //     TempVendorPaymentBuffer.SetFilter("Vendor Ledg. Entry Doc. Type", '<>%1&<>%2', TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type"::Refund, TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type"::Payment);
+    //     if TempVendorPaymentBuffer.Find('-') then
+    //         repeat
+    //             GenJnlLine.Init();
+    //             GenJnlLine.Validate("Journal Template Name", JournalTemplateName);
+    //             GenJnlLine.Validate("Journal Batch Name", JournalBatchName);
+    //             LastLineNo += 10000;
+    //             GenJnlLine."Line No." := LastLineNo;
+    //             if TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type" = TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type"::Invoice then
+    //                 GenJnlLine."Document Type" := GenJnlLine."Document Type"::Payment
+    //             else if TempVendorPaymentBuffer.Amount > 0 then
+    //                 GenJnlLine."Document Type" := GenJnlLine."Document Type"::Payment
+    //             else
+    //                 GenJnlLine."Document Type" := GenJnlLine."Document Type"::Refund;
+    //             GenJnlLine."Posting No. Series" := GenJournalBatch."Posting No. Series";
+    //             GenJnlLine."Document No." := TempVendorPaymentBuffer."Document No.";
+    //             GenJnlLine."Account Type" := GenJnlLine."Account Type"::Vendor;
+    //             GenJnlLine.SetHideValidation(true);
+    //             GenJnlLine.Validate("Posting Date", PostingDate);
+    //             GenJnlLine.Validate("Account No.", TempVendorPaymentBuffer."Vendor No.");
+    //             if Vendor."No." <> TempVendorPaymentBuffer."Vendor No." then Vendor.Get(TempVendorPaymentBuffer."Vendor No.");
+    //             GenJnlLine.Description := Vendor.Name;
+    //             GenJnlLine."VLE Doc No." := TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. No.";
+    //             GenJnlLine."Bal. Account Type" := GenJnlLine."Bal. Account Type"::"Bank Account";
+    //             GenJnlLine.Validate("Bal. Account No.", BalAccountNo);
+    //             GenJnlLine.Validate("Currency Code", TempVendorPaymentBuffer."Currency Code");
+    //             GenJnlLine."Message to Recipient" := GetMessageToRecipient(TempVendorPaymentBuffer, DocumentsToApply);
+    //             GenJnlLine."Bank Payment Type" := BankPaymentType;
+    //             GenJnlLine."Applies-to ID" := GenJnlLine."Document No.";
+    //             GenJnlLine."Source Code" := GenJournalTemplate."Source Code";
+    //             GenJnlLine."Reason Code" := GenJournalBatch."Reason Code";
+    //             GenJnlLine."Source Line No." := TempVendorPaymentBuffer."Vendor Ledg. Entry No.";
+    //             GenJnlLine."Shortcut Dimension 1 Code" := TempVendorPaymentBuffer."Global Dimension 1 Code";
+    //             GenJnlLine."Shortcut Dimension 2 Code" := TempVendorPaymentBuffer."Global Dimension 2 Code";
+    //             GenJnlLine."Dimension Set ID" := TempVendorPaymentBuffer."Dimension Set ID";
+    //             GenJnlLine.Validate(Amount, TempVendorPaymentBuffer.Amount);
+    //             GenJnlLine."Applies-to Doc. Type" := TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type";
+    //             GenJnlLine."Applies-to Doc. No." := '';//TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. No.";
+    //             GenJnlLine.Validate("Payment Method Code", TempVendorPaymentBuffer."Payment Method Code");
+    //             GenJnlLine."Remit-to Code" := TempVendorPaymentBuffer."Remit-to Code";
+    //             GenJnlLine."Bank Integration" := true;
+    //             GenJnlLine."Applies-to ID" := UserId();
+    //             // GenJnlLine."Applies-to ID" := TempVendorPaymentBuffer."Vendor Ledg. Entry No.";
+
+    //             TempVendorPaymentBuffer.CopyFieldsToGenJournalLine(GenJnlLine);
+    //             OnBeforeUpdateGnlJnlLineDimensionsFromVendorPayment(GenJnlLine, TempVendorPaymentBuffer);
+    //             UpdateDimensions(GenJnlLine, TempVendorPaymentBuffer);
+
+    //             GenJnlLine.Insert();
+    //         until TempVendorPaymentBuffer.Next() = 0;
+    // end;
 
     protected procedure UpdateDimensions(var GenJnlLine: Record "Gen. Journal Line"; TempVendorPaymentBuffer: Record "Vendor Payment Buffer" temporary)
     var

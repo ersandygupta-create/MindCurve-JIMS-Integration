@@ -288,15 +288,16 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                                 IndentLine."Released Stock Issue" := false;
                                 IndentLine.Modify();
                                 purchLine := Rec;
-                                purchLine."Indent Line No." := 0;
-                                purchLine."Indent No." := '';
-                                purchline."Indent Line Remarks" := '';
-                                purchLine.Quantity := 0;
-                                purchLine.Modify();
+                                // purchLine."Indent Line No." := 0;
+                                // purchLine."Indent No." := '';
+                                // purchline."Indent Line Remarks" := '';
+                                // purchLine.Quantity := 0;
+                                purchLine.Delete(false);
                             until IndentLine.Next() = 0;
                         Message('Purchase line %1 has been cancled from indent.', rec."Line No.");
                     end else
                         Message('Purchase line %1 has been partially recived so can not be canceled from indent.', rec."Line No.");
+                    CurrPage.Update(false);
                 end;
             }
             action("Group Indent Lines")
