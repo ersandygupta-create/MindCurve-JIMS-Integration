@@ -25,6 +25,9 @@ report 50002 "GST Sales Invoice Print"
             {
 
             }
+            column(Work_Description; "Work Description")
+            {
+            }
             column(Order_Date; "Order Date")
             {
 
@@ -116,6 +119,9 @@ report 50002 "GST Sales Invoice Print"
 
             }
             column(Customer_PAN_No; CustomerPANNo)
+            {
+            }
+            column(CustDLNo; CustDLNo)
             {
             }
             column(State; State)
@@ -551,6 +557,7 @@ report 50002 "GST Sales Invoice Print"
                             Cust_rec.SetRange("No.", "Sales Invoice Line"."Bill-to Customer No.");
                             if Cust_rec.FindFirst() then begin
                                 CustomerPANNo := Cust_rec."P.A.N. No.";
+                                CustDLNo := Cust_rec."DL No.";
                                 CustPostRec.Reset();
                                 CustPostRec.SetRange(Code, Cust_rec."Customer Posting Group");
                                 if CustPostRec.FindFirst() then
@@ -1020,6 +1027,7 @@ report 50002 "GST Sales Invoice Print"
         IGST28: Decimal;
         fromFunction: Boolean;
         CustomerPANNo: Code[10];
+        CustDLNo: Text[60];
         IGST_recrate: Decimal;
         Qrinstream: InStream;
         qrboolean: Boolean;

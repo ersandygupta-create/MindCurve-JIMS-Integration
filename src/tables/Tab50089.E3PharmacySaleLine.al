@@ -15,40 +15,48 @@ table 50089 "E3 Pharmacy Sale Lines"
             Editable = false;
             DataClassification = ToBeClassified;
         }
-        field(2; "Entry Type"; Text[30])
+        field(2; "Entry Type"; Option)
         {
             Caption = 'Entry Type';
+            OptionMembers = ,Sale,"Credit Memo";
             DataClassification = CustomerContent;
         }
-        field(3; "Entry Number"; Text[100])
+        field(3; "Document Type"; Text[50])
         {
-            Caption = 'Entry Number';
-            TableRelation = "E3 Pharmacy Sale Header"."Entry Number";
+            Caption = 'Document Type';
             DataClassification = CustomerContent;
+        }
+        field(4; "Document Number"; Code[20])
+        {
+            Caption = 'Document Number';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Pharmacy Sale Header"."Document Number"
+        WHERE(
+            "Entry Type" = FIELD("Entry Type"),
+            "Document Type" = FIELD("Document Type")
+        );
+
             trigger OnValidate()
             begin
                 GetHISIntegrationSalesHdr();
             end;
         }
-        field(4; "Line Number"; Integer)
+        field(5; "Line Number"; Integer)
         {
             Caption = 'Line Number';
             DataClassification = CustomerContent;
         }
-        field(5; "Document Type"; Text[50])
+        field(6; "Entry Number"; Text[100])
         {
-            Caption = 'Document Type';
+            Caption = 'Entry Number';
             DataClassification = CustomerContent;
-        }
-        field(6; "Document Number"; Text[50])
-        {
-            Caption = 'Document Number';
-            DataClassification = CustomerContent;
+
         }
         field(7; "D365 Department Code"; Code[30])
         {
             Caption = 'D365 Department Code';
             DataClassification = CustomerContent;
+            TableRelation = Location;
         }
         field(8; "Department Name"; Text[100])
         {
@@ -59,6 +67,7 @@ table 50089 "E3 Pharmacy Sale Lines"
         {
             Caption = 'Location Code';
             DataClassification = CustomerContent;
+            TableRelation = Location;
         }
         field(10; "Location Name"; Text[100])
         {
@@ -69,6 +78,8 @@ table 50089 "E3 Pharmacy Sale Lines"
         {
             Caption = 'Business Unit';
             DataClassification = CustomerContent;
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            ValidateTableRelation = false;
         }
         field(12; "Consultant Name"; Text[100])
         {
@@ -89,6 +100,7 @@ table 50089 "E3 Pharmacy Sale Lines"
         {
             Caption = 'D365 Item Code';
             DataClassification = CustomerContent;
+            TableRelation = Item;
         }
         field(16; "Item Name"; Text[150])
         {
@@ -110,6 +122,7 @@ table 50089 "E3 Pharmacy Sale Lines"
         {
             Caption = 'D365 Unit Code';
             DataClassification = CustomerContent;
+            TableRelation = "Unit of Measure";
         }
         field(20; "Unit Name"; Text[50])
         {
@@ -188,7 +201,7 @@ table 50089 "E3 Pharmacy Sale Lines"
 
     keys
     {
-        key(PK; "Entry No.", "Entry Type", "Document Type", "Entry Number", "Line Number")
+        key(PK; "Entry No.", "Entry Type", "Document Type", "Document Number", "Line Number")
         {
             Clustered = true;
         }
@@ -199,11 +212,11 @@ table 50089 "E3 Pharmacy Sale Lines"
         // TestField("Document Type");
         // TestField("Entry Number");
         IF ("Entry Type" <> PharmacySaleHdr."Entry Type") OR ("Document Type" <> PharmacySaleHdr."Document Type") OR
-            ("Entry Number" <> PharmacySaleHdr."Entry Number") THEN BEGIN
+            ("Document Number" <> PharmacySaleHdr."Document Number") THEN BEGIN
             PharmacySaleHdr.Reset();
             PharmacySaleHdr.SetRange("Entry Type", "Entry Type");
             PharmacySaleHdr.SetRange("Document Type", "Document Type");
-            PharmacySaleHdr.SetRange("Entry Number", "Entry Number");
+            PharmacySaleHdr.SetRange("Document Number", "Document Number");
             PharmacySaleHdr.FindFirst();
         END;
     end;

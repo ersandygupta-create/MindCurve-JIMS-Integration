@@ -12,6 +12,7 @@ page 50249 "E3 Transfer Card"
         {
             group(General)
             {
+                Editable = IsPageEditable;
                 field("Entry Type"; Rec."Entry Type")
                 {
                     ApplicationArea = All;
@@ -66,6 +67,7 @@ page 50249 "E3 Transfer Card"
             part(TransferLines; "E3 Transfer Lines")
             {
                 ApplicationArea = All;
+                Editable = IsPageEditable;
                 SubPageLink =
                     "Entry Type" = field("Entry Type"),
                     "Entry Number" = field("Entry Number");
@@ -80,38 +82,49 @@ page 50249 "E3 Transfer Card"
             action(PostTransfer)
             {
                 ApplicationArea = All;
-                Caption = 'Post Transfer';
+                Caption = 'Create Transfer Entries';
                 ToolTip = 'Posts the Item Reclassification Journal for this transfer.';
                 Image = Post;
                 Promoted = true;
                 PromotedCategory = Process;
-
-                Enabled = Rec."Is Created" and not Rec."Is Posted";
+                Visible = IsPageEditable;
+                Enabled = IsPageEditable;
 
                 trigger OnAction()
                 var
                     TransferJournalMgmt: Codeunit "E3 Transfer Journal Mgmt.";
                 begin
-                    Rec.TestField("Entry Number");
-
-                    if Rec."Is Posted" then
-                        Error('Transfer %1 has already been posted.', Rec."Entry Number");
-
-                    if not Rec."Is Created" then
-                        Error('Create the Item Reclassification Journal before posting the transfer.');
+                    Rec.TestField("Document Number");
 
                     if not Confirm(
                         'Do you want to post the Item Reclassification Journal for Transfer %1?',
                         false,
-                        Rec."Entry Number")
+                        Rec."Document Number")
                     then
                         exit;
 
-                    TransferJournalMgmt.CreateItemReclassificationJournal(Rec."Entry Number");
+                    TransferJournalMgmt.CreateItemReclassificationJournal(Rec."Document Number");
 
                     CurrPage.Update(false);
                 end;
             }
         }
     }
+    var
+        IsPageEditable: Boolean;
+
+    trigger OnAfterGetRecord()
+    begin
+        SetPageEditable();
+    end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        SetPageEditable();
+    end;
+
+    local procedure SetPageEditable()
+    begin
+        IsPageEditable := not Rec."Is Created";
+    end;
 }

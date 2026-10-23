@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-10-06T07:51:38.2518785Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-10-22T11:43:39.5862379Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -1676,7 +1676,6 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <rd:Selected>true</rd:Selected>
                                           <Textbox Name="UnitofMeasure_SalesInvoiceLine3">
                                             <rd:DefaultName>UnitofMeasure_SalesInvoiceLine</rd:DefaultName>
                                             <CanGrow>true</CanGrow>
@@ -4820,7 +4819,7 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                       </Style>
                     </TextRun>
                     <TextRun>
-                      <Value>="PAN : " &amp; First(Fields!CompInfoPANNo.Value, "DataSet_Result") &amp; ", " &amp; "GST No. : " &amp; First(Fields!CompInfoGSTRegNo.Value, "DataSet_Result")</Value>
+                      <Value>="PAN : " &amp; First(Fields!CompInfoPANNo.Value, "DataSet_Result") &amp; ", " &amp; "GSTIN. : " &amp; First(Fields!CompInfoGSTRegNo.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>7pt</FontSize>
@@ -4980,10 +4979,10 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>="Name : "+Code.GetData(27,1)+vbcrlf+"Address : "+Code.GetData(28,1)+", City :"+Code.GetData(60,1)+Vbcrlf+"Post Code :"+Code.GetData(62,1)+", State : "+code.getdata(47,1)+" , Phone No. "+code.getdata(49,1)+Vbcrlf+"State Code : "+code.getdata(50,1)+vbcrlf+"PAN : "+First(Fields!Customer_PAN_No.Value, "DataSet_Result")+vbcrlf+code.getdata(52,1)</Value>
+                      <Value>="Name : "+Code.GetData(27,1)+vbcrlf+"Address : "+Code.GetData(28,1)+" City :"+Code.GetData(60,1)+Vbcrlf+"Post Code :"+Code.GetData(62,1)+", State : "+code.getdata(47,1)+" , Phone No. "+code.getdata(49,1)+Vbcrlf+"State Code : "+code.getdata(50,1)+vbcrlf+"PAN : "+First(Fields!Customer_PAN_No.Value, "DataSet_Result")+vbcrlf+code.getdata(52,1)+vbcrlf+"DL No :"+First(Fields!CustDLNo.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>7pt</FontSize>
+                        <FontSize>6pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -5000,26 +4999,6 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                   <Style>Solid</Style>
                   <Width>0.75pt</Width>
                 </Border>
-                <TopBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </TopBorder>
-                <BottomBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </BottomBorder>
-                <LeftBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </LeftBorder>
-                <RightBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </RightBorder>
                 <PaddingLeft>1pt</PaddingLeft>
                 <PaddingTop>1.5pt</PaddingTop>
               </Style>
@@ -5322,10 +5301,10 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
 +vbcrlf+iif(Fields!Ship_to_Address.Value="","Address : "+Code.GetData(28,1),"Address : "+code.getdata(46,1))+iif(Code.GetData(61,1)="",", City :"+Code.GetData(60,1),", City :"+Code.GetData(61,1))+
 Vbcrlf+iif(Code.getdata(63,1)="","Post Code :"+Code.GetData(62,1),"Post Code :"+Code.GetData(63,1))+iif(Fields!ShipStateName.Value="",", State : "+Code.getdata(47,1),", State : "+Code.getdata(48,1))+", Phone No. "+Code.getdata(49,1)+
 Vbcrlf+iif(Fields!GST_Ship_to_State_Code.Value="","State Code : "+Code.getdata(50,1),"State Code : "+Code.getdata(51,1))+vbcrlf+"PAN : "+First(Fields!Customer_PAN_No.Value, "DataSet_Result")+
-vbcrlf+iif(Fields!Ship_to_GST_Reg__No_.Value="",Code.getdata(52,1),Code.getdata(53,1))</Value>
+vbcrlf+iif(Fields!Ship_to_GST_Reg__No_.Value="",Code.getdata(52,1),Code.getdata(53,1)+vbcrlf+"DL No :"+First(Fields!CustDLNo.Value, "DataSet_Result"))</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>7pt</FontSize>
+                        <FontSize>6pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -5342,26 +5321,6 @@ vbcrlf+iif(Fields!Ship_to_GST_Reg__No_.Value="",Code.getdata(52,1),Code.getdata(
                   <Style>Solid</Style>
                   <Width>0.75pt</Width>
                 </Border>
-                <TopBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </TopBorder>
-                <BottomBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </BottomBorder>
-                <LeftBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </LeftBorder>
-                <RightBorder>
-                  <Color>Black</Color>
-                  <Style>Solid</Style>
-                  <Width>0.75pt</Width>
-                </RightBorder>
                 <PaddingLeft>1pt</PaddingLeft>
                 <PaddingTop>1.5pt</PaddingTop>
               </Style>
@@ -5834,10 +5793,20 @@ Value</Value>
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value />
+                      <Value>  Remarks : </Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
-                        <FontSize>7pt</FontSize>
+                        <FontSize>6pt</FontSize>
+                        <Format>dd MMM yyyy</Format>
+                      </Style>
+                    </TextRun>
+                    <TextRun>
+                      <Value>=First(Fields!Work_Description.Value, "DataSet_Result")</Value>
+                      <Style>
+                        <FontFamily>Tahoma</FontFamily>
+                        <FontSize>6pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                        <Format>dd-MM-yyyy</Format>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -6998,6 +6967,9 @@ nZkzZ2aRd9hAS1FTgBQkN6m0AQQIyZU14ZGLhx56qHXjjTdmkWmDAZh3vaPnrFmzKtLIOoD0gazs1QZ1
         <Field Name="External_Document_No_">
           <DataField>External_Document_No_</DataField>
         </Field>
+        <Field Name="Work_Description">
+          <DataField>Work_Description</DataField>
+        </Field>
         <Field Name="Order_Date">
           <DataField>Order_Date</DataField>
         </Field>
@@ -7096,6 +7068,9 @@ nZkzZ2aRd9hAS1FTgBQkN6m0AQQIyZU14ZGLhx56qHXjjTdmkWmDAZh3vaPnrFmzKtLIOoD0gazs1QZ1
         </Field>
         <Field Name="Customer_PAN_No">
           <DataField>Customer_PAN_No</DataField>
+        </Field>
+        <Field Name="CustDLNo">
+          <DataField>CustDLNo</DataField>
         </Field>
         <Field Name="State">
           <DataField>State</DataField>

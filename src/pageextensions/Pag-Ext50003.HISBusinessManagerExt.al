@@ -229,6 +229,19 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                             ToolTip = 'Executes the Settlement Process Setup action.';
                         }
                     }
+                    group(PharmacySaleSetups)
+                    {
+                        Caption = 'Pharmacy Sale Setup';
+                        action("E3 Pharmacy Sale Setups")
+                        {
+                            ApplicationArea = Basic, Suite;
+                            Caption = 'Pharmacy Sale Setups';
+                            Image = Setup;
+                            RunObject = Page "E3 Pharmacy Sale Setup";
+                            RunPageMode = Create;
+                            ToolTip = 'Executes the Pharmacy Sale Setup action.';
+                        }
+                    }
                 }
                 group("E3 HIS Masters")
                 {

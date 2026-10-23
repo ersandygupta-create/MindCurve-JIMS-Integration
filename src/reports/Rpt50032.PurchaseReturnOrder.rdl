@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-10-07T05:28:27.4968782Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-10-22T12:00:44.8269073Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -5785,7 +5785,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Challan Date</Value>
+                    <Value>Document Date</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -6177,7 +6177,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Challan No.</Value>
+                    <Value>Reason Description</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -6211,7 +6211,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!Vendor_Invoice_No_.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!ReasonDescription.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -6584,6 +6584,9 @@ End Function
         </Field>
         <Field Name="PostingDescription">
           <DataField>PostingDescription</DataField>
+        </Field>
+        <Field Name="ReasonDescription">
+          <DataField>ReasonDescription</DataField>
         </Field>
         <Field Name="LineNo">
           <DataField>LineNo</DataField>

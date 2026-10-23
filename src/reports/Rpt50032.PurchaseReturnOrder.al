@@ -20,11 +20,9 @@ report 50032 "E3 Purchase Return Order"
             column(CompCityPostCode; CompanyInfo.City + '' + CompanyInfo."Post Code") { }
             column(CompEmail; CompanyInfo."E-Mail") { }
             column(CompGSTIN; CompanyInfo."GST Registration No.") { }
-
             column(DocumentNo; "No.") { }
             column(DocumentDate; "Document Date") { }
             column(PostingDate; "Posting Date") { }
-
             column(Buy_from_Vendor_No_; "Buy-from Vendor No.") { }
             column(Buy_from_Vendor_Name; "Buy-from Vendor Name") { }
             column(Buy_from_Address; "Buy-from Address") { }
@@ -36,16 +34,13 @@ report 50032 "E3 Purchase Return Order"
             column(PrintCaption; "Print Caption") { }
             column(LocationCode; "Location Code") { }
             column(PaymentTermsCode; "Payment Terms Code") { }
-
             column(Location_Name; LocationName) { }
             column(LocationName2; LocationName2) { }
             column(LocationName3; LocationName3) { }
             column(LocationFullAddress; LocationFullAddress) { }
-
             column(Location_Address; LocationAddress)
             {
             }
-
             column(Location_Address_2; LocationAddress2)
             {
             }
@@ -94,6 +89,7 @@ report 50032 "E3 Purchase Return Order"
             column(ApprovedByUserName; ApprovedByUserName) { }
             column(DepartmentName; DepartmentName) { }
             column(PostingDescription; "Posting Description") { }
+            column(ReasonDescription; ReasonDescription) { }
             dataitem(PurchaseLine; "Purchase Line")
             {
                 DataItemLink =
@@ -175,7 +171,12 @@ report 50032 "E3 Purchase Return Order"
 
             trigger OnAfterGetRecord()
             begin
-                // Currency Code
+                Clear(ReasonDescription);
+
+                if "Reason Code" <> '' then
+                    if ReasonCodeRec.Get("Reason Code") then
+                        ReasonDescription := ReasonCodeRec.Description;
+
                 CdCurrencyCode := "Currency Code";
 
                 // Reset amount variables
@@ -330,7 +331,8 @@ report 50032 "E3 Purchase Return Order"
         VendorGSTIN: Code[20];
         VendorEmail: Text[80];
         VendorPhone: Text[30];
-
+        ReasonCodeRec: Record "Reason Code";
+        ReasonDescription: Text[100];
         PurchLine: Record "Purchase Line";
         recPurchaseLine: Record "Purchase Line";
 

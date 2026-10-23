@@ -70,7 +70,17 @@ table 50035 "E3 Item Category Master"
     var
         InventorySetup: Record "Inventory Setup";
         NoSeries: Codeunit "No. Series";
+        UserSetup: Record "User Setup";
     begin
+
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Insert" then
+            Error(
+                'You do not have permission to create a new Item Category record. ' +
+                'Please contact your administrator.');
+
         TestField(Name);
         if Code = '' then begin
             InventorySetup.Get();
@@ -80,6 +90,20 @@ table 50035 "E3 Item Category Master"
             Code := NoSeries.GetNextNo("No. Series", Today, true);
         end;
     end;
+
+    trigger OnModify()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Modify" then
+            Error(
+                'You do not have permission to modify an Item Category record. ' +
+                'Please contact your administrator.');
+    end;
+
 
     procedure AssistEdit(OldItemCategory: Record "E3 Item Category Master"): Boolean
     var

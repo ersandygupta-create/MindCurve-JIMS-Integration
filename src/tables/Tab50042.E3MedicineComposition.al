@@ -119,9 +119,33 @@ table 50042 "E3 Medicine Composition"
         }
     }
     trigger OnInsert()
+    var
+        UserSetup: Record "User Setup";
     begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Insert" then
+            Error(
+                'You do not have permission to create a new Medicine Composition record. ' +
+                'Please contact your administrator.');
+
         SetLineNo();
     end;
+
+    trigger OnModify()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Modify" then
+            Error(
+                'You do not have permission to modify an Medicine Composition record. ' +
+                'Please contact your administrator.');
+    end;
+
 
     local procedure SetLineNo()
     var

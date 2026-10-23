@@ -93,6 +93,7 @@ codeunit 50058 "E3 GRN Invoice Management"
         PurchRcptLine: Record "Purch. Rcpt. Line";
         TempPurchRcptLine: Record "Purch. Rcpt. Line" temporary;
         PurchGetReceipt: Codeunit "Purch.-Get Receipt";
+        PaymentTerms: Record "Payment Terms";
     begin
         // Step 1: Create Purchase Invoice Header for this specific GRN
         Clear(PurchHeader);
@@ -106,8 +107,15 @@ codeunit 50058 "E3 GRN Invoice Management"
         PurchHeader."Vendor Invoice No." := PurchRcptHeader."Vendor Invoice No.";
         PurchHeader."Purchase Narration" := PurchRcptHeader."Purchase Narration";
         PurchHeader."Receipt No." := PurchRcptHeader."No.";
-        PurchHeader."Receipt Date" := PurchRcptHeader."Posting Date";
-        PurchHeader."Due Date" := PurchRcptHeader."Due Date";
+        PurchHeader."Receipt Date" := WorkDate();
+        //ak
+        if PurchHeader."Payment Terms Code" <> '' then begin
+            PaymentTerms.Get(PurchHeader."Payment Terms Code");
+            PurchHeader."Due Date" :=
+                CalcDate(PaymentTerms."Due Date Calculation", PurchHeader."Posting Date");
+        end else
+            PurchHeader."Due Date" := PurchHeader."Posting Date";
+        //ak
         PurchHeader.Validate("Pay-to Vendor No.", PurchRcptHeader."Pay-to Vendor No.");
         PurchHeader."Order Date" := PurchRcptHeader."Order Date";
         if PurchRcptHeader."Location Code" <> '' then

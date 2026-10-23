@@ -2,12 +2,10 @@
 page 50244 "E3 Pharmacy Sales Lines"
 {
     Caption = 'Pharmacy Sales Line';
-    //AutoSplitKey = true;
     DelayedInsert = true;
-    LinksAllowed = false;
-    MultipleNewLines = true;
     PageType = ListPart;
     SourceTable = "E3 Pharmacy Sale Lines";
+    ApplicationArea = All;
 
     layout
     {
@@ -31,6 +29,7 @@ page 50244 "E3 Pharmacy Sales Lines"
                 field("Line Number"; Rec."Line Number")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies the line number.';
                 }
                 field("Document Type"; Rec."Document Type")
@@ -180,8 +179,7 @@ page 50244 "E3 Pharmacy Sales Lines"
     }
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
-        Rec.Validate("Entry Type", Rec.GetRangeMin("Entry Type"));
-        Rec.Validate("Document Type", Rec.GetRangeMin("Document Type"));
-        Rec.Validate("Entry Number", Rec.GetRangeMin("Entry Number"));
+        Rec."Entry Type" := Rec."Entry Type";
+        Rec."Document Type" := Rec."Document Type";
     end;
 }

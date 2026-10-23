@@ -75,8 +75,30 @@ table 50029 "E3 Item Type"
         }
     }
     trigger OnInsert()
+    var
+        UserSetup: Record "User Setup";
     begin
         TestField(Name);
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Insert" then
+            Error(
+                'You do not have permission to create a new Item Type record. ' +
+                'Please contact your administrator.');
+    end;
+
+    trigger OnModify()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Modify" then
+            Error(
+                'You do not have permission to modify an Item Type record. ' +
+                'Please contact your administrator.');
     end;
 
 }

@@ -6,6 +6,7 @@ page 50251 "E3 Posted Transfer List"
     ApplicationArea = All;
     UsageCategory = Lists;
     CardPageId = "E3 Transfer Card";
+    SourceTableView = where("Is Created" = filter(true));
 
     layout
     {
