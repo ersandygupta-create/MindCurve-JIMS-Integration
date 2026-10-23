@@ -5,7 +5,7 @@ codeunit 50049 "E3 Settlement Process Mgmt."
 
     end;
 
-    procedure InitGenJnlLineSettlementProcess()
+    procedure InitGenJnlLineSettlementProcess(var OrgReceipt: Record "E3 Organization Receipt")
     var
         GenJournalLine: Record "Gen. Journal Line";
         HISGLAccountMapping: Record "E3 Settlement Process Setup";
@@ -31,8 +31,10 @@ codeunit 50049 "E3 Settlement Process Mgmt."
         OrgnizationReceipt.RESET();
         OrgnizationReceipt.SETFILTER(OrgnizationReceipt.IsCreated, '%1', FALSE);
         OrgnizationReceipt.SETFILTER(OrgnizationReceipt."Received Amount", '<>%1', 0);
+        OrgnizationReceipt.SetRange("Document No.", OrgReceipt."Document No.");
         IF OrgnizationReceipt.FINDSET() THEN
             REPEAT
+                checkMandatoryField(OrgnizationReceipt);
                 GenJournalLine.RESET();
                 GenJournalLine.SETRANGE("Journal Template Name", IntegrationSetupLine."General Journal Template Code");
                 GenJournalLine.SETRANGE("Journal Batch Name", IntegrationSetupLine."General Journal Batch Code");
@@ -49,18 +51,11 @@ codeunit 50049 "E3 Settlement Process Mgmt."
                 //GenJournalLine.VALIDATE("Document Type", OrgnizationReceipt."Document Type");
                 GenJournalLine.VALIDATE("Document No.", OrgnizationReceipt."Document No.");
                 GenJournalLine.VALIDATE("Posting Date", OrgnizationReceipt."Document Date");
+                GenJournalLine.VALIDATE("Account Type", OrgnizationReceipt."Account Type");
+                GenJournalLine.VALIDATE("Account No.", OrgnizationReceipt."Account No.");
+                GenJournalLine.Validate("E3 UTR No.", OrgnizationReceipt."Instrument No.");
 
-                HISGLAccountMapping.Reset();
-                HISGLAccountMapping.SetRange("Settlement Type", HISGLAccountMapping."Settlement Type"::Orgnization);
-                HISGLAccountMapping.SetRange("HIS Document Type", OrgnizationReceipt."HIS Document Type");
-                if HISGLAccountMapping.FindFirst() then begin
-
-                    GenJournalLine.VALIDATE("Account Type", HISGLAccountMapping."Account Type");
-                    GenJournalLine.VALIDATE("Account No.", HISGLAccountMapping."Account No.");
-                end ELSE
-                    Error(MOPLbl, OrgnizationReceipt."HIS Document Type");//ak
-
-                GenJournalLine.VALIDATE(Amount, OrgnizationReceipt."Received Amount");
+                GenJournalLine.VALIDATE(Amount, -1 * OrgnizationReceipt."Received Amount");
                 GenJournalLine.VALIDATE("Cheque Date", OrgnizationReceipt."Instrument Date");
                 GenJournalLine.VALIDATE("Cheque No.", COPYSTR(OrgnizationReceipt."Instrument No.", 1, 10));
                 GenJournalLine.validate("Bal. Account Type", OrgnizationReceipt."Bal. Account Type");
@@ -72,8 +67,8 @@ codeunit 50049 "E3 Settlement Process Mgmt."
 
                 if OrgnizationReceipt."Shortcut Dimension 2 Code" <> '' then
                     GenJournalLine.VALIDATE("Shortcut Dimension 2 Code", (OrgnizationReceipt."Shortcut Dimension 2 Code"));
-
-                GenJournalLine.VALIDATE("E3 HIS Document Type", OrgnizationReceipt."HIS Document Type");
+                Evaluate(HisDocumentType, Format(OrgnizationReceipt."HIS Document Type"));
+                GenJournalLine.VALIDATE("E3 HIS Document Type", HisDocumentType);
 
                 GenJournalLine.INSERT();
 
@@ -131,10 +126,35 @@ codeunit 50049 "E3 Settlement Process Mgmt."
 
     end;
 
+    local procedure checkMandatoryField(OrgReceipt: Record "E3 Organization Receipt")
+    var
+        ErrorMessage: Text;
+        IsFirst: Boolean;
+    begin
+        IsFirst := true;
+
+        if Format(OrgReceipt."Account Type") = '' then
+            ErrorMessage := ErrorMessage + '\ - Account Type cannot be blank.';
+
+        if OrgReceipt."Account No." = '' then
+            ErrorMessage := ErrorMessage + '\ - Account No. cannot be blank.';
+
+        if Format(OrgReceipt."Bal. Account Type") = '' then
+            ErrorMessage := ErrorMessage + '\ - Bal. Account Type cannot be blank.';
+
+        if OrgReceipt."Bal. Account No" = '' then
+            ErrorMessage := ErrorMessage + '\ - Bal. Account No cannot be blank.';
+
+        if ErrorMessage <> '' then
+            Error('Please fill in the following required fields:' + ErrorMessage);
+    end;
+
 
 
     var
         IntegrationSetup: Record "E3 HIS Integartion Setup";
         IntegrationSetupLine: Record "E3 HIS Integration Setup Line";
+        HisDocumentType: Code[50];
         OrgnizationReceipt: Record "E3 Organization Receipt";
+
 }

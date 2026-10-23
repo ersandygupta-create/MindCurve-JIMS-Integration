@@ -137,7 +137,7 @@ page 50256 "E3 Posted Organization Receipt"
                 var
                     OrgnizationReceiptMgmt: Codeunit "E3 Settlement Process Mgmt.";
                 begin
-                    OrgnizationReceiptMgmt.InitGenJnlLineSettlementProcess();
+                    OrgnizationReceiptMgmt.InitGenJnlLineSettlementProcess(Rec);
 
                 end;
             }

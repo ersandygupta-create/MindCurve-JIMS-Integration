@@ -18,7 +18,7 @@ table 50086 "E3 Settlement Process Setup"
             Caption = 'Settlement Type';
             DataClassification = CustomerContent;
         }
-        field(3; "HIS Document Type"; Text[50])
+        field(3; "HIS Document Type"; Enum "HIS Settlement Type")
         {
             Caption = 'HIS Document Type';
             DataClassification = CustomerContent;

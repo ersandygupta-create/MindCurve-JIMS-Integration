@@ -202,7 +202,7 @@ table 50085 "E3 Bill Application"
             until BillApplication.Next() = 0;
 
         AvailableAmount :=
-            AllocationReceipt."Receipt Amount" - TotalPaymentReceived;
+            AllocationReceipt."Allocated Amount" - TotalPaymentReceived;
 
         if "Payment Received" > AvailableAmount then
             Error(

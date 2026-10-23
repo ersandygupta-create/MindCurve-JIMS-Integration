@@ -14,7 +14,7 @@ table 50083 "E3 Organization Receipt"
             Editable = false;
             DataClassification = CustomerContent;
         }
-        field(2; "HIS Document Type"; Text[50])
+        field(2; "HIS Document Type"; Enum "HIS Settlement Type")
         {
             Caption = 'HIS Document Type';
             DataClassification = CustomerContent;
@@ -28,6 +28,7 @@ table 50083 "E3 Organization Receipt"
         {
             Caption = 'Document Date';
             DataClassification = CustomerContent;
+
         }
         field(5; "Received Amount"; Decimal)
         {
@@ -199,6 +200,7 @@ table 50083 "E3 Organization Receipt"
 
             "Document No." :=
                 NoSeries.GetNextNo(IntegrationSetup."Settlement Nos.", WorkDate());
+            "Document Date" := WorkDate();
         end;
     end;
 

@@ -123,6 +123,7 @@ report 50056 "E3 Bill Application Import"
                         BillApplication."UHIDNo" := CustomerLedgerEntry."E3 UHID";
                         CustomerLedgerEntry.CalcFields("Remaining Amount");
                         BillApplication."Bill Amount" := CustomerLedgerEntry."Remaining Amount";
+                        BillApplication."Patient Name" := CustomerLedgerEntry."E3 Patient Name";
 
                         BillApplication.Insert(true);
                         InsertedCount += 1;
