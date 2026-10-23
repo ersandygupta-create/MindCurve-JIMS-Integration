@@ -99,7 +99,17 @@ table 50036 "E3 Item Make Master"
     var
         InventorySetup: Record "Inventory Setup";
         NoSeries: Codeunit "No. Series";
+        UserSetup: Record "User Setup";
     begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Insert" then
+            Error(
+                'You do not have permission to create a new Item Make record. ' +
+                'Please contact your administrator.');
+
+
         TestField("Company Name");
         if Code = '' then begin
             InventorySetup.Get();
@@ -109,6 +119,20 @@ table 50036 "E3 Item Make Master"
             Code := NoSeries.GetNextNo("No. Series", Today, true);
         end;
     end;
+
+    trigger OnModify()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Modify" then
+            Error(
+                'You do not have permission to modify an Item Make record. ' +
+                'Please contact your administrator.');
+    end;
+
 
     procedure AssistEdit(OldItemMake: Record "E3 Item Make Master"): Boolean
     var

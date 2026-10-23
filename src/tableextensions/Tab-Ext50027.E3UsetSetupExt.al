@@ -289,5 +289,15 @@ tableextension 50027 "E3 Uset Setup Ext" extends "User Setup"
             Caption = 'Order Address Delete';
             DataClassification = CustomerContent;
         }
+        field(50055; "Item Sub Table Insert"; Boolean)
+        {
+            Caption = 'Item Sub Table Insert';
+            DataClassification = CustomerContent;
+        }
+        field(50056; "Item Sub Table Modify"; Boolean)
+        {
+            Caption = 'Item Sub Table Modify';
+            DataClassification = CustomerContent;
+        }
     }
 }

@@ -82,6 +82,11 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Send Order E-mail field';
                 }
+                field(Status; Rec.Status)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies a value of approval status field.';
+                }
             }
         }
     }

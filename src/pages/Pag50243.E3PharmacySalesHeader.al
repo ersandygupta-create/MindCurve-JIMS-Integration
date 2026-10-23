@@ -1,11 +1,10 @@
 
 page 50243 "E3 Pharmacy Sales Card"
 {
-    PageType = Card;
     Caption = 'Pharmacy Sales Card';
     SourceTable = "E3 Pharmacy Sale Header";
     ApplicationArea = All;
-    UsageCategory = None;
+    PageType = Document;
 
     layout
     {
@@ -27,11 +26,6 @@ page 50243 "E3 Pharmacy Sales Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the entry type.';
                 }
-                field("Entry Number"; Rec."Entry Number")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the pharmacy sales entry reference.';
-                }
                 field("Document Type"; Rec."Document Type")
                 {
                     ApplicationArea = All;
@@ -41,6 +35,11 @@ page 50243 "E3 Pharmacy Sales Card"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the document number.';
+                }
+                field("Entry Number"; Rec."Entry Number")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the pharmacy sales entry reference.';
                 }
                 field("D365 Department Code"; Rec."D365 Department Code")
                 {
@@ -117,7 +116,9 @@ page 50243 "E3 Pharmacy Sales Card"
             part(SalesLines; "E3 Pharmacy Sales Lines")
             {
                 ApplicationArea = All;
-                SubPageLink = "Entry Type" = field("Entry Type"), "Document Type" = field("Document Type"), "Entry Number" = field("Entry Number");
+                Editable = IsPageEditable;
+                SubPageLink = "Entry Type" = field("Entry Type"), "Document Type" = field("Document Type"),
+                    "Document Number" = field("Document Number");
                 UpdatePropagation = Both;
             }
 
@@ -189,14 +190,77 @@ page 50243 "E3 Pharmacy Sales Card"
                 field("Is Created"; Rec."Is Created")
                 {
                     ApplicationArea = All;
+                    //Editable = false;
                     ToolTip = 'Specifies whether the record has been created.';
                 }
                 field("Is Posted"; Rec."Is Posted")
                 {
                     ApplicationArea = All;
+                    Visible = false;
+                    Editable = false;
                     ToolTip = 'Specifies whether the record has been posted.';
                 }
             }
         }
     }
+
+    actions
+    {
+        area(Processing)
+        {
+            action(CreateSalesInvoice)
+            {
+                Caption = 'Create Sales Invoice';
+                ApplicationArea = All;
+                Image = NewDocument;
+                Visible = IsPageEditable;
+                Enabled = IsPageEditable;
+
+                trigger OnAction()
+                var
+                    PharmacySalesPosting: Codeunit "E3 Pharmacy Sales Posting";
+                begin
+                    Rec.TestField("Document Number");
+
+                    if Rec."Is Created" then
+                        Error(
+                            'Sales Invoice has already been created for Document No. %1.',
+                            Rec."Document Number");
+
+                    if not Confirm(
+                        'Do you want to create a Sales Invoice for Document No. %1?',
+                        false,
+                        Rec."Document Number")
+                    then
+                        exit;
+
+                    PharmacySalesPosting.InitSalesInvoice(
+                        Rec."Entry Type",
+                        Rec."Document Type",
+                        Rec."Document Number");
+
+                    CurrPage.Update(false);
+                end;
+            }
+        }
+    }
+
+    trigger OnAfterGetRecord()
+    begin
+        SetPageEditable();
+    end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        SetPageEditable();
+    end;
+
+    local procedure SetPageEditable()
+    begin
+        IsPageEditable := not Rec."Is Created";
+        //CurrPage.Editable(IsPageEditable);
+    end;
+
+    var
+        IsPageEditable: Boolean;
 }

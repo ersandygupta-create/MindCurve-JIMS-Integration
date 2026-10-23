@@ -12,7 +12,7 @@ tableextension 50001 "E3 HIS Customer Ext" extends Customer
             Caption = 'HIS Type';
             DataClassification = CustomerContent;
         }
-        field(50003; "DL No."; Text[20])
+        field(50003; "DL No."; Text[60])
         {
             Caption = 'DL No.';
             DataClassification = CustomerContent;

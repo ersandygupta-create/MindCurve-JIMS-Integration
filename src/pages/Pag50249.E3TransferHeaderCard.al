@@ -12,6 +12,7 @@ page 50249 "E3 Transfer Card"
         {
             group(General)
             {
+                Editable = IsPageEditable;
                 field("Entry Type"; Rec."Entry Type")
                 {
                     ApplicationArea = All;
@@ -66,6 +67,7 @@ page 50249 "E3 Transfer Card"
             part(TransferLines; "E3 Transfer Lines")
             {
                 ApplicationArea = All;
+                Editable = IsPageEditable;
                 SubPageLink =
                     "Entry Type" = field("Entry Type"),
                     "Entry Number" = field("Entry Number");
@@ -85,25 +87,44 @@ page 50249 "E3 Transfer Card"
                 Image = Post;
                 Promoted = true;
                 PromotedCategory = Process;
+                Visible = IsPageEditable;
+                Enabled = IsPageEditable;
 
                 trigger OnAction()
                 var
                     TransferJournalMgmt: Codeunit "E3 Transfer Journal Mgmt.";
                 begin
-                    Rec.TestField("Entry Number");
+                    Rec.TestField("Document Number");
 
                     if not Confirm(
                         'Do you want to post the Item Reclassification Journal for Transfer %1?',
                         false,
-                        Rec."Entry Number")
+                        Rec."Document Number")
                     then
                         exit;
 
-                    TransferJournalMgmt.PostItemReclassificationJournal(Rec."Entry Number");
+                    TransferJournalMgmt.CreateItemReclassificationJournal(Rec."Document Number");
 
                     CurrPage.Update(false);
                 end;
             }
         }
     }
+    var
+        IsPageEditable: Boolean;
+
+    trigger OnAfterGetRecord()
+    begin
+        SetPageEditable();
+    end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        SetPageEditable();
+    end;
+
+    local procedure SetPageEditable()
+    begin
+        IsPageEditable := not Rec."Is Created";
+    end;
 }

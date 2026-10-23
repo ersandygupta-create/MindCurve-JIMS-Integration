@@ -14,30 +14,32 @@ table 50088 "E3 Pharmacy Sale Header"
             Editable = false;
             DataClassification = ToBeClassified;
         }
-        field(2; "Entry Type"; Text[30])
+        field(2; "Entry Type"; Option)
         {
             Caption = 'Entry Type';
+            OptionMembers = ,Sale,"Credit Memo";
             DataClassification = CustomerContent;
         }
-        field(3; "Entry Number"; Text[100])
-        {
-            Caption = 'Entry Number';
-            DataClassification = CustomerContent;
-        }
-        field(4; "Document Type"; Text[50])
+        field(3; "Document Type"; Text[50])
         {
             Caption = 'Document Type';
             DataClassification = CustomerContent;
         }
-        field(5; "Document Number"; Text[50])
+        field(4; "Document Number"; Code[20])
         {
             Caption = 'Document Number';
+            DataClassification = CustomerContent;
+        }
+        field(5; "Entry Number"; Text[100])
+        {
+            Caption = 'Entry Number';
             DataClassification = CustomerContent;
         }
         field(6; "D365 Department Code"; Code[30])
         {
             Caption = 'D365 Department Code';
             DataClassification = CustomerContent;
+            TableRelation = Location;
         }
         field(7; "Department Name"; Text[100])
         {
@@ -48,6 +50,7 @@ table 50088 "E3 Pharmacy Sale Header"
         {
             Caption = 'Location Code';
             DataClassification = CustomerContent;
+            TableRelation = Location;
         }
         field(9; "Location Name"; Text[100])
         {
@@ -58,6 +61,8 @@ table 50088 "E3 Pharmacy Sale Header"
         {
             Caption = 'Business Unit';
             DataClassification = CustomerContent;
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            ValidateTableRelation = false;
         }
         field(11; "Legal Entity"; Text[150])
         {
@@ -187,7 +192,7 @@ table 50088 "E3 Pharmacy Sale Header"
 
     keys
     {
-        key(PK; "Entry No.", "Entry Type", "Document Type", "Entry Number")
+        key(PK; "Entry No.", "Entry Type", "Document Type", "Document Number")
         {
             Clustered = true;
         }

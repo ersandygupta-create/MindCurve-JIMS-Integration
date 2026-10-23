@@ -22,7 +22,7 @@ tableextension 50000 "E3 HIS Vendor Ext" extends Vendor
             Caption = 'Auto E-Mail';
             DataClassification = CustomerContent;
         }
-        field(50004; "DL No."; Text[20])
+        field(50004; "DL No."; Text[60])
         {
             Caption = 'DL No.';
             DataClassification = CustomerContent;
@@ -96,6 +96,10 @@ tableextension 50000 "E3 HIS Vendor Ext" extends Vendor
         {
             caption = 'Beneficiary Name';
             DataClassification = CustomerContent;
+        }
+        field(50058; Status; Enum "E3 Approval Status")
+        {
+            Caption = 'Status';
         }
         modify("Date Filter")
         {

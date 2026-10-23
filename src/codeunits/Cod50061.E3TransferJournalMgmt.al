@@ -1,3 +1,4 @@
+
 codeunit 50061 "E3 Transfer Journal Mgmt."
 {
     Permissions =
@@ -7,71 +8,59 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         tabledata "Item Ledger Entry" = r,
         tabledata "Reservation Entry" = rim;
 
-    procedure CreateItemReclassificationJournal(EntryNumber: Text[100])
+    procedure CreateItemReclassificationJournal(DocumentNo: Code[20])
     var
         TransferHeader: Record "E3 Transfer Header";
         TransferLine: Record "E3 Transfer Line";
         ItemJournalLine: Record "Item Journal Line";
         ItemJournalTemplate: Record "Item Journal Template";
         ItemJournalBatch: Record "Item Journal Batch";
+        HISIntegrationSetupLine: Record "E3 HIS Integration Setup Line";
         Item: Record Item;
         LineNo: Integer;
         JournalTemplateName: Code[10];
         JournalBatchName: Code[10];
     begin
-        if EntryNumber = '' then
-            Error('Entry Number must not be blank.');
+        if DocumentNo = '' then
+            Error('Document No. must not be blank.');
 
+        // Find the transfer header by Document Number.
         TransferHeader.Reset();
-        TransferHeader.SetRange("Entry Number", EntryNumber);
+        TransferHeader.SetRange("Document Number", DocumentNo);
 
         if not TransferHeader.FindFirst() then
-            Error(
-                'Transfer Header %1 does not exist.',
-                EntryNumber);
+            Error('Transfer Header with Document No. %1 does not exist.', DocumentNo);
 
         if TransferHeader."Is Created" then
             Error(
-                'Item Reclassification Journal has already been created for Entry Number %1.',
-                EntryNumber);
+                'Item Reclassification Journal has already been created for Document No. %1.',
+                DocumentNo);
 
-        JournalTemplateName := 'RECLASS';
-        JournalBatchName := 'DEFAULT';
+        // Get journal template and batch from setup where Type = Reclass.
+        GetReclassJournalSetup(HISIntegrationSetupLine, JournalTemplateName, JournalBatchName);
 
         if not ItemJournalTemplate.Get(JournalTemplateName) then
-            Error(
-                'Item Journal Template %1 does not exist.',
-                JournalTemplateName);
+            Error('Item Journal Template %1 does not exist.', JournalTemplateName);
 
-        if not ItemJournalBatch.Get(
-            JournalTemplateName,
-            JournalBatchName)
+        if not ItemJournalBatch.Get(JournalTemplateName, JournalBatchName)
         then
             Error(
-                'Item Journal Batch %1 does not exist for template %2.',
-                JournalBatchName,
-                JournalTemplateName);
+                'Item Journal Batch %1 does not exist for template %2.', JournalBatchName, JournalTemplateName);
 
+        // Get lines linked to the selected transfer header.
         TransferLine.Reset();
-        TransferLine.SetRange(
-            "Entry Type",
-            TransferHeader."Entry Type");
-        TransferLine.SetRange(
-            "Entry Number",
-            TransferHeader."Entry Number");
+        TransferLine.SetRange("Entry Type", TransferHeader."Entry Type");
+        TransferLine.SetRange("Entry Number", TransferHeader."Entry Number");
 
         if not TransferLine.FindSet() then
             Error(
-                'No transfer lines exist for Entry Number %1.',
-                EntryNumber);
+                'No transfer lines exist for Document No. %1.',
+                DocumentNo);
 
+        // Find the next line number in the configured batch.
         ItemJournalLine.Reset();
-        ItemJournalLine.SetRange(
-            "Journal Template Name",
-            JournalTemplateName);
-        ItemJournalLine.SetRange(
-            "Journal Batch Name",
-            JournalBatchName);
+        ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
+        ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
 
         if ItemJournalLine.FindLast() then
             LineNo := ItemJournalLine."Line No." + 10000
@@ -81,14 +70,14 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         repeat
             if TransferLine.Quantity <= 0 then
                 Error(
-                    'Quantity must be greater than zero for Entry Number %1, Line Number %2.',
-                    EntryNumber,
+                    'Quantity must be greater than zero for Document No. %1, Line No. %2.',
+                    DocumentNo,
                     TransferLine."Line Number");
 
             if TransferLine."D365 Item Code" = '' then
                 Error(
-                    'Item Code must not be blank for Entry Number %1, Line Number %2.',
-                    EntryNumber,
+                    'Item Code must not be blank for Document No. %1, Line No. %2.',
+                    DocumentNo,
                     TransferLine."Line Number");
 
             if not Item.Get(TransferLine."D365 Item Code") then
@@ -98,114 +87,55 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
 
             if TransferLine."D365 From Department Code" = '' then
                 Error(
-                    'From Department Code must not be blank for Entry Number %1, Line Number %2.',
-                    EntryNumber,
+                    'From Department Code must not be blank for Document No. %1, Line No. %2.',
+                    DocumentNo,
                     TransferLine."Line Number");
 
             if TransferLine."D365 To Department Code" = '' then
                 Error(
-                    'To Department Code must not be blank for Entry Number %1, Line Number %2.',
-                    EntryNumber,
+                    'To Department Code must not be blank for Document No. %1, Line No. %2.',
+                    DocumentNo,
                     TransferLine."Line Number");
 
-            if TransferLine."D365 From Department Code" =
-               TransferLine."D365 To Department Code"
-            then
-                Error(
-                    'From Department and To Department cannot be the same for Entry Number %1, Line Number %2.',
-                    EntryNumber,
-                    TransferLine."Line Number");
-
-            // For lot-tracked items, require an existing available source lot.
+            // Check existing lot availability for tracked items.
             if Item."Item Tracking Code" <> '' then begin
                 if TransferLine."Batch No." = '' then
                     Error(
-                        'An existing Batch No. is required for item %1, Entry Number %2, Line Number %3.',
-                        Item."No.",
-                        EntryNumber,
-                        TransferLine."Line Number");
+                        'An existing Batch No. is required for item %1, Document No. %2, Line No. %3.',
+                        Item."No.", DocumentNo, TransferLine."Line Number");
 
-                CheckExistingLotAvailability(
-                    Item."No.",
-                    TransferLine."D365 From Department Code",
+                CheckExistingLotAvailability(Item."No.", TransferLine."D365 From Department Code",
                     TransferLine."Batch No.",
                     TransferLine.Quantity);
             end;
 
-            // Create the Item Reclassification Journal line.
+            // Create Item Reclassification Journal line.
             ItemJournalLine.Init();
-
-            ItemJournalLine.Validate(
-                "Journal Template Name",
-                JournalTemplateName);
-
-            ItemJournalLine.Validate(
-                "Journal Batch Name",
-                JournalBatchName);
-
-            ItemJournalLine.Validate(
-                "Line No.",
-                LineNo);
-
-            ItemJournalLine.Validate(
-                "Posting Date",
-                TransferHeader."v_Date");
-
-            ItemJournalLine.Validate(
-                "Entry Type",
-                ItemJournalLine."Entry Type"::Transfer);
-
-            ItemJournalLine.Validate(
-                "Document No.",
-                TransferHeader."Document Number");
-
-            ItemJournalLine.Validate(
-                "Item No.",
-                TransferLine."D365 Item Code");
-
-            ItemJournalLine.Validate(
-                "Location Code",
-                TransferLine."D365 From Department Code");
-
-            ItemJournalLine.Validate(
-                "New Location Code",
-                TransferLine."D365 To Department Code");
-
-            ItemJournalLine.Validate(
-                Quantity,
-                TransferLine.Quantity);
+            ItemJournalLine.Validate("Journal Template Name", JournalTemplateName);
+            ItemJournalLine.Validate("Journal Batch Name", JournalBatchName);
+            ItemJournalLine.Validate("Line No.", LineNo);
+            ItemJournalLine.Validate("Posting Date", TransferHeader."v_Date");
+            ItemJournalLine.Validate("Entry Type", ItemJournalLine."Entry Type"::Transfer);
+            ItemJournalLine.Validate("Document No.", DocumentNo);
+            ItemJournalLine.Validate("Item No.", TransferLine."D365 Item Code");
+            ItemJournalLine.Validate("Location Code", TransferLine."D365 From Department Code");
+            ItemJournalLine.Validate("New Location Code", TransferLine."D365 To Department Code");
+            ItemJournalLine.Validate("Shortcut Dimension 1 Code", TransferLine."Business Unit");
+            ItemJournalLine.Validate("New Shortcut Dimension 1 Code", TransferLine."Business Unit");
+            ItemJournalLine.Validate(Quantity, TransferLine.Quantity);
 
             if TransferLine."D365 Unit Code" <> '' then
-                ItemJournalLine.Validate(
-                    "Unit of Measure Code",
-                    TransferLine."D365 Unit Code");
+                ItemJournalLine.Validate("Unit of Measure Code", TransferLine."D365 Unit Code");
 
-            // Assign existing lot number for item reclassification
-            if Item."Item Tracking Code" <> '' then begin
-                if TransferLine."Batch No." = '' then
-                    Error(
-                        'Batch No. must be specified for tracked item %1.',
-                        TransferLine."D365 Item Code");
+            // Retain the existing lot. Do not assign New Lot No.
+            if Item."Item Tracking Code" <> '' then
+                ItemJournalLine.Validate("Lot No.", TransferLine."Batch No.");
 
-                // Existing lot at the source location
-                ItemJournalLine.Validate(
-                    "Lot No.",
-                    TransferLine."Batch No.");
-
-                // Reuse the same lot at the destination location
-                ItemJournalLine.Validate(
-                    "New Lot No.",
-                    TransferLine."Batch No.");
-            end;
-
-            // Insert the journal line; do not post it.
             ItemJournalLine.Insert(true);
 
-            // Create the tracking entry for the existing source lot.
+            // Create tracking entries for the existing lot.
             if Item."Item Tracking Code" <> '' then
-                CreateExistingLotTracking(
-                    ItemJournalLine,
-                    TransferLine."Batch No.");
+                CreateExistingLotTracking(ItemJournalLine, TransferLine."Batch No.");
 
             LineNo += 10000;
         until TransferLine.Next() = 0;
@@ -214,8 +144,45 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         TransferHeader.Modify(true);
 
         Message(
-            'Item Reclassification Journal lines created for Transfer %1. The journal has not been posted.',
-            EntryNumber);
+            'Item Reclassification Journal created for Document No. %1 using template %2 and batch %3. The journal has not been posted.',
+            DocumentNo,
+            JournalTemplateName,
+            JournalBatchName);
+    end;
+
+    local procedure GetReclassJournalSetup(
+        var HISIntegrationSetupLine: Record "E3 HIS Integration Setup Line";
+        var JournalTemplateName: Code[10];
+        var JournalBatchName: Code[10])
+    begin
+        HISIntegrationSetupLine.Reset();
+        HISIntegrationSetupLine.SetRange(
+            Type,
+            HISIntegrationSetupLine.Type::Reclass);
+
+        if not HISIntegrationSetupLine.FindFirst() then
+            Error(
+                'No HIS Integration Setup Line found with Type = Reclass.');
+
+        if HISIntegrationSetupLine."General Journal Template Code" = '' then
+            Error(
+                'General Journal Template Code is blank for Type = Reclass.');
+
+        if HISIntegrationSetupLine."General Journal Batch Code" = '' then
+            Error(
+                'General Journal Batch Code is blank for Type = Reclass.');
+
+        JournalTemplateName :=
+            CopyStr(
+                HISIntegrationSetupLine."General Journal Template Code",
+                1,
+                MaxStrLen(JournalTemplateName));
+
+        JournalBatchName :=
+            CopyStr(
+                HISIntegrationSetupLine."General Journal Batch Code",
+                1,
+                MaxStrLen(JournalBatchName));
     end;
 
     local procedure CheckExistingLotAvailability(
@@ -240,7 +207,7 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
 
         if AvailableQty < RequiredQty then
             Error(
-                'Insufficient existing lot quantity for item %1, lot %2, source location %3. Available quantity: %4; required quantity: %5.',
+                'Insufficient existing lot quantity for item %1, lot %2, source location %3. Available: %4; required: %5.',
                 ItemNo,
                 LotNo,
                 LocationCode,
@@ -272,23 +239,13 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
                     ItemJournalLine."Qty. per Unit of Measure",
                     0.00001);
 
-        // Avoid duplicate tracking entries for this journal line.
+        // Remove existing tracking entries for this journal line.
         ReservationEntry.Reset();
-        ReservationEntry.SetRange(
-            "Source Type",
-            Database::"Item Journal Line");
-        ReservationEntry.SetRange(
-            "Source Subtype",
-            ItemJournalLine."Entry Type".AsInteger());
-        ReservationEntry.SetRange(
-            "Source ID",
-            ItemJournalLine."Journal Template Name");
-        ReservationEntry.SetRange(
-            "Source Batch Name",
-            ItemJournalLine."Journal Batch Name");
-        ReservationEntry.SetRange(
-            "Source Ref. No.",
-            ItemJournalLine."Line No.");
+        ReservationEntry.SetRange("Source Type", Database::"Item Journal Line");
+        ReservationEntry.SetRange("Source Subtype", ItemJournalLine."Entry Type".AsInteger());
+        ReservationEntry.SetRange("Source ID", ItemJournalLine."Journal Template Name");
+        ReservationEntry.SetRange("Source Batch Name", ItemJournalLine."Journal Batch Name");
+        ReservationEntry.SetRange("Source Ref. No.", ItemJournalLine."Line No.");
 
         if not ReservationEntry.IsEmpty() then
             ReservationEntry.DeleteAll(true);
@@ -298,7 +255,6 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         ReservationEntry."Lot No." := LotNo;
 
         CreateReservEntry.SetDates(0D, 0D);
-
         CreateReservEntry.CreateReservEntryFor(
             Database::"Item Journal Line",
             ItemJournalLine."Entry Type".AsInteger(),
@@ -322,56 +278,53 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
             ReservationEntry."Reservation Status"::Prospect);
 
         ItemJournalLine.Validate("Lot No.", LotNo);
-        //ItemJournalLine.Validate("New Lot No.", LotNo);
         ItemJournalLine.Modify(true);
     end;
 
-    procedure PostItemReclassificationJournal(EntryNumber: Text[100])
+    procedure PostItemReclassificationJournal(DocumentNo: Code[20])
     var
         TransferHeader: Record "E3 Transfer Header";
         ItemJournalLine: Record "Item Journal Line";
         ItemJnlPostBatch: Codeunit "Item Jnl.-Post Batch";
+        HISIntegrationSetupLine: Record "E3 HIS Integration Setup Line";
         JournalTemplateName: Code[10];
         JournalBatchName: Code[10];
     begin
-        if EntryNumber = '' then
-            Error('Entry Number must not be blank.');
+        if DocumentNo = '' then
+            Error('Document No. must not be blank.');
 
         TransferHeader.Reset();
-        TransferHeader.SetRange("Entry Number", EntryNumber);
+        TransferHeader.SetRange("Document Number", DocumentNo);
 
         if not TransferHeader.FindFirst() then
             Error(
-                'Transfer Header %1 does not exist.',
-                EntryNumber);
+                'Transfer Header with Document No. %1 does not exist.',
+                DocumentNo);
 
         if not TransferHeader."Is Created" then
-            CreateItemReclassificationJournal(EntryNumber);
+            CreateItemReclassificationJournal(DocumentNo);
 
-        JournalTemplateName := 'RECLASS';
-        JournalBatchName := 'DEFAULT';
+        // Read template and batch from setup where Type = Reclass.
+        GetReclassJournalSetup(HISIntegrationSetupLine, JournalTemplateName, JournalBatchName);
 
+        // Filter journal lines for this document only.
         ItemJournalLine.Reset();
-        ItemJournalLine.SetRange(
-            "Journal Template Name",
-            JournalTemplateName);
-        ItemJournalLine.SetRange(
-            "Journal Batch Name",
-            JournalBatchName);
-        ItemJournalLine.SetRange(
-            "Document No.",
-            TransferHeader."Document Number");
+        ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
+        ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
+        ItemJournalLine.SetRange("Document No.", DocumentNo);
 
         if not ItemJournalLine.FindFirst() then
             Error(
-                'No Item Journal Lines found for Transfer %1.',
-                EntryNumber);
+                'No Item Journal Lines found for Document No. %1 in template %2 and batch %3.',
+                DocumentNo,
+                JournalTemplateName,
+                JournalBatchName);
 
-        // Posting is separate from journal creation.
+        // Post the selected document's journal lines.
         ItemJnlPostBatch.Run(ItemJournalLine);
 
         Message(
-            'Item Reclassification Journal posting process completed for Transfer %1.',
-            EntryNumber);
+            'Item Reclassification Journal posting process completed for Document No. %1.',
+            DocumentNo);
     end;
 }

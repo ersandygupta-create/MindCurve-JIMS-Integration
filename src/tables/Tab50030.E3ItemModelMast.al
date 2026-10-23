@@ -59,7 +59,16 @@ table 50030 "E3 Item Model Master"
     var
         InventorySetup: Record "Inventory Setup";
         NoSeries: Codeunit "No. Series";
+        UserSetup: Record "User Setup";
     begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Insert" then
+            Error(
+                'You do not have permission to create a new Item Model record. ' +
+                'Please contact your administrator.');
+
         TestField(Name);
         if Code = '' then begin
             InventorySetup.Get();
@@ -69,6 +78,19 @@ table 50030 "E3 Item Model Master"
             Code := NoSeries.GetNextNo("No. Series", Today, true);
 
         end;
+    end;
+
+    trigger OnModify()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Modify" then
+            Error(
+                'You do not have permission to modify an Item Model record. ' +
+                'Please contact your administrator.');
     end;
 
     procedure AssistEdit(OldItemModel: Record "E3 Item Model Master"): Boolean

@@ -8,7 +8,7 @@ page 50247 "E3 Posted Pharmacy Sales List"
     UsageCategory = Lists;
     CardPageId = "E3 Pharmacy Sales Card";
     Editable = false;
-    SourceTableView = where("Is Posted" = filter(true));
+    SourceTableView = where("Is Created" = filter(true));
 
     layout
     {

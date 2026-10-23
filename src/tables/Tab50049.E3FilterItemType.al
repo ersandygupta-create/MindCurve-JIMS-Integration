@@ -60,6 +60,30 @@ table 50049 "E3 Filter Item Type"
             Clustered = true;
         }
     }
+    trigger OnInsert()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
 
+        if not UserSetup."Item Sub Table Insert" then
+            Error(
+                'You do not have permission to create a new Filter Item Type record. ' +
+                'Please contact your administrator.');
+    end;
+
+    trigger OnModify()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Modify" then
+            Error(
+                'You do not have permission to modify an Filter Item Type record. ' +
+                'Please contact your administrator.');
+    end;
 }
 

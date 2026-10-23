@@ -25,6 +25,10 @@ pageextension 50094 "E3 Purchase Return Order Ext" extends "Purchase Return Orde
                 ShowMandatory = true;
                 ToolTip = 'Specifies a value Reason Code field.';
             }
+            field("Posting Description"; Rec."Posting Description")
+            {
+                ApplicationArea = All;
+            }
         }
     }
 

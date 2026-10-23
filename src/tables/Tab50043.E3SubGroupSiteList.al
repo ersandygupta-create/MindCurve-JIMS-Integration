@@ -69,6 +69,30 @@ table 50043 "E3 Sub Group Site List"
             Clustered = true;
         }
     }
+    trigger OnInsert()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
 
+        if not UserSetup."Item Sub Table Insert" then
+            Error(
+                'You do not have permission to create a new Sub Group Site record. ' +
+                'Please contact your administrator.');
+    end;
+
+    trigger OnModify()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Modify" then
+            Error(
+                'You do not have permission to modify an Sub Group Site record. ' +
+                'Please contact your administrator.');
+    end;
 }
 

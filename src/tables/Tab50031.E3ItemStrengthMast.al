@@ -59,7 +59,16 @@ table 50031 "E3 Item Strength Master"
     var
         InventorySetup: Record "Inventory Setup";
         NoSeries: Codeunit "No. Series";
+        UserSetup: Record "User Setup";
     begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Insert" then
+            Error(
+                'You do not have permission to create a new Item Strength record. ' +
+                'Please contact your administrator.');
+
         TestField(Name);
         if Code = '' then begin
             InventorySetup.Get();
@@ -68,6 +77,19 @@ table 50031 "E3 Item Strength Master"
             "No. Series" := InventorySetup."Item Strength Nos.";
             Code := NoSeries.GetNextNo("No. Series");
         end;
+    end;
+
+    trigger OnModify()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Modify" then
+            Error(
+                'You do not have permission to modify an Item Strength record. ' +
+                'Please contact your administrator.');
     end;
 
     procedure AssistEdit(OldItemStrength: Record "E3 Item Strength Master"): Boolean

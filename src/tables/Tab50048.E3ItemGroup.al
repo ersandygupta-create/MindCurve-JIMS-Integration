@@ -68,9 +68,33 @@ table 50048 "E3 Item Group"
         }
     }
     trigger OnInsert()
+    var
+        UserSetup: Record "User Setup";
     begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Insert" then
+            Error(
+                'You do not have permission to create a new Item Group record. ' +
+                'Please contact your administrator.');
+
         TestField(Name);
     end;
+
+    trigger OnModify()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if not UserSetup.Get(UserId()) then
+            Error('User Setup is not configured for user %1.', UserId());
+
+        if not UserSetup."Item Sub Table Modify" then
+            Error(
+                'You do not have permission to modify an Item Group record. ' +
+                'Please contact your administrator.');
+    end;
+
 
 }
 

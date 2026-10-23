@@ -122,6 +122,16 @@ page 50206 "E3 Advanced User Control Setup"
                     ApplicationArea = All;
                     ToolTip = 'Specifies whether the user is allowed to delete item records.';
                 }
+                field("Item Sub Table Insert"; Rec."Item Sub Table Insert")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies a value for Item Sub table Insert Permission';
+                }
+                field("Item Sub Table Modify"; Rec."Item Sub Table Modify")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies a value for Item Sub table Modify Permission';
+                }
                 field("Voucher Type Master Editable"; Rec."Voucher Type Master Editable")
                 {
                     ApplicationArea = All;
