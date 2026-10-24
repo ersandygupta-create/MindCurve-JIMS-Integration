@@ -976,6 +976,7 @@ codeunit 50001 "E3 HIS Event Subscriber"
                         GenJournalLine.Status := GenJournalLine.Status::Approved;
 
         GenJournalLine.Modify(true);
+
     end;
 
 
