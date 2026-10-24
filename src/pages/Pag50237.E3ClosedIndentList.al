@@ -180,16 +180,6 @@ page 50237 "E3 Closed Indent List"
                     Visible = false;
                     ToolTip = 'Specifies the Purchase Order Line no of indent line.';
                 }
-                field("Sales Order No."; Rec."Sales Order No.")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies a value Sales Order No.';
-                }
-                field("SO Created"; Rec."SO Created")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies a value Sales Order Created field';
-                }
                 field(IsSent; Rec.IsSent)
                 {
                     ApplicationArea = All;

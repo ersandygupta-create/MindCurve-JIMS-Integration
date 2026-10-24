@@ -345,7 +345,10 @@ permissionset 50000 "E3 HIS Permission"
     page "E3 Med PRF List" = X,
     table "E3 Pharmacy Sale Setup" = X,
     tabledata "E3 Pharmacy Sale Setup" = RIMD,
-    page "E3 Pharmacy Sale Setup" = X;
+    page "E3 Pharmacy Sale Setup" = X,
+    table "E3 Bill Handling" = X,
+    tabledata "E3 Bill Handling" = RIMD,
+    page "E3 Bill Handling List" = X;
 
 
 

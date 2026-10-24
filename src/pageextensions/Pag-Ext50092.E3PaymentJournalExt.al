@@ -111,6 +111,9 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
                 var
                     GenJnlLine: Record "Gen. Journal Line";
                 begin
+                    if Rec.Status <> Rec.Status::Approved then
+                        Error('You can print the Card Payment Report only when Status is Approved.');
+
                     if CardPaymentReportID = 0 then
                         Error(
                             'Card Payment Report is not configured for Bank Account %1.',

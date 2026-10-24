@@ -8,7 +8,6 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
             {
                 ToolTip = 'Submit to finance';
                 ApplicationArea = All;
-
             }
             field("Submit Doc No."; Rec."Submit Doc No.")
             {
@@ -25,7 +24,7 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
 
     actions
     {
-        addafter("&Invoice")
+        addafter(Action7)
         {
             action("Submit")
             {
@@ -33,7 +32,10 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                 Caption = 'Submit to Finance';
                 ToolTip = 'Submit to Finance';
                 Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
                 Image = Post;
+
                 trigger OnAction()
                 var
                     PurchaseHeader: Record "Purchase Header";
@@ -58,13 +60,18 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
 
                     // 4. Update all selected records with the same generated Document No.
                     repeat
-                        PurchaseHeader."Submit Doc No." := NewDocNo; // Replace "Document No." with your field name
+                        PurchaseHeader."Submit Doc No." := NewDocNo;
+                        PurchaseHeader."Submit to Finance" := true;
                         PurchaseHeader.Modify(true);
+
+                        // Insert Bill Handling record
+                        InsertBillHandling(PurchaseHeader, 'Submit to Finance');
                     until PurchaseHeader.Next() = 0;
 
                     Message('Document No. %1 submitted to finance to %2 selected record(s).', NewDocNo, PurchaseHeader.Count());
                 end;
             }
+
             action("Accept")
             {
                 ApplicationArea = All;
@@ -72,6 +79,7 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                 ToolTip = 'Mark selected records as Received if Submitted Document No. is not blank.';
                 Promoted = true;
                 PromotedCategory = Process;
+                PromotedIsBig = true;
                 Image = Approve;
 
                 trigger OnAction()
@@ -82,10 +90,16 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                     CurrPage.SetSelectionFilter(PurchaseHeader);
 
                     // 2. Filter ONLY records where Submitted Document No. is NOT blank
-                    PurchaseHeader.SetFilter("Submit Doc No.", '<>%1', ''); // Replace "Submit to Finance No." with your exact field name
+                    PurchaseHeader.SetFilter("Submit Doc No.", '<>%1', '');
 
                     if PurchaseHeader.IsEmpty() then
                         Error('None of the selected records have a Submitted Document No.');
+
+                    // Insert Bill Handling records for matching selected records
+                    if PurchaseHeader.FindSet() then
+                        repeat
+                            InsertBillHandling(PurchaseHeader, 'Accept');
+                        until PurchaseHeader.Next() = 0;
 
                     // 3. Update matching records
                     PurchaseHeader.ModifyAll("Receive Finance", true);
@@ -101,6 +115,7 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                 ToolTip = 'Reject selected records if Submitted Document No. is not blank.';
                 Promoted = true;
                 PromotedCategory = Process;
+                PromotedIsBig = true;
                 Image = Reject;
 
                 trigger OnAction()
@@ -111,10 +126,16 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                     CurrPage.SetSelectionFilter(PurchaseHeader);
 
                     // 2. Filter ONLY records where Submitted Document No. is NOT blank
-                    PurchaseHeader.SetFilter("Submit Doc No.", '<>%1', ''); // Replace "Submit to Finance No." with your exact field name
+                    PurchaseHeader.SetFilter("Submit Doc No.", '<>%1', '');
 
                     if PurchaseHeader.IsEmpty() then
                         Error('None of the selected records have a Submitted Document No.');
+
+                    // Insert Bill Handling records for matching selected records
+                    if PurchaseHeader.FindSet() then
+                        repeat
+                            InsertBillHandling(PurchaseHeader, 'Reject');
+                        until PurchaseHeader.Next() = 0;
 
                     // 3. Clear fields across qualifying records
                     PurchaseHeader.ModifyAll("Receive Finance", false);
@@ -123,6 +144,43 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                     Message('%1 selected record(s) rejected.', PurchaseHeader.Count());
                 end;
             }
+
+            action("Bill Handling")
+            {
+                ApplicationArea = All;
+                Caption = 'Bill Handling';
+                ToolTip = 'Open the Bill Handling List page.';
+                Image = Document;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+
+                trigger OnAction()
+                begin
+                    Page.Run(Page::"E3 Bill Handling List");
+                end;
+            }
         }
     }
+
+    local procedure InsertBillHandling(PurchaseHeader: Record "Purchase Header"; EventName: Text[100])
+    var
+        BillHandling: Record "E3 Bill Handling";
+    begin
+        BillHandling.Init();
+
+        BillHandling."Voucher Type Code" := PurchaseHeader."Voucher Type";
+        BillHandling."Voucher Type Name" := PurchaseHeader."GRN Voucher Type Name";
+        BillHandling."Vendor Code" := PurchaseHeader."Buy-from Vendor No.";
+        BillHandling."Vendor Name" := PurchaseHeader."Buy-from Vendor Name";
+        BillHandling."Challan No." := PurchaseHeader."Vendor Invoice No.";
+        BillHandling."Challan Date" := PurchaseHeader."Document Date";
+        BillHandling."GRN No." := PurchaseHeader."Receipt No.";
+        BillHandling."GRN Date" := PurchaseHeader."Receipt Date";
+        BillHandling."Bill Handling No." := PurchaseHeader."Submit Doc No.";
+        BillHandling."Due Date" := PurchaseHeader."Due Date";
+        BillHandling.Remarks := PurchaseHeader."Posting Description";
+        BillHandling."Event Name" := EventName;
+        BillHandling.Insert(true);
+    end;
 }

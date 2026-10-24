@@ -1,0 +1,255 @@
+page 50266 "E3 Closed SO Indent List"
+{
+    PageType = List;
+    ApplicationArea = All;
+    UsageCategory = Lists;
+    SourceTable = "E3 Indent Line";
+    Caption = 'Closed SO Indent List';
+    SourceTableView = where("SO Created" = const(true));
+    InsertAllowed = false;
+    ModifyAllowed = false;
+    DeleteAllowed = false;
+
+    layout
+    {
+        area(Content)
+        {
+            repeater(General)
+            {
+                field("Document No."; Rec."Document No.")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the Document No of the indent line.';
+                }
+                field(Type; Rec.Type)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the type of the indent line.';
+                }
+                field("No."; Rec."No.")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the number of the item or resource.';
+                }
+                field(Description; Rec.Description)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the description of the indent line.';
+                }
+                field("Unit of Measure"; Rec."Unit of Measure")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the unit of measure for the indent line.';
+                }
+                field("Indent Qty"; Rec."Indent Qty")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the quantity requested in the indent.';
+                }
+                field("Indent Approved Qty"; Rec."Indent Approved Qty")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the quantity approved against the indent.';
+                }
+                field("Purch. Unit of Measure"; Rec."Purch. Unit of Measure")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the unit of measure used for purchasing the item.';
+                }
+                field("Qty Per Purch. Unit of Measure"; Rec."Qty Per Purch. Unit of Measure")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the quantity contained in one purchase unit of measure.';
+                }
+                field("Requested Qty"; Rec."Requested Qty")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the requested quantity for the purchase.';
+                }
+                field("Approved Qty"; Rec."Approved Qty")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the quantity approved for purchase.';
+                }
+                field("Short Qty Requisition"; Rec."Short Qty Requisition")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the shortage quantity after comparing the approved quantity with the purchase quantity.';
+                }
+                field("Short Qty Approved"; Rec."Short Qty Approved")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the shortage quantity based on the approved indent quantity.';
+                }
+                field("Short Qty Order"; Rec."Short Qty Order")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the shortage quantity based on the purchase order quantity.';
+                }
+                field("Unit Cost"; Rec."Unit Cost")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the unit cost of the item.';
+                }
+                field(Amount; Rec.Amount)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the total amount for the indent line.';
+                }
+                field("Item Make Code"; Rec."Item Make Code")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the item make code associated with the indent line.';
+                }
+                field("Item Make Name"; Rec."Item Make Name")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the name of the item make.';
+                }
+                field("Requested Received Date"; Rec."Requested Received Date")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the requested date for receiving the item.';
+                }
+                field(Remarks; Rec.Remarks)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies additional remarks for the indent line.';
+                }
+                field(IndentRemarks; Rec."Quotation Remarks")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    Caption = 'Indent Remarks';
+                    ToolTip = 'Specifies additional remarks for the indent line.';
+                }
+                field("Entry No."; Rec."Entry No.")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the entry number of the indent line.';
+                }
+                field("SNo."; Rec."SNo.")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the serial number of the indent line.';
+                }
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the shortcut dimension code assigned to the indent line.';
+                }
+                field("Critical Item"; Rec."Critical Item")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies whether the item is marked as a critical item.';
+                }
+                field("Sales Order No."; Rec."Sales Order No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies a value Sales Order No.';
+                }
+                field("SO Created"; Rec."SO Created")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies a value Sales Order Created field';
+                }
+                field(IsSent; Rec.IsSent)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'IsSent';
+                }
+                field(Response; Rec.Response)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Response';
+                }
+            }
+        }
+    }
+    actions
+    {
+        area(Processing)
+        {
+
+            action(SendToStatusAPI)
+            {
+                ApplicationArea = All;
+                Caption = 'Send to Status API';
+                ToolTip = 'Sends the selected indent line statuses to the Status API.';
+                Image = SendTo;
+
+                trigger OnAction()
+                var
+                    IndentStatusMgmt: Codeunit "E3 Indent Status SO Mgmt.";
+                    IndentLineRec: Record "E3 Indent Line";
+                    SuccessCount: Integer;
+                    AlreadySentCount: Integer;
+                    FailedCount: Integer;
+                    ErrorMessage: Text;
+                begin
+                    CurrPage.SetSelectionFilter(IndentLineRec);
+
+                    if IndentLineRec.IsEmpty() then
+                        Error('Please select at least one indent line.');
+
+                    IndentLineRec.SetRange("SO Created", true);
+                    if IndentLineRec.FindSet() then
+                        repeat
+                            if IndentLineRec."IsSent" then
+                                AlreadySentCount += 1
+                            else begin
+                                ClearLastError();
+
+                                if IndentStatusMgmt.SendIndentLineSODetails(IndentLineRec) then
+                                    SuccessCount += 1
+                                else begin
+                                    FailedCount += 1;
+                                    ErrorMessage += StrSubstNo(
+                                        'Indent %1, S.No. %2 failed to send.',
+                                        IndentLineRec."Document No.",
+                                        IndentLineRec."SNo.") + '\';
+                                end;
+                            end;
+                        until IndentLineRec.Next() = 0;
+
+                    Message(
+                        'Selected indent Sales lines processed.\' +
+                        'Successfully sent: %1\' +
+                        'Already sent (skipped): %2\' +
+                        'Failed: %3\%4',
+                        SuccessCount,
+                        AlreadySentCount,
+                        FailedCount,
+                        ErrorMessage);
+
+                    CurrPage.Update(false);
+                end;
+
+            }
+        }
+    }
+}

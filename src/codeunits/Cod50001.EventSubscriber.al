@@ -802,24 +802,40 @@ codeunit 50001 "E3 HIS Event Subscriber"
         VendorToUpdate: Record Vendor;
         ApprovalEntry: Record "Approval Entry";
         HasOpenApproval: Boolean;
+        HasRejectedApproval: Boolean;
+        HasApprovedApproval: Boolean;
     begin
         ApprovalEntry.Reset();
         ApprovalEntry.SetRange("Record ID to Approve", Vendor.RecordId);
 
         if ApprovalEntry.FindSet() then
             repeat
-                if ApprovalEntry.Status = ApprovalEntry.Status::Open then
-                    HasOpenApproval := true;
+                case ApprovalEntry.Status of
+                    ApprovalEntry.Status::Open:
+                        HasOpenApproval := true;
+                    ApprovalEntry.Status::Rejected:
+                        HasRejectedApproval := true;
+                    ApprovalEntry.Status::Approved:
+                        HasApprovedApproval := true;
+                end;
             until ApprovalEntry.Next() = 0;
 
-        if VendorToUpdate.Get(Vendor."No.") then begin
-            // Approval entries may not yet be available at this event.
-            // Keep the Vendor pending until approval is completed.
-            VendorToUpdate.Status := VendorToUpdate.Status::"Pending Approval";
-            VendorToUpdate.Modify(true);
-        end;
-    end;
+        if not VendorToUpdate.Get(Vendor."No.") then
+            exit;
 
+        if HasRejectedApproval then
+            VendorToUpdate.Status := VendorToUpdate.Status::Rejected
+        else
+            if HasOpenApproval then
+                VendorToUpdate.Status := VendorToUpdate.Status::"Pending Approval"
+            else
+                if HasApprovedApproval then
+                    VendorToUpdate.Status := VendorToUpdate.Status::Approved
+                else
+                    VendorToUpdate.Status := VendorToUpdate.Status::"Pending Approval";
+
+        VendorToUpdate.Modify(true);
+    end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnApproveApprovalRequest', '', false, false)]
     local procedure UpdateVendorStatusFromApprovalEntry(

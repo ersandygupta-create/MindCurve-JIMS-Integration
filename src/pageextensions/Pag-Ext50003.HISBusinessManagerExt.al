@@ -1279,6 +1279,16 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         RunPageMode = Create;
                         ToolTip = 'Closed a Closed Indents Store List';
                     }
+                    action("ClosedSalesOrderIndentLines")
+                    {
+                        AccessByPermission = TableData "E3 Indent Line" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Closed Sales Order Indent Lines';
+                        Image = Archive;
+                        RunObject = Page "E3 Closed SO Indent List";
+                        RunPageMode = Create;
+                        ToolTip = 'Closed a Closed Indents Sales Order Lines List';
+                    }
                 }
                 group(ReleasedPurchaseIndent)
                 {
