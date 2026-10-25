@@ -110,14 +110,29 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
                 trigger OnAction()
                 var
                     GenJnlLine: Record "Gen. Journal Line";
+                    ChequeJnlLine: Record "Gen. Journal Line";
                 begin
                     if Rec.Status <> Rec.Status::Approved then
                         Error('You can print the Card Payment Report only when Status is Approved.');
 
                     if CardPaymentReportID = 0 then
-                        Error(
-                            'Card Payment Report is not configured for Bank Account %1.',
+                        Error('Card Payment Report is not configured for Bank Account %1.',
                             Rec."Bal. Account No.");
+
+                    // Validate all journal lines having the same cheque number.
+                    ChequeJnlLine.Reset();
+                    ChequeJnlLine.SetRange("Journal Template Name", Rec."Journal Template Name");
+                    ChequeJnlLine.SetRange("Journal Batch Name", Rec."Journal Batch Name");
+                    ChequeJnlLine.SetRange("Cheque No.", Rec."Cheque No.");
+                    if ChequeJnlLine.FindSet() then
+                        repeat
+                            if ChequeJnlLine.Status <> ChequeJnlLine.Status::Approved then
+                                Error(
+                                    'Cheque No. %1 cannot be printed. Journal line Document No. %2 has Status %3. All lines with the same cheque number must be Approved.',
+                                    Rec."Cheque No.",
+                                    ChequeJnlLine."Document No.",
+                                    ChequeJnlLine.Status);
+                        until ChequeJnlLine.Next() = 0;
 
                     GenJnlLine.Reset();
                     GenJnlLine.SetRange("Journal Template Name", Rec."Journal Template Name");
@@ -125,8 +140,6 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
                     GenJnlLine.SetRange("Document No.", Rec."Document No.");
 
                     Report.RunModal(CardPaymentReportID, true, true, GenJnlLine);
-
-                    //Report.Run(CardPaymentReportID);
                 end;
             }
         }

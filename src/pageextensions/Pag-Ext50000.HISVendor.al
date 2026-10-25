@@ -110,6 +110,7 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
                 field(Status; Rec.Status)
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     ToolTip = 'Specifies a value of approval status field.';
                 }
             }
