@@ -348,7 +348,20 @@ permissionset 50000 "E3 HIS Permission"
     page "E3 Pharmacy Sale Setup" = X,
     table "E3 Bill Handling" = X,
     tabledata "E3 Bill Handling" = RIMD,
-    page "E3 Bill Handling List" = X;
+    page "E3 Bill Handling List" = X,
+    table "E3 Building Type" = X,
+    tabledata "E3 Building Type" = RIMD,
+    page "E3 Building Type List" = X,
+    table "E3 Room/Ward Type" = X,
+    tabledata "E3 Room/Ward Type" = RIMD,
+    page "E3 Room/Ward Type List" = X,
+    table "E3 Custodian Type" = X,
+    tabledata "E3 Custodian Type" = RIMD,
+    page "E3 Custodian Type List" = X,
+    table "E3 Fixed Asset Transfer" = X,
+    tabledata "E3 Fixed Asset Transfer" = RIMD,
+    page "E3 Fixed Asset Transfer List" = X;
+
 
 
 

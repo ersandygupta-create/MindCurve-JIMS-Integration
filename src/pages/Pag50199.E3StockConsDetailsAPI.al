@@ -21,6 +21,10 @@ page 50199 "E3 Stock Consumption API"
             {
                 Caption = 'Entry Type';
             }
+            field(documentNo; Rec."Document No.")
+            {
+                Caption = 'Document Number';
+            }
             field(entryNumber; Rec."Entry Number")
             {
                 Caption = 'Entry Number';
@@ -32,10 +36,6 @@ page 50199 "E3 Stock Consumption API"
             field(documentType; Rec."Document Type")
             {
                 Caption = 'Document Type';
-            }
-            field(documentNo; Rec."Document No.")
-            {
-                Caption = 'Document Number';
             }
             field(businessUnit; Rec."Business Unit")
             {

@@ -70,5 +70,15 @@ tableextension 50018 "E3 HIS Purch. Inv. Line" extends "Purch. Inv. Line"
             Caption = 'Batch No.';
             DataClassification = CustomerContent;
         }
+        field(50028; "Challan No."; Code[35])
+        {
+            Caption = 'Challan No.';
+            DataClassification = CustomerContent;
+        }
+        field(50029; "Challan Date"; Date)
+        {
+            Caption = 'Challan Date';
+            DataClassification = CustomerContent;
+        }
     }
 }

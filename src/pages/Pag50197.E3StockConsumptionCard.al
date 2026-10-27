@@ -20,6 +20,11 @@ page 50197 "E3 Stock Consumption Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the entry type of the stock consumption.';
                 }
+                field("Document No."; Rec."Document No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the document number.';
+                }
                 field("Entry Number"; Rec."Entry Number")
                 {
                     ApplicationArea = All;
@@ -34,11 +39,6 @@ page 50197 "E3 Stock Consumption Card"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the document type.';
-                }
-                field("Document No."; Rec."Document No.")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the document number.';
                 }
                 field("Business Unit"; Rec."Business Unit")
                 {

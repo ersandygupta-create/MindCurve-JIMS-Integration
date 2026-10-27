@@ -583,7 +583,9 @@ page 50169 "E3 GRN Work Sheet"
                     CopyPostedReceiptToGRN(TempPostedSelectedGRNWorksheet);
                     CurrPage.Update(false);
 
-                    Message('Purchase Receipt  %1 posted successfully and GRN data has been created.', PostedReceiptNo);
+                    if Confirm('Purchase Receipt %1 posted successfully and GRN data has been created. Do you want to open the E3 GRN Work Sheet List?',
+                                true, PostedReceiptNo) then
+                        Page.Run(Page::"E3 GRN Work Sheet List");
                 end;
             }
             action(Split)

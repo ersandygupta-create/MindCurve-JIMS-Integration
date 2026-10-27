@@ -14,6 +14,11 @@ pageextension 50021 "E3 HIS Vendor List" extends "Vendor List"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the GST Registration No. field.';
             }
+            field(Status; Rec.Status)
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies whether the record is open, waiting to be approved, or released to the next stage of processing.';
+            }
         }
     }
 }

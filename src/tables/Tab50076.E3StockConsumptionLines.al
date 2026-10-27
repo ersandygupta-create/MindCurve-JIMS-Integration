@@ -19,14 +19,14 @@ table 50076 "E3 Stock Consumption Line"
             Caption = 'Document No.';
             DataClassification = CustomerContent;
         }
-        field(3; "Line No."; Integer)
-        {
-            Caption = 'Line Number';
-            DataClassification = CustomerContent;
-        }
-        field(4; "Entry Type"; Enum "Item Journal Entry Type")
+        field(3; "Entry Type"; Enum "Item Journal Entry Type")
         {
             Caption = 'Entry Type';
+            DataClassification = CustomerContent;
+        }
+        field(4; "Line No."; Integer)
+        {
+            Caption = 'Line Number';
             DataClassification = CustomerContent;
         }
         field(5; "Entry Number"; Code[50])
@@ -199,7 +199,7 @@ table 50076 "E3 Stock Consumption Line"
     }
     local procedure GetHISIntegrationSalesHdr()
     begin
-        TestField("Entry Type");
+        //TestField("Entry Type");
         TestField("Document No.");
         IF ("Entry Type" <> StockCons."Entry Type") OR
             ("Document No." <> StockCons."Document No.") THEN BEGIN
