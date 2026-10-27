@@ -23,18 +23,21 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
                 {
                     ApplicationArea = All;
                     Caption = 'Building Code';
+                    Editable = false;
                     ToolTip = 'Specifies the building code.';
                 }
                 field("Room/Ward No."; Rec."Room/Ward No.")
                 {
                     ApplicationArea = All;
                     Caption = 'Room/Ward No.';
+                    Editable = false;
                     ToolTip = 'Specifies the room or ward number.';
                 }
                 field("Custodian ID"; Rec."Custodian ID")
                 {
                     ApplicationArea = All;
                     Caption = 'Custodian ID';
+                    Editable = false;
                     ToolTip = 'Specifies the custodian ID.';
                 }
                 field("Custodian Name"; Rec."Custodian Name")
