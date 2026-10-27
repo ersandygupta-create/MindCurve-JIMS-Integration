@@ -127,7 +127,7 @@ table 50076 "E3 Stock Consumption Line"
             Caption = 'Item Name';
             DataClassification = CustomerContent;
         }
-        field(16; "Item Type"; Text[50])
+        field(16; "Item Type"; Code[20])
         {
             Caption = 'Item Type';
             DataClassification = CustomerContent;

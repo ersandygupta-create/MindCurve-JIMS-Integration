@@ -276,6 +276,12 @@ table 50098 "E3 Fixed Asset Transfer"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(25; IsPosted; Boolean)
+        {
+            Caption = 'IsPosted';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
 
     keys
@@ -289,5 +295,17 @@ table 50098 "E3 Fixed Asset Transfer"
     begin
         if "Transfer Date" = 0D then
             "Transfer Date" := WorkDate();
+    end;
+
+    trigger OnModify()
+    begin
+        if xRec.IsPosted then
+            Error('Posted Fixed Asset Transfer cannot be modified.');
+    end;
+
+    trigger OnDelete()
+    begin
+        if IsPosted then
+            Error('Posted Fixed Asset Transfer cannot be deleted.');
     end;
 }

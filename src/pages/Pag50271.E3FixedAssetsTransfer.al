@@ -5,7 +5,6 @@ page 50271 "E3 Fixed Asset Transfer List"
     SourceTable = "E3 Fixed Asset Transfer";
     ApplicationArea = All;
     UsageCategory = Lists;
-    Editable = true;
 
     layout
     {
@@ -165,6 +164,9 @@ page 50271 "E3 Fixed Asset Transfer List"
                 var
                     FixedAsset: Record "Fixed Asset";
                 begin
+                    if Rec.IsPosted then
+                        Error('This Fixed Asset Transfer is already posted and cannot be modified.');
+
                     if Rec."Fixed Assets No" = '' then
                         Error('Please select a Fixed Asset No.');
 
@@ -174,8 +176,13 @@ page 50271 "E3 Fixed Asset Transfer List"
                     FixedAsset.Validate("Building Code", Rec."To Building Code");
                     FixedAsset.Validate("Room/Ward No.", Rec."To Room/Ward No. Code");
                     FixedAsset.Validate("Custodian ID", Rec."To Custodian Code");
+                    FixedAsset.Validate("Global Dimension 2 Code", Rec."To Department");
 
                     FixedAsset.Modify(true);
+                    Rec.IsPosted := true;
+                    Rec.Modify(true);
+
+                    CurrPage.Update(false);
 
                     Message('Fixed Asset %1 has been updated successfully.', FixedAsset."No.");
                 end;
