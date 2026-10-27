@@ -16,16 +16,9 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
         }
         addlast(Content)
         {
-            part("Fixed Asset Transfer List"; "E3 Fixed Asset Transfer List")
-            {
-                ApplicationArea = All;
-                Caption = 'Fixed Asset Transfer List';
-                SubPageLink = "Fixed Assets No" = field("No.");
-                ToolTip = 'Displays transfer records for this fixed asset.';
-            }
             group("FA Attributes")
             {
-                Caption = 'Custom Attributes';
+                Caption = 'JIMS Attributes';
                 field("Building Code"; Rec."Building Code")
                 {
                     ApplicationArea = All;
@@ -58,6 +51,14 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
                     Editable = false;
                     ToolTip = 'Specifies the name of the head of department.';
                 }
+            }
+            part("Fixed Asset Transfer List"; "E3 Fixed Asset Transfer List")
+            {
+                ApplicationArea = All;
+                Caption = 'Fixed Asset Transfer';
+                SubPageLink = "Fixed Assets No" = field("No.");
+                ToolTip = 'Displays transfer records for this fixed asset.';
+
             }
         }
         addlast(factboxes)

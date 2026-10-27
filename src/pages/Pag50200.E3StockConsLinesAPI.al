@@ -95,4 +95,19 @@ page 50200 "E3 Stock Consumption Line API"
             }
         }
     }
+    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
+    begin
+        if Rec.HasFilter() then begin
+            Rec.Validate("Entry Type", Rec."Entry Type"::"Negative Adjmt.");
+            Rec."Document No." := Rec.GetFilter("Document No.");
+        end;
+    end;
+
+    trigger OnNewRecord(BelowxRec: Boolean)
+    begin
+        if Rec.HasFilter() then begin
+            Rec.Validate("Entry Type", Rec."Entry Type"::"Negative Adjmt.");
+            Rec."Document No." := Rec.GetFilter("Document No.");
+        end;
+    end;
 }
