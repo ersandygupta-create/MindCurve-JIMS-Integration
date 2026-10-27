@@ -180,6 +180,19 @@ page 50111 "Vendor Advance Pay. Against PO"
                     rec.Release := true;
                 end;
             }
+            action(Reopen)
+            {
+                Caption = 'Reopen';
+                ToolTip = 'Reopen';
+                Image = ReOpen;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                trigger OnAction()
+                begin
+                    rec.Release := false;
+                end;
+            }
             action("Update Remaining Amount")
             {
                 Caption = 'Update Remaining Amount';

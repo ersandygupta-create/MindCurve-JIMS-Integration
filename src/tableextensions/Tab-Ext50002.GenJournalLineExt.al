@@ -119,7 +119,7 @@ tableextension 50002 "E3 Gen. Journal Line Exts" extends "Gen. Journal Line"
         {
             Caption = 'Advance Document No.';
             DataClassification = CustomerContent;
-            TableRelation = "Vendor Adv. Pay. Ag. PO"."Document No" where("Vendor Code" = field("Account No."));//, "Remaining Amount" = filter(<> 0));
+            TableRelation = "Vendor Adv. Pay. Ag. PO"."Document No" where("Vendor Code" = field("Account No."), Release = const(true));
             trigger OnValidate()
             var
                 VendAdvPayAgPO: Record "Vendor Adv. Pay. Ag. PO";

@@ -69,6 +69,7 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
             var
                 PurchHeader: Record "Purchase Header";
             begin
+                CheckStatus();
                 if PurchHeader.Get(PurchHeader."Document Type"::Order, "Purchase Order No.") then begin
                     PurchHeader.CalcFields(Amount);
                     //CalcFields("Total PO Amount");
@@ -261,5 +262,13 @@ table 50022 "Vendor Adv. Pay. Ag. PO"
     begin
         if rec.Release = true then
             Error('Document is release and can not be deleted.');
+    end;
+
+
+
+    local procedure CheckStatus()
+    begin
+        if (rec.Release = true) then
+            Error('Document should be open.');
     end;
 }

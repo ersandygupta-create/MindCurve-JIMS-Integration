@@ -51,6 +51,7 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Caption = 'Free Qty';
             DataClassification = CustomerContent;
         }
+
         field(50009; "SNo."; Integer)
         {
             Caption = 'SNo.';
@@ -160,6 +161,18 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
                     Error('Short Close qty %1 can not exceed outstanding qty %2.', Rec."Short Close Qty", rec."Outstanding Quantity");
 
             end;
+        }
+        field(70004; "Short Close Reason"; Code[10])
+        {
+            Caption = 'Short Close Reason Code';
+            DataClassification = CustomerContent;
+            TableRelation = "Reason Code".Code;
+        }
+        field(70005; "Cancel Reason"; Code[10])
+        {
+            Caption = 'Cancel Reason Code';
+            DataClassification = CustomerContent;
+            TableRelation = "Reason Code".Code;
         }
         modify("No.")
         {

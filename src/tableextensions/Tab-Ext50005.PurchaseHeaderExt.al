@@ -285,6 +285,12 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Caption = 'Submit Doc. No.';
             DataClassification = CustomerContent;
         }
+        field(81104; "Short Close Reason"; Code[10])
+        {
+            Caption = 'Short Close Reason Code';
+            DataClassification = CustomerContent;
+            TableRelation = "Reason Code".Code;
+        }
 
 
     }

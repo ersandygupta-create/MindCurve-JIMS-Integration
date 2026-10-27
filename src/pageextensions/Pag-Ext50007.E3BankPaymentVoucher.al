@@ -2,6 +2,23 @@ pageextension 50007 "E3 Bank Payment Voucher" extends "Bank Payment Voucher"
 {
     layout
     {
+        modify(Amount)
+        {
+            trigger OnBeforeValidate()
+            var
+                AdvancePo: Record "Vendor Adv. Pay. Ag. PO";
+            begin
+                if (Rec."Document No" <> '') then begin
+                    AdvancePo.Reset();
+                    AdvancePo.SetRange("Document No", rec."Document No");
+                    if AdvancePo.Find('-') then begin
+                        if rec.Amount > AdvancePo."Remaining Amount" then
+                            Error('Amount can not be greater then Remaining amount of Advance document no.');
+                    end;
+                end;
+
+            end;
+        }
         addafter(Comment)
         {
             field("Posting Group"; Rec."Posting Group")

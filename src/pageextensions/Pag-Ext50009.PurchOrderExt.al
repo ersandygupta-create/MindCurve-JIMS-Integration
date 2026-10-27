@@ -91,6 +91,15 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 end;
             }
         }
+        addafter("Reason Code")
+        {
+            field("Short Close Reason"; Rec."Short Close Reason")
+            {
+                ApplicationArea = all;
+                ShowMandatory = true;
+                ToolTip = 'Short Close Reason';
+            }
+        }
     }
     actions
     {
@@ -126,6 +135,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 var
                     purchaseline: record "Purchase Line";
                 begin
+                    CheckPoStatus();
                     Rec.TestField("Reason Code");
                     purchaseline.reset();
                     purchaseline.SetRange("Document Type", rec."Document Type");
@@ -151,6 +161,8 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 var
                     purchaseline: record "Purchase Line";
                 begin
+                    CheckPoStatus();
+                    rec.TestField("Short Close Reason");
                     purchaseline.reset();
                     purchaseline.SetRange("Document Type", rec."Document Type");
                     purchaseline.SetRange("Document No.", Rec."No.");
@@ -196,7 +208,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
     var
         IndentLine: Record "E3 Indent Line";
     begin
-        if purchLine."Qty. Invoiced (Base)" = 0 then begin
+        if ((purchLine."Qty. Invoiced (Base)" = 0) AND (purchLine."Qty. Received (Base)" = 0)) then begin
             IndentLine.Reset();
             //  IndentLine.SetRange("Order Line No.", purchLine."Line No.");
             IndentLine.SetRange("Purchase Order No.", purchLine."Document No.");
@@ -238,6 +250,14 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
     local procedure SetFieldEditable()
     begin
         CanEditCustomFields := not (Rec.Status in [Rec.Status::"Pending Approval", Rec.Status::Released]);
+    end;
+
+    local procedure CheckPoStatus()
+
+    begin
+
+        if Rec.Status <> Rec.Status::Open then
+            Error('Purchase order should be open');
     end;
 
 }

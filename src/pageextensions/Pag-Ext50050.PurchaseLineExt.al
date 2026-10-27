@@ -180,6 +180,18 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 ApplicationArea = All;
                 ToolTip = 'Specifies the Indent Line Remarks for the item.';
             }
+            field("Short Close Reason"; Rec."Short Close Reason")
+            {
+                ApplicationArea = all;
+                ShowMandatory = true;
+                ToolTip = 'Short Close Reason';
+            }
+            field("Reason Code"; Rec."Cancel Reason")
+            {
+                ApplicationArea = all;
+                ShowMandatory = true;
+                ToolTip = 'Cancel Reason Code';
+            }
         }
     }
     actions
@@ -245,6 +257,8 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 var
                     purchLine: Record "Purchase Line";
                 begin
+                    CheckPoStatus();
+                    rec.TestField("Short Close Reason");
                     if rec."Short Close Qty" <> 0 then begin
                         purchLine := Rec;
                         purchLine."Outstanding Quantity" := purchLine."Outstanding Quantity" - purchline."Short Close Qty";
@@ -273,9 +287,9 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     IndentLine: Record "E3 Indent Line";
                     purchLine: Record "Purchase Line";
                 begin
-                    if rec."Qty. Invoiced (Base)" = 0 then begin
-
-
+                    CheckPoStatus();
+                    rec.TestField("Cancel Reason");
+                    if ((rec."Qty. Invoiced (Base)" = 0) and (rec."Qty. Received (Base)" = 0)) then begin
                         IndentLine.Reset();
                         indentline.SetRange("No.", Rec."No.");
                         IndentLine.SetRange("Purchase Order No.", rec."Document No.");
@@ -948,6 +962,15 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
 
         // Final editable condition
         CanEdit := CanEditLineFields and IsLineEditable;
+    end;
+
+    local procedure CheckPoStatus()
+    var
+        PurchaseHeader: Record "Purchase Header";
+    begin
+        PurchaseHeader.get(rec."Document Type", rec."Document No.");
+        if PurchaseHeader.Status <> PurchaseHeader.Status::Open then
+            Error('Purchase order should be open');
     end;
 
 }
