@@ -53,4 +53,14 @@ page 50199 "E3 Stock Consumption API"
             }
         }
     }
+    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
+    begin
+
+        Rec.Validate("Entry Type", Rec."Entry Type"::"Negative Adjmt.");
+    end;
+
+    trigger OnNewRecord(BelowxRec: Boolean)
+    begin
+        Rec.Validate("Entry Type", Rec."Entry Type"::"Negative Adjmt.");
+    end;
 }

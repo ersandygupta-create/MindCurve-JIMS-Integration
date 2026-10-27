@@ -1,10 +1,10 @@
 page 50271 "E3 Fixed Asset Transfer List"
 {
-    Caption = 'Fixed Asset Transfer List';
-    PageType = CardPart;
+    Caption = 'Fixed Asset Transfer';
+    PageType = ListPart;
     SourceTable = "E3 Fixed Asset Transfer";
     ApplicationArea = All;
-    UsageCategory = Documents;
+    UsageCategory = Lists;
     Editable = true;
 
     layout
@@ -145,6 +145,40 @@ page 50271 "E3 Fixed Asset Transfer List"
                     Editable = false;
                     ToolTip = 'Specifies the destination head of department name.';
                 }
+            }
+        }
+    }
+    actions
+    {
+        area(Processing)
+        {
+            action("Update Fixed Asset")
+            {
+                ApplicationArea = All;
+                Caption = 'Update Fixed Asset';
+                Image = UpdateDescription;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Update the fixed asset with the destination building, room or ward, and custodian details.';
+
+                trigger OnAction()
+                var
+                    FixedAsset: Record "Fixed Asset";
+                begin
+                    if Rec."Fixed Assets No" = '' then
+                        Error('Please select a Fixed Asset No.');
+
+                    if not FixedAsset.Get(Rec."Fixed Assets No") then
+                        Error('Fixed Asset %1 does not exist.', Rec."Fixed Assets No");
+
+                    FixedAsset.Validate("Building Code", Rec."To Building Code");
+                    FixedAsset.Validate("Room/Ward No.", Rec."To Room/Ward No. Code");
+                    FixedAsset.Validate("Custodian ID", Rec."To Custodian Code");
+
+                    FixedAsset.Modify(true);
+
+                    Message('Fixed Asset %1 has been updated successfully.', FixedAsset."No.");
+                end;
             }
         }
     }

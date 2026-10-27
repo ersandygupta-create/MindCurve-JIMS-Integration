@@ -105,6 +105,7 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                             ApplicationArea = Basic, Suite;
                             Caption = 'Consumption Setup';
                             Image = Setup;
+                            Visible = false;
                             RunObject = Page "E3 HIS Consumption Setup";
                             RunPageMode = Create;
                             ToolTip = 'Executes the Consumption Setup action.';
@@ -702,6 +703,7 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                 group("E3 HIS Consumption Staging")
                 {
                     Caption = 'Consumption Entries';
+                    Visible = false;
 
                     action("E3 Create HIS Consumption Entries")
                     {
@@ -713,8 +715,6 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         RunPageMode = Create;
                         ToolTip = 'Create a new Consumption Entries for Companies.';
                     }
-
-
                     action("E3 Created HIS Consumption Ent.")
                     {
                         ApplicationArea = Basic, Suite;
