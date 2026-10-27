@@ -14,6 +14,52 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
                 ToolTip = 'Specifies the value of the Model No. field.';
             }
         }
+        addlast(Content)
+        {
+            part("Fixed Asset Transfer List"; "E3 Fixed Asset Transfer List")
+            {
+                ApplicationArea = All;
+                Caption = 'Fixed Asset Transfer List';
+                SubPageLink = "Fixed Assets No" = field("No.");
+                ToolTip = 'Displays transfer records for this fixed asset.';
+            }
+            group("FA Attributes")
+            {
+                Caption = 'Custom Attributes';
+                field("Building Code"; Rec."Building Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Building Code';
+                    ToolTip = 'Specifies the building code.';
+                }
+                field("Room/Ward No."; Rec."Room/Ward No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Room/Ward No.';
+                    ToolTip = 'Specifies the room or ward number.';
+                }
+                field("Custodian ID"; Rec."Custodian ID")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Custodian ID';
+                    ToolTip = 'Specifies the custodian ID.';
+                }
+                field("Custodian Name"; Rec."Custodian Name")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Custodian Name';
+                    Editable = false;
+                    ToolTip = 'Specifies the custodian name.';
+                }
+                field("Name (Head of Department)"; Rec."Name (Head of Department)")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Name (Head of Department)';
+                    Editable = false;
+                    ToolTip = 'Specifies the name of the head of department.';
+                }
+            }
+        }
         addlast(factboxes)
         {
             part(QRFactBox; "FA QR Code")

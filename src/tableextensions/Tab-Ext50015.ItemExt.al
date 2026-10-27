@@ -896,12 +896,21 @@ tableextension 50015 "E3 HIS Item" extends Item
         if not UserSetup.Get(UserId()) then
             Error('User Setup is not configured for user %1.', UserId());
 
-        if not UserSetup."Item Modify" then
-            Error(
-                'You do not have permission to modify Item %1. ' +
-                'Please contact your administrator.',
-                Rec."No.");
-        UpdatePreparedBy();
+        if UserSetup."Item Modify" then begin
+            UpdatePreparedBy();
+            exit;
+        end;
+        if UserSetup."Item Insert" and
+           (Rec.Status = Rec.Status::Created)
+        then begin
+            UpdatePreparedBy();
+            exit;
+        end;
+
+        Error(
+            'You do not have permission to modify Item %1. ' +
+            'Please contact your administrator.',
+            Rec."No.");
     end;
 
     local procedure UpdatePreparedBy()

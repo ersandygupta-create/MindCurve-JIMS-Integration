@@ -126,4 +126,70 @@ page 50265 "E3 Discard GE Outward List"
             }
         }
     }
+
+    actions
+    {
+        area(Processing)
+        {
+            action(MarkAsDiscard)
+            {
+                Caption = 'Discard';
+                ApplicationArea = All;
+                Image = ReOpen;
+                ToolTip = 'Mark the Gate Entry Outward record as Discard.';
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+                Visible = CanMarkDiscard;
+
+                trigger OnAction()
+                var
+                    CancelIndentDialog: Page "E3 Cancel Indent Dialog";
+                    CancelGERemark: Text[250];
+                begin
+                    if Rec."Gate Pass Type" <> Rec."Gate Pass Type"::"Non-Returnable" then
+                        Error('Discard is allowed only for Non-Returnable Gate Pass Type.');
+
+                    if CancelIndentDialog.RunModal() <> Action::OK then
+                        exit;
+
+                    CancelGERemark := CancelIndentDialog.GetCancelReason();
+
+                    if CancelGERemark = '' then
+                        Error('Please enter a cancellation remark.');
+
+                    if not Confirm(
+                        'Do you want to mark this Gate Entry Outward record as Discard?',
+                        false)
+                    then
+                        exit;
+
+                    Rec.Validate("Cancel GE Remark", CancelGERemark);
+                    Rec.Validate(Status, Rec.Status::Discard);
+                    Rec.Modify(true);
+
+                    CurrPage.Update(false);
+
+                    Message('Gate Entry Outward status has been marked as Discard.');
+                end;
+            }
+        }
+    }
+    trigger OnOpenPage()
+    begin
+        SetDiscardActionVisibility();
+    end;
+
+    local procedure SetDiscardActionVisibility()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        CanMarkDiscard := false;
+
+        if UserSetup.Get(UserId()) then
+            CanMarkDiscard := UserSetup."Gate Entry Discard";
+    end;
+
+    var
+        CanMarkDiscard: Boolean;
 }

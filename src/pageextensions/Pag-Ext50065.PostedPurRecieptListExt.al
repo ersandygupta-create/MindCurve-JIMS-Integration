@@ -65,4 +65,14 @@ pageextension 50065 "Posted Pur Receipt List Ext" extends "Posted Purchase Recei
             }
         }
     }
+    trigger OnOpenPage()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        if UserSetup.Get(UserId) then
+            if UserSetup."Purchase Resp. Ctr. Filter" <> '' then
+                Rec.SetFilter(
+                    "Responsibility Center",
+                    UserSetup."Purchase Resp. Ctr. Filter");
+    end;
 }

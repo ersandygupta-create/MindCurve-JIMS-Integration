@@ -119,6 +119,11 @@ page 50107 "E3 Posted Gate Ent Outward Hdr"
                     ToolTip = 'Specifies the value of the Remarks field';
                     ApplicationArea = All;
                 }
+                field("Cancel GE Remark"; Rec."Cancel GE Remark")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Cancel GE Remarks field';
+                }
             }
             part(HISPurchaseSubform; "E3Posted Gate Ent Outward Line")
             {
@@ -155,19 +160,33 @@ page 50107 "E3 Posted Gate Ent Outward Hdr"
                 Visible = CanMarkDiscard;
 
                 trigger OnAction()
+                var
+                    CancelIndentDialog: Page "E3 Cancel Indent Dialog";
+                    CancelGERemark: Text[250];
                 begin
                     if Rec."Gate Pass Type" <> Rec."Gate Pass Type"::"Non-Returnable" then
                         Error('Discard is allowed only for Non-Returnable Gate Pass Type.');
+
+                    if CancelIndentDialog.RunModal() <> Action::OK then
+                        exit;
+
+                    CancelGERemark := CancelIndentDialog.GetCancelReason();
+
+                    if CancelGERemark = '' then
+                        Error('Please enter a cancellation remark.');
+
                     if not Confirm(
                         'Do you want to mark this Gate Entry Outward record as Discard?',
                         false)
                     then
                         exit;
 
+                    Rec.Validate("Cancel GE Remark", CancelGERemark);
                     Rec.Validate(Status, Rec.Status::Discard);
                     Rec.Modify(true);
 
                     CurrPage.Update(false);
+
                     Message('Gate Entry Outward status has been marked as Discard.');
                 end;
             }

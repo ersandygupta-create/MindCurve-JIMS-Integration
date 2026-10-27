@@ -1149,4 +1149,6 @@ codeunit 50001 "E3 HIS Event Subscriber"
                 end;
             until PurchaseLine.Next() = 0;
     end;
+
+
 }

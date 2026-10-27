@@ -137,5 +137,15 @@ tableextension 50019 "E3 HIS Retrun Shipment Line" extends "Return Shipment Line
             Caption = 'Response';
             DataClassification = CustomerContent;
         }
+        field(50028; "Challan No."; Code[35])
+        {
+            Caption = 'Challan No.';
+            DataClassification = CustomerContent;
+        }
+        field(50029; "Challan Date"; Date)
+        {
+            Caption = 'Challan Date';
+            DataClassification = CustomerContent;
+        }
     }
 }

@@ -178,6 +178,11 @@ table 50044 "E3 Posted Gate Entry Header"
             Caption = 'Posted Gate Entry Outward No.';
             DataClassification = CustomerContent;
         }
+        field(28; "Cancel GE Remark"; Text[200])
+        {
+            Caption = 'Cancel GE Remark';
+            DataClassification = CustomerContent;
+        }
         field(201; "Inward Document No."; COde[20])
         {
             Caption = 'Posted Inward Document No.';

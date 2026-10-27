@@ -32,6 +32,18 @@ pageextension 50103 "E3 Purch. Ret. Order SubForm" extends "Purchase Return Orde
                 Editable = false;
                 ToolTip = 'Specifies the name of the item make.';
             }
+            field("Challan No."; Rec."Challan No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Challan No.';
+                ToolTip = 'Specifies the challan number.';
+            }
+            field("Challan Date"; Rec."Challan Date")
+            {
+                ApplicationArea = All;
+                Caption = 'Challan Date';
+                ToolTip = 'Specifies the challan date.';
+            }
         }
     }
 }

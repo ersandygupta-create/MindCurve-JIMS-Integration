@@ -213,7 +213,7 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
                     OrderAddress."Phone No." := '';
                     OrderAddress."E-Mail" := '';
                     OrderAddress.Insert();
-                    CurrPage.Update();
+                    CurrPage.Update(false);
                     Message('Order Address generated for Vendor %1.', VendorRec."No.");
                 end;
 

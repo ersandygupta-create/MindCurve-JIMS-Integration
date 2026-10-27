@@ -2,7 +2,7 @@
 page 50259 "E3 Cancel Indent Dialog"
 {
     PageType = StandardDialog;
-    Caption = 'Cancel Indent';
+    Caption = 'Cancel Reason';
     ApplicationArea = All;
     UsageCategory = None;
 
