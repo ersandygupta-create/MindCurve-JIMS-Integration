@@ -60,7 +60,7 @@ table 50075 "E3 Stock Consumption Header"
     }
     keys
     {
-        key(PK; "Entry No.", "Entry Type", "Document No.")
+        key(PK; "Entry No.", "Document No.", "Entry Type")
         {
             Clustered = true;
         }

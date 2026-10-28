@@ -17,13 +17,13 @@ page 50199 "E3 Stock Consumption API"
     {
         area(content)
         {
-            field(entryType; Rec."Entry Type")
-            {
-                Caption = 'Entry Type';
-            }
             field(documentNo; Rec."Document No.")
             {
                 Caption = 'Document Number';
+            }
+            field(entryType; Rec."Entry Type")
+            {
+                Caption = 'Entry Type';
             }
             field(entryNumber; Rec."Entry Number")
             {
@@ -49,18 +49,8 @@ page 50199 "E3 Stock Consumption API"
             {
                 EntityName = 'stockConsLine';
                 EntitySetName = 'stockConsLines';
-                SubPageLink = "Document No." = field("Document No.");
+                SubPageLink = "Document No." = field("Document No."), "Entry Type" = field("Entry Type");
             }
         }
     }
-    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
-    begin
-
-        Rec.Validate("Entry Type", Rec."Entry Type"::"Negative Adjmt.");
-    end;
-
-    trigger OnNewRecord(BelowxRec: Boolean)
-    begin
-        Rec.Validate("Entry Type", Rec."Entry Type"::"Negative Adjmt.");
-    end;
 }

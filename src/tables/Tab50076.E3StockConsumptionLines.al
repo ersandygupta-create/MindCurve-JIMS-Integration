@@ -127,7 +127,7 @@ table 50076 "E3 Stock Consumption Line"
             Caption = 'Item Name';
             DataClassification = CustomerContent;
         }
-        field(16; "Item Type"; Text[50])
+        field(16; "Item Type"; Code[20])
         {
             Caption = 'Item Type';
             DataClassification = CustomerContent;
@@ -192,22 +192,25 @@ table 50076 "E3 Stock Consumption Line"
     }
     keys
     {
-        key(PK; "Entry No.", "Entry Type", "Document No.", "Line No.")
+        key(PK; "Entry No.", "Document No.", "Entry Type", "Line No.")
         {
             Clustered = true;
         }
     }
     local procedure GetHISIntegrationSalesHdr()
     begin
-        //TestField("Entry Type");
         TestField("Document No.");
-        IF ("Entry Type" <> StockCons."Entry Type") OR
-            ("Document No." <> StockCons."Document No.") THEN BEGIN
-            StockCons.Reset();
-            StockCons.SetRange("Entry Type", "Entry Type");
-            StockCons.SetRange("Document No.", "Document No.");
-            StockCons.FindFirst();
-        END;
+        TestField("Entry Type");
+
+        StockCons.Reset();
+        StockCons.SetRange("Document No.", "Document No.");
+        StockCons.SetRange("Entry Type", "Entry Type");
+
+        if not StockCons.FindFirst() then
+            Error(
+                'Stock Consumption Header does not exist for Document No. %1 and Entry Type %2.',
+                "Document No.",
+                "Entry Type");
     end;
 
     trigger OnInsert()

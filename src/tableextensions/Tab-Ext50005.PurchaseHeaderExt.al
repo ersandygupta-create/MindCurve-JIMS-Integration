@@ -187,6 +187,7 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
                 "GRN Voucher Type Name" := VoucherType."GRN Voucher Type Name";
                 "Print Caption" := VoucherType."Print Caption";
                 Sync := VoucherType.Sync;
+                "Item Type" := VoucherType."Item Type";
 
                 case "Document Type" of
                     "Document Type"::Order:
@@ -254,6 +255,12 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Caption = 'Stock Order';
             Editable = false;
             DataClassification = CustomerContent;
+        }
+        field(50023; "Item Type"; Code[20])
+        {
+            Caption = 'Item Type';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Type".Code;
         }
         field(80001; "Receipt No."; code[20])
         {

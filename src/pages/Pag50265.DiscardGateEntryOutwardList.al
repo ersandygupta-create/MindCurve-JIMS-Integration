@@ -111,6 +111,12 @@ page 50265 "E3 Discard GE Outward List"
                     ToolTip = 'Specifies the value of the Remarks field';
                     ApplicationArea = All;
                 }
+                field("Cancel GE Remark"; Rec."Cancel GE Remark")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Cancel Remarks';
+                    ToolTip = 'Specifies the value of the Cancel GE Remarks field';
+                }
                 field(SystemModifiedBy; Rec.SystemModifiedBy)
                 {
                     ToolTip = 'Approved By';

@@ -5,7 +5,7 @@ page 50254 "E3 All Indent List"
     UsageCategory = Lists;
     SourceTable = "E3 Indent Line";
     Caption = 'Indent Summary';
-    SourceTableView = where("PO Created" = const(false));
+    SourceTableView = where("PO Created" = const(false), "SO Created" = const(false));
     InsertAllowed = false;
     ModifyAllowed = false;
     DeleteAllowed = false;
@@ -292,6 +292,8 @@ page 50254 "E3 All Indent List"
 
                     // if SelectedIndentLine."SNo." <> 0 then
                     //     Error('S.No. cannot be 0. Please select a valid indent line.');
+                    if SelectedIndentLine."Cancel Indent Remark" = '' then
+                        Error('Cancel Indent Line Remarks can not blank');
 
                     if SelectedIndentLine.IsEmpty() then
                         Error('Please select at least one indent line.');
