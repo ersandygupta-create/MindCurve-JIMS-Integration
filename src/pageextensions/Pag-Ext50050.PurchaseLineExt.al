@@ -356,22 +356,18 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     PurchHeader.SetRange("No.", rec."Document No.");
                     if PurchHeader.FindFirst() then;
 
-                    if PurchHeader."Item Type" <> '' then begin
-                        IndentLine.Reset();
-                        IndentLine.SetFilter("No.", '<>%1', '');
+                    IndentLine.Reset();
+                    IndentLine.SetRange(Status, IndentLine.Status::Approved);
 
-                        if IndentLine.FindSet() then
-                            repeat
-                                if ItemRec.Get(IndentLine."No.") then
-                                    if ItemRec."Item Type" <> PurchHeader."Item Type" then
-                                        IndentLine.Mark(true);
-                            until IndentLine.Next() = 0;
+                    if IndentLine.FindSet() then
+                        repeat
+                            if ItemRec.Get(IndentLine."No.") then
+                                if ItemRec."Item Type" <> PurchHeader."Item Type" then
+                                    IndentLine.Mark(true);
+                        until IndentLine.Next() = 0;
 
-                        IndentLine.MarkedOnly(true);
-                    end;
-                    // if PurchHeader."Item Make Code" = '' then
-                    //     Error(
-                    //         'Item Make Code cannot be blank. Please enter the Item Make Code before creating the Indent Lines.');
+                    IndentLine.MarkedOnly(true);
+
                     PurchHeader.Reset();
                     IndentHeader.Reset();
                     IndentHeader.SetRange(Status, IndentHeader.Status::Approved);
