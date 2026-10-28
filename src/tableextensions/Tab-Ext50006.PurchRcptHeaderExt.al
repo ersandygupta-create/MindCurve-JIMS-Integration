@@ -90,6 +90,12 @@ tableextension 50006 "E3 HIS Purch. Rcpt. Header" extends "Purch. Rcpt. Header"
             Caption = 'Purchase Narration';
             DataClassification = CustomerContent;
         }
+        field(50023; "Item Type"; Code[20])
+        {
+            Caption = 'Item Type';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Type".Code;
+        }
 
     }
 }

@@ -69,6 +69,12 @@ tableextension 50007 "E3 HIS Purch. Inv. Header" extends "Purch. Inv. Header"
             Caption = 'Sync';
             DataClassification = CustomerContent;
         }
+        field(50023; "Item Type"; Code[20])
+        {
+            Caption = 'Item Type';
+            DataClassification = CustomerContent;
+            TableRelation = "E3 Item Type".Code;
+        }
 
     }
 }

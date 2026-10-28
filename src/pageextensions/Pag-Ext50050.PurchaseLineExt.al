@@ -15,6 +15,28 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         modify("No.")
         {
             Editable = CanEdit;
+            trigger OnLookup(var Text: Text): Boolean
+            var
+                ItemRec: Record Item;
+                PurchaseHeader: Record "Purchase Header";
+            begin
+                if Rec.Type <> Rec.Type::Item then
+                    exit(false);
+
+                if not PurchaseHeader.Get(
+                    PurchaseHeader."Document Type"::Order,
+                    Rec."Document No.")
+                then
+                    exit(false);
+
+                ItemRec.Reset();
+                ItemRec.SetRange("Item Type", PurchaseHeader."Item Type");
+
+                if Page.RunModal(Page::"Item List", ItemRec) = Action::LookupOK then
+                    Text := ItemRec."No.";
+
+                exit(true);
+            end;
         }
         modify(Description)
         {
