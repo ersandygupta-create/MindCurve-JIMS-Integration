@@ -2,7 +2,6 @@ codeunit 50057 "E3 Indent Status Mgmt."
 {
     TableNo = "Job Queue Entry";
 
-
     trigger OnRun()
     begin
         if not E3APISetup.Get() then
@@ -16,6 +15,7 @@ codeunit 50057 "E3 Indent Status Mgmt."
 
         IndentLine.Reset();
         IndentLine.SetRange(IsSent, false);
+        IndentLine.SetRange("PO Created", false);
         IndentLine.SetFilter(Remarks, '<>%1', '');
         IndentLine.SetFilter("SNo.", '<>%1', 0);
 
@@ -70,7 +70,7 @@ codeunit 50057 "E3 Indent Status Mgmt."
         IndentLine.Reset();
         IndentLine.SetRange("Document No.", IndentLineUpdateLog."Document No.");
         IndentLine.SetRange("SNo.", IndentLineUpdateLog."SNo.");
-        //IndentLine.SetRange("No.", IndentLineUpdateLog."No.");
+        IndentLine.SetRange("PO Created", true);
         IndentLine.SetRange(IsSent, false);
 
         if IndentLine.FindSet() then
