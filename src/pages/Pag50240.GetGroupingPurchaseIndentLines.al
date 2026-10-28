@@ -166,4 +166,31 @@ page 50240 "E3 Get Groupping Indent Lines"
                 TargetIndentLine.Insert();
             until SelectedRec.Next() = 0;
     end;
+
+    trigger OnOpenPage()
+    var
+        PurchHeader: Record "Purchase Header";
+        ItemRec: Record Item;
+    begin
+        if PurchaseDocumentNo = '' then
+            exit;
+
+        if not PurchHeader.Get(PurchaseDocumentType, PurchaseDocumentNo) then
+            exit;
+
+        if PurchHeader."Item Type" = '' then
+            exit;
+
+        // Keep the existing SourceTableView filters and mark only matching items.
+        Rec.ClearMarks();
+
+        if Rec.FindSet() then
+            repeat
+                if ItemRec.Get(Rec."No.") then
+                    if ItemRec."Item Type" = PurchHeader."Item Type" then
+                        Rec.Mark(true);
+            until Rec.Next() = 0;
+
+        Rec.MarkedOnly(true);
+    end;
 }

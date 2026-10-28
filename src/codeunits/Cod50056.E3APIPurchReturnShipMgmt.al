@@ -183,7 +183,7 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
                             LineObj.Add('d365_hsnCode', '');
                     end else
                         LineObj.Add('d365_hsnCode', '');
-                    LineObj.Add('indentSKUQty', PurchaseShipmentLine.Quantity);
+                    LineObj.Add('indentSKUQty', (PurchaseShipmentLine.Quantity * PurchaseShipmentLine."Qty. per Unit of Measure"));
                     LineObj.Add('issQty', PurchaseShipmentLine.Quantity);
                     LineObj.Add('rate', Round(PurchaseShipmentLine."Unit Cost"));
                     LineObj.Add('oh_Amt_Gross', PurchaseShipmentLine."VAT Base Amount");
