@@ -1200,13 +1200,7 @@ codeunit 50001 "E3 HIS Event Subscriber"
             until PurchaseLine.Next() = 0;
     end;
 
-    [EventSubscriber(
-            ObjectType::Codeunit,
-            Codeunit::"Purch.-Post",
-            'OnBeforePurchRcptHeaderInsert',
-            '',
-            false,
-            false)]
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePurchRcptHeaderInsert', '', false, false)]
     local procedure CheckDuplicateReceiptInvoice(
     var PurchRcptHeader: Record "Purch. Rcpt. Header";
     var PurchaseHeader: Record "Purchase Header";
