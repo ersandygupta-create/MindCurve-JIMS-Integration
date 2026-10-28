@@ -16,6 +16,7 @@ codeunit 50064 "E3 Indent Status SO Mgmt."
 
         IndentLine.Reset();
         IndentLine.SetRange(IsSent, false);
+        IndentLine.SetRange("SO Created", true);
         IndentLine.SetFilter(Remarks, '<>%1', '');
         IndentLine.SetFilter("SNo.", '<>%1', 0);
 
@@ -70,9 +71,8 @@ codeunit 50064 "E3 Indent Status SO Mgmt."
         IndentLine.Reset();
         IndentLine.SetRange("Document No.", IndentLineUpdateLog."Document No.");
         IndentLine.SetRange("SNo.", IndentLineUpdateLog."SNo.");
-        //IndentLine.SetRange("No.", IndentLineUpdateLog."No.");
-        IndentLine.SetRange(IsSent, false);
         IndentLine.SetRange("SO Created", true);
+        IndentLine.SetRange(IsSent, false);
 
         if IndentLine.FindSet() then
             repeat

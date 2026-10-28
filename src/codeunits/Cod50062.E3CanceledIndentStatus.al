@@ -15,6 +15,8 @@ codeunit 50062 "E3 Canceled Indent Status Mgmt"
 
         IndentLine.Reset();
         IndentLine.SetRange(IsSent, false);
+        IndentLine.SetRange("PO Created", false);
+        IndentLine.SetRange("SO Created", false);
         IndentLine.SetFilter("Cancel Indent Remark", '<>%1', '');
         IndentLine.SetFilter("SNo.", '<>%1', 0);
 
@@ -69,7 +71,8 @@ codeunit 50062 "E3 Canceled Indent Status Mgmt"
         IndentLine.Reset();
         IndentLine.SetRange("Document No.", IndentLineUpdateLog."Document No.");
         IndentLine.SetRange("SNo.", IndentLineUpdateLog."SNo.");
-        //IndentLine.SetRange("No.", IndentLineUpdateLog."No.");
+        IndentLine.SetRange("PO Created", false);
+        IndentLine.SetRange("SO Created", false);
         IndentLine.SetRange(IsSent, false);
 
         if IndentLine.FindSet() then
