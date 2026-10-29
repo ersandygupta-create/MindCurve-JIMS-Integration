@@ -26,7 +26,7 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         }
         modify(Control1)
         {
-            Editable = true;
+            Editable = IsEditable;
         }
 
         addafter("Cheque No.")
@@ -155,22 +155,13 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
                     GenJnlLine.SetRange("Document No.", Rec."Document No.");
 
                     Report.RunModal(CardPaymentReportID, true, true, GenJnlLine);
+                    Rec."Check Printed" := true;
+                    Rec.Modify(true);
+                    CurrPage.Update(false);
                 end;
             }
         }
     }
-
-    trigger OnAfterGetRecord()
-    begin
-        UpdateCardPaymentAction();
-        SetPageEditable();
-
-    end;
-
-    trigger OnAfterGetCurrRecord()
-    begin
-        AmountEdit();
-    end;
 
     trigger OnOpenPage()
     begin
@@ -179,21 +170,35 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         SetPageEditable();
     end;
 
-    trigger OnModifyRecord(): Boolean
+    trigger OnAfterGetRecord()
     begin
-        if Rec.Status in
-           [Rec.Status::"Pending Approval", Rec.Status::Approved] then
-            Error(
-                'You cannot modify this payment journal line because its status is %1.',
-                Rec.Status);
+        UpdateCardPaymentAction();
+        SetPageEditable();
+        AmountEdit();
+    end;
 
-        exit(true);
+    trigger OnAfterGetCurrRecord()
+    begin
+        UpdateCardPaymentAction();
+        SetPageEditable();
+        AmountEdit();
+    end;
+
+    trigger OnNewRecord(BelowxRec: Boolean)
+    begin
+        // Allow the user to enter a new payment journal line.
+        IsEditable := true;
+        isEdit := true;
     end;
 
     local procedure AmountEdit()
     var
         vendLedgerEntry: Record "Vendor Ledger Entry";
     begin
+        isEdit :=
+        (Rec.Status <> Rec.Status::"Pending Approval") and
+        (Rec.Status <> Rec.Status::Approved);
+
         if (rec."VLE Doc No." <> '') then begin
             vendLedgerEntry.Reset();
             vendLedgerEntry.SetRange("Document No.", rec."VLE Doc No.");
