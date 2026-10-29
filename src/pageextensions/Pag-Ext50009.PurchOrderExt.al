@@ -221,14 +221,15 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                     indentline."Closed Indent Grouped Line" := false;
                     IndentLine."Released Stock Issue" := false;
                     IndentLine.Modify();
-                    // purchLine."Indent Line No." := 0;
-                    // purchLine."Indent No." := '';
-                    // purchLine."Indent Line Remarks" := '';
-                    // purchLine.Quantity := 0;
-                    purchLine.Delete(false);
+                // purchLine."Indent Line No." := 0;
+                // purchLine."Indent No." := '';
+                // purchLine."Indent Line Remarks" := '';
+                // purchLine.Quantity := 0;
+
 
                 //Sandeep
                 until IndentLine.Next() = 0;
+            purchLine.Delete(false);
         end else
             Message('Purchase line %1 is partially receive so it line can not be canceled.', purchLine."Line No.");
         CurrPage.Update(false);
