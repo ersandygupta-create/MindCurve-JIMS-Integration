@@ -351,28 +351,11 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     PurchHeader: Record "Purchase Header";
                     IndentHeader: Record "E3 Indent Header";
                     IndentLine: Record "E3 Indent Line";
-                    ItemRec: Record Item;
                 begin
                     PurchHeader.SetRange("Document Type", rec."Document Type");
                     PurchHeader.SetRange("No.", rec."Document No.");
                     if PurchHeader.FindFirst() then;
 
-                    if PurchHeader."Item Type" <> '' then begin
-                        IndentLine.Reset();
-                        IndentLine.SetFilter("No.", '<>%1', '');
-
-                        if IndentLine.FindSet() then
-                            repeat
-                                if ItemRec.Get(IndentLine."No.") then
-                                    if ItemRec."Item Type" <> PurchHeader."Item Type" then
-                                        IndentLine.Mark(true);
-                            until IndentLine.Next() = 0;
-
-                        IndentLine.MarkedOnly(true);
-                    end;
-                    // if PurchHeader."Item Make Code" = '' then
-                    //     Error(
-                    //         'Item Make Code cannot be blank. Please enter the Item Make Code before creating the Indent Lines.');
                     PurchHeader.Reset();
                     IndentHeader.Reset();
                     IndentHeader.SetRange(Status, IndentHeader.Status::Approved);
@@ -685,6 +668,13 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         Commit();
 
         // 2. Open lookup page showing ALL unfiltered records
+        // GetGroupingIndentLinesPage.SetTableView(IndentLine);
+        // GetGroupingIndentLinesPage.LookupMode(true);
+
+        // if GetGroupingIndentLinesPage.RunModal() <> Action::LookupOK then
+        //     exit;
+        // 2. Pass the Purchase Order details to the lookup page
+        GetGroupingIndentLinesPage.SetPurchaseOrder(PurchHeader."Document Type", PurchHeader."No.");
         GetGroupingIndentLinesPage.SetTableView(IndentLine);
         GetGroupingIndentLinesPage.LookupMode(true);
 
