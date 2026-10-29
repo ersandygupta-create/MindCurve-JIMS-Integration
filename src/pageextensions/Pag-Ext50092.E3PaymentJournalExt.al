@@ -4,7 +4,7 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
     {
         modify(Amount)
         {
-            Editable = isEdit;
+            Editable = IsEditable;
             trigger OnBeforeValidate()
             var
                 AdvancePo: Record "Vendor Adv. Pay. Ag. PO";
@@ -22,10 +22,6 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         }
         modify("Amount (LCY)")
         {
-            Editable = isEdit;
-        }
-        modify(Control1)
-        {
             Editable = IsEditable;
         }
 
@@ -34,6 +30,7 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
             field("E3 Narration"; Rec."E3 Narration")
             {
                 ApplicationArea = All;
+                Editable = IsEditable;
                 ToolTip = 'Specifies a value Narration';
             }
             field("CheckPrinted"; Rec."Check Printed")
@@ -55,6 +52,7 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
             field("Purchase Order No."; Rec."Purchase Order No.")
             {
                 ApplicationArea = All;
+                Editable = IsEditable;
                 ToolTip = 'Purchase Order No.';
                 Caption = 'Purchase Order No.';
             }
@@ -63,18 +61,21 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
             {
                 ToolTip = 'Advance Document No.';
                 ApplicationArea = All;
+                Editable = IsEditable;
                 Caption = 'Advance Document No.';
             }
             field("Beneficiary Name"; Rec."Beneficiary Name")
             {
                 ToolTip = 'Beneficiary Name';
                 ApplicationArea = All;
+                Editable = IsEditable;
                 //Editable = blnEdit;
             }
         }
 
         modify("Bal. Account No.")
         {
+            Editable = IsEditable;
             trigger OnAfterValidate()
             begin
                 UpdateCardPaymentAction();
@@ -83,6 +84,7 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         }
         modify("Account Type")
         {
+            Editable = IsEditable;
             trigger OnAfterValidate()
             begin
                 if rec."Account Type" = rec."Account Type"::Vendor then
@@ -97,8 +99,29 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
 
             end;
         }
+        modify("Posting Date")
+        {
+            Editable = IsEditable;
+        }
+        modify("Document Type")
+        {
+            Editable = IsEditable;
+        }
+        modify("Document No.")
+        {
+            Editable = IsEditable;
+        }
+        modify("External Document No.")
+        {
+            Editable = IsEditable;
+        }
+        modify("Payment Reference")
+        {
+            Editable = IsEditable;
+        }
         modify("Account No.")
         {
+            Editable = IsEditable;
             trigger OnAfterValidate()
             begin
                 if rec."Account Type" = rec."Account Type"::Vendor then begin
@@ -106,6 +129,46 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
                     rec."Beneficiary Name" := Vendor."Beneficiary Name";
                 end;
             end;
+        }
+        modify(Description)
+        {
+            Editable = IsEditable;
+        }
+        modify("Location Code")
+        {
+            Editable = IsEditable;
+        }
+        modify("Shortcut Dimension 1 Code")
+        {
+            Editable = IsEditable;
+        }
+        modify("Shortcut Dimension 2 Code")
+        {
+            Editable = IsEditable;
+        }
+        modify("TDS Section Code")
+        {
+            Editable = IsEditable;
+        }
+        modify("Posting Group")
+        {
+            Editable = IsEditable;
+        }
+        modify("Bank Payment Type")
+        {
+            Editable = IsEditable;
+        }
+        modify("Message to Recipient")
+        {
+            Editable = IsEditable;
+        }
+        modify("Debit Amount")
+        {
+            Editable = IsEditable;
+        }
+        modify("Credit Amount")
+        {
+            Editable = IsEditable;
         }
     }
 
@@ -167,20 +230,17 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
     begin
         blnEdit := false;
         isEdit := true;
-        SetPageEditable();
     end;
 
     trigger OnAfterGetRecord()
     begin
         UpdateCardPaymentAction();
-        SetPageEditable();
         AmountEdit();
     end;
 
     trigger OnAfterGetCurrRecord()
     begin
         UpdateCardPaymentAction();
-        SetPageEditable();
         AmountEdit();
     end;
 
