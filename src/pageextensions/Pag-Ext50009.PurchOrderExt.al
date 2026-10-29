@@ -144,7 +144,8 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                         repeat
                             cancleIndentLine(purchaseline);
                         until purchaseline.Next() = 0;
-
+                    rec.Cancelled := true;
+                    rec.Modify(false);
                     Message('Purchase Order has been canceled from indent;');
                 end;
             }
@@ -172,7 +173,8 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                         repeat
                             ShortCloseQty(purchaseline);
                         until purchaseline.Next() = 0;
-
+                    rec."Short Closed" := true;
+                    rec.Modify(false);
                     Message('Purchase Order has been Short closed.');
                 end;
             }

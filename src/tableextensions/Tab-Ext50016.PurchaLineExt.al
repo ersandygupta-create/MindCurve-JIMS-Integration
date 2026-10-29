@@ -184,6 +184,13 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             DataClassification = CustomerContent;
             TableRelation = "Reason Code".Code;
         }
+        field(70006; "Short Closed"; Boolean)
+        {
+            Caption = 'Short Closed';
+            DataClassification = CustomerContent;
+            InitValue = false;
+        }
+
         modify("No.")
         {
             trigger OnAfterValidate()

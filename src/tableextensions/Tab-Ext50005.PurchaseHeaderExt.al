@@ -298,6 +298,18 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             DataClassification = CustomerContent;
             TableRelation = "Reason Code".Code;
         }
+        field(81105; "Short Closed"; Boolean)
+        {
+            Caption = 'Short Closeed';
+            DataClassification = CustomerContent;
+            InitValue = false;
+        }
+        field(81106; "Cancelled"; boolean)
+        {
+            Caption = 'Cancelled';
+            DataClassification = CustomerContent;
+            InitValue = false;
+        }
 
 
     }

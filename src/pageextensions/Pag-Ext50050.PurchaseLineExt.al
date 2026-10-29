@@ -263,6 +263,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     // Open GRN Worksheet
                     GRNWorkSheet.Reset();
                     GRNWorkSheet.SetRange("PO No.", Rec."Document No.");
+                    updateGrnWorkSheet(rec);
                     Page.Run(Page::"E3 GRN Work Sheet", GRNWorkSheet);
                 end;
 
@@ -289,6 +290,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                         purchLine.Validate("Outstanding Qty. (Base)");
                         purchLine."Qty. to Receive" := purchline."Outstanding Quantity";
                         purchLine."Qty. to Receive (Base)" := purchLine."Outstanding Quantity";
+                        purchLine."Short Closed" := true;
                         purchLine.Modify(true);
                         Message('Purchase line %1 has been short closed.', rec."Line No.");
                     end else
@@ -1001,4 +1003,28 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
             Error('Purchase order should be open');
     end;
 
+    local procedure updateGrnWorkSheet(PurchaseLine: Record "Purchase Line")
+    var
+        PurchLine: Record "Purchase Line";
+        GRNWorksheet: Record "E3 GRN Work Sheet";
+    begin
+
+        PurchLine.Reset();
+        PurchLine.SetRange("Document Type", PurchaseLine."Document Type"::Order);
+        PurchLine.SetRange("Document No.", PurchaseLine."Document No.");
+        if PurchLine.FindSet() then
+            repeat
+                GRNWorksheet.Reset();
+                GRNWorksheet.SetRange("PO No.", PurchLine."Document No.");
+                GRNWorksheet.SetRange("Orig. Line No.", PurchLine."Line No.");
+                if GRNWorksheet.FindSet() then
+                    repeat
+                        GRNWorksheet."Quantity Received" := PurchLine."Qty. Received (Base)";
+                        if GRNWorksheet."PO Qty" <> PurchLine."Qty. Received (Base)" then
+                            GRNWorksheet."Receipt Created" := false;
+                        GRNWorksheet.Modify(false);
+                    until GRNWorksheet.Next() = 0;
+            until PurchLine.Next() = 0;
+
+    end;
 }

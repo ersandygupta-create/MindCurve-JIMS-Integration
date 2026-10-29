@@ -485,6 +485,7 @@ page 50169 "E3 GRN Work Sheet"
                 trigger OnAction()
                 var
                     GRNWorksheet: Record "E3 GRN Work Sheet";
+
                     PurchHeader: Record "Purchase Header";
                     PurchLine: Record "Purchase Line";
                     PurchRcptHeader: Record "Purch. Rcpt. Header";
@@ -492,6 +493,8 @@ page 50169 "E3 GRN Work Sheet"
                     SelectedGRNWorksheet: Record "E3 GRN Work Sheet";
                     TempPostedSelectedGRNWorksheet: Record "E3 GRN Work Sheet" temporary;
                     GRNToReceive: Record "E3 GRN Work Sheet";
+                    worksheetpage: page "E3 GRN Work Sheet List";
+                    GRNWorkSheetRec: Record "E3 GRN Work Sheet Header";
                     ConsolidateLine: Record "E3 GRN Work Sheet";
                     PrevLine: Integer;
                     POList: Record "Purchase Header";
@@ -585,7 +588,20 @@ page 50169 "E3 GRN Work Sheet"
 
                     if Confirm('Purchase Receipt %1 posted successfully and GRN data has been created. Do you want to open the E3 GRN Work Sheet List?',
                                 true, PostedReceiptNo) then
-                        Page.Run(Page::"E3 GRN Work Sheet List");
+                        // Page.Run(Page::"E3 GRN Work Sheet List");
+                        begin
+
+
+                        GRNWorkSheetRec.Reset();
+
+                        // Filter by Posted Receipt No or PO No as needed
+                        GRNWorkSheetRec.SetRange("Document ID", SelectedGRNWorksheet."PO No.");
+                        // OR if you filter by receipt number:
+                        // GRNWorkSheetRec.SetRange("Receipt No.", PostedReceiptNo);
+
+                        worksheetpage.SetTableView(GRNWorkSheetRec);
+                        worksheetpage.Run();
+                    end;
                 end;
             }
             action(Split)
@@ -897,4 +913,6 @@ page 50169 "E3 GRN Work Sheet"
 
         GRNHeader.Modify(true);
     end;
+
+
 }
