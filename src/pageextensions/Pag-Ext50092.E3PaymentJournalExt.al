@@ -26,7 +26,7 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         }
         modify(Control1)
         {
-            Editable = IsEditable;
+            Editable = true;
         }
 
         addafter("Cheque No.")
@@ -179,6 +179,17 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         SetPageEditable();
     end;
 
+    trigger OnModifyRecord(): Boolean
+    begin
+        if Rec.Status in
+           [Rec.Status::"Pending Approval", Rec.Status::Approved] then
+            Error(
+                'You cannot modify this payment journal line because its status is %1.',
+                Rec.Status);
+
+        exit(true);
+    end;
+
     local procedure AmountEdit()
     var
         vendLedgerEntry: Record "Vendor Ledger Entry";
@@ -217,8 +228,8 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
     local procedure SetPageEditable()
     begin
         IsEditable :=
-         (Rec.Status <> Rec.Status::"Pending Approval") and
-         (Rec.Status <> Rec.Status::Approved);
+            (Rec.Status <> Rec.Status::"Pending Approval") and
+            (Rec.Status <> Rec.Status::Approved);
     end;
 
     var
