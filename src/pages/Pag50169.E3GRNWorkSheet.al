@@ -595,9 +595,9 @@ page 50169 "E3 GRN Work Sheet"
                         GRNWorkSheetRec.Reset();
 
                         // Filter by Posted Receipt No or PO No as needed
-                        GRNWorkSheetRec.SetRange("Document ID", SelectedGRNWorksheet."PO No.");
+                        //GRNWorkSheetRec.SetRange("Document ID", SelectedGRNWorksheet."PO No.");
                         // OR if you filter by receipt number:
-                        // GRNWorkSheetRec.SetRange("Receipt No.", PostedReceiptNo);
+                        GRNWorkSheetRec.SetRange("Document ID", PostedReceiptNo);
 
                         worksheetpage.SetTableView(GRNWorkSheetRec);
                         worksheetpage.Run();

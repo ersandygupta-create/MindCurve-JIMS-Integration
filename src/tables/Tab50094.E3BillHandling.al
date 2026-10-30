@@ -74,6 +74,16 @@ table 50094 "E3 Bill Handling"
             Caption = 'Event Name';
             DataClassification = CustomerContent;
         }
+        field(14; "No."; Code[20])
+        {
+            Caption = 'No.';
+            DataClassification = CustomerContent;
+        }
+        field(15; "Created By"; Text[100])
+        {
+            Caption = 'Created By';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

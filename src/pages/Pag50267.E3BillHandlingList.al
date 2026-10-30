@@ -17,6 +17,11 @@ page 50267 "E3 Bill Handling List"
         {
             repeater(General)
             {
+                field("Document No."; Rec."No.")
+                {
+                    ToolTip = 'Specifies the value of the No. field';
+                    ApplicationArea = All;
+                }
                 field("Voucher Type Code"; Rec."Voucher Type Code")
                 {
                     ApplicationArea = All;
@@ -86,7 +91,7 @@ page 50267 "E3 Bill Handling List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the event name.';
                 }
-                field(SystemCreatedBy; Rec.SystemCreatedBy)
+                field("Created By"; Rec."Created By")
                 {
                     ApplicationArea = All;
                     Caption = 'Created By';
@@ -100,7 +105,7 @@ page 50267 "E3 Bill Handling List"
                     ToolTip = 'Specifies the date and time when this record was created.';
                     Editable = false;
                 }
-                field(SystemModifiedBy; Rec.SystemModifiedBy)
+                field("Modified By"; Rec."Created By")
                 {
                     ApplicationArea = All;
                     Caption = 'Modified By';

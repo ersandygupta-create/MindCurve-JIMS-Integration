@@ -42,12 +42,24 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                     NoSeriesMgt: Codeunit "No. Series";
                     VoucherType: Record "E3 Voucher Type";
                     NewDocNo: Code[20];
+                    SelectedCount: Integer;
                 begin
                     // 1. Get selected records from the page
                     CurrPage.SetSelectionFilter(PurchaseHeader);
 
                     if not PurchaseHeader.FindSet() then
                         Error('No records selected.');
+
+                    repeat
+                        if PurchaseHeader."Submit to Finance" then
+                            Error(
+                                'Purchase Invoice %1 has already been submitted to Finance. You cannot submit it again.',
+                                PurchaseHeader."No.");
+                    until PurchaseHeader.Next() = 0;
+
+                    // ADDED: Get selected records again after validation
+                    Clear(PurchaseHeader);
+                    CurrPage.SetSelectionFilter(PurchaseHeader);
 
                     // 2. Fetch the No. Series code from your setup table
                     VoucherType.Reset();
@@ -59,16 +71,24 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                     NewDocNo := NoSeriesMgt.GetNextNo(VoucherType."Finance Doc. No.", WorkDate(), true);
 
                     // 4. Update all selected records with the same generated Document No.
-                    repeat
-                        PurchaseHeader."Submit Doc No." := NewDocNo;
-                        PurchaseHeader."Submit to Finance" := true;
-                        PurchaseHeader.Modify(true);
+                    if PurchaseHeader.FindSet(true) then
+                        repeat
+                            PurchaseHeader."Submit Doc No." := NewDocNo;
+                            PurchaseHeader."Submit to Finance" := true;
+                            PurchaseHeader.Modify(true);
 
-                        // Insert Bill Handling record
-                        InsertBillHandling(PurchaseHeader, 'Submit to Finance');
-                    until PurchaseHeader.Next() = 0;
+                            // Insert Bill Handling record
+                            InsertBillHandling(PurchaseHeader, 'Submit to Finance');
 
-                    Message('Document No. %1 submitted to finance to %2 selected record(s).', NewDocNo, PurchaseHeader.Count());
+                            SelectedCount += 1;
+                        until PurchaseHeader.Next() = 0;
+
+                    CurrPage.Update(false);
+
+                    Message(
+                        'Document No. %1 submitted to finance to %2 selected record(s).',
+                        NewDocNo,
+                        SelectedCount);
                 end;
             }
 
@@ -169,6 +189,7 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
     begin
         BillHandling.Init();
 
+        BillHandling."No." := PurchaseHeader."No.";
         BillHandling."Voucher Type Code" := PurchaseHeader."Voucher Type";
         BillHandling."Voucher Type Name" := PurchaseHeader."GRN Voucher Type Name";
         BillHandling."Vendor Code" := PurchaseHeader."Buy-from Vendor No.";
@@ -181,6 +202,7 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
         BillHandling."Due Date" := PurchaseHeader."Due Date";
         BillHandling.Remarks := PurchaseHeader."Posting Description";
         BillHandling."Event Name" := EventName;
+        BillHandling."Created By" := UserId();
         BillHandling.Insert(true);
     end;
 }

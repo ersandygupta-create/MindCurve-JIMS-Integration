@@ -173,7 +173,7 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
                 Image = ReOpen;
                 Promoted = true;
                 PromotedCategory = Process;
-                Enabled = Rec.Status = Rec.Status::Approved;
+                Enabled = (Rec.Status = Rec.Status::Approved) and not VendorInsertPermission;
                 trigger OnAction()
                 begin
                     if Rec.Status <> Rec.Status::Approved then
@@ -249,10 +249,15 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
         exit(true);
     end;
 
+    trigger OnOpenPage()
+    begin
+        CheckVendorInsertPermission();
+    end;
 
     trigger OnAfterGetRecord()
     begin
         UpdateEditableState();
+        CheckVendorInsertPermission();
     end;
 
     trigger OnAfterGetCurrRecord()
@@ -262,12 +267,23 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
 
     var
         IsPageEditable: Boolean;
+        VendorInsertPermission: Boolean;
 
     local procedure UpdateEditableState()
     begin
         IsPageEditable :=
             (Rec.Status <> Rec.Status::Approved) and
             (Rec.Status <> Rec.Status::"Pending Approval");
+    end;
+
+    local procedure CheckVendorInsertPermission()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        VendorInsertPermission := false;
+
+        if UserSetup.Get(UserId()) then
+            VendorInsertPermission := UserSetup."Vendor Insert";
     end;
 
 
