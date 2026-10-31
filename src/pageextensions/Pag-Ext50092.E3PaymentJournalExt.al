@@ -225,6 +225,15 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
             }
         }
     }
+    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
+    begin
+        AmountEdit();
+
+        if isEdit then
+            exit(false); // Prevents the new line from being created
+
+        exit(true);
+    end;
 
     trigger OnOpenPage()
     begin
