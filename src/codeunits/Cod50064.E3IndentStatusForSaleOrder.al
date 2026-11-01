@@ -15,7 +15,6 @@ codeunit 50064 "E3 Indent Status SO Mgmt."
             exit;
 
         IndentLine.Reset();
-        IndentLine.SetRange("Document No.", IndentLine."Document No.");
         IndentLine.SetRange(IsSent, false);
         IndentLine.SetRange("SO Created", true);
         //IndentLine.SetFilter(Remarks, '<>%1', '');
