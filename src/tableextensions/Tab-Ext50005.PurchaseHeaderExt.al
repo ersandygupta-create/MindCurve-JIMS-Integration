@@ -262,6 +262,16 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Type".Code;
         }
+        field(50024; "Company Name"; Text[100])
+        {
+            Caption = 'Company Name';
+            DataClassification = CustomerContent;
+        }
+        field(50025; "Net Amount"; Decimal)
+        {
+            Caption = 'Net Amount';
+            DataClassification = CustomerContent;
+        }
         field(80001; "Receipt No."; code[20])
         {
             Caption = 'Receipt NO.';
@@ -428,4 +438,63 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Error('Purchase Invoice Created by Rcpt line can not be deleted.');
     end;
 
+    trigger OnInsert()
+    begin
+        if "Company Name" = '' then
+            "Company Name" := CopyStr(CompanyName(), 1, MaxStrLen("Company Name"));
+    end;
+
+    procedure CalculateGSTAmount()
+    var
+        PurchLine: Record "Purchase Line";
+        GSTAmount: Decimal;
+        GrossLineAmount: Decimal;
+        DiscountAmount: Decimal;
+        TaxableAmount: Decimal;
+        GSTPercentage: Decimal;
+        TotalAmt: Decimal;
+    begin
+        Clear(GSTAmount);
+        Clear(TotalAmt);
+
+        PurchLine.Reset();
+        PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+        PurchLine.SetRange("Document No.", Rec."No.");
+
+        if PurchLine.FindSet() then
+            repeat
+                // Gross amount before line discount
+                GrossLineAmount :=
+                    PurchLine.Quantity * PurchLine."Direct Unit Cost";
+
+                // Calculate line discount
+                DiscountAmount :=
+                    Round(
+                        GrossLineAmount *
+                        PurchLine."Line Discount %" / 100,
+                        0.01);
+
+                // Taxable amount after discount
+                TaxableAmount := GrossLineAmount - DiscountAmount;
+
+                // Calculate line amount
+                PurchLine.CalcFields(Amount);
+                TotalAmt += PurchLine.Amount;
+
+                // Calculate GST
+                if PurchLine."GST Group Code" <> '' then begin
+                    GSTPercentage := 0;
+
+                    if Evaluate(GSTPercentage, PurchLine."GST Group Code") then
+                        GSTAmount +=
+                            Round(
+                                TaxableAmount * GSTPercentage / 100,
+                                0.01);
+                end;
+            until PurchLine.Next() = 0;
+
+        // Update Net Amount
+        "Net Amount" := TotalAmt + GSTAmount;
+        Modify(false);
+    end;
 }

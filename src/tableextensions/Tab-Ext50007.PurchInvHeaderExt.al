@@ -75,6 +75,16 @@ tableextension 50007 "E3 HIS Purch. Inv. Header" extends "Purch. Inv. Header"
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Type".Code;
         }
+        field(50024; "Company Name"; Text[100])
+        {
+            Caption = 'Company Name';
+            DataClassification = CustomerContent;
+        }
+        field(50025; "Net Amount"; Decimal)
+        {
+            Caption = 'Net Amount';
+            DataClassification = CustomerContent;
+        }
 
     }
 }

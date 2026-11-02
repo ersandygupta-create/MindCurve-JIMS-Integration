@@ -23,6 +23,16 @@ pageextension 50057 "E3 HIS Purchase Order List" extends "Purchase Order List"
                 Caption = 'Send E-mail';
                 ToolTip = 'Send E-mail';
             }
+            field("Company Name"; Rec."Company Name")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the Company Name of the document.';
+            }
+            field("Net Amount"; Rec."Net Amount")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the Net Amount of the document.';
+            }
         }
     }
     actions
@@ -74,4 +84,11 @@ pageextension 50057 "E3 HIS Purchase Order List" extends "Purchase Order List"
             Error(
                 'You do not have permission to open Purchase Order.');
     end;
+
+    trigger OnAfterGetRecord()
+    begin
+        Rec.CalculateGSTAmount();
+    end;
+
+
 }
