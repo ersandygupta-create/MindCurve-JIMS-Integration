@@ -3,7 +3,10 @@ codeunit 50064 "E3 Indent Status SO Mgmt."
     TableNo = "Job Queue Entry";
 
 
+
     trigger OnRun()
+    var
+        IndentLineToProcess: Record "E3 Indent Line";
     begin
         if not E3APISetup.Get() then
             exit;
@@ -14,17 +17,18 @@ codeunit 50064 "E3 Indent Status SO Mgmt."
         if not E3APISetup."Indent Status API Enabled" then
             exit;
 
-        IndentLine.Reset();
-        IndentLine.SetRange(IsSent, false);
-        IndentLine.SetRange("SO Created", true);
-        //IndentLine.SetFilter(Remarks, '<>%1', '');
-        IndentLine.SetFilter("SNo.", '<>%1', 0);
+        IndentLineToProcess.Reset();
+        IndentLineToProcess.SetRange(IsSent, false);
+        IndentLineToProcess.SetRange("SO Created", true);
+        IndentLineToProcess.SetFilter("SNo.", '<>%1', 0);
 
-        if IndentLine.FindSet(true) then
+        if IndentLineToProcess.FindSet(true) then
             repeat
                 ClearLastError();
-                SendIndentLineSODetails(IndentLine);
-            until IndentLine.Next() = 0;
+
+                SendIndentLineSODetails(IndentLineToProcess);
+
+            until IndentLineToProcess.Next() = 0;
     end;
 
 
