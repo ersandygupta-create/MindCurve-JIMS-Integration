@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-10-22T11:43:39.5862379Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-10-30T10:18:11.4721965Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -3951,7 +3951,7 @@
                                                             <Paragraph>
                                                               <TextRuns>
                                                                 <TextRun>
-                                                                  <Value>Net Amount (R/O)</Value>
+                                                                  <Value>Net Amount</Value>
                                                                   <Style>
                                                                     <FontFamily>Tahoma</FontFamily>
                                                                     <FontSize>6pt</FontSize>
@@ -4819,7 +4819,7 @@ Cstr(Fields!VehicleNo_SalesHeader.Value)+Chr(177)+Cstr(Fields!Bill_to_City.Value
                       </Style>
                     </TextRun>
                     <TextRun>
-                      <Value>="PAN : " &amp; First(Fields!CompInfoPANNo.Value, "DataSet_Result") &amp; ", " &amp; "GSTIN. : " &amp; First(Fields!CompInfoGSTRegNo.Value, "DataSet_Result")</Value>
+                      <Value>="PAN : " &amp; First(Fields!CompInfoPANNo.Value, "DataSet_Result") &amp; ", " &amp; "GSTIN : " &amp; First(Fields!CompInfoGSTRegNo.Value, "DataSet_Result")</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>7pt</FontSize>

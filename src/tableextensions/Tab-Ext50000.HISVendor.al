@@ -158,20 +158,12 @@ tableextension 50000 "E3 HIS Vendor Ext" extends Vendor
         if not UserSetup.Get(UserId()) then
             Error('User Setup is not configured for user %1.', UserId());
 
-        if UserSetup."Vendor Modify" then
-            exit;
-
-        if UserSetup."Vendor Insert" and
-           (Rec.Status = Rec.Status::Created)
-        then
-            exit;
-
-        Error(
-            'You do not have permission to modify Vendor %1. ' +
-            'Please contact your administrator.',
-            Rec."No.");
+        if not (UserSetup."Vendor Insert" or UserSetup."Vendor Modify") then
+            Error(
+                'You do not have permission to modify Vendor %1. ' +
+                'Please contact your administrator.',
+                Rec."No.");
     end;
-
 
     trigger OnBeforeDelete()
     var

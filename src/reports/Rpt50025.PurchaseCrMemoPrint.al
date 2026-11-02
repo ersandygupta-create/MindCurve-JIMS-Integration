@@ -87,6 +87,9 @@ report 50025 "Purchase Cr. Memo Print GST"
                     column(LocationGSTIN; Location."GST Registration No.")
                     {
                     }
+                    column(LocDLNo; Location."W/S DL No.")
+                    {
+                    }
                     column(VendAddr4; VendAddr[4])
                     {
                     }

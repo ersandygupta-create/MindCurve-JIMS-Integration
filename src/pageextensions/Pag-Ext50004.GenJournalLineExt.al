@@ -48,6 +48,11 @@ pageextension 50004 "E3 HIS General Journal" extends "General Journal"
                 ApplicationArea = All;
 
             }
+            field("Encounter No."; Rec."E3 Encounter No.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Encounter No.';
+            }
             field("E3 Validation Key"; Rec."E3 Validation Key")
             {
                 ApplicationArea = All;

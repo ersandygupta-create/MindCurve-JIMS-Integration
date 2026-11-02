@@ -14,8 +14,9 @@ codeunit 50057 "E3 Indent Status Mgmt."
             exit;
 
         IndentLine.Reset();
+        IndentLine.SetRange("Document No.", IndentLine."Document No.");
         IndentLine.SetRange(IsSent, false);
-        IndentLine.SetRange("PO Created", false);
+        IndentLine.SetRange("PO Created", true);
         IndentLine.SetFilter(Remarks, '<>%1', '');
         IndentLine.SetFilter("SNo.", '<>%1', 0);
 

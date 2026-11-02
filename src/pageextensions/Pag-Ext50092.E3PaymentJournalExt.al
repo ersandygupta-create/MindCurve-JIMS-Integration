@@ -154,10 +154,6 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         {
             Editable = IsEditable;
         }
-        modify("Bank Payment Type")
-        {
-            Editable = IsEditable;
-        }
         modify("Message to Recipient")
         {
             Editable = IsEditable;
@@ -167,6 +163,14 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
             Editable = IsEditable;
         }
         modify("Credit Amount")
+        {
+            Editable = IsEditable;
+        }
+        modify("Cheque No.")
+        {
+            Editable = IsEditable;
+        }
+        modify("Cheque Date")
         {
             Editable = IsEditable;
         }
@@ -218,9 +222,6 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
                     GenJnlLine.SetRange("Document No.", Rec."Document No.");
 
                     Report.RunModal(CardPaymentReportID, true, true, GenJnlLine);
-                    Rec."Check Printed" := true;
-                    Rec.Modify(true);
-                    CurrPage.Update(false);
                 end;
             }
         }

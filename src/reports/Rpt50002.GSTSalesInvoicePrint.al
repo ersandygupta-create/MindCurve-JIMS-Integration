@@ -764,7 +764,7 @@ report 50002 "GST Sales Invoice Print"
                 LocationName2 := LocationRec."Name 2";
                 LocationName3 := LocationRec."Name 3";
                 LocationGSTNo := LocationRec."GST Registration No.";
-                LocAddress := LocationRec.Address + ',' + LocationRec."Address 2" + ',' + LocationRec.City + ' ,' + LocationRec."Post Code";
+                LocAddress := LocationRec.Address + ' ' + LocationRec."Address 2" + ',' + LocationRec.City + ' ,' + LocationRec."Post Code";
                 LocDLNo := LocationRec."W/S DL No.";
                 Clear(ShipStateName);
                 Clear(BillStateName);
