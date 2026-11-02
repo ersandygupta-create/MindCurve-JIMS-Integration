@@ -76,8 +76,7 @@ codeunit 50064 "E3 Indent Status SO Mgmt."
 
         if IndentLine.FindSet() then
             repeat
-                // Skip only a matching Free Qty line.
-                if (IndentLine."SNo." <> 0) then begin
+                if IndentLine."SNo." <> 0 then begin
                     Clear(ItemObj);
 
                     EntryNoText := Format(IndentLine."Entry No.");
@@ -99,9 +98,16 @@ codeunit 50064 "E3 Indent Status SO Mgmt."
                     ItemObj.Add('itemCode', IndentLine."No.");
                     ItemObj.Add('dm_itemCode', 0);
                     ItemObj.Add('status', 'Completed');
-                    ItemObj.Add('remark', Format(IndentLine."Requested Qty") + ' Indent Sales Order Qty');
+
+                    ItemObj.Add(
+                        'remark',
+                        Format(IndentLine."Requested Qty") + ' Indent Sales Order Qty');
+
                     ItemObj.Add('uom', IndentLine."Unit of Measure");
-                    ItemObj.Add('qty', Format(IndentLine."Requested Qty"));
+
+                    // Send Decimal as JSON number
+                    ItemObj.Add('qty', IndentLine."Requested Qty");
+
                     ItemObj.Add('indentnumber', IndentLine."Document No.");
                     ItemObj.Add('indentserialnumber', Format(IndentLine."Entry No."));
 
@@ -114,7 +120,11 @@ codeunit 50064 "E3 Indent Status SO Mgmt."
             exit(false);
 
         Clear(RootObj);
+
+        // Include both only if required by the API request model
+        RootObj.Add('inputarray', ItemArray);
         RootObj.Add('header', ItemArray);
+
         RootObj.WriteTo(ReqPayload);
 
         if GuiAllowed then
