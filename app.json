@@ -2,7 +2,11 @@
   "id": "ede53059-43d1-450d-a3f6-7136a9649af5",
   "name": "JIMS Integration",
   "publisher": "MindCurve",
+<<<<<<< HEAD
   "version": "1.0.0.51",
+=======
+  "version": "1.0.1.2",
+>>>>>>> 7f64ec5a099b1b036f48a1287dece5fdda30aaef
   "target": "Cloud",
   "brief": "JIMS Integration",
   "description": "HIS Integration with JIMS",
