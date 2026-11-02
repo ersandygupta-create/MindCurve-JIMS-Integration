@@ -230,8 +230,12 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
     begin
         AmountEdit();
 
-        if isEdit then
-            exit(false); // Prevents the new line from being created
+        // if isEdit then begin
+        //     Error('You can not create a new record.');
+        //     exit(false); // Prevents the new line from being created
+        //     CurrPage.Update(false);
+        // end;
+
 
         exit(true);
     end;
@@ -240,25 +244,28 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
     begin
         blnEdit := false;
         isEdit := true;
+
     end;
 
     trigger OnAfterGetRecord()
     begin
         UpdateCardPaymentAction();
         AmountEdit();
+
     end;
 
     trigger OnAfterGetCurrRecord()
     begin
         UpdateCardPaymentAction();
         AmountEdit();
+
     end;
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
         // Allow the user to enter a new payment journal line.
         IsEditable := true;
-        isEdit := true;
+        // isEdit := true;
     end;
 
     local procedure AmountEdit()
@@ -275,6 +282,28 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
             if vendLedgerEntry.Find('-') then
                 isEdit := false;
         end
+        else
+            isEdit := true;
+
+    end;
+
+    local procedure InsertRow()
+    var
+        vendLedgerEntry: Record "Vendor Ledger Entry";
+        line: Record "Gen. Journal Line";
+    begin
+
+        line.Reset();
+        line.SetRange("Document No", rec."Document No");
+        if line.Find('-') then begin
+            if (line."VLE Doc No." <> '') then begin
+                vendLedgerEntry.Reset();
+                vendLedgerEntry.SetRange("Document No.", line."VLE Doc No.");
+                if vendLedgerEntry.Find('-') then
+                    isEdit := false;
+            end
+        end
+
         else
             isEdit := true;
 
