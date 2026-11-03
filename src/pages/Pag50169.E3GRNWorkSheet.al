@@ -503,7 +503,24 @@ page 50169 "E3 GRN Work Sheet"
                     POListNo: Code[20];
                     PostedGRNHeader: Record "E3 GRN Work Sheet Header";
                     DeleteGRNWorksheet: Record "E3 GRN Work Sheet";
+                    ExistingPurchRcptHeader: Record "Purch. Rcpt. Header";
                 begin
+                    purchHeader.get(purchHeader."Document Type"::Order, Rec."PO No.");
+                    purchheader.TestStatusIsNotReleased();
+                    ExistingPurchRcptHeader.Reset();
+                    ExistingPurchRcptHeader.SetRange(
+                        "Buy-from Vendor No.",
+                        purchHeader."Buy-from Vendor No.");
+                    ExistingPurchRcptHeader.SetRange(
+                        "Vendor Invoice No.",
+                        purchHeader."Vendor Invoice No.");
+
+                    if ExistingPurchRcptHeader.FindFirst() then
+                        Error(
+                            'Vendor Invoice No. %1 already exists for Vendor %2 in Purchase Receipt %3.',
+                            purchHeader."Vendor Invoice No.",
+                            purchHeader."Buy-from Vendor No.",
+                            ExistingPurchRcptHeader."No.");
                     CurrPage.SetSelectionFilter(SelectedGRNWorksheet);
 
                     if SelectedGRNWorksheet.IsEmpty() then
@@ -558,6 +575,7 @@ page 50169 "E3 GRN Work Sheet"
                             if GRNToReceive."Receipt Qty" > 0 then begin
                                 TempPostedSelectedGRNWorksheet := GRNToReceive;
                                 TempPostedSelectedGRNWorksheet.Insert();
+
                             end;
 
                         until GRNToReceive.Next() = 0;
@@ -565,11 +583,11 @@ page 50169 "E3 GRN Work Sheet"
                     POList.Reset();
                     POList.SetRange("Document Type", POList."Document Type"::Order);
 
-                    if SelectedGRNWorksheet.FindSet() then
+                    if TempPostedSelectedGRNWorksheet.FindSet() then
                         repeat
-                            if POListNo <> SelectedGRNWorksheet."PO No." then begin
-                                POListNo := SelectedGRNWorksheet."PO No.";
-                                if POList.Get(POList."Document Type"::Order, SelectedGRNWorksheet."PO No.")
+                            if POListNo <> TempPostedSelectedGRNWorksheet."PO No." then begin
+                                POListNo := TempPostedSelectedGRNWorksheet."PO No.";
+                                if POList.Get(POList."Document Type"::Order, TempPostedSelectedGRNWorksheet."PO No.")
                                 then begin
 
                                     POList.Receive := true;
@@ -580,10 +598,11 @@ page 50169 "E3 GRN Work Sheet"
 
                                 end;
                             end;
-
-                        until SelectedGRNWorksheet.Next() = 0;
+                        //  SelectedGRNWorksheet.Delete(false)
+                        until TempPostedSelectedGRNWorksheet.Next() = 0;
 
                     CopyPostedReceiptToGRN(TempPostedSelectedGRNWorksheet);
+                    deletePostedGrnWorksheet(TempPostedSelectedGRNWorksheet."PO No.");
                     CurrPage.Update(false);
 
                     if Confirm('Purchase Receipt %1 posted successfully and GRN data has been created. Do you want to open the E3 GRN Work Sheet List?',
@@ -697,6 +716,16 @@ page 50169 "E3 GRN Work Sheet"
 
         }
     }
+    local procedure deletePostedGrnWorksheet(PO_No: Code[20])
+    var
+        GRNWorksheet: Record "E3 GRN Work Sheet";
+    begin
+        grnworksheet.SetRange("PO No.", PO_No);
+        GRNWorksheet.SetFilter("Receipt Created", '%1', true);
+        GRNWorksheet.DeleteAll(false);
+
+    end;
+
     local procedure CopyPostedReceiptToGRN(var SelectedGRNWorksheet: Record "E3 GRN Work Sheet")
     var
         PurchRcptHeader: Record "Purch. Rcpt. Header";
@@ -790,11 +819,11 @@ page 50169 "E3 GRN Work Sheet"
                     // if PurchRcptLine.Type = PurchRcptLine.Type::Item then begin
                     Clear(GRNWorksheet);
 
-                    if not GRNWorksheet.Get(SelectedGRNWorksheet."PO No.", SelectedGRNWorksheet."Line No.", SelectedGRNWorksheet."Orig. Line No.")
-                    then begin
-                        LineNo += 10000;
-                        continue;
-                    end;
+                    // if not GRNWorksheet.Get(SelectedGRNWorksheet."PO No.", SelectedGRNWorksheet."Line No.", SelectedGRNWorksheet."Orig. Line No.")
+                    // then begin
+                    //     LineNo += 10000;
+                    //     continue;
+                    // end;
 
                     //Prevent duplicate GRN lines
 
