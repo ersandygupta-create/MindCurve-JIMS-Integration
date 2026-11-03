@@ -95,7 +95,7 @@ page 50197 "E3 Stock Consumption Card"
                 var
                     E3PostStockConsumption: Codeunit "E3 Post Stock Consumption";
                 begin
-                    //E3PostStockConsumption.PostItemJournal(Rec);
+                    E3PostStockConsumption.PostItemJournal(Rec);
 
                     Message(
                         'Item Journal has been posted for Stock Consumption Document %1.',

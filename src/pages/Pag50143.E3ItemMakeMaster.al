@@ -19,8 +19,6 @@ page 50143 "E3 Item Make Master"
                     ToolTip = 'Specifies the value of the Make Type field';
                     ApplicationArea = All;
                     AssistEdit = true;
-
-
                 }
                 field(Code; Rec.Code)
                 {
