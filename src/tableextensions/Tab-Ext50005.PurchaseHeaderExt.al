@@ -167,6 +167,24 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Caption = 'Item Make Code';
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Make Master".Code where("Make Type" = filter('Medicine/Marketing'));
+            trigger OnValidate()
+            var
+                ItemMakeMaster: Record "E3 Item Make Master";
+            begin
+                if "Item Make Code" = '' then begin
+                    "Make Name" := '';
+                    exit;
+                end;
+
+                ItemMakeMaster.Reset();
+                ItemMakeMaster.SetRange(Code, "Item Make Code");
+                ItemMakeMaster.SetRange("Make Type", ItemMakeMaster."Make Type"::"Medicine/Marketing");
+
+                if ItemMakeMaster.FindFirst() then
+                    "Make Name" := ItemMakeMaster."Company Name"
+                else
+                    "Make Name" := '';
+            end;
 
         }
         field(50016; "Voucher Type"; Code[20])
@@ -262,9 +280,9 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Type".Code;
         }
-        field(50024; "Company Name"; Text[100])
+        field(50024; "Make Name"; Text[60])
         {
-            Caption = 'Company Name';
+            Caption = 'Make Name';
             DataClassification = CustomerContent;
         }
         field(50025; "Net Amount"; Decimal)
@@ -438,12 +456,6 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             Error('Purchase Invoice Created by Rcpt line can not be deleted.');
     end;
 
-    trigger OnInsert()
-    begin
-        if "Company Name" = '' then
-            "Company Name" := CopyStr(CompanyName(), 1, MaxStrLen("Company Name"));
-    end;
-
     procedure CalculateGSTAmount()
     var
         PurchLine: Record "Purchase Line";
@@ -478,8 +490,7 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
                 TaxableAmount := GrossLineAmount - DiscountAmount;
 
                 // Calculate line amount
-                PurchLine.CalcFields(Amount);
-                TotalAmt += PurchLine.Amount;
+                TotalAmt += PurchLine."Line Amount";
 
                 // Calculate GST
                 if PurchLine."GST Group Code" <> '' then begin
@@ -496,5 +507,24 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
         // Update Net Amount
         "Net Amount" := TotalAmt + GSTAmount;
         Modify(false);
+    end;
+
+    procedure UpdateItemMakeName()
+    var
+        ItemMakeMaster: Record "E3 Item Make Master";
+    begin
+        if "Item Make Code" = '' then begin
+            "Make Name" := '';
+            exit;
+        end;
+
+        ItemMakeMaster.Reset();
+        ItemMakeMaster.SetRange(Code, "Item Make Code");
+        ItemMakeMaster.SetRange("Make Type", ItemMakeMaster."Make Type"::"Medicine/Marketing");
+
+        if ItemMakeMaster.FindFirst() then
+            "Make Name" := ItemMakeMaster."Company Name"
+        else
+            "Make Name" := '';
     end;
 }

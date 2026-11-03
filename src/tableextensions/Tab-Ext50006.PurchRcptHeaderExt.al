@@ -96,9 +96,9 @@ tableextension 50006 "E3 HIS Purch. Rcpt. Header" extends "Purch. Rcpt. Header"
             DataClassification = CustomerContent;
             TableRelation = "E3 Item Type".Code;
         }
-        field(50024; "Company Name"; Text[100])
+        field(50024; "Make Name"; Text[60])
         {
-            Caption = 'Company Name';
+            Caption = 'Make Name';
             DataClassification = CustomerContent;
         }
         field(50025; "Net Amount"; Decimal)

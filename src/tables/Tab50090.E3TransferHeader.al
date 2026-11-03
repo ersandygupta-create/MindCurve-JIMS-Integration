@@ -71,4 +71,13 @@ table 50090 "E3 Transfer Header"
             Clustered = true;
         }
     }
+    trigger OnDelete()
+    var
+        TrfLine: Record "E3 Transfer Line";
+    begin
+        TrfLine.SetRange("Entry Type", Rec."Entry Type");
+        TrfLine.SetRange("Document Type", Rec."Document Type");
+        TrfLine.SetRange("Entry Number", Rec."Entry Number");
+        TrfLine.DeleteAll();
+    end;
 }

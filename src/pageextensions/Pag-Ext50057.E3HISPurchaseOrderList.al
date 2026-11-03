@@ -23,10 +23,15 @@ pageextension 50057 "E3 HIS Purchase Order List" extends "Purchase Order List"
                 Caption = 'Send E-mail';
                 ToolTip = 'Send E-mail';
             }
-            field("Company Name"; Rec."Company Name")
+            field("Order Date"; Rec."Order Date")
             {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the Company Name of the document.';
+                ToolTip = 'Specifies the Order Date of the document.';
+            }
+            field("Make Name"; Rec."Make Name")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the Make Name of the document.';
             }
             field("Net Amount"; Rec."Net Amount")
             {
@@ -88,6 +93,7 @@ pageextension 50057 "E3 HIS Purchase Order List" extends "Purchase Order List"
     trigger OnAfterGetRecord()
     begin
         Rec.CalculateGSTAmount();
+        Rec.UpdateItemMakeName();
     end;
 
 

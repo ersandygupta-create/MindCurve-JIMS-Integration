@@ -12,7 +12,7 @@ page 50249 "E3 Transfer Card"
         {
             group(General)
             {
-                Editable = IsPageEditable;
+                //Editable = IsPageEditable;
                 field("Entry Type"; Rec."Entry Type")
                 {
                     ApplicationArea = All;
