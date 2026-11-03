@@ -8,6 +8,41 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
         tabledata "Sales Header" = rim,
         tabledata "Sales Line" = rim;
 
+    trigger OnRun()
+    begin
+        ProcessPendingSalesInvoices();
+    end;
+
+    procedure ProcessPendingSalesInvoices()
+    var
+        PharmacySaleHeader: Record "E3 Pharmacy Sale Header";
+        ProcessedCount: Integer;
+        IntegrationSetup: Record "E3 HIS Integartion Setup";
+    begin
+        // Check Integration Setup
+        if not IntegrationSetup.FindFirst() then
+            Error('E3 HIS Integration Setup not found.');
+
+        // Process only when Auto Pharmacy Posting is enabled
+        if not IntegrationSetup."Auto Pharmacy Posting Enabled" then
+            exit;
+
+        PharmacySaleHeader.Reset();
+        PharmacySaleHeader.SetRange("Is Created", false);
+
+        if PharmacySaleHeader.FindSet() then
+            repeat
+                if PharmacySaleHeader."Document Number" <> '' then begin
+                    InitSalesInvoice(
+                        PharmacySaleHeader."Entry Type",
+                        PharmacySaleHeader."Document Type",
+                        PharmacySaleHeader."Document Number");
+
+                    ProcessedCount += 1;
+                end;
+            until PharmacySaleHeader.Next() = 0;
+    end;
+
     procedure InitSalesInvoice(EntryType: Option; DocumentType: Text[50]; DocumentNo: Code[20])
     var
         SalesHeader: Record "Sales Header";
@@ -20,6 +55,7 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
         LinesFound: Boolean;
         CreateReservEntry: Codeunit "Create Reserv. Entry";
         TempReservationEntry: Record "Reservation Entry" temporary;
+        IntegrationSetup: Record "E3 HIS Integartion Setup";
     begin
         // Find Pharmacy Sales Header
         PharmacySaleHeader.Reset();
@@ -124,8 +160,8 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
                 "Document Date",
                 PharmacySaleHeader."Bill Date");
         end else begin
-            SalesHeader.Validate("Posting Date", WorkDate());
-            SalesHeader.Validate("Document Date", WorkDate());
+            SalesHeader.Validate("Posting Date", PharmacySaleHeader."Bill Date");
+            SalesHeader.Validate("Document Date", PharmacySaleHeader."Bill Date");
         end;
 
         if PharmacySaleHeader."Location Code" <> '' then
@@ -199,14 +235,18 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
 
         until PharmacySaleLine.Next() = 0;
 
+        // Check Integration Setup
+        if not IntegrationSetup.FindFirst() then
+            Error('E3 HIS Integration Setup not found.');
+
+        // Automatically Post Sales Invoice if enabled
+        if IntegrationSetup."Auto Pharmacy Posting Enabled" then begin
+            PostSalesInvoice(InvoiceNo);
+        end;
+
         // Mark source Pharmacy Sales Header as Created
         PharmacySaleHeader."Is Created" := true;
         PharmacySaleHeader.Modify(true);
-
-        Message(
-            'Sales Invoice %1 created successfully for Customer %2. The invoice is not posted.',
-            InvoiceNo,
-            PharmacySaleSetup."Account No.");
     end;
 
     local procedure CreateLotTracking(
@@ -249,5 +289,40 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
             SalesLine."Shipment Date",
             0,
             Enum::"Reservation Status"::Surplus);
+    end;
+
+    local procedure PostSalesInvoice(InvoiceNo: Code[20])
+    var
+        SalesHeader: Record "Sales Header";
+        SalesPost: Codeunit "Sales-Post";
+        SalesInvoiceHeader: Record "Sales Invoice Header";
+    begin
+        // Find Sales Invoice
+        SalesHeader.Reset();
+        SalesHeader.SetRange(
+            "Document Type",
+            SalesHeader."Document Type"::Invoice);
+        SalesHeader.SetRange("No.", InvoiceNo);
+
+        if not SalesHeader.FindFirst() then
+            Error(
+                'Sales Invoice %1 not found for posting.',
+                InvoiceNo);
+
+        // Validate Sales Invoice
+        SalesHeader.TestField("Sell-to Customer No.");
+        SalesHeader.TestField("Posting Date");
+
+        // Post Sales Invoice using Base Business Central Posting Engine
+        SalesPost.Run(SalesHeader);
+
+        // Verify Posted Sales Invoice
+        SalesInvoiceHeader.Reset();
+        SalesInvoiceHeader.SetRange("No.", InvoiceNo);
+
+        if not SalesInvoiceHeader.FindFirst() then
+            Error(
+                'Sales Invoice %1 was not posted successfully.',
+                InvoiceNo);
     end;
 }

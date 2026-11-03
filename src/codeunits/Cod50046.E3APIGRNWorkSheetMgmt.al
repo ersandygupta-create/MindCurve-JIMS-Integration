@@ -3,14 +3,34 @@ codeunit 50046 "E3 GRN Work Sheet Mgmt."
 
     TableNo = "Job Queue Entry";
 
+
     trigger OnRun()
+    var
+        GRNHeaderToSend: Record "E3 GRN Work Sheet Header";
     begin
+        // Check API Setup
         if not E3APISetup.Get() then
             exit;
 
         if not E3APISetup."Integration Enabled" then
             exit;
+
+        if not E3APISetup."GRN Work Sheet API Enabled" then
+            exit;
+
+        // Find GRNs pending synchronization
+        GRNHeaderToSend.Reset();
+        GRNHeaderToSend.SetRange(Sync, true);
+        GRNHeaderToSend.SetRange(IsSent, false);
+
+        if GRNHeaderToSend.FindSet() then
+            repeat
+                if GRNHeaderToSend."Document ID" <> '' then
+                    SendGRNWorkSheetDetails(
+                        GRNHeaderToSend."Document ID");
+            until GRNHeaderToSend.Next() = 0;
     end;
+
 
     var
         E3APISetup: Record "E3 Integration API Setup";

@@ -121,6 +121,7 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
             ItemJournalLine.Validate(Quantity, TransferLine.Quantity);
             ItemJournalLine.Validate("Location Code", TransferLine."D365 From Department Code");
             ItemJournalLine.Validate("New Location Code", TransferLine."D365 To Department Code");
+            ItemjournalLine."Bin Code" := TransferLine."D365 From Department Code";
             ItemJournalLine.Validate("Shortcut Dimension 1 Code", TransferLine."Business Unit");
             ItemJournalLine.Validate("New Shortcut Dimension 1 Code", TransferLine."Business Unit");
 

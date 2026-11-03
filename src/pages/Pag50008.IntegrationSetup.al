@@ -129,6 +129,11 @@ page 50008 "E3 Integration Setup"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Inter Unit Sales Enabled';
                 }
+                field("Auto Pharmacy Posting Enabled"; Rec."Auto Pharmacy Posting Enabled")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Auto Pharmacy Posting Enabled';
+                }
             }
             group(NumberSeries)
             {

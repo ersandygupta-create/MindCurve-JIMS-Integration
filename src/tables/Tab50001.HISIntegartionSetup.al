@@ -155,6 +155,11 @@ table 50001 "E3 HIS Integartion Setup"
             DataClassification = CustomerContent;
             TableRelation = "No. Series";
         }
+        field(29; "Auto Pharmacy Posting Enabled"; Boolean)
+        {
+            Caption = 'Auto Pharmacy Posting Enabled';
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {
