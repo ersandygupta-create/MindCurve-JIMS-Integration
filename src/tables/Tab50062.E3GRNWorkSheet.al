@@ -710,6 +710,7 @@ table 50062 "E3 GRN Work Sheet"
         LocationRec: Record Location;
         CompanyInformation: Record "Company Information";
         Vendor: Record Vendor;
+        GrnWorksheet: Record "E3 GRN Work Sheet";
 
     begin
         PurchLine.Reset();
@@ -719,6 +720,14 @@ table 50062 "E3 GRN Work Sheet"
         if PurchLine.FindSet() then
             repeat
                 if Get(PurchLine."Document No.", PurchLine."Line No.") then
+                    continue;
+                if purchline."Quantity" = purchline."Quantity Received" then
+                    continue;
+
+                GrnWorksheet.Reset();
+                grnworksheet.SetRange("PO No.", PurchLine."Document No.");
+                grnworksheet.SetRange("Orig. Line No.", PurchLine."Line No.");
+                if grnworksheet.FindFirst() then
                     continue;
 
                 Init();
@@ -842,7 +851,8 @@ table 50062 "E3 GRN Work Sheet"
 
 
                 CalculateLandedValue();
-
+                "Receipt Created" := false;
+                "Lot Assigned" := false;
                 Insert(true);
             until PurchLine.Next() = 0;
     end;

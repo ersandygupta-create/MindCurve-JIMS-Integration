@@ -252,13 +252,13 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     //         'No Purchase Order lines have Qty. to Receive greater than zero.');
 
                     // Check existing GRN Worksheet
-                    GRNWorkSheet.Reset();
-                    GRNWorkSheet.SetRange("PO No.", Rec."Document No.");
+                    // GRNWorkSheet.Reset();
+                    // GRNWorkSheet.SetRange("PO No.", Rec."Document No.");
 
-                    if GRNWorkSheet.IsEmpty() then begin
-                        // Create GRN Worksheet only first time
-                        GRNWorkSheet.InitFromPurchaseLine(Rec."Document No.");
-                    end;
+                    // if GRNWorkSheet.IsEmpty() then begin
+                    // Create GRN Worksheet only first time
+                    GRNWorkSheet.InitFromPurchaseLine(Rec."Document No.");
+                    // end;
 
                     // Open GRN Worksheet
                     GRNWorkSheet.Reset();
@@ -1009,22 +1009,22 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         GRNWorksheet: Record "E3 GRN Work Sheet";
     begin
 
-        PurchLine.Reset();
-        PurchLine.SetRange("Document Type", PurchaseLine."Document Type"::Order);
-        PurchLine.SetRange("Document No.", PurchaseLine."Document No.");
-        if PurchLine.FindSet() then
-            repeat
-                GRNWorksheet.Reset();
-                GRNWorksheet.SetRange("PO No.", PurchLine."Document No.");
-                GRNWorksheet.SetRange("Orig. Line No.", PurchLine."Line No.");
-                if GRNWorksheet.FindSet() then
-                    repeat
-                        GRNWorksheet."Quantity Received" := PurchLine."Qty. Received (Base)";
-                        if GRNWorksheet."PO Qty" <> PurchLine."Qty. Received (Base)" then
-                            GRNWorksheet."Receipt Created" := false;
-                        GRNWorksheet.Modify(false);
-                    until GRNWorksheet.Next() = 0;
-            until PurchLine.Next() = 0;
+        // PurchLine.Reset();
+        // PurchLine.SetRange("Document Type", PurchaseLine."Document Type"::Order);
+        // PurchLine.SetRange("Document No.", PurchaseLine."Document No.");
+        // if PurchLine.FindSet() then
+        //     repeat
+        //         GRNWorksheet.Reset();
+        //         GRNWorksheet.SetRange("PO No.", PurchLine."Document No.");
+        //         GRNWorksheet.SetRange("Orig. Line No.", PurchLine."Line No.");
+        //         if GRNWorksheet.FindSet() then
+        //             repeat
+        //                 GRNWorksheet."Quantity Received" := PurchLine."Qty. Received (Base)";
+        //                 if GRNWorksheet."PO Qty" <> PurchLine."Qty. Received (Base)" then
+        //                     GRNWorksheet."Receipt Created" := false;
+        //                 GRNWorksheet.Modify(false);
+        //             until GRNWorksheet.Next() = 0;
+        //     until PurchLine.Next() = 0;
 
     end;
 }
