@@ -18,6 +18,8 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
         LineNo: Integer;
         InvoiceNo: Code[20];
         LinesFound: Boolean;
+        CreateReservEntry: Codeunit "Create Reserv. Entry";
+        TempReservationEntry: Record "Reservation Entry" temporary;
     begin
         // Find Pharmacy Sales Header
         PharmacySaleHeader.Reset();
@@ -176,38 +178,24 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
             SalesLine.Validate("Document No.", SalesHeader."No.");
             SalesLine."Line No." := LineNo;
             SalesLine.Insert(true);
-
             SalesLine.Validate(Type, SalesLine.Type::Item);
             SalesLine.Validate("No.", PharmacySaleLine."D365 Item Code");
-
-            SalesLine.Validate(
-                "Unit of Measure Code",
-                PharmacySaleLine."D365 Unit Code");
-
-            SalesLine.Validate(
-                Quantity,
-                PharmacySaleLine.Quantity);
-
-            SalesLine.Validate(
-                "Unit Price",
-                PharmacySaleLine."OH Amt Net");
-
+            SalesLine.Validate("Unit of Measure Code", PharmacySaleLine."D365 Unit Code");
+            SalesLine.Validate(Quantity, PharmacySaleLine.Quantity);
+            SalesLine.Validate("Unit Price", PharmacySaleLine."OH Amt Net");
             if PharmacySaleLine."Business Unit" <> '' then
-                SalesLine.Validate(
-                    "Shortcut Dimension 1 Code",
-                    PharmacySaleLine."Business Unit");
-
+                SalesLine.Validate("Shortcut Dimension 1 Code", PharmacySaleLine."Business Unit");
             if PharmacySaleHeader."Location Code" <> '' then
-                SalesLine.Validate(
-                    "Location Code",
-                    PharmacySaleHeader."Location Code");
-
+                SalesLine.Validate("Location Code", PharmacySaleHeader."Location Code");
             if PharmacySaleLine."OH Amt Discount" <> 0 then
-                SalesLine.Validate(
-                    "Line Discount Amount",
-                    PharmacySaleLine."OH Amt Discount");
+                SalesLine.Validate("Line Discount Amount", PharmacySaleLine."OH Amt Discount");
 
             SalesLine.Modify(true);
+            // Create Item Tracking using existing Pharmacy Batch No.
+            if PharmacySaleLine."Batch No." <> '' then
+                CreateLotTracking(
+                    SalesLine,
+                    PharmacySaleLine."Batch No.");
 
         until PharmacySaleLine.Next() = 0;
 
@@ -219,5 +207,47 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
             'Sales Invoice %1 created successfully for Customer %2. The invoice is not posted.',
             InvoiceNo,
             PharmacySaleSetup."Account No.");
+    end;
+
+    local procedure CreateLotTracking(
+    SalesLine: Record "Sales Line";
+    BatchNo: Code[50])
+    var
+        CreateReservEntry: Codeunit "Create Reserv. Entry";
+        TempReservationEntry: Record "Reservation Entry" temporary;
+    begin
+        // Validate existing Batch No.
+        if BatchNo = '' then
+            Error(
+                'Batch No. must have a value for Item No. %1.',
+                SalesLine."No.");
+
+        // Assign existing Batch No. to Item Tracking
+        TempReservationEntry.Init();
+        TempReservationEntry."Lot No." := BatchNo;
+
+        // Create Item Tracking for Sales Invoice Line
+        CreateReservEntry.CreateReservEntryFor(
+            Database::"Sales Line",
+            SalesLine."Document Type".AsInteger(),
+            SalesLine."Document No.",
+            '',
+            0,
+            SalesLine."Line No.",
+            SalesLine."Qty. per Unit of Measure",
+            SalesLine.Quantity,
+            SalesLine."Quantity (Base)",
+            TempReservationEntry);
+
+        // Create tracking entry using existing Lot No.
+        CreateReservEntry.CreateEntry(
+            SalesLine."No.",
+            SalesLine."Variant Code",
+            SalesLine."Location Code",
+            SalesLine.Description,
+            0D,
+            SalesLine."Shipment Date",
+            0,
+            Enum::"Reservation Status"::Surplus);
     end;
 }
