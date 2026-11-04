@@ -134,6 +134,16 @@ page 50008 "E3 Integration Setup"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Auto Pharmacy Posting Enabled';
                 }
+                field("Auto Transfer Journal Enabled"; Rec."Auto Transfer Journal Enabled")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Auto Transfer Journal Enabled';
+                }
+                field("Auto Post StockConsumption"; Rec."Auto Post StockConsumption")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Auto Post StockConsumption';
+                }
             }
             group(NumberSeries)
             {

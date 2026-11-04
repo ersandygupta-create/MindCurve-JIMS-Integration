@@ -160,6 +160,16 @@ table 50001 "E3 HIS Integartion Setup"
             Caption = 'Auto Pharmacy Posting Enabled';
             DataClassification = CustomerContent;
         }
+        field(30; "Auto Transfer Journal Enabled"; Boolean)
+        {
+            Caption = 'Auto Transfer Journal Enabled';
+            DataClassification = CustomerContent;
+        }
+        field(31; "Auto Post StockConsumption"; Boolean)
+        {
+            Caption = 'Auto Post StockConsumption';
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

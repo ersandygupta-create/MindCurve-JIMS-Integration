@@ -51,11 +51,16 @@ table 50075 "E3 Stock Consumption Header"
             Caption = 'Legal Entity';
             DataClassification = CustomerContent;
         }
-        field(9; "Posted"; Boolean)
+        field(9; "Is Created"; Boolean)
         {
-            Caption = 'Posted';
+            Caption = 'Is Created';
             DataClassification = CustomerContent;
             Editable = false;
+        }
+        field(10; "Error Description"; Text[150])
+        {
+            Caption = 'Error Description';
+            DataClassification = CustomerContent;
         }
     }
     keys

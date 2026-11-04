@@ -7,7 +7,7 @@ page 50209 "E3 Posted Stock Cons. List"
     UsageCategory = Lists;
     CardPageId = "E3 Stock Consumption Card";
     Editable = false;
-    SourceTableView = sorting("Entry No.") where(Posted = filter(true));
+    SourceTableView = sorting("Entry No.") where("Is Created" = filter(true));
 
     layout
     {
@@ -49,6 +49,11 @@ page 50209 "E3 Posted Stock Cons. List"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the legal entity.';
+                }
+                field("Error Description"; Rec."Error Description")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the error description.';
                 }
             }
         }

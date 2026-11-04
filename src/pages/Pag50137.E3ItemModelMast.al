@@ -19,11 +19,16 @@ page 50137 "E3 Item Model Master"
                     ToolTip = 'Specifies the value of the Code field';
                     ApplicationArea = All;
                     AssistEdit = true;
+                    Editable = true;
+                    trigger OnValidate()
+                    begin
+                        Error('Manual Code entry is not allowed. Please select No. Series using the AssistEdit (...) button.');
+                    end;
 
                     trigger OnAssistEdit()
                     begin
                         if Rec.AssistEdit(xRec) then
-                            CurrPage.Update();
+                            CurrPage.Update(false);
                     end;
                 }
                 field(Name; Rec.Name)

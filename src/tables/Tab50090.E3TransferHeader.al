@@ -62,6 +62,11 @@ table 50090 "E3 Transfer Header"
             Caption = 'Is Posted';
             DataClassification = CustomerContent;
         }
+        field(12; "Error Description"; Text[150])
+        {
+            Caption = 'Error Description';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

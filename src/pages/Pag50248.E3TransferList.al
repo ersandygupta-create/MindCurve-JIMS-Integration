@@ -59,9 +59,15 @@ page 50248 "E3 Transfer List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies whether the transfer has been created.';
                 }
+                field("Error Description"; Rec."Error Description")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the error description.';
+                }
                 field("Is Posted"; Rec."Is Posted")
                 {
                     ApplicationArea = All;
+                    visible = false;
                     ToolTip = 'Specifies whether the transfer has been posted.';
                 }
             }

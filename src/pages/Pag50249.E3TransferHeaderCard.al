@@ -58,9 +58,15 @@ page 50249 "E3 Transfer Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies whether the transfer has been created.';
                 }
+                field("Error Description"; Rec."Error Description")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the error description.';
+                }
                 field("Is Posted"; Rec."Is Posted")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                     ToolTip = 'Specifies whether the transfer has been posted.';
                 }
             }
