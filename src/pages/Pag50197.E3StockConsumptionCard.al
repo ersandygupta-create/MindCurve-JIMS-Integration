@@ -50,6 +50,11 @@ page 50197 "E3 Stock Consumption Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the legal entity.';
                 }
+                field("Error Description"; Rec."Error Description")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the error description.';
+                }
             }
             part(Lines; "E3 Stock Consumption Line")
             {
@@ -76,7 +81,7 @@ page 50197 "E3 Stock Consumption Card"
                     E3PostStockConsumption: Codeunit "E3 Post Stock Consumption";
                 begin
                     E3PostStockConsumption.CreateItemJournal(Rec);
-                    Rec.Posted := true;
+                    Rec."Is Created" := true;
                     Rec.Modify(true);
                     Message(
                         'Item Journal has been created for Stock Consumption Document %1.',
@@ -88,19 +93,24 @@ page 50197 "E3 Stock Consumption Card"
                 Caption = 'Post Item Journal';
                 ApplicationArea = All;
                 Image = Post;
+                visible = false;
 
                 ToolTip = 'Posts the Item Journal created for the Stock Consumption Document.';
 
-                trigger OnAction()
-                var
-                    E3PostStockConsumption: Codeunit "E3 Post Stock Consumption";
-                begin
-                    E3PostStockConsumption.PostItemJournal(Rec);
+                // trigger OnAction()
+                // var
+                //     StockConsumptionHeader: Record "E3 Stock Consumption Header";
+                //     PostStockConsumption: Codeunit "E3 Post Stock Consumption";
+                // begin
+                //     StockConsumptionHeader.Reset();
+                //     StockConsumptionHeader.SetRange("Is Created", false);
 
-                    Message(
-                        'Item Journal has been posted for Stock Consumption Document %1.',
-                        Rec."Document No.");
-                end;
+                //     if StockConsumptionHeader.FindSet() then
+                //         repeat
+                //             Clear(PostStockConsumption);
+                //             PostStockConsumption.Run();
+                //         until StockConsumptionHeader.Next() = 0;
+                //end;
             }
         }
     }

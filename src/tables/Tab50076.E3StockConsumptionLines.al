@@ -148,25 +148,7 @@ table 50076 "E3 Stock Consumption Line"
         {
             Caption = 'D365 Unit Code';
             DataClassification = CustomerContent;
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
-            ValidateTableRelation = false;
-            trigger OnValidate()
-            var
-                DimensionValue: Record "Dimension Value";
-            begin
-                if "D365 Unit Code" = '' then begin
-                    "Unit Name" := '';
-                    exit;
-                end;
-
-                DimensionValue.SetRange("Global Dimension No.", 1);
-                DimensionValue.SetRange(Code, "D365 Unit Code");
-
-                if DimensionValue.FindFirst() then
-                    "Unit Name" := DimensionValue.Name
-                else
-                    "Unit Name" := '';
-            end;
+            TableRelation = "Unit of Measure".Code;
         }
         field(20; "Unit Name"; Text[50])
         {

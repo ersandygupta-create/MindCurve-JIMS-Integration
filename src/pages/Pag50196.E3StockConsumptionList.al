@@ -6,7 +6,7 @@ page 50196 "E3 Stock Consumption List"
     ApplicationArea = All;
     UsageCategory = Lists;
     CardPageId = "E3 Stock Consumption Card";
-    SourceTableView = sorting("Entry No.") where(Posted = filter(false));
+    SourceTableView = sorting("Entry No.") where("Is Created" = filter(false));
     layout
     {
         area(content)
@@ -47,6 +47,11 @@ page 50196 "E3 Stock Consumption List"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the legal entity.';
+                }
+                field("Error Description"; Rec."Error Description")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the error description.';
                 }
             }
         }

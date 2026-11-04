@@ -288,11 +288,8 @@ codeunit 50057 "E3 Indent Status Mgmt."
         RemarkText: Text;
         RejectQty: Decimal;
     begin
-        RemarkText :=
-            Format(IndentLine."Qty Per Purch. Unit of Measure") +
-            '*' +
-            Format(IndentLine."Requested Qty") +
-            ' PO QTY';
+        RemarkText := Format(IndentLine."Qty Per Purch. Unit of Measure" *
+        IndentLine."Requested Qty") + ' PO QTY';
 
         FreeQty := GetMatchingFreeQty(IndentLine);
 
