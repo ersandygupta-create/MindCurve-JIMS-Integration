@@ -228,13 +228,13 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
     }
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     begin
-        AmountEdit();
+        //AmountEdit();
 
-        // if isEdit then begin
-        //     Error('You can not create a new record.');
-        //     exit(false); // Prevents the new line from being created
-        //     CurrPage.Update(false);
-        // end;
+        if isEdit = false then begin
+            Error('You can not create a new record.');
+            exit(false); // Prevents the new line from being created
+            CurrPage.Update(false);
+        end;
 
 
         exit(true);
@@ -244,6 +244,11 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
     begin
         blnEdit := false;
         isEdit := true;
+
+        rec.Setfilter("VLE Doc No.", '<>%1', '');
+        if rec.FindFirst() then
+            InsertRow();
+
 
     end;
 
@@ -261,12 +266,12 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
 
     end;
 
-    trigger OnNewRecord(BelowxRec: Boolean)
-    begin
-        // Allow the user to enter a new payment journal line.
-        IsEditable := true;
-        // isEdit := true;
-    end;
+    // trigger OnNewRecord(BelowxRec: Boolean)
+    // begin
+    //     // Allow the user to enter a new payment journal line.
+    //     // IsEditable := true;
+    //     // isEdit := true;
+    // end;
 
     local procedure AmountEdit()
     var
@@ -293,19 +298,20 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         line: Record "Gen. Journal Line";
     begin
 
-        line.Reset();
-        line.SetRange("Document No", rec."Document No");
-        if line.Find('-') then begin
-            if (line."VLE Doc No." <> '') then begin
-                vendLedgerEntry.Reset();
-                vendLedgerEntry.SetRange("Document No.", line."VLE Doc No.");
-                if vendLedgerEntry.Find('-') then
-                    isEdit := false;
-            end
-        end
+        // line.Reset();
+        // line.SetRange("Document No", rec."Document No");
+        // if line.Find('-') then begin
+        //     if (line."VLE Doc No." <> '') then begin
+        //         vendLedgerEntry.Reset();
+        //         vendLedgerEntry.SetRange("Document No.", line."VLE Doc No.");
+        //         if vendLedgerEntry.Find('-') then
+        //             isEdit := false;
+        //     end
+        // end
 
-        else
-            isEdit := true;
+        // else
+        //isEdit := true;
+        isedit := false;
 
     end;
 
