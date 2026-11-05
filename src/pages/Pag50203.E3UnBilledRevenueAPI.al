@@ -127,6 +127,10 @@ page 50203 "E3 UnBilled Revenue API"
             field(validationHisKey; Rec."Validation HIS Key")
             {
                 Caption = 'Validation HIS Key';
+                trigger OnValidate()
+                begin
+                    DuplicateCheck();
+                end;
             }
             field(regNo; Rec."Reg. No.")
             {
@@ -142,4 +146,12 @@ page 50203 "E3 UnBilled Revenue API"
             }
         }
     }
+    local procedure DuplicateCheck()
+    var
+        RevenueStaging: Record "E3 UnBilled Service Revenue";
+    begin
+        RevenueStaging.SetRange("Validation HIS Key", Rec."Validation HIS Key");
+        if not RevenueStaging.IsEmpty then
+            error('Duplicate Entry');
+    end;
 }

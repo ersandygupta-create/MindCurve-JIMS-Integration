@@ -110,8 +110,8 @@ codeunit 50047 "E3 Post Stock Consumption"
             ItemJournalLine.Validate("Unit Cost", StockConsumptionLine."Unit Cost");
             ItemJournalLine.Validate("Posting Date", StockConsumptionHeader."Entry Date");
             ItemJournalLine.Validate("Document No.", StockConsumptionHeader."Document No.");
-            if StockConsumptionLine."D365 Unit Code" <> '' then
-                ItemJournalLine.Validate("Shortcut Dimension 1 Code", StockConsumptionLine."D365 Unit Code");
+            if StockConsumptionLine."Business Unit" <> '' then
+                ItemJournalLine.Validate("Shortcut Dimension 1 Code", StockConsumptionLine."Business Unit");
             if StockConsumptionLine."D365 From Department Code" <> '' then
                 ItemJournalLine.Validate("Location Code", StockConsumptionLine."D365 From Department Code");
             if ItemJournalLine."Location Code" <> '' then
@@ -546,7 +546,7 @@ codeunit 50047 "E3 Post Stock Consumption"
         IntegrationSetup: Record "E3 HIS Integartion Setup";
     begin
         if not IntegrationSetup.Get() then
-            exit;
+            Error('E3 HIS Integration Setup record not found.');
 
         StockConsumptionHeader.Reset();
         StockConsumptionHeader.SetRange("Is Created", false);
@@ -564,6 +564,7 @@ codeunit 50047 "E3 Post Stock Consumption"
     AutoPostStockConsumption: Boolean)
     var
         ErrorDescription: Text;
+        CleanupError: Text;
     begin
         ClearLastError();
 
@@ -575,17 +576,39 @@ codeunit 50047 "E3 Post Stock Consumption"
                 StockConsumptionHeader,
                 '');
         end else begin
+            // Capture the original document processing/posting error.
             ErrorDescription := GetLastErrorText();
 
-            // Remove incomplete journal lines after an error.
-            CleanupStockConsumptionJournalLines(
-                StockConsumptionHeader);
+            // Attempt cleanup without allowing cleanup failure
+            // to stop processing of the next document.
+            ClearLastError();
 
-            // Keep Is Created = FALSE and save the error.
+            if not TryCleanupStockConsumptionJournalLines(
+                StockConsumptionHeader)
+            then begin
+                CleanupError := GetLastErrorText();
+
+                if CleanupError <> '' then
+                    ErrorDescription :=
+                        CopyStr(
+                            ErrorDescription + ' | Cleanup Error: ' + CleanupError,
+                            1,
+                            MaxStrLen(StockConsumptionHeader."Error Description"));
+            end;
+
+            // Update only the current document's error.
             UpdateStockConsumptionError(
                 StockConsumptionHeader,
                 ErrorDescription);
         end;
+    end;
+
+    [TryFunction]
+    local procedure TryCleanupStockConsumptionJournalLines(
+    var StockConsumptionHeader: Record "E3 Stock Consumption Header")
+    begin
+        CleanupStockConsumptionJournalLines(
+            StockConsumptionHeader);
     end;
 
     local procedure CleanupStockConsumptionJournalLines(

@@ -23,6 +23,11 @@ page 50260 "E3 Pharmacy Sale Setup"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the document type.';
                 }
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the shortcut dimension 1 code.';
+                }
                 field("Account Type"; Rec."Account Type")
                 {
                     ApplicationArea = All;
