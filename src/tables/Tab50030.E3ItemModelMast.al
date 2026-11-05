@@ -11,9 +11,16 @@ table 50030 "E3 Item Model Master"
             Caption = 'Code';
             DataClassification = CustomerContent;
             trigger OnValidate()
+            var
+                InventorySetup: Record "Inventory Setup";
+                NoSeries: Codeunit "No. Series";
             begin
-                if (xRec.Code <> '') and (Rec.Code <> xRec.Code) then
-                    Error('Code cannot be modified once it has been assigned.');
+                if Code <> xRec.Code then begin
+                    InventorySetup.Get();
+                    InventorySetup.TestField("Item Model Nos.");
+                    NoSeries.TestManual(InventorySetup."Item Model Nos.");
+                    "No. Series" := '';
+                end;
             end;
         }
         field(2; Name; Text[60])
@@ -46,7 +53,6 @@ table 50030 "E3 Item Model Master"
             Caption = 'First Sent';
             DataClassification = CustomerContent;
         }
-
     }
     keys
     {
@@ -55,6 +61,7 @@ table 50030 "E3 Item Model Master"
             Clustered = true;
         }
     }
+
     trigger OnInsert()
     var
         InventorySetup: Record "Inventory Setup";
@@ -65,19 +72,19 @@ table 50030 "E3 Item Model Master"
             Error('User Setup is not configured for user %1.', UserId());
 
         if not UserSetup."Item Sub Table Insert" then
-            Error(
-                'You do not have permission to create a new Item Model record. ' +
-                'Please contact your administrator.');
+            Error('You do not have permission to create a new Item Model record. Please contact your administrator.');
 
-        TestField(Name);
+
+
         if Code = '' then begin
             InventorySetup.Get();
             InventorySetup.TestField("Item Model Nos.");
-
             "No. Series" := InventorySetup."Item Model Nos.";
-            Code := NoSeries.GetNextNo("No. Series", Today, true);
-
+            // Pass false for the third parameter (increment) if you want to test, 
+            // but standard usage uses true only upon actual assignment.
+            Code := NoSeries.GetNextNo("No. Series", WorkDate(), true);
         end;
+        // TestField(Name);
     end;
 
     trigger OnModify()
@@ -88,26 +95,25 @@ table 50030 "E3 Item Model Master"
             Error('User Setup is not configured for user %1.', UserId());
 
         if not UserSetup."Item Sub Table Modify" then
-            Error(
-                'You do not have permission to modify an Item Model record. ' +
-                'Please contact your administrator.');
+            Error('You do not have permission to modify an Item Model record. Please contact your administrator.');
     end;
 
     procedure AssistEdit(OldItemModel: Record "E3 Item Model Master"): Boolean
     var
         InventorySetup: Record "Inventory Setup";
         NoSeries: Codeunit "No. Series";
+        TempCode: Code[20];
     begin
         InventorySetup.Get();
         InventorySetup.TestField("Item Model Nos.");
 
         if NoSeries.LookupRelatedNoSeries(InventorySetup."Item Model Nos.", OldItemModel."No. Series", "No. Series") then begin
-            Code := NoSeries.GetNextNo("No. Series", Today, true);
-            exit(true);
+            TempCode := NoSeries.GetNextNo("No. Series", WorkDate(), true);
+            if TempCode <> '' then begin
+                Code := TempCode;
+                exit(true);
+            end;
         end;
-
         exit(false);
     end;
-
 }
-

@@ -21,17 +21,11 @@ page 50137 "E3 Item Model Master"
                     ApplicationArea = All;
                     AssistEdit = true;
                     Editable = true;
-                    trigger OnValidate()
-                    begin
-                        if Rec.Code <> xRec.Code then
-                            Error(
-                                'You cannot enter the Code manually. Use the AssistEdit button to select a number series.');
-                    end;
 
                     trigger OnAssistEdit()
                     begin
                         if Rec.AssistEdit(xRec) then
-                            CurrPage.Update(false);
+                            CurrPage.Update(true);
                     end;
                 }
                 field(Name; Rec.Name)
@@ -61,6 +55,7 @@ page 50137 "E3 Item Model Master"
             }
         }
     }
+
     actions
     {
         area(Processing)
@@ -74,6 +69,7 @@ page 50137 "E3 Item Model Master"
                 PromotedIsBig = true;
                 PromotedCategory = Process;
                 Image = SendTo;
+
                 trigger OnAction()
                 var
                     E3ItemModelMgmt: Codeunit "E3 Item Model Mgmt.";
@@ -81,7 +77,6 @@ page 50137 "E3 Item Model Master"
                     SentCount: Integer;
                     FailedCount: Integer;
                 begin
-                    // Get all records selected on the list page
                     CurrPage.SetSelectionFilter(ItemModelMst);
 
                     if ItemModelMst.FindSet() then begin
@@ -101,13 +96,8 @@ page 50137 "E3 Item Model Master"
                     if FailedCount = 0 then
                         Message('%1 record(s) sent successfully.', SentCount)
                     else
-                        Message(
-                            '%1 record(s) sent successfully.\%2 record(s) failed.',
-                            SentCount,
-                            FailedCount
-                        );
+                        Message('%1 record(s) sent successfully.\%2 record(s) failed.', SentCount, FailedCount);
                 end;
-
             }
         }
     }
