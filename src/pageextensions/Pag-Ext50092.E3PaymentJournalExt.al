@@ -226,52 +226,54 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
             }
         }
     }
-    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
-    begin
-        //AmountEdit();
-
-        if isEdit = false then begin
-            Error('You can not create a new record.');
-            exit(false); // Prevents the new line from being created
-            CurrPage.Update(false);
-        end;
-
-
-        exit(true);
-    end;
 
     trigger OnOpenPage()
+    var
+        RecCopy: Record 81; // Replace with your actual table name
     begin
         blnEdit := false;
         isEdit := true;
+        RecCopy.Copy(Rec);
+        IsEditable := true;
+        isedit := true;
+        // Loop through the records to check your condition
+        if RecCopy.FindSet() then
+            repeat
+                // Check if your field is not blank (e.g., YourField <> '')
+                if RecCopy."VLE Doc No." <> '' then begin
+                    // Set IsEditable to false if the condition is met
+                    restrict := true;
+                    exit;
+                end;
 
-        rec.Setfilter("VLE Doc No.", '<>%1', '');
-        if rec.FindFirst() then
-            InsertRow();
-
-
+            until RecCopy.Next() = 0;
     end;
 
     trigger OnAfterGetRecord()
     begin
         UpdateCardPaymentAction();
         AmountEdit();
-
+        SetPageEditable();
     end;
 
     trigger OnAfterGetCurrRecord()
     begin
         UpdateCardPaymentAction();
         AmountEdit();
-
+        SetPageEditable();
     end;
 
-    // trigger OnNewRecord(BelowxRec: Boolean)
-    // begin
-    //     // Allow the user to enter a new payment journal line.
-    //     // IsEditable := true;
-    //     // isEdit := true;
-    // end;
+    trigger OnNewRecord(BelowxRec: Boolean)
+    begin
+        // Allow the user to enter a new payment journal line.
+        IsEditable := true;
+        isEdit := true;
+        if restrict then begin
+            message('You cannot create a new payment journal line because there is already a line with a Bank pay later.');
+            Error('You cannot create a new payment journal line because there is already a line with a non-blank "VLE Doc No." field.');
+        end;
+
+    end;
 
     local procedure AmountEdit()
     var
@@ -289,29 +291,6 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         end
         else
             isEdit := true;
-
-    end;
-
-    local procedure InsertRow()
-    var
-        vendLedgerEntry: Record "Vendor Ledger Entry";
-        line: Record "Gen. Journal Line";
-    begin
-
-        // line.Reset();
-        // line.SetRange("Document No", rec."Document No");
-        // if line.Find('-') then begin
-        //     if (line."VLE Doc No." <> '') then begin
-        //         vendLedgerEntry.Reset();
-        //         vendLedgerEntry.SetRange("Document No.", line."VLE Doc No.");
-        //         if vendLedgerEntry.Find('-') then
-        //             isEdit := false;
-        //     end
-        // end
-
-        // else
-        //isEdit := true;
-        isedit := false;
 
     end;
 
@@ -340,7 +319,10 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         IsEditable :=
             (Rec.Status <> Rec.Status::"Pending Approval") and
             (Rec.Status <> Rec.Status::Approved);
+        if rec."VLE Doc No." <> '' then
+            IsEditable := false;
     end;
+
 
     var
         Vendor: Record Vendor;
@@ -349,4 +331,5 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         blnEdit: Boolean;
         isEdit: Boolean;
         IsEditable: Boolean;
+        restrict: boolean;
 }
