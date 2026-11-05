@@ -146,6 +146,11 @@ page 50203 "E3 UnBilled Revenue API"
             }
         }
     }
+    trigger OnNewRecord(BelowxRec: Boolean)
+    begin
+        DuplicateCheck();
+    end;
+
     local procedure DuplicateCheck()
     var
         RevenueStaging: Record "E3 UnBilled Service Revenue";
