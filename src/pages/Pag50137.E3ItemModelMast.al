@@ -6,6 +6,7 @@ page 50137 "E3 Item Model Master"
     DeleteAllowed = false;
     SourceTable = "E3 Item Model Master";
     Editable = true;
+    DelayedInsert = true;
     Caption = 'Item Model';
 
     layout
@@ -22,7 +23,9 @@ page 50137 "E3 Item Model Master"
                     Editable = true;
                     trigger OnValidate()
                     begin
-                        Error('Manual Code entry is not allowed. Please select No. Series using the AssistEdit (...) button.');
+                        if Rec.Code <> xRec.Code then
+                            Error(
+                                'You cannot enter the Code manually. Use the AssistEdit button to select a number series.');
                     end;
 
                     trigger OnAssistEdit()

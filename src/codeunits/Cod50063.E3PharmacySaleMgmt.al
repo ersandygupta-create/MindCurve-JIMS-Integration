@@ -87,14 +87,18 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
             "Document Type",
             PharmacySaleHeader."Document Type");
         PharmacySaleSetup.SetRange(
+            "Shortcut Dimension 1 Code",
+            PharmacySaleHeader."Business Unit");
+        PharmacySaleSetup.SetRange(
             "Account Type",
             PharmacySaleSetup."Account Type"::Customer);
 
         if not PharmacySaleSetup.FindFirst() then
             Error(
-                'Customer setup not found in E3 Pharmacy Sale Setup. Entry Type: %1, Document Type: %2, Account Type: Customer.',
+                'Pharmacy Sale Setup not found. Entry Type: %1, Document Type: %2, BU Code: %3, Account Type: Customer.',
                 PharmacySaleHeader."Entry Type",
-                PharmacySaleHeader."Document Type");
+                PharmacySaleHeader."Document Type",
+                PharmacySaleHeader."Business Unit");
 
         PharmacySaleSetup.TestField("Account No.");
 
@@ -218,7 +222,7 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
             SalesLine.Validate("No.", PharmacySaleLine."D365 Item Code");
             SalesLine.Validate("Unit of Measure Code", PharmacySaleLine."D365 Unit Code");
             SalesLine.Validate(Quantity, PharmacySaleLine.Quantity);
-            SalesLine.Validate("Unit Price", PharmacySaleLine."OH Amt Net");
+            SalesLine.Validate("Unit Price", PharmacySaleLine."OH Amt Net" / PharmacySaleLine.Quantity);
             if PharmacySaleLine."Business Unit" <> '' then
                 SalesLine.Validate("Shortcut Dimension 1 Code", PharmacySaleLine."Business Unit");
             if PharmacySaleHeader."Location Code" <> '' then

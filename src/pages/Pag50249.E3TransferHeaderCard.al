@@ -110,6 +110,9 @@ page 50249 "E3 Transfer Card"
                         exit;
 
                     TransferJournalMgmt.CreateItemReclassificationJournal(Rec."Document Number");
+                    Rec."Is Created" := true;
+                    Rec.Modify(true);
+                    message('Item Reclassification Journal created for Transfer %1.', Rec."Document Number");
 
                     CurrPage.Update(false);
                 end;

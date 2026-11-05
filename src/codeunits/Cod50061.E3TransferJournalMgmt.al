@@ -359,7 +359,6 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         if not TransferHeader.FindFirst() then
             Error('Transfer Document %1 does not exist.', DocumentNo);
 
-        // Is Created now means creation AND posting completed successfully.
         if TransferHeader."Is Created" then
             exit;
 
@@ -377,22 +376,24 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
                 JournalBatchName,
                 JournalTemplateName);
 
-        // Check whether journal lines already exist for this document.
+        // Validate transfer lines before journal creation or posting.
+        ValidateTransferLotAvailability(DocumentNo);
+
+        // Find existing journal lines for this document.
         ItemJournalLine.Reset();
         ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
         ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
         ItemJournalLine.SetRange("Document No.", DocumentNo);
 
-        // Create journal lines only if they do not already exist.
+        // Create journal lines only when they do not already exist.
         if ItemJournalLine.IsEmpty() then
             CreateItemReclassificationJournal(DocumentNo);
 
-        // If auto posting is disabled, leave Is Created = FALSE.
-        // Existing journal lines will be reused when auto posting is enabled.
+        // If auto posting is disabled, do not post.
         if not AutoTransferJournal then
             exit;
 
-        // Get the current document's journal lines.
+        // Re-read existing or newly created journal lines.
         ItemJournalLine.Reset();
         ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
         ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
@@ -403,12 +404,12 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
                 'No Item Journal Lines found for Document No. %1.',
                 DocumentNo);
 
-        // Post the journal.
+        // Post existing or newly created journal lines.
         Codeunit.Run(
             Codeunit::"Item Jnl.-Post Batch",
             ItemJournalLine);
 
-        // Mark completed ONLY after successful posting.
+        // Mark completed only after successful posting.
         TransferHeader."Is Created" := true;
         TransferHeader."Error Description" := '';
         TransferHeader.Modify(true);
@@ -509,17 +510,18 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
                         'Item %1 does not exist in Business Central.',
                         TransferLine."D365 Item Code");
 
-                // Case 1: Item Tracking Code is blank.
+                // Item Tracking Code is blank.
+                // Batch No. must also be blank.
                 if Item."Item Tracking Code" = '' then begin
                     if TransferLine."Batch No." <> '' then
                         Error(
-                            'Batch No. %1 must be blank because Item Tracking Code is not configured for item %2, Document No. %3, Line No. %4.',
+                            'Batch No. %1 is not allowed because Item Tracking Code is blank for item %2, Document No. %3, Line No. %4.',
                             TransferLine."Batch No.",
                             Item."No.",
                             DocumentNo,
                             TransferLine."Line Number");
                 end else begin
-                    // Case 2: Item Tracking Code is enabled.
+                    // Item Tracking Code is configured.
                     if TransferLine."Batch No." = '' then
                         Error(
                             'Batch No. is required for tracked item %1, Document No. %2, Line No. %3.',
@@ -527,7 +529,6 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
                             DocumentNo,
                             TransferLine."Line Number");
 
-                    // Check existing lot quantity.
                     CheckExistingLotAvailability(
                         Item."No.",
                         TransferLine."D365 From Department Code",
