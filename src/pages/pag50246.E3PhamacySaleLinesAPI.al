@@ -56,24 +56,4 @@ page 50246 "E3 Pharmacy Sales Lines API"
             }
         }
     }
-    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
-    begin
-        DuplicateLineCheck();
-    end;
-
-    local procedure DuplicateLineCheck()
-    var
-        PharmacySaleLine: Record "E3 Pharmacy Sale Lines";
-    begin
-        PharmacySaleLine.SetRange("Entry Type", Rec."Entry Type");
-        PharmacySaleLine.SetRange("Document Type", Rec."Document Type");
-        PharmacySaleLine.SetRange("Document Number", Rec."Document Number");
-        PharmacySaleLine.SetRange("Line Number", Rec."Line Number");
-
-        if PharmacySaleLine.FindFirst() then
-            Error(
-                'Duplicate Pharmacy Sale Line. Document %1, Line %2.',
-                Rec."Document Number",
-                Rec."Line Number");
-    end;
 }
