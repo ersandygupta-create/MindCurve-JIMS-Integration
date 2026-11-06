@@ -24,10 +24,6 @@ page 50245 "E3 Pharmacy Sales API"
                 field(validationKey; Rec."Validation Key")
                 {
                     Caption = 'Validation Key';
-                    trigger OnValidate()
-                    begin
-                        DuplicateCheck();
-                    end;
                 }
                 field(entryNo; Rec."Entry No.") { Caption = 'Entry No.'; }
                 field(entryType; Rec."Entry Type") { Caption = 'Entry Type'; }
@@ -75,7 +71,7 @@ page 50245 "E3 Pharmacy Sales API"
 
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     begin
-
+        DuplicateCheck();
     end;
 
     trigger OnNewRecord(BelowxRec: Boolean)
@@ -89,8 +85,9 @@ page 50245 "E3 Pharmacy Sales API"
     begin
         PharmacySaleHdr.SetRange("Entry Type", Rec."Entry Type");
         PharmacySaleHdr.SetRange("Document Type", Rec."Document Type");
-        PharmacySaleHdr.SetRange("Entry Number", Rec."Entry Number");
-        if not PharmacySaleHdr.IsEmpty then
-            error('Duplicate Entry');
+        PharmacySaleHdr.SetRange("Document Number", Rec."Document Number");
+
+        if PharmacySaleHdr.FindFirst() then
+            Error('Pharmacy Sale Document %1 already exists.', Rec."Document Number");
     end;
 }
