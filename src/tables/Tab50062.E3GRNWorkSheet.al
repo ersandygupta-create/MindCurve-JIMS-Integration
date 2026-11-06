@@ -852,7 +852,6 @@ table 50062 "E3 GRN Work Sheet"
 
                 CalculateLandedValue();
                 "Receipt Created" := false;
-                "Lot Assigned" := false;
                 Insert(true);
             until PurchLine.Next() = 0;
     end;

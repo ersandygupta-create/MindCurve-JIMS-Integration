@@ -493,6 +493,8 @@ page 50169 "E3 GRN Work Sheet"
                     SelectedGRNWorksheet: Record "E3 GRN Work Sheet";
                     TempPostedSelectedGRNWorksheet: Record "E3 GRN Work Sheet" temporary;
                     GRNToReceive: Record "E3 GRN Work Sheet";
+                    TempConsolidateLine: record "E3 GRN Work Sheet" temporary;
+                    postReceipt: Boolean;
                     worksheetpage: page "E3 GRN Work Sheet List";
                     GRNWorkSheetRec: Record "E3 GRN Work Sheet Header";
                     ConsolidateLine: Record "E3 GRN Work Sheet";
@@ -529,7 +531,7 @@ page 50169 "E3 GRN Work Sheet"
                     //GRNWorksheet := SelectedGRNWorksheet;
                     GRNToReceive.Reset();
                     GRNToReceive.SetRange("PO No.", SelectedGRNWorksheet."PO No.");
-                    GRNToReceive.SetFilter("Receipt Created", '%1', false);
+                    // GRNToReceive.SetFilter("Receipt Created", '%1', false);
                     GRNToReceive.SetFilter("Lot Assigned", '%1', true);
                     GRNToReceive.SetCurrentKey("PO No.", "Orig. Line No.");
 
@@ -553,7 +555,7 @@ page 50169 "E3 GRN Work Sheet"
                             ConsolidateLine.SetRange("PO No.", GRNToReceive."PO No.");
                             ConsolidateLine.SetRange("Orig. Line No.", GRNToReceive."Orig. Line No.");
                             ConsolidateLine.SetFilter("Lot Assigned", '%1', True);
-                            ConsolidateLine.SetFilter("Receipt Created", '%1', false);
+                            // ConsolidateLine.SetFilter("Receipt Created", '%1', false);
                             ConsolidateLine.CalcSums("Receipt Qty");
 
 
@@ -577,32 +579,49 @@ page 50169 "E3 GRN Work Sheet"
                                 TempPostedSelectedGRNWorksheet.Insert();
 
                             end;
-
+                            // TempConsolidateLine := GRNToReceive;
+                            // if not TempConsolidateLine.Insert() then
+                            //     TempConsolidateLine.Modify();
+                            TempConsolidateLine.Init();
+                            TempConsolidateLine."PO No." := GRNToReceive."PO No.";
+                            TempConsolidateLine."Line No." := GRNToReceive."Line No.";
+                            TempConsolidateLine."Orig. Line No." := GRNToReceive."Orig. Line No.";
+                            TempConsolidateLine.Insert();
+                            postReceipt := true;
                         until GRNToReceive.Next() = 0;
+                    if postReceipt then begin
+                        POList.Reset();
+                        POList.SetRange("Document Type", POList."Document Type"::Order);
 
-                    POList.Reset();
-                    POList.SetRange("Document Type", POList."Document Type"::Order);
+                        if TempPostedSelectedGRNWorksheet.FindSet() then
+                            repeat
+                                if POListNo <> TempPostedSelectedGRNWorksheet."PO No." then begin
+                                    POListNo := TempPostedSelectedGRNWorksheet."PO No.";
+                                    if POList.Get(POList."Document Type"::Order, TempPostedSelectedGRNWorksheet."PO No.")
+                                    then begin
 
-                    if TempPostedSelectedGRNWorksheet.FindSet() then
-                        repeat
-                            if POListNo <> TempPostedSelectedGRNWorksheet."PO No." then begin
-                                POListNo := TempPostedSelectedGRNWorksheet."PO No.";
-                                if POList.Get(POList."Document Type"::Order, TempPostedSelectedGRNWorksheet."PO No.")
-                                then begin
+                                        POList.Receive := true;
+                                        POList.Invoice := false;
 
-                                    POList.Receive := true;
-                                    POList.Invoice := false;
+                                        Codeunit.Run(Codeunit::"Purch.-Post", POList);
+                                        PostedReceiptNo := POList."Last Receiving No.";
 
-                                    Codeunit.Run(Codeunit::"Purch.-Post", POList);
-                                    PostedReceiptNo := POList."Last Receiving No.";
-
+                                    end;
                                 end;
-                            end;
-                        //  SelectedGRNWorksheet.Delete(false)
-                        until TempPostedSelectedGRNWorksheet.Next() = 0;
+                            //  SelectedGRNWorksheet.Delete(false)
+                            until TempPostedSelectedGRNWorksheet.Next() = 0;
+
+                    end;
 
                     CopyPostedReceiptToGRN(TempPostedSelectedGRNWorksheet);
-                    deletePostedGrnWorksheet(TempPostedSelectedGRNWorksheet."PO No.");
+                    if TempConsolidateLine.FindSet() then
+                        repeat
+                            // Use .Get() with your primary key fields ("PO No.", "Line No.", etc.) 
+                            // to fetch and delete the real record safely
+                            if GRNToReceive.Get(TempConsolidateLine."PO No.", TempConsolidateLine."Line No.", TempConsolidateLine."Orig. Line No.") then
+                                GRNToReceive.Delete(true); // Pass 'true' to trigger any deletion logic/triggers
+                        until TempConsolidateLine.Next() = 0;
+                    //deletePostedGrnWorksheet(TempPostedSelectedGRNWorksheet."PO No.");
                     CurrPage.Update(false);
 
                     if Confirm('Purchase Receipt %1 posted successfully and GRN data has been created. Do you want to open the E3 GRN Work Sheet List?',
@@ -612,12 +631,7 @@ page 50169 "E3 GRN Work Sheet"
 
 
                         GRNWorkSheetRec.Reset();
-
-                        // Filter by Posted Receipt No or PO No as needed
-                        //GRNWorkSheetRec.SetRange("Document ID", SelectedGRNWorksheet."PO No.");
-                        // OR if you filter by receipt number:
                         GRNWorkSheetRec.SetRange("Document ID", PostedReceiptNo);
-
                         worksheetpage.SetTableView(GRNWorkSheetRec);
                         worksheetpage.Run();
                     end;
