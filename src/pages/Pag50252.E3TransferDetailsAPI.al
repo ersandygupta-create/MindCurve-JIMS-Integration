@@ -26,6 +26,10 @@ page 50252 "E3 Transfer Header API"
                 }
                 field(entryNumber; Rec."Entry Number")
                 {
+                    trigger OnValidate()
+                    begin
+                        DuplicateCheck();
+                    end;
                 }
                 field(vDate; Rec.v_Date)
                 {
@@ -76,5 +80,16 @@ page 50252 "E3 Transfer Header API"
             Error('Transfer Header with Entry Number %1 already exists.', Rec."Entry Number");
 
         exit(true);
+    end;
+
+    local procedure DuplicateCheck()
+    var
+        TrfHeader: Record "E3 Transfer Header";
+    begin
+        TrfHeader.SetRange("Entry Type", Rec."Entry Type");
+        TrfHeader.SetRange("Document Type", Rec."Document Type");
+        TrfHeader.SetRange("Entry Number", Rec."Entry Number");
+        if TrfHeader.Count >= 1 then
+            error('Duplicate Entry');
     end;
 }
