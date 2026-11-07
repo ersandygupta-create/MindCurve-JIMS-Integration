@@ -168,11 +168,11 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         }
         modify("Cheque No.")
         {
-            Editable = IsEditable;
+            Editable = ChequeFieldsEditable;
         }
         modify("Cheque Date")
         {
-            Editable = IsEditable;
+            Editable = ChequeFieldsEditable;
         }
     }
 
@@ -319,6 +319,11 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         IsEditable :=
             (Rec.Status <> Rec.Status::"Pending Approval") and
             (Rec.Status <> Rec.Status::Approved);
+
+        ChequeFieldsEditable :=
+        (Rec.Status <> Rec.Status::"Pending Approval") and
+        (Rec.Status <> Rec.Status::Approved);
+
         if rec."VLE Doc No." <> '' then
             IsEditable := false;
     end;
@@ -332,4 +337,5 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         isEdit: Boolean;
         IsEditable: Boolean;
         restrict: boolean;
+        ChequeFieldsEditable: Boolean;
 }
