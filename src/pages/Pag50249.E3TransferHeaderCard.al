@@ -5,6 +5,7 @@ page 50249 "E3 Transfer Card"
     Caption = 'Transfer Card';
     ApplicationArea = All;
     UsageCategory = None;
+    DeleteAllowed = false;
 
     layout
     {
@@ -12,7 +13,7 @@ page 50249 "E3 Transfer Card"
         {
             group(General)
             {
-                //Editable = IsPageEditable;
+                Editable = false;
                 field("Entry Type"; Rec."Entry Type")
                 {
                     ApplicationArea = All;
@@ -73,7 +74,7 @@ page 50249 "E3 Transfer Card"
             part(TransferLines; "E3 Transfer Lines")
             {
                 ApplicationArea = All;
-                Editable = IsPageEditable;
+                Editable = true;
                 SubPageLink =
                     "Entry Type" = field("Entry Type"),
                     "Entry Number" = field("Entry Number");

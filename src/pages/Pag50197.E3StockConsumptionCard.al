@@ -6,6 +6,7 @@ page 50197 "E3 Stock Consumption Card"
     PageType = Document;
     DelayedInsert = true;
     RefreshOnActivate = true;
+    DeleteAllowed = false;
 
     layout
     {
@@ -14,7 +15,7 @@ page 50197 "E3 Stock Consumption Card"
             group(General)
             {
                 Caption = 'General';
-
+                Editable = false;
                 field("Entry Type"; Rec."Entry Type")
                 {
                     ApplicationArea = All;
@@ -60,6 +61,7 @@ page 50197 "E3 Stock Consumption Card"
             {
                 ApplicationArea = Basic, Suite;
                 UpdatePropagation = Both;
+                Editable = true;
                 SubPageLink = "Document No." = field("Document No."), "Entry Type" = field("Entry Type");
             }
         }
