@@ -68,6 +68,11 @@ table 50093 "E3 Pharmacy Sale Setup"
             ValidateTableRelation = false;
             DataClassification = CustomerContent;
         }
+        field(8; Exempted; Boolean)
+        {
+            Caption = 'Exempted';
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

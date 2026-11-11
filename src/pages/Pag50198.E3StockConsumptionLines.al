@@ -29,6 +29,23 @@ page 50198 "E3 Stock Consumption Line"
                     Editable = false;
                     ToolTip = 'Specifies the item name.';
                 }
+                field(Quantity; Rec.Quantity)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the consumed quantity.';
+                }
+                field("Unit Cost"; Rec."Unit Cost")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the Unit Cost.';
+                }
+                field("Batch No."; Rec."Batch No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the batch number.';
+                }
                 field("Line No."; Rec."Line No.")
                 {
                     ApplicationArea = All;
@@ -64,23 +81,6 @@ page 50198 "E3 Stock Consumption Line"
                     ApplicationArea = All;
                     Editable = false;
                     ToolTip = 'Specifies the item type.';
-                }
-                field(Quantity; Rec.Quantity)
-                {
-                    ApplicationArea = All;
-                    Editable = false;
-                    ToolTip = 'Specifies the consumed quantity.';
-                }
-                field("Unit Cost"; Rec."Unit Cost")
-                {
-                    ApplicationArea = All;
-                    Editable = false;
-                    ToolTip = 'Specifies the Unit Cost.';
-                }
-                field("Batch No."; Rec."Batch No.")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the batch number.';
                 }
                 field("Expiry Date"; Rec."Expiry Date")
                 {

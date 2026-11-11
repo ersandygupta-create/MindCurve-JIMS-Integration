@@ -5,6 +5,7 @@ page 50243 "E3 Pharmacy Sales Card"
     SourceTable = "E3 Pharmacy Sale Header";
     ApplicationArea = All;
     PageType = Document;
+    DeleteAllowed = false;
 
     layout
     {
@@ -13,7 +14,7 @@ page 50243 "E3 Pharmacy Sales Card"
             group(General)
             {
                 Caption = 'General';
-
+                Editable = false;
                 field("Entry No."; Rec."Entry No.")
                 {
                     ApplicationArea = All;
@@ -110,6 +111,11 @@ page 50243 "E3 Pharmacy Sales Card"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the bill time.';
+                }
+                field("Error Description"; Rec."Error Description")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the error description.';
                 }
             }
 
@@ -215,6 +221,8 @@ page 50243 "E3 Pharmacy Sales Card"
                 Image = NewDocument;
                 Visible = IsPageEditable;
                 Enabled = IsPageEditable;
+                Promoted = true;
+                PromotedCategory = Process;
 
                 trigger OnAction()
                 var

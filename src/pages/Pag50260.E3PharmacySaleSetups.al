@@ -44,6 +44,11 @@ page 50260 "E3 Pharmacy Sale Setup"
                     ToolTip = 'Specifies the account name.';
                     Editable = false;
                 }
+                field(Exempted; Rec.Exempted)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the item is exempted.';
+                }
             }
         }
     }

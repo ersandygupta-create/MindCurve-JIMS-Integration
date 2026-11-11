@@ -26,6 +26,17 @@ page 50250 "E3 Transfer Lines"
                     Editable = false;
                     ToolTip = 'Specifies the item name.';
                 }
+                field(Quantity; Rec.Quantity)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    ToolTip = 'Specifies the transfer quantity.';
+                }
+                field("Batch No."; Rec."Batch No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the batch number.';
+                }
                 field("Entry Type"; Rec."Entry Type")
                 {
                     ApplicationArea = All;
@@ -103,17 +114,6 @@ page 50250 "E3 Transfer Lines"
                     ApplicationArea = All;
                     Editable = false;
                     ToolTip = 'Specifies the item type.';
-                }
-                field("Batch No."; Rec."Batch No.")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the batch number.';
-                }
-                field(Quantity; Rec.Quantity)
-                {
-                    ApplicationArea = All;
-                    Editable = false;
-                    ToolTip = 'Specifies the transfer quantity.';
                 }
                 field("D365 Unit Code"; Rec."D365 Unit Code")
                 {

@@ -33,10 +33,33 @@ pageextension 50057 "E3 HIS Purchase Order List" extends "Purchase Order List"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the Make Name of the document.';
             }
+            field("No. of Archived Versions"; Rec."No. of Archived Versions")
+            {
+                ApplicationArea = All;
+            }
+            field("Advance PO Count"; Rec."Advance PO Count")
+            {
+                ApplicationArea = All;
+            }
             field("Net Amount"; Rec."Net Amount")
             {
                 ApplicationArea = All;
                 ToolTip = 'Specifies the Net Amount of the document.';
+            }
+        }
+        addbefore("No.")
+        {
+
+            field("Voucher Type"; Rec."Voucher Type")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the voucher type.';
+            }
+            field("GRN Voucher Type Name"; Rec."GRN Voucher Type Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Voucher Type Name';
+                ToolTip = 'Specifies the name of the GRN voucher type.';
             }
         }
     }
@@ -44,6 +67,23 @@ pageextension 50057 "E3 HIS Purchase Order List" extends "Purchase Order List"
     {
         addlast(Processing)
         {
+            action("View Approval Entries")
+            {
+                ApplicationArea = All;
+                Caption = 'Approval History';
+                ToolTip = 'View approval entries for the selected purchase order.';
+                Image = Approvals;
+
+                trigger OnAction()
+                var
+                    ApprovalEntry: Record "Approval Entry";
+                begin
+                    ApprovalEntry.Reset();
+                    ApprovalEntry.SetRange("Document No.", Rec."No.");
+
+                    Page.Run(Page::"Approval Entries", ApprovalEntry);
+                end;
+            }
             action("Send Order E-Mail")
             {
                 ApplicationArea = All;

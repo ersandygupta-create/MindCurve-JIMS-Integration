@@ -342,8 +342,8 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
 
 
     procedure ProcessTransferDocument(
-    DocumentNo: Code[20];
-    AutoTransferJournal: Boolean)
+     DocumentNo: Code[20];
+     AutoTransferJournal: Boolean)
     var
         TransferHeader: Record "E3 Transfer Header";
         HISIntegrationSetupLine: Record "E3 HIS Integration Setup Line";
@@ -359,6 +359,7 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         if not TransferHeader.FindFirst() then
             Error('Transfer Document %1 does not exist.', DocumentNo);
 
+        // IMPORTANT: Never process an already completed document.
         if TransferHeader."Is Created" then
             exit;
 
@@ -376,24 +377,25 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
                 JournalBatchName,
                 JournalTemplateName);
 
-        // Validate transfer lines before journal creation or posting.
+        // Validate transfer lines.
         ValidateTransferLotAvailability(DocumentNo);
 
-        // Find existing journal lines for this document.
+        // Find existing journal lines.
         ItemJournalLine.Reset();
         ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
         ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
         ItemJournalLine.SetRange("Document No.", DocumentNo);
 
-        // Create journal lines only when they do not already exist.
+        // Create journal lines only if they do not already exist.
         if ItemJournalLine.IsEmpty() then
             CreateItemReclassificationJournal(DocumentNo);
 
-        // If auto posting is disabled, do not post.
+        // If automatic posting is disabled, do not post.
+        // Is Created remains FALSE.
         if not AutoTransferJournal then
             exit;
 
-        // Re-read existing or newly created journal lines.
+        // Recheck journal lines before posting.
         ItemJournalLine.Reset();
         ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
         ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
@@ -404,12 +406,12 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
                 'No Item Journal Lines found for Document No. %1.',
                 DocumentNo);
 
-        // Post existing or newly created journal lines.
+        // Post only once.
         Codeunit.Run(
             Codeunit::"Item Jnl.-Post Batch",
             ItemJournalLine);
 
-        // Mark completed only after successful posting.
+        // Mark document completed only after successful posting.
         TransferHeader."Is Created" := true;
         TransferHeader."Error Description" := '';
         TransferHeader.Modify(true);
@@ -426,11 +428,14 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         TransferHeader.Reset();
         TransferHeader.SetRange("Is Created", false);
 
-        if TransferHeader.FindSet() then
+        if TransferHeader.FindSet(true) then
             repeat
-                ProcessTransferHeaderWithErrorHandling(
-                    TransferHeader,
-                    IntegrationSetup."Auto Transfer Journal Enabled");
+                // Process only incomplete documents.
+                if not TransferHeader."Is Created" then
+                    ProcessTransferHeaderWithErrorHandling(
+                        TransferHeader,
+                        IntegrationSetup."Auto Transfer Journal Enabled");
+
             until TransferHeader.Next() = 0;
     end;
 
@@ -443,20 +448,34 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
     begin
         DocumentNo := TransferHeader."Document Number";
 
+        // Do not process completed documents.
+        if TransferHeader."Is Created" then
+            exit;
+
+        // Clear previous error before retrying.
+        if TransferHeader."Error Description" <> '' then begin
+            TransferHeader."Error Description" := '';
+            TransferHeader.Modify(true);
+        end;
+
         ClearLastError();
 
         if TryProcessTransferDocument(
             DocumentNo,
             AutoTransferJournal)
         then begin
+
+            // Clear error after successful processing.
             UpdateTransferError(DocumentNo, '');
+
         end else begin
+
             ErrorDescription := GetLastErrorText();
 
-            // Remove incomplete journal lines after an error.
+            // Remove incomplete journal lines and tracking entries.
             CleanupTransferJournalLines(DocumentNo);
 
-            // Keep Is Created = FALSE and save the error.
+            // Save error. Is Created remains FALSE.
             UpdateTransferError(
                 DocumentNo,
                 ErrorDescription);
@@ -538,7 +557,8 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
             until TransferLine.Next() = 0;
     end;
 
-    local procedure CleanupTransferJournalLines(DocumentNo: Code[20])
+    local procedure CleanupTransferJournalLines(
+        DocumentNo: Code[20])
     var
         ItemJournalLine: Record "Item Journal Line";
         ReservationEntry: Record "Reservation Entry";
@@ -552,23 +572,41 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
             JournalBatchName);
 
         ItemJournalLine.Reset();
-        ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
-        ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
-        ItemJournalLine.SetRange("Document No.", DocumentNo);
+        ItemJournalLine.SetRange(
+            "Journal Template Name",
+            JournalTemplateName);
 
-        if ItemJournalLine.FindSet() then
+        ItemJournalLine.SetRange(
+            "Journal Batch Name",
+            JournalBatchName);
+
+        ItemJournalLine.SetRange(
+            "Document No.",
+            DocumentNo);
+
+        if ItemJournalLine.FindSet(true) then
             repeat
-                // Delete tracking entries belonging to this journal line.
+                // Delete tracking entries belonging only
+                // to the current journal line.
                 ReservationEntry.Reset();
+
                 ReservationEntry.SetRange(
                     "Source Type",
                     Database::"Item Journal Line");
+
+                // IMPORTANT: Source Subtype filter.
+                ReservationEntry.SetRange(
+                    "Source Subtype",
+                    ItemJournalLine."Entry Type".AsInteger());
+
                 ReservationEntry.SetRange(
                     "Source ID",
                     ItemJournalLine."Journal Template Name");
+
                 ReservationEntry.SetRange(
                     "Source Batch Name",
                     ItemJournalLine."Journal Batch Name");
+
                 ReservationEntry.SetRange(
                     "Source Ref. No.",
                     ItemJournalLine."Line No.");
@@ -576,7 +614,10 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
                 if not ReservationEntry.IsEmpty() then
                     ReservationEntry.DeleteAll(true);
 
+                // Delete incomplete journal line.
                 ItemJournalLine.Delete(true);
+
             until ItemJournalLine.Next() = 0;
     end;
+
 }

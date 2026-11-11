@@ -59,6 +59,7 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                             ApplicationArea = Basic, Suite;
                             Caption = 'Payroll Setup';
                             Image = Setup;
+                            Visible = false;
                             RunObject = Page "E3 HIS Payroll Setup";
                             RunPageMode = Create;
                             ToolTip = 'Executes the Payroll Setup action.';
@@ -915,54 +916,6 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         ToolTip = 'Create a Med PRF List';
                     }
                 }
-                group("E3 Pharmacy Sales Entries")
-                {
-                    Caption = 'Pharmacy Sales Entries';
-                    action("E3 Pharmacy Sales Invoice")
-                    {
-                        AccessByPermission = TableData "E3 Pharmacy Sale Header" = IMD;
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Create Pharmacy Sales Entries';
-                        Image = Archive;
-                        RunObject = Page "E3 Pharmacy Sales List";
-                        RunPageMode = Create;
-                        ToolTip = 'Executes the Create Pharmacy Sales Entries action.';
-                    }
-                    action("E3 Created Pharmacy Sales Entries")
-                    {
-                        AccessByPermission = TableData "E3 Pharmacy Sale Header" = IMD;
-                        ApplicationArea = Basic, Suite;
-                        Image = Archive;
-                        RunObject = Page "E3 Posted Pharmacy Sales List";
-                        RunPageMode = Create;
-                        ToolTip = 'Executes the Created Pharmacy Sales action.';
-                        Caption = 'Created Pharmacy Sales Entries';
-                    }
-                }
-                group("E3 Transfer Entries")
-                {
-                    Caption = 'Transfer Entries';
-                    action("E3 Transfer Entries List")
-                    {
-                        AccessByPermission = TableData "E3 Transfer Header" = IMD;
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Create Transfer Entries';
-                        Image = Archive;
-                        RunObject = Page "E3 Transfer List";
-                        RunPageMode = Create;
-                        ToolTip = 'Executes the Create Transfer Entries action.';
-                    }
-                    action("E3 Created Transfer Entries")
-                    {
-                        AccessByPermission = TableData "E3 Transfer Header" = IMD;
-                        ApplicationArea = Basic, Suite;
-                        Image = Archive;
-                        RunObject = Page "E3 Posted Transfer List";
-                        RunPageMode = Create;
-                        ToolTip = 'Executes the Created Transfer action.';
-                        Caption = 'Created Transfer Entries';
-                    }
-                }
             }
         }
 
@@ -1158,37 +1111,37 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
             }
         }
 
-        addbefore(Action39)
-        {
-            group("E3 Bank Integration")
-            {
-                Caption = 'Payroll Integration';
-                group("E3 Payroll Integration")
-                {
-                    Caption = 'Payroll Integration';
-                    action("E3 Payroll Entries")
-                    {
-                        AccessByPermission = TableData "E3 Salary Header" = IMD;
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Create Payroll Entries';
-                        Image = Archive;
-                        RunObject = Page "E3 Salary List Page";
-                        RunPageMode = Create;
-                        ToolTip = 'Executes the Create Payroll Entries action.';
-                    }
-                    action("E3 Created Payroll Entries")
-                    {
-                        AccessByPermission = TableData "E3 Salary Header" = IMD;
-                        ApplicationArea = Basic, Suite;
-                        Image = Archive;
-                        RunObject = Page "E3 Posted Salary List";
-                        RunPageMode = Create;
-                        ToolTip = 'Executes the Created Payroll Entries action.';
-                        Caption = 'Created Payroll Entries';
-                    }
-                }
-            }
-        }
+        // addbefore(Action39)
+        // {
+        //     group("E3 Bank Integration")
+        //     {
+        //         Caption = 'Payroll Integration';
+        //         group("E3 Payroll Integration")
+        //         {
+        //             Caption = 'Payroll Integration';
+        //             action("E3 Payroll Entries")
+        //             {
+        //                 AccessByPermission = TableData "E3 Salary Header" = IMD;
+        //                 ApplicationArea = Basic, Suite;
+        //                 Caption = 'Create Payroll Entries';
+        //                 Image = Archive;
+        //                 RunObject = Page "E3 Salary List Page";
+        //                 RunPageMode = Create;
+        //                 ToolTip = 'Executes the Create Payroll Entries action.';
+        //             }
+        //             action("E3 Created Payroll Entries")
+        //             {
+        //                 AccessByPermission = TableData "E3 Salary Header" = IMD;
+        //                 ApplicationArea = Basic, Suite;
+        //                 Image = Archive;
+        //                 RunObject = Page "E3 Posted Salary List";
+        //                 RunPageMode = Create;
+        //                 ToolTip = 'Executes the Created Payroll Entries action.';
+        //                 Caption = 'Created Payroll Entries';
+        //             }
+        //         }
+        //     }
+        // }
         addbefore(Action39)
         {
             group("E3 Indent Module")
@@ -1360,6 +1313,55 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         ToolTip = 'Specifies a view Stock Consumption.';
                     }
                 }
+
+                group("E3 Pharmacy Sales Entries")
+                {
+                    Caption = 'Pharmacy Sales Entries';
+                    action("E3 Pharmacy Sales Invoice")
+                    {
+                        AccessByPermission = TableData "E3 Pharmacy Sale Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Create Pharmacy Sales Entries';
+                        Image = Archive;
+                        RunObject = Page "E3 Pharmacy Sales List";
+                        RunPageMode = Create;
+                        ToolTip = 'Executes the Create Pharmacy Sales Entries action.';
+                    }
+                    action("E3 Created Pharmacy Sales Entries")
+                    {
+                        AccessByPermission = TableData "E3 Pharmacy Sale Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Image = Archive;
+                        RunObject = Page "E3 Posted Pharmacy Sales List";
+                        RunPageMode = Create;
+                        ToolTip = 'Executes the Created Pharmacy Sales action.';
+                        Caption = 'Created Pharmacy Sales Entries';
+                    }
+                }
+                group("E3 Transfer Entries")
+                {
+                    Caption = 'Transfer Entries';
+                    action("E3 Transfer Entries List")
+                    {
+                        AccessByPermission = TableData "E3 Transfer Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Caption = 'Create Transfer Entries';
+                        Image = Archive;
+                        RunObject = Page "E3 Transfer List";
+                        RunPageMode = Create;
+                        ToolTip = 'Executes the Create Transfer Entries action.';
+                    }
+                    action("E3 Created Transfer Entries")
+                    {
+                        AccessByPermission = TableData "E3 Transfer Header" = IMD;
+                        ApplicationArea = Basic, Suite;
+                        Image = Archive;
+                        RunObject = Page "E3 Posted Transfer List";
+                        RunPageMode = Create;
+                        ToolTip = 'Executes the Created Transfer action.';
+                        Caption = 'Created Transfer Entries';
+                    }
+                }
                 // group(Quotation)
                 // {
                 //     Caption = 'Purchase Indent';
@@ -1475,20 +1477,20 @@ pageextension 50003 "E3 HIS Business Manager RC" extends "Business Manager Role 
                         }
                     }
                 }
-                group(StockTransferSetup)
-                {
-                    Caption = 'Stock Transfer Setups';
-                    action("Stock Transfer")
-                    {
-                        AccessByPermission = TableData "E3 Stock Transfer Setup" = RIMD;
-                        ApplicationArea = Basic, Suite;
-                        Caption = 'Stock Transfer Setups';
-                        Image = List;
-                        RunObject = Page "E3 Stock Transfer List";
-                        RunPageMode = View;
-                        ToolTip = 'Executes the Stock Transfer Setup.';
-                    }
-                }
+                // group(StockTransferSetup)
+                // {
+                //     Caption = 'Stock Transfer Setups';
+                //     action("Stock Transfer")
+                //     {
+                //         AccessByPermission = TableData "E3 Stock Transfer Setup" = RIMD;
+                //         ApplicationArea = Basic, Suite;
+                //         Caption = 'Stock Transfer Setups';
+                //         Image = List;
+                //         RunObject = Page "E3 Stock Transfer List";
+                //         RunPageMode = View;
+                //         ToolTip = 'Executes the Stock Transfer Setup.';
+                //     }
+                // }
                 group(Scheme)
                 {
                     Caption = 'Scheme Type';

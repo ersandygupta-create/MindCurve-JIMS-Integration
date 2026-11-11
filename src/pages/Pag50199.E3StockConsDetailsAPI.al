@@ -10,13 +10,18 @@ page 50199 "E3 Stock Consumption API"
     SourceTable = "E3 Stock Consumption Header";
     DelayedInsert = true;
     ApplicationArea = All;
-    ODataKeyFields = "Document No.";
+    ODataKeyFields = SystemId;
     Extensible = false;
 
     layout
     {
         area(content)
         {
+            field(systemId; Rec.SystemId)
+            {
+                Caption = 'SystemId';
+                Editable = false;
+            }
             field(documentNo; Rec."Document No.")
             {
                 Caption = 'Document Number';

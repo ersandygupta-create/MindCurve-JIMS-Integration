@@ -188,6 +188,11 @@ table 50088 "E3 Pharmacy Sale Header"
             Caption = 'Validation Key';
             DataClassification = CustomerContent;
         }
+        field(34; "Error Description"; Text[150])
+        {
+            Caption = 'Error Description';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
