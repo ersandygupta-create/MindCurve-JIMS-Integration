@@ -460,6 +460,19 @@ codeunit 50047 "E3 Post Stock Consumption"
         if not AutoPostStockConsumption then
             exit;
 
+        // Recheck status before posting.
+        StockConsumptionHeader.LockTable();
+        StockConsumptionHeader.Get(
+            StockConsumptionHeader."Entry No.",
+            StockConsumptionHeader."Entry Type",
+            StockConsumptionHeader."Document Type",
+            StockConsumptionHeader."Document No.");
+
+        if StockConsumptionHeader."Is Created" then
+            Error(
+                'Stock Consumption %1 is already posted. Duplicate posting is not allowed.',
+                StockConsumptionHeader."Document No.");
+
         // Get current document's journal lines.
         ItemJournalLine.Reset();
         ItemJournalLine.SetRange(
@@ -566,6 +579,10 @@ codeunit 50047 "E3 Post Stock Consumption"
         ErrorDescription: Text;
         CleanupError: Text;
     begin
+        // Do not process an already created/posted document.
+        if StockConsumptionHeader."Is Created" then
+            exit;
+
         ClearLastError();
 
         if TryProcessStockConsumption(

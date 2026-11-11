@@ -202,4 +202,15 @@ table 50088 "E3 Pharmacy Sale Header"
             Clustered = true;
         }
     }
+    trigger OnDelete()
+    var
+        PHLine: Record "E3 Pharmacy Sale Lines";
+    begin
+        PHLine.Reset();
+        PHLine.SetRange("Entry Type", Rec."Entry Type");
+        PHLine.SetRange("Document Type", Rec."Document Type");
+        PHLine.SetRange("Document Number", Rec."Document Number");
+        PHLine.DeleteAll(true);
+    end;
+
 }

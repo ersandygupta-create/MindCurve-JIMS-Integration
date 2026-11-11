@@ -52,6 +52,11 @@ page 50242 "E3 Pharmacy Sales List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the bill date.';
                 }
+                field("No of Lines"; Rec."No of Lines")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the No of Lines.';
+                }
                 field("D365 Department Code"; Rec."D365 Department Code")
                 {
                     ApplicationArea = All;
@@ -131,4 +136,35 @@ page 50242 "E3 Pharmacy Sales List"
             }
         }
     }
+    actions
+    {
+        area(Processing)
+        {
+            action(DeleteSelected)
+            {
+                ApplicationArea = All;
+                Caption = 'Delete Selected';
+                Image = DeleteRow;
+                ToolTip = 'Deletes all selected pharmacy sales documents and their related lines.';
+
+                trigger OnAction()
+                var
+                    PharmacyHdr: Record "E3 Pharmacy Sale Header";
+                    PharmacySaleHeader: Record "E3 Pharmacy Sale Header";
+                begin
+                    CurrPage.SetSelectionFilter(PharmacyHdr);
+
+                    if PharmacyHdr.FindSet() then
+                        repeat
+                            PharmacySaleHeader := PharmacyHdr;
+                            PharmacySaleHeader.Delete(true);
+                        until PharmacyHdr.Next() = 0;
+
+                    CurrPage.Update(false);
+                end;
+            }
+        }
+    }
+    var
+        PharmacyHdr: Record "E3 Pharmacy Sale Header";
 }

@@ -73,6 +73,16 @@ table 50093 "E3 Pharmacy Sale Setup"
             Caption = 'Exempted';
             DataClassification = CustomerContent;
         }
+        field(9; "Price Inclusive of Tax"; Boolean)
+        {
+            Caption = 'Price Inclusive of Tax';
+            DataClassification = CustomerContent;
+        }
+        field(10; "Invoice Type"; Enum "Sales Invoice Type")
+        {
+            Caption = 'Invoice Type';
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

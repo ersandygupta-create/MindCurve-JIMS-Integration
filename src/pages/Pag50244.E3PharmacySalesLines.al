@@ -31,7 +31,7 @@ page 50244 "E3 Pharmacy Sales Lines"
                 field("Line Number"; Rec."Line Number")
                 {
                     ApplicationArea = All;
-                    Visible = false;
+                    Visible = true;
                     Editable = false;
                     ToolTip = 'Specifies the line number.';
                 }

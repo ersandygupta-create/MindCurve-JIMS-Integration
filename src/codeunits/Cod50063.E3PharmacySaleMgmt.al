@@ -83,9 +83,7 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
         // Check whether an unposted invoice already exists.
         // Do not create a duplicate or delete an existing invoice.
         SalesHeader.Reset();
-        SalesHeader.SetRange(
-            "Document Type",
-            SalesHeader."Document Type"::Invoice);
+        SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Invoice);
         SalesHeader.SetRange("No.", DocumentNo);
 
         if SalesHeader.FindFirst() then begin
@@ -172,10 +170,7 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
         DocumentType: Text[50];
         DocumentNo: Code[20])
     begin
-        InitSalesInvoice(
-            EntryType,
-            DocumentType,
-            DocumentNo);
+        InitSalesInvoice(EntryType, DocumentType, DocumentNo);
     end;
 
     procedure InitSalesInvoice(
@@ -189,6 +184,7 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
         PharmacySaleHeader: Record "E3 Pharmacy Sale Header";
         PharmacySaleLine: Record "E3 Pharmacy Sale Lines";
         PharmacySaleSetup: Record "E3 Pharmacy Sale Setup";
+        IntegrationSetup: Record "E3 HIS Integartion Setup";
         LineNo: Integer;
         InvoiceNo: Code[20];
     begin
@@ -228,9 +224,7 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
 
         // Do not create another unposted invoice.
         SalesHeader.Reset();
-        SalesHeader.SetRange(
-            "Document Type",
-            SalesHeader."Document Type"::Invoice);
+        SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Invoice);
         SalesHeader.SetRange("No.", InvoiceNo);
 
         if SalesHeader.FindFirst() then
@@ -240,18 +234,10 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
 
         // Find Customer from E3 Pharmacy Sale Setup.
         PharmacySaleSetup.Reset();
-        PharmacySaleSetup.SetRange(
-            "Entry Type",
-            PharmacySaleHeader."Entry Type");
-        PharmacySaleSetup.SetRange(
-            "Document Type",
-            PharmacySaleHeader."Document Type");
-        PharmacySaleSetup.SetRange(
-            "Shortcut Dimension 1 Code",
-            PharmacySaleHeader."Business Unit");
-        PharmacySaleSetup.SetRange(
-            "Account Type",
-            PharmacySaleSetup."Account Type"::Customer);
+        PharmacySaleSetup.SetRange("Entry Type", PharmacySaleHeader."Entry Type");
+        PharmacySaleSetup.SetRange("Document Type", PharmacySaleHeader."Document Type");
+        PharmacySaleSetup.SetRange("Shortcut Dimension 1 Code", PharmacySaleHeader."Business Unit");
+        PharmacySaleSetup.SetRange("Account Type", PharmacySaleSetup."Account Type"::Customer);
 
         if not PharmacySaleSetup.FindFirst() then
             Error(
@@ -264,20 +250,12 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
 
         // Find Pharmacy Sales Lines.
         PharmacySaleLine.Reset();
-        PharmacySaleLine.SetRange(
-            "Entry Type",
-            PharmacySaleHeader."Entry Type");
-        PharmacySaleLine.SetRange(
-            "Document Type",
-            PharmacySaleHeader."Document Type");
-        PharmacySaleLine.SetRange(
-            "Document Number",
-            PharmacySaleHeader."Document Number");
+        PharmacySaleLine.SetRange("Entry Type", PharmacySaleHeader."Entry Type");
+        PharmacySaleLine.SetRange("Document Type", PharmacySaleHeader."Document Type");
+        PharmacySaleLine.SetRange("Document Number", PharmacySaleHeader."Document Number");
 
         if not PharmacySaleLine.FindSet() then
-            Error(
-                'Pharmacy Sales Lines not found for Document No. %1.',
-                InvoiceNo);
+            Error('Pharmacy Sales Lines not found for Document No. %1.', InvoiceNo);
 
         // Validate all source lines before creating invoice.
         repeat
@@ -298,25 +276,17 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
 
         // Create Sales Invoice Header.
         SalesHeader.Init();
-        SalesHeader.Validate(
-            "Document Type",
-            SalesHeader."Document Type"::Invoice);
+        SalesHeader.Validate("Document Type", SalesHeader."Document Type"::Invoice);
         SalesHeader."No." := InvoiceNo;
         SalesHeader.Insert(true);
 
         // Assign Customer.
-        SalesHeader.Validate(
-            "Sell-to Customer No.",
-            PharmacySaleSetup."Account No.");
+        SalesHeader.Validate("Sell-to Customer No.", PharmacySaleSetup."Account No.");
 
         // Assign Posting Date and Document Date.
         if PharmacySaleHeader."Bill Date" <> 0D then begin
-            SalesHeader.Validate(
-                "Posting Date",
-                PharmacySaleHeader."Bill Date");
-            SalesHeader.Validate(
-                "Document Date",
-                PharmacySaleHeader."Bill Date");
+            SalesHeader.Validate("Posting Date", PharmacySaleHeader."Bill Date");
+            SalesHeader.Validate("Document Date", PharmacySaleHeader."Bill Date");
         end;
 
         if PharmacySaleHeader."Location Code" <> '' then
@@ -325,9 +295,7 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
                 PharmacySaleHeader."Location Code");
 
         if PharmacySaleHeader."Business Unit" <> '' then
-            SalesHeader.Validate(
-                "Shortcut Dimension 1 Code",
-                PharmacySaleHeader."Business Unit");
+            SalesHeader.Validate("Shortcut Dimension 1 Code", PharmacySaleHeader."Business Unit");
 
         if PharmacySaleHeader."Bill No." <> '' then
             SalesHeader.Validate(
@@ -336,20 +304,17 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
                     PharmacySaleHeader."Bill No.",
                     1,
                     MaxStrLen(SalesHeader."External Document No.")));
+        SalesHeader."Pharmacy Amount" := PharmacySaleHeader."OH Amt Net";
+        SalesHeader."Pharmacy Integration" := true;
+        SalesHeader.Validate("Invoice Type", PharmacySaleSetup."Invoice Type");
 
         SalesHeader.Modify(true);
 
         // Find Pharmacy Sales Lines again.
         PharmacySaleLine.Reset();
-        PharmacySaleLine.SetRange(
-            "Entry Type",
-            PharmacySaleHeader."Entry Type");
-        PharmacySaleLine.SetRange(
-            "Document Type",
-            PharmacySaleHeader."Document Type");
-        PharmacySaleLine.SetRange(
-            "Document Number",
-            PharmacySaleHeader."Document Number");
+        PharmacySaleLine.SetRange("Entry Type", PharmacySaleHeader."Entry Type");
+        PharmacySaleLine.SetRange("Document Type", PharmacySaleHeader."Document Type");
+        PharmacySaleLine.SetRange("Document Number", PharmacySaleHeader."Document Number");
 
         if not PharmacySaleLine.FindSet() then
             Error(
@@ -363,82 +328,66 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
             LineNo += 10000;
 
             SalesLine.Init();
-            SalesLine.Validate(
-                "Document Type",
-                SalesHeader."Document Type");
-            SalesLine.Validate(
-                "Document No.",
-                SalesHeader."No.");
+            SalesLine.Validate("Document Type", SalesHeader."Document Type");
+            SalesLine.Validate("Document No.", SalesHeader."No.");
 
             SalesLine."Line No." := LineNo;
             SalesLine.Insert(true);
 
-            SalesLine.Validate(
-                Type,
-                SalesLine.Type::Item);
-
-            SalesLine.Validate(
-                "No.",
-                PharmacySaleLine."D365 Item Code");
-
-            SalesLine.Validate(
-                "Unit of Measure Code",
-                PharmacySaleLine."D365 Unit Code");
-
-            SalesLine.Validate(
-                Quantity,
-                PharmacySaleLine.Quantity);
-
+            SalesLine.Validate(Type, SalesLine.Type::Item);
+            SalesLine.Validate("No.", PharmacySaleLine."D365 Item Code");
+            SalesLine.Validate("Unit of Measure Code", PharmacySaleLine."D365 Unit Code");
+            SalesLine.Validate(Quantity, PharmacySaleLine.Quantity);
             if PharmacySaleLine.Quantity = 0 then
                 Error(
                     'Quantity cannot be zero on line %1.',
                     PharmacySaleLine."Line Number");
 
-            SalesLine.Validate(
-                "Unit Price",
-                PharmacySaleLine."OH Amt Net" /
-                PharmacySaleLine.Quantity);
+            SalesLine.Validate("Price Inclusive of Tax", PharmacySaleSetup."Price Inclusive of Tax");
+            SalesLine.Validate("Unit Price Incl. of Tax", PharmacySaleLine."OH Amt Gross" / PharmacySaleLine.Quantity);
+            SalesLine.Validate(Exempted, PharmacySaleSetup.Exempted);
+            SalesLine.Validate("Unit Price", PharmacySaleLine."OH Amt Gross" / PharmacySaleLine.Quantity);
 
             if PharmacySaleLine."Business Unit" <> '' then
-                SalesLine.Validate(
-                    "Shortcut Dimension 1 Code",
-                    PharmacySaleLine."Business Unit");
+                SalesLine.Validate("Shortcut Dimension 1 Code", PharmacySaleLine."Business Unit");
 
             if PharmacySaleHeader."Location Code" <> '' then
-                SalesLine.Validate(
-                    "Location Code",
-                    PharmacySaleHeader."Location Code");
+                SalesLine.Validate("Location Code", PharmacySaleHeader."Location Code");
+            if PharmacySaleLine."OH Amt Discount" < 0 then
+                Error(
+                    'Discount Amount cannot be negative on Pharmacy Sale Line %1.',
+                    PharmacySaleLine."Line Number");
 
             if PharmacySaleLine."OH Amt Discount" <> 0 then
-                SalesLine.Validate(
-                    "Line Discount Amount",
-                    PharmacySaleLine."OH Amt Discount");
-
-            SalesLine.Exempted := PharmacySaleSetup.Exempted;
+                SalesLine.Validate("Line Discount Amount", PharmacySaleLine."OH Amt Discount");
 
             SalesLine.Modify(true);
 
             // Create Item Tracking using existing Pharmacy Batch No.
             if PharmacySaleLine."Batch No." <> '' then
-                CreateLotTracking(
-                    SalesLine,
-                    PharmacySaleLine."Batch No.");
+                CreateLotTracking(SalesLine, PharmacySaleLine."Batch No.");
 
         until PharmacySaleLine.Next() = 0;
 
-        // Automatically post the invoice.
-        PostSalesInvoice(InvoiceNo);
+        // Check Integration Setup.
+        if not IntegrationSetup.FindFirst() then
+            Error('E3 HIS Integration Setup not found.');
 
-        // Verify posted invoice before updating source status.
-        SalesInvoiceHeader.Reset();
-        SalesInvoiceHeader.SetRange("No.", InvoiceNo);
+        // Automatically post only when enabled.
+        if IntegrationSetup."Auto Pharmacy Posting Enabled" then begin
+            PostSalesInvoice(InvoiceNo);
 
-        if not SalesInvoiceHeader.FindFirst() then
-            Error(
-                'Sales Invoice %1 was not found in Posted Sales Invoices after posting.',
-                InvoiceNo);
+            // Verify posted invoice.
+            SalesInvoiceHeader.Reset();
+            SalesInvoiceHeader.SetRange("No.", InvoiceNo);
 
-        // Mark source Pharmacy Sales Header as Created.
+            if not SalesInvoiceHeader.FindFirst() then
+                Error(
+                    'Sales Invoice %1 was not posted successfully.',
+                    InvoiceNo);
+        end;
+
+        // Mark source Pharmacy Sale Header as Created.
         UpdatePharmacySaleStatus(
             EntryType,
             DocumentType,
@@ -634,5 +583,61 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
             DocumentNo,
             false,
             ErrorText);
+    end;
+
+    procedure ManualCreateSalesInvoice(
+    EntryType: Option;
+    DocumentType: Text[50];
+    DocumentNo: Code[20])
+    var
+        SalesInvoiceHeader: Record "Sales Invoice Header";
+        ErrorDescription: Text;
+    begin
+        ClearLastError();
+
+        if TryProcessSalesInvoice(
+            EntryType,
+            DocumentType,
+            DocumentNo)
+        then begin
+            Message(
+                'Sales Invoice %1 created successfully.',
+                DocumentNo);
+        end else begin
+            // Capture actual error.
+            ErrorDescription := GetLastErrorText();
+
+            // Check whether invoice was posted despite an error.
+            SalesInvoiceHeader.Reset();
+            SalesInvoiceHeader.SetRange("No.", DocumentNo);
+
+            if SalesInvoiceHeader.FindFirst() then begin
+                UpdatePharmacySaleStatus(
+                    EntryType,
+                    DocumentType,
+                    DocumentNo,
+                    true,
+                    '');
+
+                Message(
+                    'Sales Invoice %1 is already posted.',
+                    DocumentNo);
+            end else begin
+                // Clean up incomplete invoice.
+                CleanupIncompleteSalesInvoice(DocumentNo);
+
+                // Save error description.
+                UpdatePharmacySaleError(
+                    EntryType,
+                    DocumentType,
+                    DocumentNo,
+                    ErrorDescription);
+
+                Message(
+                    'Sales Invoice %1 could not be created.\Error: %2',
+                    DocumentNo,
+                    ErrorDescription);
+            end;
+        end;
     end;
 }

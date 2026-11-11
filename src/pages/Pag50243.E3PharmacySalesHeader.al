@@ -242,7 +242,7 @@ page 50243 "E3 Pharmacy Sales Card"
                     then
                         exit;
 
-                    PharmacySalesPosting.InitSalesInvoice(
+                    PharmacySalesPosting.ManualCreateSalesInvoice(
                         Rec."Entry Type",
                         Rec."Document Type",
                         Rec."Document Number");

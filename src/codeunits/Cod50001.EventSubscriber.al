@@ -1234,4 +1234,20 @@ codeunit 50001 "E3 HIS Event Subscriber"
                 PurchaseHeader."Buy-from Vendor No.",
                 ExistingPurchRcptHeader."No.");
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforePostSalesDoc', '', false, false)]
+    local procedure CheckPharmacyAmountonSalesDoc(var SalesHeader: Record "Sales Header")
+    var
+        CalcStatistics: Codeunit "Calculate Statistics";
+        AmountToCustomer: Decimal;
+    begin
+        if SalesHeader."Document Type" = SalesHeader."Document Type"::Invoice then
+            if SalesHeader."Pharmacy Integration" then begin
+                CalcStatistics.GetSalesStatisticsAmount(SalesHeader, AmountToCustomer);
+
+                if Abs(SalesHeader."Pharmacy Amount" - AmountToCustomer) > 1 then
+                    Error(
+                        'Difference between Pharmacy Amount and Sales Invoice Statistics Net Amount cannot be more than 1.');
+            end;
+    end;
 }

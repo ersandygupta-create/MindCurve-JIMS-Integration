@@ -105,6 +105,16 @@ tableextension 50024 "E3 HIS Sales Invoice Header" extends "Sales Invoice Header
             Caption = 'Response';
             DataClassification = CustomerContent;
         }
+        field(60000; "Pharmacy Amount"; Decimal)
+        {
+            Caption = 'Pharmacy Amount';
+            DataClassification = CustomerContent;
+        }
+        field(60001; "Pharmacy Integration"; Boolean)
+        {
+            Caption = 'Pharmacy Integration';
+            DataClassification = CustomerContent;
+        }
     }
     trigger OnAfterInsert()
     begin
