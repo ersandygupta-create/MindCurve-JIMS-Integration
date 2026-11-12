@@ -112,24 +112,24 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
     //         }
     //     }
     // }
-    trigger OnAfterGetRecord()
-    var
-        SwissQRHelper: Codeunit "Swiss QR Code Helper";
-        TempBlob: Codeunit "Temp Blob";
-        SourceText: Text;
-        InS: InStream;
-        FileName: Text;
-    begin
-        if (Rec."No." <> '') then begin
-            SwissQRHelper.GenerateQRCodeImage(Rec."No.", TempBlob);
-            if TempBlob.HasValue() then begin
-                FileName := Rec."No." + '_QRCode.png';
-                TempBlob.CreateInStream(InS);
-                Clear(Rec."QR Code");
-                Rec."QR Code".ImportStream(InS, FileName, 'image/png');
+    // trigger OnAfterGetRecord()
+    // var
+    //     SwissQRHelper: Codeunit "Swiss QR Code Helper";
+    //     TempBlob: Codeunit "Temp Blob";
+    //     SourceText: Text;
+    //     InS: InStream;
+    //     FileName: Text;
+    // begin
+    //     if (Rec."No." <> '') then begin
+    //         SwissQRHelper.GenerateQRCodeImage(Rec."No.", TempBlob);
+    //         if TempBlob.HasValue() then begin
+    //             FileName := Rec."No." + '_QRCode.png';
+    //             TempBlob.CreateInStream(InS);
+    //             Clear(Rec."QR Code");
+    //             Rec."QR Code".ImportStream(InS, FileName, 'image/png');
 
-                Rec.Modify(false);
-            end;
-        end;
-    end;
+    //             // Rec.Modify(false);
+    //         end;
+    //     end;
+    // end;
 }

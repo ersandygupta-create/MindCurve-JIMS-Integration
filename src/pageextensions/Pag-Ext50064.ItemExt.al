@@ -524,7 +524,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 {
                     ApplicationArea = All;
                     ShowMandatory = true;
-                    Editable = Rec.Status <> Rec.Status::Approved;
+                    Editable = Rec.Status = Rec.Status::Created;
                     ToolTip = 'Specifies the value of Packing field.';
                 }
 
