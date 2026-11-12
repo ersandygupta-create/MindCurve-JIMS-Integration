@@ -209,6 +209,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
     local procedure cancleIndentLine(var purchLine: Record "Purchase Line")
     var
         IndentLine: Record "E3 Indent Line";
+        CancelPoLines: Record "E3 Cancel PO Lines";
     begin
         if ((purchLine."Qty. Invoiced (Base)" = 0) AND (purchLine."Qty. Received (Base)" = 0)) then begin
             IndentLine.Reset();
@@ -231,6 +232,8 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
 
                 //Sandeep
                 until IndentLine.Next() = 0;
+            CancelPoLines.TransferFields(purchLine);
+            CancelPoLines.Insert();
             purchLine.Delete(false);
         end else
             Message('Purchase line %1 is partially receive so it line can not be canceled.', purchLine."Line No.");
