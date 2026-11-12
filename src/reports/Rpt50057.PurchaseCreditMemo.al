@@ -118,6 +118,8 @@ report 50057 "E3 Purchase Credit Memo"
                 column(MRP; MRP) { }
                 column(Batch_No_; "Batch No.") { }
                 column(Expiry_Date; "Expiry Date") { }
+                column(Challan_No_; "Challan No.") { }
+                column(Challan_Date; "Challan Date") { }
 
                 trigger OnAfterGetRecord()
                 begin

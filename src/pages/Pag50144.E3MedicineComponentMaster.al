@@ -45,7 +45,7 @@ page 50144 "E3 Medicine Component Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = true;
+                    Editable = false;
                 }
                 field(Response; Rec.Response)
                 {

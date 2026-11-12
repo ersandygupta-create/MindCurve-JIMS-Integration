@@ -74,8 +74,6 @@ table 50030 "E3 Item Model Master"
         if not UserSetup."Item Sub Table Insert" then
             Error('You do not have permission to create a new Item Model record. Please contact your administrator.');
 
-
-
         if Code = '' then begin
             InventorySetup.Get();
             InventorySetup.TestField("Item Model Nos.");

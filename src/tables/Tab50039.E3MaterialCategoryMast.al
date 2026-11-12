@@ -11,9 +11,16 @@ table 50039 "E3 Material Category Master"
             Caption = 'Code';
             DataClassification = CustomerContent;
             trigger OnValidate()
+            var
+                InventorySetup: Record "Inventory Setup";
+                NoSeries: Codeunit "No. Series";
             begin
-                if (xRec.Code <> '') and (Rec.Code <> xRec.Code) then
-                    Error('Code cannot be modified once it has been assigned.');
+                if Code <> xRec.Code then begin
+                    InventorySetup.Get();
+                    InventorySetup.TestField("Material Category Nos.");
+                    NoSeries.TestManual(InventorySetup."Material Category Nos.");
+                    "No. Series" := '';
+                end;
             end;
         }
         field(2; Name; Text[60])

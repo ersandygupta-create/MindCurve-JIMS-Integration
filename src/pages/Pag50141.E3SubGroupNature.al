@@ -28,7 +28,7 @@ page 50141 "E3 Sub Group Nature"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = true;
+                    Editable = false;
                 }
                 field(Response; Rec.Response)
                 {

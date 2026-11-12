@@ -66,7 +66,7 @@ page 50149 "E3 Medicine Composition"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = true;
+                    Editable = false;
                 }
                 field(Response; Rec.Response)
                 {

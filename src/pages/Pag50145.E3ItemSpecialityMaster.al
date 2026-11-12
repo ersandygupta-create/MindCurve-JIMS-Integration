@@ -35,7 +35,7 @@ page 50145 "E3 Item Speciality Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = true;
+                    Editable = false;
                 }
                 field(Response; Rec.Response)
                 {
