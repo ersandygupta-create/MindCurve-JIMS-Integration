@@ -1,4 +1,3 @@
-
 page 50242 "E3 Pharmacy Sales List"
 {
     PageType = List;
@@ -9,6 +8,7 @@ page 50242 "E3 Pharmacy Sales List"
     CardPageId = "E3 Pharmacy Sales Card";
     Editable = false;
     SourceTableView = where("Is Created" = filter(false));
+    DeleteAllowed = false;
 
     layout
     {
@@ -25,7 +25,12 @@ page 50242 "E3 Pharmacy Sales List"
                 field("Entry Number"; Rec."Entry Number")
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the pharmacy sales entry reference.';
+                    ToolTip = 'Specifies the pharmacy sales entry number.';
+                }
+                field("Entry Type"; Rec."Entry Type")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the pharmacy sales entry type.';
                 }
                 field("Document Type"; Rec."Document Type")
                 {
@@ -47,6 +52,26 @@ page 50242 "E3 Pharmacy Sales List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the bill date.';
                 }
+                field("No of Lines"; Rec."No of Lines")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the No of Lines.';
+                }
+                field("D365 Department Code"; Rec."D365 Department Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the department code.';
+                }
+                field("Department Name"; Rec."Department Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the department name.';
+                }
+                field("Business Unit"; Rec."Business Unit")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the business unit.';
+                }
                 field("Patient UHID"; Rec."Patient UHID")
                 {
                     ApplicationArea = All;
@@ -62,10 +87,40 @@ page 50242 "E3 Pharmacy Sales List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the location code.';
                 }
+                field("Error Description"; Rec."Error Description")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the error description.';
+                }
                 field("OH Amt Net"; Rec."OH Amt Net")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the net bill amount.';
+                }
+                field("OH Amt Gross"; Rec."OH Amt Gross")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the gross bill amount.';
+                }
+                field("OH Amt Discount"; Rec."OH Amt Discount")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the discount amount.';
+                }
+                field("OH Amt Taxable"; Rec."OH Amt Taxable")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the taxable amount.';
+                }
+                field("OH Amt CGST"; Rec."OH Amt CGST")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the CGST amount.';
+                }
+                field("OH Amt SGST"; Rec."OH Amt SGST")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the SGST amount.';
                 }
                 field("Is Created"; Rec."Is Created")
                 {
@@ -81,4 +136,35 @@ page 50242 "E3 Pharmacy Sales List"
             }
         }
     }
+    actions
+    {
+        area(Processing)
+        {
+            action(DeleteSelected)
+            {
+                ApplicationArea = All;
+                Caption = 'Delete Selected';
+                Image = DeleteRow;
+                ToolTip = 'Deletes all selected pharmacy sales documents and their related lines.';
+
+                trigger OnAction()
+                var
+                    PharmacyHdr: Record "E3 Pharmacy Sale Header";
+                    PharmacySaleHeader: Record "E3 Pharmacy Sale Header";
+                begin
+                    CurrPage.SetSelectionFilter(PharmacyHdr);
+
+                    if PharmacyHdr.FindSet() then
+                        repeat
+                            PharmacySaleHeader := PharmacyHdr;
+                            PharmacySaleHeader.Delete(true);
+                        until PharmacyHdr.Next() = 0;
+
+                    CurrPage.Update(false);
+                end;
+            }
+        }
+    }
+    var
+        PharmacyHdr: Record "E3 Pharmacy Sale Header";
 }

@@ -12,11 +12,17 @@ page 50200 "E3 Stock Consumption Line API"
     PageType = API;
     SourceTable = "E3 Stock Consumption Line";
     Extensible = false;
+    ODataKeyFields = SystemId;
 
     layout
     {
         area(content)
         {
+            field(systemId; Rec.SystemId)
+            {
+                Caption = 'SystemId';
+                Editable = false;
+            }
             field(documentNo; Rec."Document No.")
             {
                 Caption = 'Document Number';

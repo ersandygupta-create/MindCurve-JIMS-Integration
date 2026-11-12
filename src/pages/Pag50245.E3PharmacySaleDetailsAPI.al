@@ -24,16 +24,19 @@ page 50245 "E3 Pharmacy Sales API"
                 field(validationKey; Rec."Validation Key")
                 {
                     Caption = 'Validation Key';
-                    trigger OnValidate()
-                    begin
-                        DuplicateCheck();
-                    end;
                 }
                 field(entryNo; Rec."Entry No.") { Caption = 'Entry No.'; }
                 field(entryType; Rec."Entry Type") { Caption = 'Entry Type'; }
                 field(entryNumber; Rec."Entry Number") { Caption = 'Entry Number'; }
                 field(documentType; Rec."Document Type") { Caption = 'Document Type'; }
-                field(documentNumber; Rec."Document Number") { Caption = 'Document Number'; }
+                field(documentNumber; Rec."Document Number")
+                {
+                    Caption = 'Document Number';
+                    trigger OnValidate()
+                    begin
+                        DuplicateCheck();
+                    end;
+                }
                 field(d365DepartmentCode; Rec."D365 Department Code") { Caption = 'D365 Department Code'; }
                 field(departmentName; Rec."Department Name") { Caption = 'Department Name'; }
                 field(locationCode; Rec."Location Code") { Caption = 'Location Code'; }
@@ -68,7 +71,7 @@ page 50245 "E3 Pharmacy Sales API"
                 Caption = 'Lines';
                 EntityName = 'pharmacySaleLine';
                 EntitySetName = 'pharmacySaleLines';
-                SubPageLink = "Entry Type" = field("Entry Type"), "Document Type" = field("Document Type"), "Entry Number" = field("Entry Number");
+                SubPageLink = "Entry Type" = field("Entry Type"), "Document Type" = field("Document Type"), "Document Number" = field("Document Number");
             }
         }
     }
@@ -90,7 +93,7 @@ page 50245 "E3 Pharmacy Sales API"
         PharmacySaleHdr.SetRange("Entry Type", Rec."Entry Type");
         PharmacySaleHdr.SetRange("Document Type", Rec."Document Type");
         PharmacySaleHdr.SetRange("Document Number", Rec."Document Number");
-        if not PharmacySaleHdr.IsEmpty then
+        if PharmacySaleHdr.Count >= 1 then
             error('Duplicate Entry');
     end;
 }

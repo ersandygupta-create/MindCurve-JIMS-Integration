@@ -108,7 +108,7 @@ table 50076 "E3 Stock Consumption Line"
         {
             Caption = 'D365 Item Code';
             DataClassification = CustomerContent;
-            TableRelation = Item;
+            TableRelation = Item."No.";
             trigger OnValidate()
             var
                 Item: Record Item;
@@ -137,6 +137,7 @@ table 50076 "E3 Stock Consumption Line"
         {
             Caption = 'Batch No.';
             DataClassification = CustomerContent;
+            TableRelation = "Lot No. Information"."Lot No.";
         }
         field(18; Quantity; Decimal)
         {

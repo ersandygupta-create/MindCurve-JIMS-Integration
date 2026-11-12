@@ -77,6 +77,7 @@ table 50091 "E3 Transfer Line"
         {
             Caption = 'D365 Item Code';
             DataClassification = CustomerContent;
+            TableRelation = Item."No.";
         }
         field(15; "Item Name"; Text[150])
         {
@@ -92,6 +93,7 @@ table 50091 "E3 Transfer Line"
         {
             Caption = 'Batch No.';
             DataClassification = CustomerContent;
+            TableRelation = "Lot No. Information"."Lot No.";
         }
         field(18; Quantity; Decimal)
         {

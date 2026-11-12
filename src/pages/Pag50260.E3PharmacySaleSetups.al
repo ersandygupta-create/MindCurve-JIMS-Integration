@@ -44,6 +44,21 @@ page 50260 "E3 Pharmacy Sale Setup"
                     ToolTip = 'Specifies the account name.';
                     Editable = false;
                 }
+                field(Exempted; Rec.Exempted)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the item is exempted.';
+                }
+                field("Price Inclusive of Tax"; Rec."Price Inclusive of Tax")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the price is inclusive of tax.';
+                }
+                field("Invoice Type"; Rec."Invoice Type")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the Invoice type as GST Laws.';
+                }
             }
         }
     }

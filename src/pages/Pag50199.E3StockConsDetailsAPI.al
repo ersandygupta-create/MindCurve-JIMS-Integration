@@ -10,16 +10,25 @@ page 50199 "E3 Stock Consumption API"
     SourceTable = "E3 Stock Consumption Header";
     DelayedInsert = true;
     ApplicationArea = All;
-    ODataKeyFields = "Document No.";
+    ODataKeyFields = SystemId;
     Extensible = false;
 
     layout
     {
         area(content)
         {
+            field(systemId; Rec.SystemId)
+            {
+                Caption = 'SystemId';
+                Editable = false;
+            }
             field(documentNo; Rec."Document No.")
             {
                 Caption = 'Document Number';
+                trigger OnValidate()
+                begin
+                    DuplicateCheck();
+                end;
             }
             field(entryType; Rec."Entry Type")
             {
@@ -53,4 +62,13 @@ page 50199 "E3 Stock Consumption API"
             }
         }
     }
+    local procedure DuplicateCheck()
+    var
+        StockHeader: Record "E3 Stock Consumption Header";
+    begin
+        StockHeader.SetRange("Document No.", Rec."Document No.");
+        StockHeader.SetRange("Entry Type", Rec."Entry Type");
+        if StockHeader.Count >= 1 then
+            error('Duplicate Entry');
+    end;
 }

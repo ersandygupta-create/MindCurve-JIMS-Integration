@@ -7,12 +7,14 @@ page 50196 "E3 Stock Consumption List"
     UsageCategory = Lists;
     CardPageId = "E3 Stock Consumption Card";
     SourceTableView = sorting("Entry No.") where("Is Created" = filter(false));
+    DeleteAllowed = false;
     layout
     {
         area(content)
         {
             repeater(General)
             {
+                Editable = false;
                 field("Entry Type"; Rec."Entry Type")
                 {
                     ApplicationArea = All;
