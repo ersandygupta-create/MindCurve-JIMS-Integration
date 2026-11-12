@@ -6,6 +6,8 @@ permissionset 50001 "E3 Indent Permission"
     tabledata "E3 Indent Header" = RIMD,
     table "E3 Indent Line" = X,
     tabledata "E3 Indent Line" = RIMD,
+    table "E3 Cancel PO Lines" = X,
+    tabledata "E3 Cancel PO Lines" = RIMD,
     table "E3 Indenter Master" = X,
     tabledata "E3 Indenter Master" = RIMD,
     page "E3 Indent List" = X,

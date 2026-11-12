@@ -310,6 +310,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 var
                     IndentLine: Record "E3 Indent Line";
                     purchLine: Record "Purchase Line";
+                    CancelPOLines: Record "E3 Cancel PO Lines";
                 begin
                     CheckPoStatus();
                     rec.TestField("Cancel Reason");
@@ -328,10 +329,8 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
 
                             until IndentLine.Next() = 0;
                         purchLine := Rec;
-                        // purchLine."Indent Line No." := 0;
-                        // purchLine."Indent No." := '';
-                        // purchline."Indent Line Remarks" := '';
-                        // purchLine.Quantity := 0;
+                        CancelPOLines.TransferFields(purchLine);
+                        CancelPOLines.Insert();
                         purchLine.Delete(false);
                         Message('Purchase line %1 has been cancled from indent.', rec."Line No.");
                     end else
