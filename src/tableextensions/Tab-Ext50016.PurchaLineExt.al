@@ -249,6 +249,11 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
                                     if PurchHeader."Location Code" <> '' then begin
                                         if Location.Get(PurchHeader."Location Code") then
                                             "GST Credit" := Location."GST Credit";
+
+                                        if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then begin
+                                            Rec."Challan No." := PurchHeader."Vendor Invoice No.";
+                                            Rec."Challan Date" := PurchHeader."Document Date";
+                                        end;
                                     end;
                                 end;
                             end;
