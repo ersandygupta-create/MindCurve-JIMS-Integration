@@ -115,6 +115,25 @@ tableextension 50056 "E3 HIS Fixed Asset" extends "Fixed Asset"
             Caption = 'Asset Item Group';
             TableRelation = "E3 Asset Item Group".Code;
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                UpdateAssetsName();
+            end;
+        }
+        field(50012; "Asset Item Category"; Code[20])
+        {
+            Caption = 'Asset Item Category';
+            TableRelation = "E3 Asset Item Categories".Code;
+        }
+        field(50013; "Asset Item Name Group"; Code[20])
+        {
+            Caption = 'Asset Item Name Group';
+            TableRelation = "E3 Asset Item Group".Code;
+        }
+        field(50014; "Asset Item Sub Group"; Code[20])
+        {
+            Caption = 'Presentation Order';
+            TableRelation = "E3 Asset Item Sub Group".Code;
         }
     }
     trigger OnBeforeRename()
@@ -126,11 +145,35 @@ tableextension 50056 "E3 HIS Fixed Asset" extends "Fixed Asset"
     local procedure UpdateAssetsName()
     var
         AssetsName: Text[200];
+        AssetItemGroup: Record "E3 Asset Item Group";
     begin
+
+        if "Asset Item Group" = '' then begin
+            Clear("Asset Item Category");
+            Clear("Asset Item Name Group");
+            Clear("Asset Item Sub Group");
+            exit;
+        end;
+
+        if AssetItemGroup.Get("Asset Item Group") then begin
+
+            Validate(
+                "Asset Item Category",
+                AssetItemGroup."Asset Item Category");
+
+            Validate(
+                "Asset Item Name Group",
+                AssetItemGroup."Asset Item Name Group");
+
+            Validate(
+                "Asset Item Sub Group",
+                AssetItemGroup."Asset Item Sub Group");
+        end;
+
         AssetsName :=
             Rec."Global Dimension 1 Code" + '/' +
             Rec."Sub Location" + '/' +
-            //Rec."Assets Category Code" + '/' +
+            Rec."Asset Item Group" + '/' +
             Rec."No." + '/' +
             GetFinancialYear();
 

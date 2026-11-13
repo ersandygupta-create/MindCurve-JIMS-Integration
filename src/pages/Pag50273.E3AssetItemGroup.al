@@ -2,17 +2,16 @@
 page 50273 "E3 Asset Item Group"
 {
     Caption = 'Asset Item Group';
-    PageType = Document;
+    PageType = List;
     SourceTable = "E3 Asset Item Group";
     ApplicationArea = All;
-    DelayedInsert = true;
     UsageCategory = Lists;
 
     layout
     {
         area(Content)
         {
-            group(General)
+            repeater(General)
             {
                 ShowCaption = false;
 

@@ -24,16 +24,14 @@ codeunit 50057 "E3 Indent Status Mgmt."
 
         if IndentLineToProcess.FindSet(true) then
             repeat
-                // Skip Free Qty / Reject Qty lines
-                // when a matching PO Qty line exists.
-                if not ShouldSkipFreeQtyLine(IndentLineToProcess) then begin
+                if (DelChr(IndentLineToProcess.Remarks, '=', ' ') <> '') and
+                   (not ShouldSkipFreeQtyLine(IndentLineToProcess))
+                then begin
                     ClearLastError();
-
                     SendIndentLineDetails(IndentLineToProcess);
                 end;
             until IndentLineToProcess.Next() = 0;
     end;
-
 
     var
         E3APISetup: Record "E3 Integration API Setup";
@@ -80,12 +78,15 @@ codeunit 50057 "E3 Indent Status Mgmt."
         IndentLine.SetRange("SNo.", IndentLineUpdateLog."SNo.");
         IndentLine.SetRange("PO Created", true);
         IndentLine.SetRange(IsSent, false);
+        IndentLine.SetFilter(Remarks, '<>%1', '');
+        IndentLine.SetFilter("SNo.", '<>%1', 0);
 
         if IndentLine.FindSet() then
             repeat
-                // Skip only a matching Free Qty line.
-                if (not ShouldSkipFreeQtyLine(IndentLine)) and
-                   (IndentLine.Remarks <> '') and (IndentLine."SNo." <> 0) then begin
+                // Do not include blank or space-only remarks.
+                if (DelChr(IndentLine.Remarks, '=', ' ') <> '') and
+                   (not ShouldSkipFreeQtyLine(IndentLine))
+                then begin
                     Clear(ItemObj);
 
                     EntryNoText := Format(IndentLine."Entry No.");

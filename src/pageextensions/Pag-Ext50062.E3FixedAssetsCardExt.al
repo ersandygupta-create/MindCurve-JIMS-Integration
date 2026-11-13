@@ -35,6 +35,24 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the asset item category.';
                 }
+                field("Asset Item Category"; Rec."Asset Item Category")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Asset Item Category';
+                    ToolTip = 'Specifies the asset item category.';
+                }
+                field("Asset Item Name Group"; Rec."Asset Item Name Group")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Asset Item Name Group';
+                    ToolTip = 'Specifies the asset item name group.';
+                }
+                field("Asset Item Sub Group"; Rec."Asset Item Sub Group")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Asset Item Sub Group';
+                    ToolTip = 'Specifies the asset item sub group.';
+                }
                 field("Building Code"; Rec."Building Code")
                 {
                     ApplicationArea = All;
