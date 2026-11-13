@@ -105,35 +105,15 @@ tableextension 50056 "E3 HIS Fixed Asset" extends "Fixed Asset"
                 UpdateAssetsName();
             end;
         }
-        field(50010; "Assets Category Code"; Code[20])
-        {
-            Caption = 'Assets Category Code';
-            DataClassification = CustomerContent;
-            TableRelation = "E3 Assets Category".Code;
-            trigger OnValidate()
-            var
-                AssetsCategory: Record "E3 Assets Category";
-            begin
-                Rec."Assets Category Name" := '';
-
-                if Rec."Assets Category Code" <> '' then
-                    if AssetsCategory.Get(Rec."Assets Category Code") then
-                        Rec."Assets Category Name" := AssetsCategory.Description;
-                UpdateAssetsName();
-            end;
-        }
-        field(50011; "Assets Category Name"; Text[100])
-        {
-            Caption = 'Assets Category Name';
-            DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                UpdateAssetsName();
-            end;
-        }
-        field(50012; "Assets Name"; Text[200])
+        field(50010; "Assets Name"; Text[200])
         {
             Caption = 'Assets Name';
+            DataClassification = CustomerContent;
+        }
+        field(50011; "Asset Item Group"; Code[20])
+        {
+            Caption = 'Asset Item Group';
+            TableRelation = "E3 Asset Item Group".Code;
             DataClassification = CustomerContent;
         }
     }
@@ -150,7 +130,7 @@ tableextension 50056 "E3 HIS Fixed Asset" extends "Fixed Asset"
         AssetsName :=
             Rec."Global Dimension 1 Code" + '/' +
             Rec."Sub Location" + '/' +
-            Rec."Assets Category Code" + '/' +
+            //Rec."Assets Category Code" + '/' +
             Rec."No." + '/' +
             GetFinancialYear();
 

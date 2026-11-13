@@ -1,10 +1,10 @@
-page 50273 "E3 Assets Category List"
+page 50275 "E3 Asset Item Name Group"
 {
+    Caption = 'Asset Item Category';
     PageType = List;
+    SourceTable = "E3 Asset Item Name Group";
     ApplicationArea = All;
     UsageCategory = Lists;
-    SourceTable = "E3 Assets Category";
-    Caption = 'Assets Category List';
 
     layout
     {
@@ -15,12 +15,12 @@ page 50273 "E3 Assets Category List"
                 field(Code; Rec.Code)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the assets category code.';
+                    ToolTip = 'Specifies the Asset Item Name Group code.';
                 }
                 field(Description; Rec.Description)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the assets category description.';
+                    ToolTip = 'Specifies the Item Name Group description.';
                 }
             }
         }

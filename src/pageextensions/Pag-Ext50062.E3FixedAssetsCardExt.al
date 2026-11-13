@@ -3,14 +3,6 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
     layout
 
     {
-        modify(FAPostingGroup)
-        {
-            Caption = 'Assets Item Group';
-        }
-        modify("FA Subclass Code")
-        {
-            Caption = 'Assets Item Name Group';
-        }
         addafter("Serial No.")
         {
             field("Model No."; Rec."Model No.")
@@ -38,18 +30,10 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies a value Sub Location field.';
                 }
-                field("Assets Category Code"; Rec."Assets Category Code")
+                field("Asset Item Group"; Rec."Asset Item Group")
                 {
                     ApplicationArea = All;
-                    Caption = 'Assets Item Category Code';
-                    ToolTip = 'Specifies the assets category code.';
-                }
-                field("Assets Category Name"; Rec."Assets Category Name")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Assets Item Category Name';
-                    ToolTip = 'Specifies the assets category name.';
-                    Editable = false;
+                    ToolTip = 'Specifies the asset item category.';
                 }
                 field("Building Code"; Rec."Building Code")
                 {

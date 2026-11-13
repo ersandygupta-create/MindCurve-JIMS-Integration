@@ -361,13 +361,19 @@ permissionset 50000 "E3 HIS Permission"
     table "E3 Fixed Asset Transfer" = X,
     tabledata "E3 Fixed Asset Transfer" = RIMD,
     page "E3 Fixed Asset Transfer List" = X,
-    table "E3 Assets Category" = X,
-    tabledata "E3 Assets Category" = RIMD,
-    page "E3 Assets Category List" = X,
+    table "E3 Asset Item Categories" = X,
+    tabledata "E3 Asset Item Categories" = RIMD,
+    page "E3 Asset Item Category" = X,
     table "E3 Cancel PO Lines" = X,
-    tabledata "E3 Cancel PO Lines" = RIMD;
-
-
-
+    tabledata "E3 Cancel PO Lines" = RIMD,
+    table "E3 Asset Item Group" = X,
+    tabledata "E3 Asset Item Group" = RIMD,
+    page "E3 Asset Item Group" = X,
+    table "E3 Asset Item Name Group" = X,
+    tabledata "E3 Asset Item Name Group" = RIMD,
+    page "E3 Asset Item Name Group" = X,
+    table "E3 Asset Item Sub Group" = X,
+    tabledata "E3 Asset Item Sub Group" = RIMD,
+    page "E3 Asset Item Sub Group" = X;
 
 }
