@@ -45,7 +45,7 @@ page 50142 "E3 Item Category Master"
                 {
                     ToolTip = 'Specifies the value of the Is Sent field';
                     ApplicationArea = All;
-                    Editable = true;
+                    Editable = false;
                 }
                 field(Response; Rec.Response)
                 {

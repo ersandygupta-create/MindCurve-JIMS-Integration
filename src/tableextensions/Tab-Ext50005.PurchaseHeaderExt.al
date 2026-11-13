@@ -23,7 +23,21 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
                     if purchrcptHeader.FindFirst() then
                         error('Vendor Invoice No. %1 already used', "Vendor Invoice No.");
                 end;
+            end;
 
+            trigger OnAfterValidate()
+            var
+                PurchLine: Record "Purchase Line";
+            begin
+                PurchLine.Reset();
+                PurchLine.SetRange("Document Type", Rec."Document Type");
+                PurchLine.SetRange("Document No.", Rec."No.");
+
+                if PurchLine.FindSet(true) then
+                    repeat
+                        PurchLine.Validate("Challan No.", Rec."Vendor Invoice No.");
+                        PurchLine.Modify(true);
+                    until PurchLine.Next() = 0;
             end;
         }
         modify("Order Date")

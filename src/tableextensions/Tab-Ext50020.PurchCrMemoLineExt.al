@@ -133,6 +133,16 @@ tableextension 50020 "E3 HIS Purch. Cr. Memo Line" extends "Purch. Cr. Memo Line
             Caption = 'Batch No.';
             DataClassification = CustomerContent;
         }
+        field(50028; "Challan No."; Code[35])
+        {
+            Caption = 'Challan No.';
+            DataClassification = CustomerContent;
+        }
+        field(50029; "Challan Date"; Date)
+        {
+            Caption = 'Challan Date';
+            DataClassification = CustomerContent;
+        }
 
     }
 }

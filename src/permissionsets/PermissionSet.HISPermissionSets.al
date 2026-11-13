@@ -360,7 +360,12 @@ permissionset 50000 "E3 HIS Permission"
     page "E3 Custodian Type List" = X,
     table "E3 Fixed Asset Transfer" = X,
     tabledata "E3 Fixed Asset Transfer" = RIMD,
-    page "E3 Fixed Asset Transfer List" = X;
+    page "E3 Fixed Asset Transfer List" = X,
+    table "E3 Assets Category" = X,
+    tabledata "E3 Assets Category" = RIMD,
+    page "E3 Assets Category List" = X,
+    table "E3 Cancel PO Lines" = X,
+    tabledata "E3 Cancel PO Lines" = RIMD;
 
 
 

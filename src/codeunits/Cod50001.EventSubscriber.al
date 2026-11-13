@@ -1250,4 +1250,18 @@ codeunit 50001 "E3 HIS Event Subscriber"
                         'Difference between Pharmacy Amount and Sales Invoice Statistics Net Amount cannot be more than 1.');
             end;
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Copy Document Mgt.", 'OnAfterCopyPurchInvLine', '', false, false)]
+    local procedure OnAfterCopyPurchInvLine(
+        FromPurchInvLine: Record "Purch. Inv. Line";
+        var ToPurchaseLine: Record "Purchase Line";
+        ToPurchHeader: Record "Purchase Header")
+    begin
+        if ToPurchHeader."Document Type" <> ToPurchHeader."Document Type"::"Return Order" then
+            exit;
+
+        ToPurchaseLine."Challan No." := FromPurchInvLine."Challan No.";
+        ToPurchaseLine."Challan Date" := FromPurchInvLine."Challan Date";
+        ToPurchaseLine.Modify(true);
+    end;
 }

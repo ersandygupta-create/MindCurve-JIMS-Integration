@@ -6,7 +6,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
         {
             Editable = IsPageEditable;
         }
-        modify(Inventory)
+        modify(InventoryGrp)
         {
             Editable = IsPageEditable;
         }
@@ -50,10 +50,12 @@ pageextension 50064 "Item Ext" extends "Item Card"
         modify("Purch. Unit of Measure")
         {
             ShowMandatory = true;
+            Editable = Rec."Purch. Unit of Measure" = '';
         }
         modify("Sales Unit of Measure")
         {
             ShowMandatory = true;
+            Editable = Rec."Sales Unit of Measure" = '';
         }
         modify("Gen. Prod. Posting Group")
         {
@@ -62,6 +64,10 @@ pageextension 50064 "Item Ext" extends "Item Card"
         modify("Inventory Posting Group")
         {
             editable = false;
+        }
+        modify("Base Unit of Measure")
+        {
+            Editable = Rec."Base Unit of Measure" = '';
         }
         addafter(Description)
         {
@@ -524,7 +530,7 @@ pageextension 50064 "Item Ext" extends "Item Card"
                 {
                     ApplicationArea = All;
                     ShowMandatory = true;
-                    Editable = Rec.Status = Rec.Status::Created;
+                    Editable = Rec.Packing = '';
                     ToolTip = 'Specifies the value of Packing field.';
                 }
 

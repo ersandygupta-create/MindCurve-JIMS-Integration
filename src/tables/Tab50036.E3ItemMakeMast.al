@@ -11,9 +11,16 @@ table 50036 "E3 Item Make Master"
             Caption = 'Code';
             DataClassification = CustomerContent;
             trigger OnValidate()
+            var
+                InventorySetup: Record "Inventory Setup";
+                NoSeries: Codeunit "No. Series";
             begin
-                if (xRec.Code <> '') and (Rec.Code <> xRec.Code) then
-                    Error('Code cannot be modified once it has been assigned.');
+                if Code <> xRec.Code then begin
+                    InventorySetup.Get();
+                    InventorySetup.TestField("Item Make Nos.");
+                    NoSeries.TestManual(InventorySetup."Item Make Nos.");
+                    "No. Series" := '';
+                end;
             end;
         }
         field(2; "Company Name"; Text[60])

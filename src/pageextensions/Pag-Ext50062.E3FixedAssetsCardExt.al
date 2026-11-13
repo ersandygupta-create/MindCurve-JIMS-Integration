@@ -3,6 +3,14 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
     layout
 
     {
+        modify(FAPostingGroup)
+        {
+            Caption = 'Assets Item Group';
+        }
+        modify("FA Subclass Code")
+        {
+            Caption = 'Assets Item Name Group';
+        }
         addafter("Serial No.")
         {
             field("Model No."; Rec."Model No.")
@@ -19,6 +27,30 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
             group("FA Attributes")
             {
                 Caption = 'JIMS Attributes';
+                field("Global Dimension 1 Code"; Rec."Global Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                    ShowMandatory = true;
+                    ToolTip = 'Specifies a value BU Code field.';
+                }
+                field("Sub Location"; Rec."Sub Location")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies a value Sub Location field.';
+                }
+                field("Assets Category Code"; Rec."Assets Category Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Assets Item Category Code';
+                    ToolTip = 'Specifies the assets category code.';
+                }
+                field("Assets Category Name"; Rec."Assets Category Name")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Assets Item Category Name';
+                    ToolTip = 'Specifies the assets category name.';
+                    Editable = false;
+                }
                 field("Building Code"; Rec."Building Code")
                 {
                     ApplicationArea = All;
@@ -26,12 +58,24 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
                     //Editable = false;
                     ToolTip = 'Specifies the building code.';
                 }
+                field("Building Name"; Rec."Building Name")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the building name.';
+                }
                 field("Room/Ward No."; Rec."Room/Ward No.")
                 {
                     ApplicationArea = All;
                     Caption = 'Room/Ward No.';
                     //Editable = false;
                     ToolTip = 'Specifies the room or ward number.';
+                }
+                field("Room/Ward Name"; Rec."Room/Ward Name")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    Caption = 'Floor Name';
+                    ToolTip = 'Specifies the room or ward name.';
                 }
                 field("Custodian ID"; Rec."Custodian ID")
                 {
@@ -43,16 +87,28 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
                 field("Custodian Name"; Rec."Custodian Name")
                 {
                     ApplicationArea = All;
-                    Caption = 'Custodian Name';
-                    //Editable = false;
+                    Caption = 'Primary Staff Name';
+                    Editable = false;
                     ToolTip = 'Specifies the custodian name.';
                 }
                 field("Name (Head of Department)"; Rec."Name (Head of Department)")
                 {
                     ApplicationArea = All;
-                    Caption = 'Name (Head of Department)';
+                    Caption = 'Incharge/HOD Name';
                     Editable = false;
                     ToolTip = 'Specifies the name of the head of department.';
+                }
+                field("Global Dimension 2 Code"; Rec."Global Dimension 2 Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'User Department';
+                    ToolTip = 'Specifies a value dept code field.';
+                }
+                field("Assets Name"; Rec."Assets Name")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Assets Card Name';
+                    ToolTip = 'Specifies the asset name.';
                 }
             }
             part("Fixed Asset Transfer List"; "E3 Fixed Asset Transfer List")
@@ -74,62 +130,4 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
             }
         }
     }
-    // actions
-    // {
-    //     addafter(Action39)
-    //     {
-    //         action("Generate QR Code")
-    //         {
-    //             Image = QRCode;
-    //             ApplicationArea = All;
-    //             Caption = 'Generate QR Code';
-    //             Promoted = true;
-    //             PromotedCategory = Process;
-
-    //             trigger OnAction()
-    //             var
-    //                 SwissQRHelper: Codeunit "Swiss QR Code Helper";
-    //                 TempBlob: Codeunit "Temp Blob";
-    //                 InS: InStream;
-    //                 FileName: Text;
-    //                 FARec: Record "Fixed Asset";
-    //             begin
-    //                 FARec := Rec;
-
-    //                 SwissQRHelper.GenerateQRCodeImage(FARec."No.", TempBlob);
-
-    //                 if TempBlob.HasValue() then begin
-    //                     FileName := FARec."No." + '_QRCode.png';
-    //                     TempBlob.CreateInStream(InS);
-    //                     Clear(FARec."QR Code");
-    //                     FARec."QR Code".ImportStream(InS, FileName, 'image/png');
-
-    //                     FARec.Modify(true);
-    //                     Message('QR Code generated for FA %1', FARec."No.");
-    //                 end else
-    //                     Error('Failed to generate QR Code.');
-    //             end;
-    //         }
-    //     }
-    // }
-    // trigger OnAfterGetRecord()
-    // var
-    //     SwissQRHelper: Codeunit "Swiss QR Code Helper";
-    //     TempBlob: Codeunit "Temp Blob";
-    //     SourceText: Text;
-    //     InS: InStream;
-    //     FileName: Text;
-    // begin
-    //     if (Rec."No." <> '') then begin
-    //         SwissQRHelper.GenerateQRCodeImage(Rec."No.", TempBlob);
-    //         if TempBlob.HasValue() then begin
-    //             FileName := Rec."No." + '_QRCode.png';
-    //             TempBlob.CreateInStream(InS);
-    //             Clear(Rec."QR Code");
-    //             Rec."QR Code".ImportStream(InS, FileName, 'image/png');
-
-    //             // Rec.Modify(false);
-    //         end;
-    //     end;
-    // end;
 }
