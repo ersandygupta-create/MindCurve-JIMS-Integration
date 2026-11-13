@@ -66,6 +66,8 @@ table 50085 "E3 Bill Application"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
+                if (rec."Disallowed Billable" > rec."Med PRF") then
+                    Error('MEDPRF amount should be more than Disallowed billable.');
                 CalculateTPAAmounts();
             end;
         }
@@ -149,6 +151,16 @@ table 50085 "E3 Bill Application"
             Editable = false;
             DataClassification = CustomerContent;
         }
+        field(23; "E3 Encounter No."; Code[50])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Encounter No.';
+        }
+        field(24; "Balance Amount"; Decimal)
+        {
+            Caption = 'Balance Amount';
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {
@@ -227,6 +239,7 @@ table 50085 "E3 Bill Application"
                 "Total Received From TPA" - "Bill Amount"
         else
             "Excess Billable" := 0;
+        "Balance Amount" := "Bill Amount" - "Total Received From TPA";
     end;
 
     local procedure CalculateMedPRF()

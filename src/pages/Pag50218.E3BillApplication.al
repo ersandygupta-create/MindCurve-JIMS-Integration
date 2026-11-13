@@ -61,6 +61,14 @@ page 50218 "E3 Bill Application List"
                     Editable = false;
                     ToolTip = 'Specifies the UHID number.';
                 }
+                field("E3 Encounter No.";
+                rec."E3 Encounter No.")
+                {
+                    Caption = 'Encounter No.';
+                    ToolTip = 'Encounter No.';
+                    ApplicationArea = all;
+                    Editable = false;
+                }
                 field("Bill Amount"; Rec."Bill Amount")
                 {
                     ApplicationArea = All;
@@ -71,6 +79,11 @@ page 50218 "E3 Bill Application List"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the payment received.';
+                }
+                field("TDS Amount"; Rec."TDS Amount")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the TDS amount.';
                 }
                 field("Disallowed Reg. Wise"; Rec."Disallowed Reg. Wise")
                 {
@@ -93,11 +106,7 @@ page 50218 "E3 Bill Application List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the security disallowed amount.';
                 }
-                field("TDS Amount"; Rec."TDS Amount")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the TDS amount.';
-                }
+
                 field("Total Received From TPA"; Rec."Total Received From TPA")
                 {
                     ApplicationArea = All;
@@ -107,6 +116,12 @@ page 50218 "E3 Bill Application List"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the excess billable amount.';
+                }
+                field("Balance Amount"; Rec."Balance Amount")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                    ToolTip = 'Balance Amount';
                 }
             }
         }

@@ -5,7 +5,8 @@ page 50217 "E3 Allocation Receipt List"
     SourceTable = "E3 Allocation Receipt";
     ApplicationArea = All;
     UsageCategory = Lists;
-    DeleteAllowed = true;
+    DeleteAllowed = false;
+    InsertAllowed = false;
 
     layout
     {

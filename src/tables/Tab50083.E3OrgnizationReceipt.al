@@ -18,6 +18,7 @@ table 50083 "E3 Organization Receipt"
         {
             Caption = 'HIS Document Type';
             DataClassification = CustomerContent;
+            InitValue = "Settlement";
         }
         field(3; "Document No."; Code[50])
         {
@@ -83,6 +84,7 @@ table 50083 "E3 Organization Receipt"
         {
             Caption = 'Bal. Account Type';
             DataClassification = CustomerContent;
+            InitValue = "Bank Account";
         }
         field(9; "Bal. Account No"; Code[20])
         {
@@ -193,15 +195,18 @@ table 50083 "E3 Organization Receipt"
     var
         IntegrationSetup: Record "E3 HIS Integartion Setup";
         NoSeries: Codeunit "No. Series";
+        UserSetup: Record "User Setup";
     begin
+        "Document Date" := WorkDate();
         if "Document No." = '' then begin
             IntegrationSetup.Get();
             IntegrationSetup.TestField("Settlement Nos.");
 
             "Document No." :=
                 NoSeries.GetNextNo(IntegrationSetup."Settlement Nos.", WorkDate());
-            "Document Date" := WorkDate();
         end;
+        UserSetup.Get(UserId());
+        "Shortcut Dimension 1 Code" := UserSetup."EDC Security Center Filter";
     end;
 
     procedure AssistEdit(OldORHeader: Record "E3 Organization Receipt"): Boolean

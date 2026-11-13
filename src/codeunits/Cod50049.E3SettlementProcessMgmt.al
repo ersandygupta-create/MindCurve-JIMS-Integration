@@ -80,6 +80,88 @@ codeunit 50049 "E3 Settlement Process Mgmt."
 
     end;
 
+    procedure CreateAndPostSettlement(var OrgReceipt: Record "E3 Organization Receipt")
+    var
+        GenJournalLine: Record "Gen. Journal Line";
+        HISGLAccountMapping: Record "E3 Settlement Process Setup";
+        intLineNo: Integer;
+        MOPLbl: Label 'MOP Setup not found for Mode of payment %1.';
+        DocumentTypeLbl: Label 'Setup not found for Document Type %1.';
+        GenJnlPostBatch: Codeunit "Gen. Jnl.-Post Batch";
+    begin
+        IntegrationSetup.GET();
+        IntegrationSetup.TESTFIELD("Integration Enabled", TRUE);
+        IntegrationSetup.TESTFIELD("Settlement Process Enabled", TRUE);
+        IntegrationSetup.TESTFIELD("Vendor Gen. Bus. Posting Group");
+        IntegrationSetup.TESTFIELD("Custom Gen. Bus. Posting Group");
+
+        IntegrationSetupLine.Reset();
+        IntegrationSetupLine.SetRange(Type, IntegrationSetupLine.Type::Settlement);
+        IntegrationSetupLine.FindFirst();
+        IntegrationSetupLine.TestField("General Journal Template Code");
+        IntegrationSetupLine.TestField("General Journal Batch Code");
+
+        IF NOT (IntegrationSetup."Integration Enabled") AND (IntegrationSetup."Settlement Process Enabled") THEN
+            EXIT;
+
+        OrgnizationReceipt.RESET();
+        OrgnizationReceipt.SETFILTER(OrgnizationReceipt.IsCreated, '%1', FALSE);
+        OrgnizationReceipt.SETFILTER(OrgnizationReceipt."Received Amount", '<>%1', 0);
+        OrgnizationReceipt.SetRange("Document No.", OrgReceipt."Document No.");
+        IF OrgnizationReceipt.FINDSET() THEN
+            REPEAT
+                checkMandatoryField(OrgnizationReceipt);
+                GenJournalLine.RESET();
+                GenJournalLine.SETRANGE("Journal Template Name", IntegrationSetupLine."General Journal Template Code");
+                GenJournalLine.SETRANGE("Journal Batch Name", IntegrationSetupLine."General Journal Batch Code");
+                IF GenJournalLine.FINDLAST() THEN
+                    intLineNo := GenJournalLine."Line No."
+                ELSE
+                    intLineNo := 10000;
+
+                GenJournalLine.INIT();
+                GenJournalLine.VALIDATE(GenJournalLine."Journal Template Name", IntegrationSetupLine."General Journal Template Code");
+                GenJournalLine.VALIDATE(GenJournalLine."Journal Batch Name", IntegrationSetupLine."General Journal Batch Code");
+                intLineNo += 10000;
+                GenJournalLine."Line No." := intLineNo;
+                //GenJournalLine.VALIDATE("Document Type", OrgnizationReceipt."Document Type");
+                GenJournalLine.VALIDATE("Document No.", OrgnizationReceipt."Document No.");
+                GenJournalLine.VALIDATE("Posting Date", OrgnizationReceipt."Document Date");
+                GenJournalLine.VALIDATE("Account Type", OrgnizationReceipt."Account Type");
+                GenJournalLine.VALIDATE("Account No.", OrgnizationReceipt."Account No.");
+                GenJournalLine.Validate("E3 UTR No.", OrgnizationReceipt."Instrument No.");
+
+                GenJournalLine.VALIDATE(Amount, -1 * OrgnizationReceipt."Received Amount");
+                GenJournalLine.VALIDATE("Cheque Date", OrgnizationReceipt."Instrument Date");
+                GenJournalLine.VALIDATE("Cheque No.", COPYSTR(OrgnizationReceipt."Instrument No.", 1, 10));
+                GenJournalLine.validate("Bal. Account Type", OrgnizationReceipt."Bal. Account Type");
+                GenJournalLine.validate("Bal. Account No.", OrgnizationReceipt."Bal. Account No");
+                if OrgnizationReceipt."Shortcut Dimension 1 Code" <> '' then begin
+                    GenJournalLine.VALIDATE("Location Code", OrgnizationReceipt."Shortcut Dimension 1 Code");
+                    GenJournalLine.VALIDATE("Shortcut Dimension 1 Code", OrgnizationReceipt."Shortcut Dimension 1 Code");
+                end;
+
+                if OrgnizationReceipt."Shortcut Dimension 2 Code" <> '' then
+                    GenJournalLine.VALIDATE("Shortcut Dimension 2 Code", (OrgnizationReceipt."Shortcut Dimension 2 Code"));
+                Evaluate(HisDocumentType, Format(OrgnizationReceipt."HIS Document Type"));
+                GenJournalLine.VALIDATE("E3 HIS Document Type", HisDocumentType);
+
+                GenJournalLine.INSERT();
+
+                OrgnizationReceipt."Created By" := USERID;
+                OrgnizationReceipt."Created Date Time" := CURRENTDATETIME;
+                OrgnizationReceipt.IsCreated := TRUE;
+                OrgnizationReceipt.MODIFY();
+            UNTIL OrgnizationReceipt.NEXT() = 0;
+
+        // Post the created General Journal lines using a Gen. Journal Line reference
+        GenJournalLine.RESET();
+        GenJournalLine.SETRANGE("Journal Template Name", IntegrationSetupLine."General Journal Template Code");
+        GenJournalLine.SETRANGE("Journal Batch Name", IntegrationSetupLine."General Journal Batch Code");
+        if GenJournalLine.FindFirst() then
+            GenJnlPostBatch.Run(GenJournalLine);
+    end;
+
     procedure PostGenJnlLineEntries()
     var
         GenJnlLine: Record "Gen. Journal Line";

@@ -114,6 +114,7 @@ report 50056 "E3 Bill Application Import"
                         // Initialize and insert the record.
                         BillApplication.Init();
                         BillApplication."Entry No." := NextEntryNo;
+                        BillApplication."E3 Encounter No." := CustomerLedgerEntry."E3 Encounter No.";
                         BillApplication."Receipt No." := AllocationReceipt."Receipt No.";
                         BillApplication."Allocation Receipt Entry No." := EntryNo;
                         BillApplication."Customer Code" := CustomerLedgerEntry."Customer No.";

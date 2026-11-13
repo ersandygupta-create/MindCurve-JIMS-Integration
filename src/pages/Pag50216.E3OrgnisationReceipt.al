@@ -110,6 +110,7 @@ page 50216 "E3 Organization Receipt"
                 ApplicationArea = All;
                 Image = CreateLedgerBudget;
                 Promoted = true;
+                Visible = false;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 ToolTip = 'Executes the Create Orgnization Entries action.';
@@ -136,7 +137,7 @@ page 50216 "E3 Organization Receipt"
                     OrgnizationReceiptMgmt: Codeunit "E3 Settlement Process Mgmt.";
                 begin
 
-                    OrgnizationReceiptMgmt.PostGenJnlLineEntries();
+                    OrgnizationReceiptMgmt.CreateAndPostSettlement(Rec);
                 end;
             }
         }
