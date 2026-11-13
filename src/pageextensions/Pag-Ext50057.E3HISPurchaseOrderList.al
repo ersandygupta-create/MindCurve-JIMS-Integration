@@ -116,6 +116,22 @@ pageextension 50057 "E3 HIS Purchase Order List" extends "Purchase Order List"
                     CurrPage.Update(false);
                 end;
             }
+            action("View PO Cancel Entries")
+            {
+                ApplicationArea = All;
+                Caption = 'PO Cancel History';
+                ToolTip = 'View PO Cancel entries for the selected purchase order.';
+                Image = Approvals;
+
+                trigger OnAction()
+                var
+                    POCancelEntry: Record "E3 Cancel PO Lines";
+                begin
+                    POCancelEntry.Reset();
+                    POCancelEntry.SetRange("Document No.", Rec."No.");
+                    Page.Run(Page::"E3 Cancel PO Lines", POCancelEntry);
+                end;
+            }
         }
     }
 
