@@ -1,9 +1,6 @@
 codeunit 50064 "E3 Indent Status SO Mgmt."
 {
     TableNo = "Job Queue Entry";
-
-
-
     trigger OnRun()
     var
         IndentLineToProcess: Record "E3 Indent Line";
@@ -52,6 +49,7 @@ codeunit 50064 "E3 Indent Status SO Mgmt."
         ResponseToken: JsonToken;
         ChildObj: JsonObject;
         CJToken: JsonToken;
+        IndentLineToMarkSent: Record "E3 Indent Line";
         ReqPayload: Text;
         JsonResponse: Text;
         ResponseMsg: Text;
@@ -187,13 +185,29 @@ codeunit 50064 "E3 Indent Status SO Mgmt."
                         ResponseMsg := CJToken.AsValue().AsText();
 
                     if ResponseMsg = 'Created Successfully' then begin
-                        IndentLineUpdateLog.IsSent := true;
-                        IndentLineUpdateLog.Response :=
-                            CopyStr(
-                                ResponseMsg,
-                                1,
-                                MaxStrLen(IndentLineUpdateLog.Response));
-                        IndentLineUpdateLog.Modify(true);
+                        // The request contains all pending sales-order lines for
+                        // this document/serial number. Mark the whole batch sent
+                        // so the job queue does not submit it again per sibling.
+                        IndentLineToMarkSent.Reset();
+                        IndentLineToMarkSent.SetRange(
+                            "Document No.", IndentLineUpdateLog."Document No.");
+                        IndentLineToMarkSent.SetRange(
+                            "SNo.", IndentLineUpdateLog."SNo.");
+                        IndentLineToMarkSent.SetRange("SO Created", true);
+                        IndentLineToMarkSent.SetRange(IsSent, false);
+
+                        if IndentLineToMarkSent.FindSet(true) then
+                            repeat
+                                if IndentLineToMarkSent."SNo." <> 0 then begin
+                                    IndentLineToMarkSent.IsSent := true;
+                                    IndentLineToMarkSent.Response :=
+                                        CopyStr(
+                                            ResponseMsg,
+                                            1,
+                                            MaxStrLen(IndentLineToMarkSent.Response));
+                                    IndentLineToMarkSent.Modify(true);
+                                end;
+                            until IndentLineToMarkSent.Next() = 0;
                         exit(true);
                     end;
                 end;
