@@ -61,13 +61,17 @@ page 50217 "E3 Allocation Receipt List"
                     ToolTip = 'Specifies the allocated amount.';
                     trigger OnValidate()
                     begin
-
+                        CalculateBalanceAmount();
                     end;
-
+                }
+                field("Balance Amount"; BalanceAmt)
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                    ToolTip = 'Balance Amount';
                 }
             }
         }
-
     }
 
     actions
@@ -89,7 +93,7 @@ page 50217 "E3 Allocation Receipt List"
                 begin
                     receiptNo := Rec.GetRangeMin("Receipt No.");
                     GetOrganizationReceipt(receiptNo);
-                    //CurrPage.Update(true);
+                    CurrPage.Update(true);
                 end;
             }
             action(SelectAllocation)
@@ -106,44 +110,66 @@ page 50217 "E3 Allocation Receipt List"
                     if Rec."Receipt No." = '' then
                         exit;
 
-                    // Pass control to the parent card to update state and refresh Subpage C
                     CurrPage.Update(true);
                 end;
             }
         }
     }
 
-
-    trigger OnModifyRecord(): Boolean
+    trigger OnAfterGetRecord()
     begin
-        CurrPage.Update(false);
+        CalculateBalanceAmount();
     end;
 
     trigger OnAfterGetCurrRecord()
     var
         OrgReceipt: Record "E3 Organization Receipt";
     begin
+        CalculateBalanceAmount();
+
         if Rec."Receipt No." = '' then
             exit;
+
         OrgReceipt.Reset();
         OrgReceipt.SetRange("Document No.", Rec."Receipt No.");
         if OrgReceipt.Find('-') then begin
-            // Update parent table A tracking fields so subpage C knows which line is currently active
             if (OrgReceipt."Selected Allocation Entry No." <> Rec."Entry No.") or
                (OrgReceipt."Selected Customer Codecode" <> Rec."Customer Code") then begin
                 OrgReceipt."Selected Allocation Entry No." := Rec."Entry No.";
                 OrgReceipt."Selected Customer Codecode" := Rec."Customer Code";
                 OrgReceipt.Modify(false);
-
-                // Forces parent page buffers to refresh UI immediately
-
             end;
         end;
-        CurrPage.Update(false);
-
     end;
 
+    trigger OnModifyRecord(): Boolean
+    begin
+        CalculateBalanceAmount();
+        CurrPage.Update(false);
+    end;
 
+    var
+        BalanceAmt: Decimal;
+
+    local procedure CalculateBalanceAmount()
+    var
+        BillApp: Record "E3 Bill Application";
+        TotalReceived: Decimal;
+    begin
+        TotalReceived := 0;
+
+        if (Rec."Receipt No." <> '') and (Rec."Customer Code" <> '') then begin
+            BillApp.Reset();
+            BillApp.SetRange("Receipt No.", Rec."Receipt No.");
+            BillApp.SetRange("Customer Code", Rec."Customer Code");
+            if BillApp.FindSet() then
+                repeat
+                    TotalReceived += BillApp."Payment Received";
+                until BillApp.Next() = 0;
+        end;
+
+        BalanceAmt := Rec."Allocated Amount" - TotalReceived;
+    end;
 
     local procedure GetOrganizationReceipt(ReceiptNo: Code[50])
     var
@@ -165,8 +191,6 @@ page 50217 "E3 Allocation Receipt List"
             GetOrgReceiptPage.SetSelectionFilter(OrgReceipt);
 
             if OrgReceipt.FindFirst() then begin
-                // Create Allocation Receipt record if it does not exist
-                //if Rec."Entry No." = 0 then begin
                 AllocationReceipt.Init();
                 AllocationReceipt.Validate("Receipt No.", OrgReceipt."Document No.");
                 AllocationReceipt.Validate("Receipt Date", OrgReceipt."Document Date");
@@ -174,28 +198,6 @@ page 50217 "E3 Allocation Receipt List"
                 AllocationReceipt.Validate("HIS Document Type", format(OrgReceipt."HIS Document Type"));
                 AllocationReceipt.Validate("Shortcut Dimension 1 Code", OrgReceipt."Shortcut Dimension 1 Code");
                 AllocationReceipt.Insert(true);
-                //end;
-
-                // Update Allocation Receipt table
-
-                //Rec.Modify(true);
-
-                // Update Organization Receipt status
-                /*if OrgReceipt."Allocation Amount" = 0 then
-                    OrgReceipt.Validate("Allocation Status", OrgReceipt."Allocation Status"::" ")
-                else
-                    if OrgReceipt."Allocation Amount" >= OrgReceipt."Received Amount" then
-                        OrgReceipt.Validate(
-                            "Allocation Status",
-                            OrgReceipt."Allocation Status"::"Fully Allocate")
-                    else
-                        OrgReceipt.Validate(
-                            "Allocation Status",
-                            OrgReceipt."Allocation Status"::"Partial Allocate");
-
-                OrgReceipt.Modify(true);
-*/
-                //  CurrPage.Update(false);
             end;
         end;
     end;
@@ -203,5 +205,11 @@ page 50217 "E3 Allocation Receipt List"
     procedure GetSelectedCustomerCode(): Code[20]
     begin
         exit(Rec."Customer Code");
+    end;
+
+    procedure RefreshData()
+    begin
+        CalculateBalanceAmount();
+        CurrPage.Update(false);
     end;
 }

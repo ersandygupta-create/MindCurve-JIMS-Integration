@@ -142,4 +142,10 @@ page 50216 "E3 Organization Receipt"
             }
         }
     }
+    // Inside your Parent Card Page code:
+    procedure UpdateAllocationSubpage()
+    begin
+        // Replace 'AllocationReceiptSubpage' with the actual control name of your subpage on the parent card
+        CurrPage.AllocationReceipt.Page.RefreshData();
+    end;
 }

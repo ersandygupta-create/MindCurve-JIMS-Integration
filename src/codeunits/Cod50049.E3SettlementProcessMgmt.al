@@ -127,6 +127,7 @@ codeunit 50049 "E3 Settlement Process Mgmt."
                 //GenJournalLine.VALIDATE("Document Type", OrgnizationReceipt."Document Type");
                 GenJournalLine.VALIDATE("Document No.", OrgnizationReceipt."Document No.");
                 GenJournalLine.VALIDATE("Posting Date", OrgnizationReceipt."Document Date");
+                GenJournalLine."Document Type" := GenJournalLine."Document Type"::Payment;
                 GenJournalLine.VALIDATE("Account Type", OrgnizationReceipt."Account Type");
                 GenJournalLine.VALIDATE("Account No.", OrgnizationReceipt."Account No.");
                 GenJournalLine.Validate("E3 UTR No.", OrgnizationReceipt."Instrument No.");

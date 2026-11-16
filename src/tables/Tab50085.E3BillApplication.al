@@ -38,7 +38,7 @@ table 50085 "E3 Bill Application"
         }
         field(6; "Bill Amount"; Decimal)
         {
-            Caption = 'Bill Amount';
+            Caption = 'Outstanding Amount';
             DataClassification = CustomerContent;
         }
         field(7; "Payment Received"; Decimal)
@@ -160,6 +160,12 @@ table 50085 "E3 Bill Application"
         {
             Caption = 'Balance Amount';
             DataClassification = CustomerContent;
+        }
+        field(25; "Revenue Bill Amount"; Decimal)
+        {
+            Caption = 'Bill Amount';
+            FieldClass = FlowField;
+            CalcFormula = lookup("E3 HIS Revenue Header".Amount where("Document No." = field("Bill No")));
         }
     }
     keys

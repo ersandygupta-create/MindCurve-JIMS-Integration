@@ -78,6 +78,13 @@ table 50084 "E3 Allocation Receipt"
             ValidateTableRelation = false;
             DataClassification = CustomerContent;
         }
+        field(11; "Balance Amount"; Decimal)
+        {
+            Caption = 'Balance Amount';
+            Editable = false;
+            FieldClass = FlowField;
+            CalcFormula = sum("E3 Bill Application"."Payment Received" where("Receipt No." = field("Receipt No."), "Customer Code" = field("Customer Code")));
+        }
     }
     keys
     {

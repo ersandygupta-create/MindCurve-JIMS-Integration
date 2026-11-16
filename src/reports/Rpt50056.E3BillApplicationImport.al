@@ -100,35 +100,35 @@ report 50056 "E3 Bill Application Import"
                     BillApplication.SetRange(
                         "Bill No", CustomerLedgerEntry."Document No.");
 
-                    if not BillApplication.FindFirst() then begin
-                        // Get the next Entry No.
-                        LastBillApplication.Reset();
-                        LastBillApplication.LockTable();
+                    // if not BillApplication.FindFirst() then begin
+                    // Get the next Entry No.
+                    LastBillApplication.Reset();
+                    LastBillApplication.LockTable();
 
-                        if LastBillApplication.FindLast() then
-                            NextEntryNo :=
-                                LastBillApplication."Entry No." + 1
-                        else
-                            NextEntryNo := 1;
+                    if LastBillApplication.FindLast() then
+                        NextEntryNo :=
+                            LastBillApplication."Entry No." + 1
+                    else
+                        NextEntryNo := 1;
 
-                        // Initialize and insert the record.
-                        BillApplication.Init();
-                        BillApplication."Entry No." := NextEntryNo;
-                        BillApplication."E3 Encounter No." := CustomerLedgerEntry."E3 Encounter No.";
-                        BillApplication."Receipt No." := AllocationReceipt."Receipt No.";
-                        BillApplication."Allocation Receipt Entry No." := EntryNo;
-                        BillApplication."Customer Code" := CustomerLedgerEntry."Customer No.";
-                        BillApplication."Customer Name" := AllocationReceipt."Customer Name";
-                        BillApplication."Bill No" := CustomerLedgerEntry."Document No.";
-                        BillApplication."Bill Date" := CustomerLedgerEntry."Document Date";
-                        BillApplication."UHIDNo" := CustomerLedgerEntry."E3 UHID";
-                        CustomerLedgerEntry.CalcFields("Remaining Amount");
-                        BillApplication."Bill Amount" := CustomerLedgerEntry."Remaining Amount";
-                        BillApplication."Patient Name" := CustomerLedgerEntry."E3 Patient Name";
+                    // Initialize and insert the record.
+                    BillApplication.Init();
+                    BillApplication."Entry No." := NextEntryNo;
+                    BillApplication."E3 Encounter No." := CustomerLedgerEntry."E3 Encounter No.";
+                    BillApplication."Receipt No." := AllocationReceipt."Receipt No.";
+                    BillApplication."Allocation Receipt Entry No." := EntryNo;
+                    BillApplication."Customer Code" := CustomerLedgerEntry."Customer No.";
+                    BillApplication."Customer Name" := AllocationReceipt."Customer Name";
+                    BillApplication."Bill No" := CustomerLedgerEntry."Document No.";
+                    BillApplication."Bill Date" := CustomerLedgerEntry."Document Date";
+                    BillApplication."UHIDNo" := CustomerLedgerEntry."E3 UHID";
+                    CustomerLedgerEntry.CalcFields("Remaining Amount");
+                    BillApplication."Bill Amount" := CustomerLedgerEntry."Remaining Amount";
+                    BillApplication."Patient Name" := CustomerLedgerEntry."E3 Patient Name";
 
-                        BillApplication.Insert(true);
-                        InsertedCount += 1;
-                    end;
+                    BillApplication.Insert(true);
+                    InsertedCount += 1;
+                //  end;
                 until CustomerLedgerEntry.Next() = 0;
 
         until AllocationReceipt.Next() = 0;
