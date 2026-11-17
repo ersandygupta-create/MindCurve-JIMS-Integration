@@ -64,5 +64,16 @@ page 50030 "E3 HIS GL Entries Editable"
             }
         }
     }
+    trigger OnOpenPage()
+    var
+        GLS: Record "General Ledger Setup";
+    begin
+        if not GLS.Get(UserId) then
+            Error('GLS not found for user %1.', UserId);
+
+        if not GLS."GL Entries Edit" then
+            Error('You are not authorized GLS to access GL Entries Editable.');
+    end;
+
 
 }

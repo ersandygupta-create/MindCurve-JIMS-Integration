@@ -127,6 +127,28 @@ page 50267 "E3 Bill Handling List"
     {
         area(Processing)
         {
+            action(PrintBillHandling)
+            {
+                Caption = 'Print Bill Handle';
+                ApplicationArea = All;
+                Image = Print;
+                ToolTip = 'Prints the bill handling report for the selected document.';
+
+                trigger OnAction()
+                var
+                    BillHandling: Record "E3 Bill Handling";
+                begin
+                    if Rec.IsEmpty() then
+                        exit;
+
+                    Rec.TestField("No.");
+                    BillHandling.SetRange("No.", Rec."No.");
+                    BillHandling.SetRange("Location Code", Rec."Location Code");
+                    BillHandling.SetRange("Posting Date", Rec."Posting Date");
+                    BillHandling.SetRange("Voucher Type Name", Rec."Voucher Type Name");
+                    Report.RunModal(Report::"E3 Bill Handling Print", true, false, BillHandling);
+                end;
+            }
             action(OpenVendor)
             {
                 Caption = 'Open Vendor';

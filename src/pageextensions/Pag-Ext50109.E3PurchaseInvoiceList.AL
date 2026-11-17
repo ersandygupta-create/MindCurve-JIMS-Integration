@@ -225,6 +225,8 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
         BillHandling."Due Date" := PurchaseHeader."Due Date";
         BillHandling.Remarks := PurchaseHeader."Posting Description";
         BillHandling."Event Name" := EventName;
+        BillHandling."Posting Date" := PurchaseHeader."Posting Date";
+        BillHandling."Location Code" := PurchaseHeader."Location Code";
         BillHandling."Created By" := UserId();
         BillHandling.Insert(true);
     end;
