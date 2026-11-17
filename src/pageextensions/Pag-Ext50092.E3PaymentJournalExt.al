@@ -23,6 +23,20 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         modify("Amount (LCY)")
         {
             Editable = IsEditable;
+            trigger OnBeforeValidate()
+            var
+                AdvancePo: Record "Vendor Adv. Pay. Ag. PO";
+            begin
+                if (Rec."Document No" <> '') then begin
+                    AdvancePo.Reset();
+                    AdvancePo.SetRange("Document No", rec."Document No");
+                    if AdvancePo.Find('-') then begin
+                        if rec.Amount > AdvancePo."Remaining Amount" then
+                            Error('Amount can not be greater then Remaining amount of Advance document no.');
+                    end;
+                end;
+
+            end;
         }
 
         addafter("Cheque No.")
@@ -242,6 +256,10 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
                 // Check if your field is not blank (e.g., YourField <> '')
                 if RecCopy."VLE Doc No." <> '' then begin
                     // Set IsEditable to false if the condition is met
+                    restrict := true;
+                    exit;
+                end;
+                if RecCopy."Document No" <> '' then begin
                     restrict := true;
                     exit;
                 end;
