@@ -75,6 +75,10 @@ table 50090 "E3 Transfer Header"
         {
             Clustered = true;
         }
+        key(PendingByDate; "Is Created", "v_Date")
+        {
+        }
+
     }
     trigger OnDelete()
     var

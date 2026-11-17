@@ -229,6 +229,11 @@ page 50206 "E3 Advanced User Control Setup"
                         ApplicationArea = All;
                         ToolTip = 'You do not have permission to Modify Purchase Order Line';
                     }
+                    field("Receive Finance"; Rec."Receive Finance")
+                    {
+                        ApplicationArea = All;
+                        ToolTip = 'You do not have permission to Receive Finance document';
+                    }
                 }
                 group(PurchaseInvoice)
                 {
@@ -238,6 +243,11 @@ page 50206 "E3 Advanced User Control Setup"
                     {
                         ApplicationArea = All;
                         ToolTip = 'Specifies whether the user is allowed to open the Purchase Invoice page.';
+                    }
+                    field("Submit to Finance"; Rec."Submit to Finance")
+                    {
+                        ApplicationArea = All;
+                        ToolTip = 'You do not have permission Submit to finance document';
                     }
                 }
             }
@@ -296,6 +306,16 @@ page 50206 "E3 Advanced User Control Setup"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies whether the user is allowed to cancel indent lines.';
+                }
+                field("Delete Stock Consumption"; Rec."Delete Stock Consumption")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the user is allowed to Delete Stock Consumption.';
+                }
+                field("Delete Transfer Entries"; Rec."Delete Transfer Entries")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the user is allowed to Delete Transfer Entries.';
                 }
             }
             group(GateEntryDiscard)

@@ -29,6 +29,9 @@ codeunit 50063 "E3 Pharmacy Sales Posting"
             exit;
 
         PharmacySaleHeader.Reset();
+        // Process pending invoices oldest first, with entry number breaking date ties.
+        PharmacySaleHeader.SetCurrentKey("Is Created", "Bill Date", "Entry No.");
+        PharmacySaleHeader.Ascending(true);
         PharmacySaleHeader.SetRange("Is Created", false);
 
         if PharmacySaleHeader.FindSet() then

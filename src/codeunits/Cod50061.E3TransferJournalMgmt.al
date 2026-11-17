@@ -432,18 +432,18 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
     var
         TransferHeader: Record "E3 Transfer Header";
         IntegrationSetup: Record "E3 HIS Integartion Setup";
-        CurrentDocumentNo: Code[20];
     begin
         if not IntegrationSetup.Get() then
             exit;
 
         TransferHeader.Reset();
+        // Process pending transfers by voucher date, oldest date first.
+        TransferHeader.SetCurrentKey("Is Created", "v_Date");
+        TransferHeader.Ascending(true);
         TransferHeader.SetRange("Is Created", false);
 
         if TransferHeader.FindSet() then
             repeat
-                CurrentDocumentNo := TransferHeader."Document Number";
-
                 ProcessTransferHeaderWithErrorHandling(
                     TransferHeader,
                     IntegrationSetup."Auto Transfer Journal Enabled");

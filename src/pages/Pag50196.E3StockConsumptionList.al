@@ -8,6 +8,7 @@ page 50196 "E3 Stock Consumption List"
     CardPageId = "E3 Stock Consumption Card";
     SourceTableView = sorting("Entry No.") where("Is Created" = filter(false));
     DeleteAllowed = false;
+
     layout
     {
         area(content)
@@ -58,4 +59,51 @@ page 50196 "E3 Stock Consumption List"
             }
         }
     }
+    actions
+    {
+        area(Processing)
+        {
+            action(DeleteSelected)
+            {
+                ApplicationArea = All;
+                Caption = 'Delete Selected';
+                Image = DeleteRow;
+                ToolTip = 'Deletes all selected pharmacy sales documents and their related lines.';
+                Visible = ShowDeleteStockConsumption;
+
+                trigger OnAction()
+                var
+                    StockCOgsHdrHeader: Record "E3 Stock Consumption Header";
+                begin
+                    CurrPage.SetSelectionFilter(StockHdrHdr);
+
+                    if StockHdrHdr.FindSet() then
+                        repeat
+                            StockCOgsHdrHeader := StockHdrHdr;
+                            StockCOgsHdrHeader.Delete(true);
+                        until StockHdrHdr.Next() = 0;
+
+                    CurrPage.Update(false);
+                end;
+            }
+        }
+    }
+    trigger OnOpenPage()
+    begin
+        UpdateButtonVisibility();
+    end;
+
+    local procedure UpdateButtonVisibility()
+    begin
+        Clear(ShowDeleteStockConsumption);
+
+        if UserSetup.Get(UserId()) then
+            ShowDeleteStockConsumption := UserSetup."Delete Stock Consumption";
+    end;
+
+    var
+        StockHdrHdr: Record "E3 Stock Consumption Header";
+        UserSetup: Record "User Setup";
+        ShowDeleteStockConsumption: Boolean;
+
 }

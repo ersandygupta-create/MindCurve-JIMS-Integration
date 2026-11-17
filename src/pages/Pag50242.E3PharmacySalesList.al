@@ -149,7 +149,6 @@ page 50242 "E3 Pharmacy Sales List"
 
                 trigger OnAction()
                 var
-                    PharmacyHdr: Record "E3 Pharmacy Sale Header";
                     PharmacySaleHeader: Record "E3 Pharmacy Sale Header";
                 begin
                     CurrPage.SetSelectionFilter(PharmacyHdr);

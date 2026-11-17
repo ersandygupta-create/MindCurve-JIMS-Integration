@@ -201,6 +201,9 @@ table 50088 "E3 Pharmacy Sale Header"
         {
             Clustered = true;
         }
+        key(PendingByBillDate; "Is Created", "Bill Date", "Entry No.")
+        {
+        }
     }
     trigger OnDelete()
     var

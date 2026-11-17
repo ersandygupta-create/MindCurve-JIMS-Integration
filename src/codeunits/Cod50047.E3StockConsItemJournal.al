@@ -94,10 +94,10 @@ codeunit 50047 "E3 Post Stock Consumption"
                     'Quantity must be greater than zero for Line No. %1.',
                     StockConsumptionLine."Line No.");
 
-            if StockConsumptionLine."Entry Type" <> StockConsumptionLine."Entry Type"::"Negative Adjmt."
+            if StockConsumptionLine."Entry Type" <> StockConsumptionLine."Entry Type"
              then
                 Error(
-                    'Stock Consumption Line %1 must have Entry Type Negative Adjmt.',
+                    'Stock Consumption Line %1 must have Entry Type',
                     StockConsumptionLine."Line No.");
 
             LotNoToUse := ResolveLotNo(Item, StockConsumptionLine."Batch No.");
@@ -112,7 +112,7 @@ codeunit 50047 "E3 Post Stock Consumption"
             ItemJournalLine.Validate("Journal Template Name", JournalTemplateName);
             ItemJournalLine.Validate("Journal Batch Name", JournalBatchName);
             ItemJournalLine."Line No." := LineNo;
-            ItemJournalLine.Validate("Entry Type", StockConsumptionLine."Entry Type"::"Negative Adjmt.");
+            ItemJournalLine.Validate("Entry Type", StockConsumptionLine."Entry Type");
             ItemJournalLine.Validate("Item No.", StockConsumptionLine."D365 Item Code");
             ItemJournalLine.Validate(Quantity, StockConsumptionLine.Quantity);
             ItemJournalLine.Validate("Unit Cost", StockConsumptionLine."Unit Cost");
@@ -431,9 +431,8 @@ codeunit 50047 "E3 Post Stock Consumption"
 
         StockConsumptionHeader.Get(
             StockConsumptionHeader."Entry No.",
-            StockConsumptionHeader."Entry Type",
-            StockConsumptionHeader."Document Type",
-            StockConsumptionHeader."Document No.");
+            StockConsumptionHeader."Document No.",
+            StockConsumptionHeader."Entry Type");
 
         // Do not create or post duplicate entries.
         if StockConsumptionHeader."Is Created" then
@@ -484,9 +483,8 @@ codeunit 50047 "E3 Post Stock Consumption"
         // Recheck document status immediately before posting.
         StockConsumptionHeader.Get(
             StockConsumptionHeader."Entry No.",
-            StockConsumptionHeader."Entry Type",
-            StockConsumptionHeader."Document Type",
-            StockConsumptionHeader."Document No.");
+            StockConsumptionHeader."Document No.",
+            StockConsumptionHeader."Entry Type");
 
         if StockConsumptionHeader."Is Created" then
             exit;
@@ -581,6 +579,9 @@ codeunit 50047 "E3 Post Stock Consumption"
             Error('E3 HIS Integration Setup record not found.');
 
         StockConsumptionHeader.Reset();
+        // Process pending documents oldest first, with entry number breaking date ties.
+        StockConsumptionHeader.SetCurrentKey("Is Created", "Entry Date", "Entry No.");
+        StockConsumptionHeader.Ascending(true);
         StockConsumptionHeader.SetRange("Is Created", false);
 
         if StockConsumptionHeader.FindSet() then
@@ -730,7 +731,7 @@ codeunit 50047 "E3 Post Stock Consumption"
                     DocumentNo, StockConsumptionLine."Line No.");
 
             if StockConsumptionLine."Entry Type" <>
-               StockConsumptionLine."Entry Type"::"Negative Adjmt." then
+               StockConsumptionLine."Entry Type" then
                 Error(
                     'Entry Type must be Negative Adjmt. Document No.: %1, Line No.: %2.',
                     DocumentNo, StockConsumptionLine."Line No.");
