@@ -134,7 +134,36 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 trigger OnAction()
                 var
                     purchaseline: record "Purchase Line";
+                    ReleasePurchDoc: Codeunit "Release Purchase Document";
+                    FullyReceivedLineExists: Boolean;
+                    HasQuantityLine: Boolean;
+                    AllQuantityLinesReceived: Boolean;
                 begin
+                    FullyReceivedLineExists := false;
+                    HasQuantityLine := false;
+                    AllQuantityLinesReceived := true;
+                    purchaseline.SetRange("Document Type", Rec."Document Type");
+                    purchaseline.SetRange("Document No.", Rec."No.");
+                    if purchaseline.FindSet() then
+                        repeat
+                            if purchaseline.Quantity <> 0 then begin
+                                HasQuantityLine := true;
+                                if purchaseline.Quantity = purchaseline."Quantity Received" then
+                                    FullyReceivedLineExists := true
+                                else
+                                    AllQuantityLinesReceived := false;
+                            end;
+                        until purchaseline.Next() = 0;
+
+                    // Check before Reopen to avoid status and archive changes.
+                    if HasQuantityLine and AllQuantityLinesReceived then begin
+                        Message('The purchase order is fully received and cannot be cancelled.');
+                        exit;
+                    end;
+
+                    if Rec.Status = Rec.Status::Released then
+                        ReleasePurchDoc.PerformManualReopen(Rec);
+
                     CheckPoStatus();
                     Rec.TestField("Reason Code");
                     purchaseline.reset();
@@ -144,9 +173,12 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                         repeat
                             cancleIndentLine(purchaseline);
                         until purchaseline.Next() = 0;
-                    rec.Cancelled := true;
+                    rec.Cancelled := not FullyReceivedLineExists;
                     rec.Modify(false);
-                    Message('Purchase Order has been canceled from indent;');
+                    if Rec.Cancelled then
+                        Message('Purchase Order has been canceled from indent;')
+                    else
+                        Message('Eligible lines have been cancelled. The purchase order is not marked cancelled because it contains a fully received line.');
                 end;
             }
             action("Short Close PO")
@@ -189,6 +221,9 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
 
         if not UserSetup."Purchase Order" then
             Error('You do not have permission to open Purchase Order.');
+
+        if Rec.Cancelled then
+            Error('Purchase Order %1 is cancelled and cannot be opened.', Rec."No.");
     end;
 
     local procedure ShortCloseQty(var purchLine: Record "Purchase Line")

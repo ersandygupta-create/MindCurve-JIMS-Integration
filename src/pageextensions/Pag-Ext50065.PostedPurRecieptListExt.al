@@ -41,8 +41,27 @@ pageextension 50065 "Posted Pur Receipt List Ext" extends "Posted Purchase Recei
                 trigger OnAction()
                 var
                     PurchRcptHeader: Record "Purch. Rcpt. Header";
+                    PurchRcptHeader2: Record "Purch. Rcpt. Header";
                     GRNInvoiceMgmt: Codeunit "E3 GRN Invoice Management";
+                    FirstBUCode: Code[20];
                 begin
+                    CurrPage.SetSelectionFilter(PurchRcptHeader);
+
+                    if not PurchRcptHeader.FindSet() then
+                        Error('Please select at least one Posted Purchase Receipt.');
+
+                    // Get first selected receipt Business Unit
+                    FirstBUCode := PurchRcptHeader."Shortcut Dimension 1 Code";
+
+                    // Validate all selected receipts
+                    repeat
+                        if PurchRcptHeader."Shortcut Dimension 1 Code" <> FirstBUCode then
+                            Error(
+                                'You cannot create Purchase Invoices for different Business Units. Please select receipts belonging to the same Business Unit.');
+                    until PurchRcptHeader.Next() = 0;
+
+                    // Create invoices after successful validation
+                    Clear(PurchRcptHeader);
                     CurrPage.SetSelectionFilter(PurchRcptHeader);
                     GRNInvoiceMgmt.CreateInvoicesFromSelectedReceipts(PurchRcptHeader);
                 end;

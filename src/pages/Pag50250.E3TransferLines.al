@@ -17,7 +17,7 @@ page 50250 "E3 Transfer Lines"
                 field("D365 Item Code"; Rec."D365 Item Code")
                 {
                     ApplicationArea = All;
-                    Editable = false;
+                    Editable = true;
                     ToolTip = 'Specifies the D365 item code.';
                 }
                 field("Item Name"; Rec."Item Name")

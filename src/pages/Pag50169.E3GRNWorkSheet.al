@@ -506,7 +506,27 @@ page 50169 "E3 GRN Work Sheet"
                     PostedGRNHeader: Record "E3 GRN Work Sheet Header";
                     DeleteGRNWorksheet: Record "E3 GRN Work Sheet";
                     ExistingPurchRcptHeader: Record "Purch. Rcpt. Header";
+                    CheckMRPConfirmLbl: Label 'Kindly check MRP in GRN Work Sheet. Do you want to continue receiving?';
                 begin
+
+                    CurrPage.SaveRecord();
+                    // Validate the whole PO before confirmation or receipt processing.
+                    GRNWorksheet.Reset();
+                    GRNWorksheet.SetRange("PO No.", Rec."PO No.");
+                    if GRNWorksheet.FindSet() then
+                        repeat
+                            if GRNWorksheet."Sale Rate" > GRNWorksheet."PO MRP" then
+                                Error(
+                                    'Cannot receive PO %1, line %2. Sale Rate (%3) cannot exceed PO MRP (%4).',
+                                    GRNWorksheet."PO No.",
+                                    GRNWorksheet."Line No.",
+                                    GRNWorksheet."Sale Rate",
+                                    GRNWorksheet."PO MRP");
+                        until GRNWorksheet.Next() = 0;
+
+                    if not Confirm(CheckMRPConfirmLbl, false) then
+                        exit;
+
                     purchHeader.get(purchHeader."Document Type"::Order, Rec."PO No.");
                     purchheader.TestStatusIsNotReleased();
                     ExistingPurchRcptHeader.Reset();

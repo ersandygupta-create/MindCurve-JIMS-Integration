@@ -69,6 +69,9 @@ table 50075 "E3 Stock Consumption Header"
         {
             Clustered = true;
         }
+        key(PendingByEntryDate; "Is Created", "Entry Date", "Entry No.")
+        {
+        }
     }
     trigger OnDelete()
     var

@@ -35,6 +35,7 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 Image = Post;
+                Visible = ShowSubmitButton;
 
                 trigger OnAction()
                 var
@@ -43,6 +44,8 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                     VoucherType: Record "E3 Voucher Type";
                     NewDocNo: Code[20];
                     SelectedCount: Integer;
+                    FirstVoucherType: Code[20];
+                    FirstBUCode: Code[20];
                 begin
                     // 1. Get selected records from the page
                     CurrPage.SetSelectionFilter(PurchaseHeader);
@@ -50,11 +53,25 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                     if not PurchaseHeader.FindSet() then
                         Error('No records selected.');
 
+                    // 2. Store first selected invoice values
+                    FirstVoucherType := PurchaseHeader."Voucher Type";
+                    FirstBUCode := PurchaseHeader."Shortcut Dimension 1 Code";
+
                     repeat
                         if PurchaseHeader."Submit to Finance" then
                             Error(
                                 'Purchase Invoice %1 has already been submitted to Finance. You cannot submit it again.',
                                 PurchaseHeader."No.");
+
+                        if PurchaseHeader."Voucher Type" <> FirstVoucherType then
+                            Error(
+                                'Selected Purchase Invoices have different Voucher Types. Please select invoices with the same Voucher Type.');
+
+                        // Business Unit validation
+                        if PurchaseHeader."Shortcut Dimension 1 Code" <> FirstBUCode then
+                            Error(
+                                'Selected Purchase Invoices belong to different Business Units. Please select invoices with the same Business Unit.');
+
                     until PurchaseHeader.Next() = 0;
 
                     // ADDED: Get selected records again after validation
@@ -79,6 +96,8 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
 
                             // Insert Bill Handling record
                             InsertBillHandling(PurchaseHeader, 'Submit to Finance');
+                            PurchaseHeader."Posting Date" := WorkDate();
+                            PurchaseHeader.Modify(true);
 
                             SelectedCount += 1;
                         until PurchaseHeader.Next() = 0;
@@ -95,12 +114,13 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
             action("Accept")
             {
                 ApplicationArea = All;
-                Caption = 'Accept';
+                Caption = 'Accept to Finance';
                 ToolTip = 'Mark selected records as Received if Submitted Document No. is not blank.';
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 Image = Approve;
+                Visible = ShowAcceptButton;
 
                 trigger OnAction()
                 var
@@ -118,7 +138,9 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                     // Insert Bill Handling records for matching selected records
                     if PurchaseHeader.FindSet() then
                         repeat
-                            InsertBillHandling(PurchaseHeader, 'Accept');
+                            InsertBillHandling(PurchaseHeader, 'Accept to Finance');
+                            PurchaseHeader."Posting Date" := WorkDate();
+                            PurchaseHeader.Modify(true);
                         until PurchaseHeader.Next() = 0;
 
                     // 3. Update matching records
@@ -131,11 +153,12 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
             action("Reject")
             {
                 ApplicationArea = All;
-                Caption = 'Reject';
+                Caption = 'Submit to Store';
                 ToolTip = 'Reject selected records if Submitted Document No. is not blank.';
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
+                Visible = ShowAcceptButton;
                 Image = Reject;
 
                 trigger OnAction()
@@ -154,14 +177,14 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                     // Insert Bill Handling records for matching selected records
                     if PurchaseHeader.FindSet() then
                         repeat
-                            InsertBillHandling(PurchaseHeader, 'Reject');
+                            InsertBillHandling(PurchaseHeader, 'Submit to Store');
                         until PurchaseHeader.Next() = 0;
 
                     // 3. Clear fields across qualifying records
                     PurchaseHeader.ModifyAll("Receive Finance", false);
                     PurchaseHeader.ModifyAll("Submit to Finance", false);
 
-                    Message('%1 selected record(s) rejected.', PurchaseHeader.Count());
+                    Message('%1 selected record(s) Submit to Store.', PurchaseHeader.Count());
                 end;
             }
 
@@ -205,4 +228,25 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
         BillHandling."Created By" := UserId();
         BillHandling.Insert(true);
     end;
+
+    trigger OnOpenPage()
+    begin
+        UpdateButtonVisibility();
+    end;
+
+    local procedure UpdateButtonVisibility()
+    begin
+        Clear(ShowSubmitButton);
+        Clear(ShowAcceptButton);
+
+        if UserSetup.Get(UserId()) then begin
+            ShowSubmitButton := UserSetup."Receive Finance";
+            ShowAcceptButton := UserSetup."Submit to Finance";
+        end;
+    end;
+
+    var
+        UserSetup: Record "User Setup";
+        ShowSubmitButton: Boolean;
+        ShowAcceptButton: Boolean;
 }

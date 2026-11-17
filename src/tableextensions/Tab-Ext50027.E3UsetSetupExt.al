@@ -304,5 +304,25 @@ tableextension 50027 "E3 Uset Setup Ext" extends "User Setup"
             Caption = 'Gate Entry Discard';
             DataClassification = CustomerContent;
         }
+        field(50058; "Submit to Finance"; Boolean)
+        {
+            Caption = 'Submit to Finance';
+            DataClassification = CustomerContent;
+        }
+        field(50059; "Receive Finance"; Boolean)
+        {
+            Caption = 'Receive Finance';
+            DataClassification = CustomerContent;
+        }
+        field(50060; "Delete Stock Consumption"; Boolean)
+        {
+            Caption = 'Delete Stock Consumption';
+            DataClassification = CustomerContent;
+        }
+        field(50061; "Delete Transfer Entries"; Boolean)
+        {
+            Caption = 'Delete Transfer Entries';
+            DataClassification = CustomerContent;
+        }
     }
 }

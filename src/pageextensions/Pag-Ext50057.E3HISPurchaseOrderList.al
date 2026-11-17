@@ -46,6 +46,11 @@ pageextension 50057 "E3 HIS Purchase Order List" extends "Purchase Order List"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the Net Amount of the document.';
             }
+            field(Cancelled; Rec.Cancelled)
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies a value Cancelled PO';
+            }
         }
         addbefore("No.")
         {

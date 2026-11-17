@@ -74,4 +74,51 @@ page 50248 "E3 Transfer List"
             }
         }
     }
+    actions
+    {
+        area(Processing)
+        {
+            action(DeleteSelected)
+            {
+                ApplicationArea = All;
+                Caption = 'Delete Selected';
+                Image = DeleteRow;
+                ToolTip = 'Deletes all selected pharmacy sales documents and their related lines.';
+                Visible = ShowDeleteTRFEntries;
+
+                trigger OnAction()
+                var
+                    TransferHeader: Record "E3 Transfer Header";
+                begin
+                    CurrPage.SetSelectionFilter(TRFHdr);
+
+                    if TRFHdr.FindSet() then
+                        repeat
+                            TransferHeader := TRFHdr;
+                            TransferHeader.Delete(true);
+                        until TRFHdr.Next() = 0;
+
+                    CurrPage.Update(false);
+                end;
+            }
+        }
+    }
+    trigger OnOpenPage()
+    begin
+        UpdateButtonVisibility();
+    end;
+
+    local procedure UpdateButtonVisibility()
+    begin
+        Clear(ShowDeleteTRFEntries);
+
+        if UserSetup.Get(UserId()) then
+            ShowDeleteTRFEntries := UserSetup."Delete Transfer Entries";
+    end;
+
+    var
+        TRFHdr: Record "E3 Transfer Header";
+        UserSetup: Record "User Setup";
+        ShowDeleteTRFEntries: Boolean;
+
 }
