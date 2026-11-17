@@ -11,7 +11,7 @@ report 50058 "E3 Bill Handling Print"
         dataitem(BillHandling; "E3 Bill Handling")
         {
             DataItemTableView = sorting("Entry No.");
-            RequestFilterFields = "No.", "Location Code", "Posting Date", "Vendor Code";
+            RequestFilterFields = "No.", "Bill Handling No.";
             column(EntryNo; "Entry No.") { }
             column(DocumentNo; "No.") { }
             column(PostingDate; "Posting Date") { }
@@ -37,9 +37,7 @@ report 50058 "E3 Bill Handling Print"
             column(CheckedBy; CheckedBy) { }
             column(PrintedBy; UserId()) { }
             column(PrintedAt; PrintedAt) { }
-            // No amount field or reliable amount relation exists in table 50094.
-            // Keep the reference layout's Net Amt. cell empty until a source is defined.
-            column(NetAmountText; EmptyAmount) { }
+            column(NetAmountText; "Net Amount") { }
 
             trigger OnAfterGetRecord()
             begin
@@ -88,6 +86,5 @@ report 50058 "E3 Bill Handling Print"
         LocationRec: Record Location;
         ToLocationName: Text[100];
         CheckedBy: Text[100];
-        EmptyAmount: Text[1];
         PrintedAt: DateTime;
 }

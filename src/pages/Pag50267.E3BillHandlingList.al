@@ -132,6 +132,8 @@ page 50267 "E3 Bill Handling List"
                 Caption = 'Print Bill Handle';
                 ApplicationArea = All;
                 Image = Print;
+                Promoted = true;
+                PromotedCategory = Report;
                 ToolTip = 'Prints the bill handling report for the selected document.';
 
                 trigger OnAction()
@@ -144,7 +146,7 @@ page 50267 "E3 Bill Handling List"
                     Rec.TestField("No.");
                     BillHandling.SetRange("No.", Rec."No.");
                     BillHandling.SetRange("Location Code", Rec."Location Code");
-                    BillHandling.SetRange("Posting Date", Rec."Posting Date");
+                    //BillHandling.SetRange("Posting Date", Rec."Posting Date");
                     BillHandling.SetRange("Voucher Type Name", Rec."Voucher Type Name");
                     Report.RunModal(Report::"E3 Bill Handling Print", true, false, BillHandling);
                 end;
@@ -154,6 +156,8 @@ page 50267 "E3 Bill Handling List"
                 Caption = 'Open Vendor';
                 ApplicationArea = All;
                 Image = Vendor;
+                Promoted = true;
+                PromotedCategory = Process;
                 ToolTip = 'Opens the selected vendor card.';
 
                 trigger OnAction()

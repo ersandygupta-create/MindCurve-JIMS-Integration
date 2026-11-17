@@ -94,6 +94,11 @@ table 50094 "E3 Bill Handling"
             Caption = 'Location Code';
             DataClassification = CustomerContent;
         }
+        field(18; "Net Amount"; Decimal)
+        {
+            Caption = 'Net Amount';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
