@@ -9,6 +9,8 @@ page 50105 "E3 Posted Gate Ent Inward Line"
     SourceTable = "E3 Posted Gate Entry Line";
     SourceTableView = sorting("Posted Entry No.");
     Editable = false;
+    ModifyAllowed = false;
+    DeleteAllowed = false;
 
     layout
     {

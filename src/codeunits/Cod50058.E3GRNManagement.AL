@@ -118,6 +118,7 @@ codeunit 50058 "E3 GRN Invoice Management"
         //ak
         PurchHeader.Validate("Pay-to Vendor No.", PurchRcptHeader."Pay-to Vendor No.");
         PurchHeader."Order Date" := PurchRcptHeader."Order Date";
+        PurchHeader."Posting Description" := PurchRcptHeader."Posting Description";
         if PurchRcptHeader."Location Code" <> '' then
             PurchHeader.Validate("Location Code", PurchRcptHeader."Location Code");
         PurchHeader.Validate("Posting Date", PurchRcptHeader."Posting Date");

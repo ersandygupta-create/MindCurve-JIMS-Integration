@@ -2,20 +2,6 @@ tableextension 50056 "E3 HIS Fixed Asset" extends "Fixed Asset"
 {
     fields
     {
-        modify("Global Dimension 1 Code")
-        {
-            trigger OnAfterValidate()
-            begin
-                UpdateAssetsName();
-            end;
-        }
-        modify("No.")
-        {
-            trigger OnAfterValidate()
-            begin
-                UpdateAssetsName();
-            end;
-        }
         field(50000; "Model No."; Text[50])
         {
             Caption = 'Model No.';
@@ -100,10 +86,6 @@ tableextension 50056 "E3 HIS Fixed Asset" extends "Fixed Asset"
         {
             Caption = 'Sub Location';
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                UpdateAssetsName();
-            end;
         }
         field(50010; "Assets Name"; Text[200])
         {
@@ -113,27 +95,34 @@ tableextension 50056 "E3 HIS Fixed Asset" extends "Fixed Asset"
         field(50011; "Asset Item Group"; Code[20])
         {
             Caption = 'Asset Item Group';
-            TableRelation = "E3 Asset Item Group".Code;
             DataClassification = CustomerContent;
-            trigger OnValidate()
-            begin
-                UpdateAssetsName();
-            end;
+            TableRelation = "E3 Asset Item Group".Code;
         }
         field(50012; "Asset Item Category"; Code[20])
         {
             Caption = 'Asset Item Category';
-            TableRelation = "E3 Asset Item Categories".Code;
+            DataClassification = CustomerContent;
+
+            TableRelation = "E3 Asset Item Category".Code
+                where("Asset Item Group" = field("Asset Item Group"));
         }
         field(50013; "Asset Item Name Group"; Code[20])
         {
             Caption = 'Asset Item Name Group';
-            TableRelation = "E3 Asset Item Group".Code;
+            DataClassification = CustomerContent;
+
+            TableRelation = "E3 Asset Item Name Group".Code
+                where(
+                    "Asset Item Category" = field("Asset Item Category"));
         }
         field(50014; "Asset Item Sub Group"; Code[20])
         {
-            Caption = 'Presentation Order';
-            TableRelation = "E3 Asset Item Sub Group".Code;
+            Caption = 'Asset Item Sub Group';
+            DataClassification = CustomerContent;
+
+            TableRelation = "E3 Asset Item Sub Group".Code
+                where(
+                    "Asset Item Name Group" = field("Asset Item Name Group"));
         }
     }
     trigger OnBeforeRename()
@@ -141,65 +130,4 @@ tableextension 50056 "E3 HIS Fixed Asset" extends "Fixed Asset"
         if (Rec."No." <> xRec."No.") and (xRec."No." <> '') then
             Error('You cannot modify the FA No.');
     end;
-
-    local procedure UpdateAssetsName()
-    var
-        AssetsName: Text[200];
-        AssetItemGroup: Record "E3 Asset Item Group";
-    begin
-
-        if "Asset Item Group" = '' then begin
-            Clear("Asset Item Category");
-            Clear("Asset Item Name Group");
-            Clear("Asset Item Sub Group");
-            exit;
-        end;
-
-        if AssetItemGroup.Get("Asset Item Group") then begin
-
-            Validate(
-                "Asset Item Category",
-                AssetItemGroup."Asset Item Category");
-
-            Validate(
-                "Asset Item Name Group",
-                AssetItemGroup."Asset Item Name Group");
-
-            Validate(
-                "Asset Item Sub Group",
-                AssetItemGroup."Asset Item Sub Group");
-        end;
-
-        AssetsName :=
-            Rec."Global Dimension 1 Code" + '/' +
-            Rec."Sub Location" + '/' +
-            Rec."Asset Item Group" + '/' +
-            Rec."No." + '/' +
-            GetFinancialYear();
-
-        Rec."Assets Name" :=
-            CopyStr(AssetsName, 1, MaxStrLen(Rec."Assets Name"));
-    end;
-
-    local procedure GetFinancialYear(): Text[10]
-    var
-        StartYear: Integer;
-        EndYear: Integer;
-        CurrentDate: Date;
-    begin
-        CurrentDate := WorkDate();
-
-        if Date2DMY(CurrentDate, 2) >= 4 then
-            StartYear := Date2DMY(CurrentDate, 3)
-        else
-            StartYear := Date2DMY(CurrentDate, 3) - 1;
-
-        EndYear := StartYear + 1;
-
-        exit(
-            CopyStr(
-                Format(StartYear) + '-' + CopyStr(Format(EndYear), 3, 2),
-                1, 10));
-    end;
-
 }

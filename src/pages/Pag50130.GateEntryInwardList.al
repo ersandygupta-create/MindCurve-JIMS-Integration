@@ -9,6 +9,7 @@ page 50130 "E3 Gate Entry Inward List"
     SourceTable = "E3 Gate Entry Header";
     SourceTableView = sorting("Entry No.") order(descending) where("Entry Type" = filter(Inward));
     UsageCategory = Lists;
+    DeleteAllowed = false;
 
     layout
     {

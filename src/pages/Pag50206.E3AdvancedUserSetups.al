@@ -326,6 +326,11 @@ page 50206 "E3 Advanced User Control Setup"
                     ApplicationArea = All;
                     ToolTip = 'Specifies whether the user is allowed to Gate Entry Discard.';
                 }
+                field("GE Line Delete"; Rec."GE Line Delete")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the user is allowed to Gate Entry delete.';
+                }
             }
         }
     }

@@ -1264,4 +1264,38 @@ codeunit 50001 "E3 HIS Event Subscriber"
         ToPurchaseLine."Challan Date" := FromPurchInvLine."Challan Date";
         ToPurchaseLine.Modify(true);
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforeTestPurchLine', '', false, false)]
+    local procedure SkipCancelledPurchaseLineCheck(var PurchaseLine: Record "Purchase Line"; var IsHandled: Boolean)
+    begin
+        if not PurchaseLine."Cancelled Line" then
+            exit;
+
+        PurchaseLine."Qty. to Receive" := 0;
+        PurchaseLine."Qty. to Receive (Base)" := 0;
+        PurchaseLine."Qty. to Invoice" := 0;
+        PurchaseLine."Qty. to Invoice (Base)" := 0;
+        IsHandled := true;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnRunOnBeforePostPurchLine', '', false, false)]
+    local procedure SkipCancelledPurchaseLinePosting(var PurchLine: Record "Purchase Line"; var IsHandled: Boolean)
+    begin
+        if PurchLine."Cancelled Line" then
+            IsHandled := true;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Purchase Line", 'OnAfterValidateEvent', 'Qty. to Receive', false, false)]
+    local procedure CheckCancelledPurchaseLineQtyToReceive(var Rec: Record "Purchase Line")
+    begin
+        if Rec."Cancelled Line" and (Rec."Qty. to Receive" <> 0) then
+            Error('You cannot receive a cancelled PO line.');
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Purchase Line", 'OnAfterValidateEvent', 'Qty. to Invoice', false, false)]
+    local procedure CheckCancelledPurchaseLineQtyToInvoice(var Rec: Record "Purchase Line")
+    begin
+        if Rec."Cancelled Line" and (Rec."Qty. to Invoice" <> 0) then
+            Error('You cannot invoice a cancelled PO line.');
+    end;
 }

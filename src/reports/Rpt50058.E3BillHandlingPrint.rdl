@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-11-17T08:56:31.7387920Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-11-18T05:48:14.7474105Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -32,33 +32,42 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>0.99771in</Width>
+                  <Width>0.73382in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.68807in</Width>
+                  <Width>0.85926in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.75688in</Width>
+                  <Width>0.56122in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.75688in</Width>
+                  <Width>0.48005in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.37615in</Width>
+                  <Width>0.96928in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.86009in</Width>
+                  <Width>0.72036in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.68807in</Width>
+                  <Width>0.52601in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.37615in</Width>
+                  <Width>0.50052in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.67953in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.63542in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.83516in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>2.44167in</Height>
+                  <Height>1.78705in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -75,294 +84,6 @@
                               <Width>2.95872in</Width>
                               <Style />
                             </Image>
-                            <Textbox Name="Text14">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>To Location</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Left</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <Top>1.93889in</Top>
-                              <Left>3.7156in</Left>
-                              <Height>0.25in</Height>
-                              <Width>0.99771in</Width>
-                              <ZIndex>1</ZIndex>
-                              <Style>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>3pt</PaddingLeft>
-                                <PaddingRight>3pt</PaddingRight>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Text13">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>:</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
-                                      </Style>
-                                    </TextRun>
-                                    <TextRun>
-                                      <Value xml:space="preserve"> </Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                    <TextRun>
-                                      <Value>=Fields!LocationName.Value</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Left</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <Top>1.93889in</Top>
-                              <Left>1.03211in</Left>
-                              <Height>0.25in</Height>
-                              <Width>2.68349in</Width>
-                              <ZIndex>2</ZIndex>
-                              <Style>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>3pt</PaddingLeft>
-                                <PaddingRight>3pt</PaddingRight>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Text12">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>From Location</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Left</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <Top>1.93889in</Top>
-                              <Left>0in</Left>
-                              <Height>0.25in</Height>
-                              <Width>0.99771in</Width>
-                              <ZIndex>3</ZIndex>
-                              <Style>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>3pt</PaddingLeft>
-                                <PaddingRight>3pt</PaddingRight>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Text11">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>:</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
-                                      </Style>
-                                    </TextRun>
-                                    <TextRun>
-                                      <Value xml:space="preserve"> </Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                    <TextRun>
-                                      <Value>=Format(Fields!PostingDate.Value, "dd-MM-yyyy")</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Left</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <Top>1.63889in</Top>
-                              <Left>4.74771in</Left>
-                              <Height>0.25in</Height>
-                              <Width>2.68349in</Width>
-                              <ZIndex>4</ZIndex>
-                              <Style>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>3pt</PaddingLeft>
-                                <PaddingRight>3pt</PaddingRight>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Text10">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>Posting Date</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Left</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <Top>1.63889in</Top>
-                              <Left>3.7156in</Left>
-                              <Height>0.25in</Height>
-                              <Width>0.99771in</Width>
-                              <ZIndex>5</ZIndex>
-                              <Style>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>3pt</PaddingLeft>
-                                <PaddingRight>3pt</PaddingRight>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Text9">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>:</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
-                                      </Style>
-                                    </TextRun>
-                                    <TextRun>
-                                      <Value xml:space="preserve"> </Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                    <TextRun>
-                                      <Value>=Fields!DocumentNo.Value</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Left</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <Top>1.63889in</Top>
-                              <Left>1.03211in</Left>
-                              <Height>0.25in</Height>
-                              <Width>2.68349in</Width>
-                              <ZIndex>6</ZIndex>
-                              <Style>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>3pt</PaddingLeft>
-                                <PaddingRight>3pt</PaddingRight>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Text15">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>:</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
-                                      </Style>
-                                    </TextRun>
-                                    <TextRun>
-                                      <Value xml:space="preserve"> </Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                    <TextRun>
-                                      <Value>=Fields!LocationName.Value</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Left</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <Top>1.93889in</Top>
-                              <Left>4.74771in</Left>
-                              <Height>0.25in</Height>
-                              <Width>2.68349in</Width>
-                              <ZIndex>7</ZIndex>
-                              <Style>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>3pt</PaddingLeft>
-                                <PaddingRight>3pt</PaddingRight>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Text8">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>No.</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Left</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <Top>1.63889in</Top>
-                              <Left>0in</Left>
-                              <Height>0.25in</Height>
-                              <Width>0.99771in</Width>
-                              <ZIndex>8</ZIndex>
-                              <Style>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>3pt</PaddingLeft>
-                                <PaddingRight>3pt</PaddingRight>
-                              </Style>
-                            </Textbox>
                             <Textbox Name="Text6">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
@@ -385,7 +106,7 @@
                               <Left>3.02816in</Left>
                               <Height>0.15278in</Height>
                               <Width>4.47248in</Width>
-                              <ZIndex>9</ZIndex>
+                              <ZIndex>1</ZIndex>
                               <Style>
                                 <VerticalAlign>Middle</VerticalAlign>
                                 <PaddingLeft>3pt</PaddingLeft>
@@ -414,7 +135,7 @@
                               <Left>3.02752in</Left>
                               <Height>0.14583in</Height>
                               <Width>4.47248in</Width>
-                              <ZIndex>10</ZIndex>
+                              <ZIndex>2</ZIndex>
                               <Style>
                                 <VerticalAlign>Middle</VerticalAlign>
                                 <PaddingLeft>3pt</PaddingLeft>
@@ -443,7 +164,7 @@
                               <Left>3.02752in</Left>
                               <Height>0.15972in</Height>
                               <Width>4.47248in</Width>
-                              <ZIndex>11</ZIndex>
+                              <ZIndex>3</ZIndex>
                               <Style>
                                 <VerticalAlign>Middle</VerticalAlign>
                                 <PaddingLeft>3pt</PaddingLeft>
@@ -472,7 +193,7 @@
                               <Left>3.02816in</Left>
                               <Height>0.15972in</Height>
                               <Width>4.47248in</Width>
-                              <ZIndex>12</ZIndex>
+                              <ZIndex>4</ZIndex>
                               <Style>
                                 <VerticalAlign>Middle</VerticalAlign>
                                 <PaddingLeft>3pt</PaddingLeft>
@@ -501,7 +222,7 @@
                               <Left>3.02752in</Left>
                               <Height>0.15278in</Height>
                               <Width>4.47248in</Width>
-                              <ZIndex>13</ZIndex>
+                              <ZIndex>5</ZIndex>
                               <Style>
                                 <VerticalAlign>Middle</VerticalAlign>
                                 <PaddingLeft>3pt</PaddingLeft>
@@ -516,7 +237,9 @@
                                   <TextRuns>
                                     <TextRun>
                                       <Value>=Fields!LocationName.Value</Value>
-                                      <Style />
+                                      <Style>
+                                        <Color>White</Color>
+                                      </Style>
                                     </TextRun>
                                   </TextRuns>
                                   <Style>
@@ -528,7 +251,7 @@
                               <Left>3.02752in</Left>
                               <Height>0.24028in</Height>
                               <Width>4.47248in</Width>
-                              <ZIndex>14</ZIndex>
+                              <ZIndex>6</ZIndex>
                               <Style>
                                 <VerticalAlign>Middle</VerticalAlign>
                                 <PaddingLeft>3pt</PaddingLeft>
@@ -558,7 +281,7 @@
                               <Left>0in</Left>
                               <Height>0.35in</Height>
                               <Width>7.5in</Width>
-                              <ZIndex>15</ZIndex>
+                              <ZIndex>7</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -573,43 +296,95 @@
                                 <PaddingRight>3pt</PaddingRight>
                               </Style>
                             </Textbox>
-                            <Textbox Name="Text16">
+                            <Textbox Name="Textbox5">
+                              <rd:DefaultName>Textbox5</rd:DefaultName>
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>="Voucher Type Name :  " &amp; Fields!VoucherTypeName.Value</Value>
+                                      <Value>Vr No. : </Value>
                                       <Style>
                                         <FontSize>8pt</FontSize>
                                         <FontWeight>Bold</FontWeight>
                                       </Style>
                                     </TextRun>
+                                    <TextRun>
+                                      <Value>=Fields!BillHandlingNo.Value</Value>
+                                      <Style>
+                                        <FontSize>8pt</FontSize>
+                                        <FontWeight>Normal</FontWeight>
+                                      </Style>
+                                    </TextRun>
                                   </TextRuns>
-                                  <Style>
-                                    <TextAlign>Left</TextAlign>
-                                  </Style>
+                                  <Style />
                                 </Paragraph>
                               </Paragraphs>
-                              <Top>2.23889in</Top>
-                              <Left>0in</Left>
-                              <Height>0.20278in</Height>
-                              <Width>7.5in</Width>
-                              <ZIndex>16</ZIndex>
+                              <Top>3.90878cm</Top>
+                              <Height>0.6cm</Height>
+                              <Width>9.78715cm</Width>
+                              <ZIndex>8</ZIndex>
                               <Style>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>3pt</PaddingLeft>
-                                <PaddingRight>3pt</PaddingRight>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                            <Textbox Name="Textbox6">
+                              <rd:DefaultName>Textbox5</rd:DefaultName>
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>Voucher Type Name : </Value>
+                                      <Style>
+                                        <FontSize>8pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                      </Style>
+                                    </TextRun>
+                                    <TextRun>
+                                      <Value>=Fields!VoucherTypeName.Value</Value>
+                                      <Style>
+                                        <FontSize>8pt</FontSize>
+                                        <FontWeight>Normal</FontWeight>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style />
+                                </Paragraph>
+                              </Paragraphs>
+                              <Top>3.90878cm</Top>
+                              <Left>9.78715cm</Left>
+                              <Height>0.6cm</Height>
+                              <Width>9.15322cm</Width>
+                              <ZIndex>9</ZIndex>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
                           </ReportItems>
                           <KeepTogether>true</KeepTogether>
                           <Style />
                         </Rectangle>
-                        <ColSpan>8</ColSpan>
+                        <ColSpan>11</ColSpan>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
                     <TablixCell />
                     <TablixCell />
                     <TablixCell />
@@ -624,7 +399,41 @@
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Text20">
+                        <Textbox Name="Text21">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Posting Dt.</Value>
+                                  <Style>
+                                    <FontSize>6pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BackgroundColor>LightGrey</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox14">
+                          <rd:DefaultName>Textbox14</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -633,7 +442,7 @@
                                 <TextRun>
                                   <Value>No.</Value>
                                   <Style>
-                                    <FontSize>7pt</FontSize>
+                                    <FontSize>6pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -644,6 +453,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
                             <BackgroundColor>LightGrey</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
@@ -654,16 +466,17 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Text21">
+                        <Textbox Name="Textbox2">
+                          <rd:DefaultName>Textbox2</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Posting Date</Value>
+                                  <Value>Challan No.</Value>
                                   <Style>
-                                    <FontSize>7pt</FontSize>
+                                    <FontSize>6pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -674,36 +487,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <Style>
-                            <BackgroundColor>LightGrey</BackgroundColor>
-                            <VerticalAlign>Middle</VerticalAlign>
-                            <PaddingLeft>3pt</PaddingLeft>
-                            <PaddingRight>3pt</PaddingRight>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Text22">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Bill Handling No.</Value>
-                                  <Style>
-                                    <FontSize>7pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
                             <BackgroundColor>LightGrey</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
@@ -721,9 +507,9 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Document Date</Value>
+                                  <Value>Challan Date</Value>
                                   <Style>
-                                    <FontSize>7pt</FontSize>
+                                    <FontSize>6pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -734,6 +520,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
                             <BackgroundColor>LightGrey</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
@@ -753,7 +542,7 @@
                                 <TextRun>
                                   <Value>Vendor Name</Value>
                                   <Style>
-                                    <FontSize>7pt</FontSize>
+                                    <FontSize>6pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -764,6 +553,77 @@
                             </Paragraph>
                           </Paragraphs>
                           <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BackgroundColor>LightGrey</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox4">
+                          <rd:DefaultName>Textbox4</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>GRN No.</Value>
+                                  <Style>
+                                    <FontSize>6pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BackgroundColor>LightGrey</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox1">
+                          <rd:DefaultName>Textbox1</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>GRN Date</Value>
+                                  <Style>
+                                    <FontSize>6pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
                             <BackgroundColor>LightGrey</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
@@ -781,9 +641,9 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Payment Due Bill</Value>
+                                  <Value>Due Date</Value>
                                   <Style>
-                                    <FontSize>7pt</FontSize>
+                                    <FontSize>6pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -794,6 +654,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
                             <BackgroundColor>LightGrey</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
@@ -813,7 +676,41 @@
                                 <TextRun>
                                   <Value>Net Amt.</Value>
                                   <Style>
-                                    <FontSize>7pt</FontSize>
+                                    <FontSize>6pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <BackgroundColor>LightGrey</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox24">
+                          <rd:DefaultName>Textbox24</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Event Name</Value>
+                                  <Style>
+                                    <FontSize>6pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -824,6 +721,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
                             <BackgroundColor>LightGrey</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
@@ -841,9 +741,9 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Submission Remark</Value>
+                                  <Value>Remarks</Value>
                                   <Style>
-                                    <FontSize>7pt</FontSize>
+                                    <FontSize>6pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -854,6 +754,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
                             <BackgroundColor>LightGrey</BackgroundColor>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
@@ -869,16 +772,17 @@
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Text28">
+                        <Textbox Name="Text29">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!DocumentNo.Value</Value>
+                                  <Value>=Fields!PostingDate.Value</Value>
                                   <Style>
-                                    <FontSize>7pt</FontSize>
+                                    <FontSize>5pt</FontSize>
+                                    <Format>dd-MM-yyyy HH:mm</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -900,16 +804,17 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Text29">
+                        <Textbox Name="DocumentNo">
+                          <rd:DefaultName>DocumentNo</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Format(Fields!GRNDate.Value, "dd-MMM-yyyy")</Value>
+                                  <Value>=Fields!DocumentNo.Value</Value>
                                   <Style>
-                                    <FontSize>7pt</FontSize>
+                                    <FontSize>5pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -919,6 +824,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
                             <PaddingRight>3pt</PaddingRight>
@@ -928,16 +836,17 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Text30">
+                        <Textbox Name="Challan_No_">
+                          <rd:DefaultName>Challan_No_</rd:DefaultName>
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!BillHandlingNo.Value</Value>
+                                  <Value>=Fields!Challan_No_.Value</Value>
                                   <Style>
-                                    <FontSize>7pt</FontSize>
+                                    <FontSize>5pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -947,6 +856,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
                             <PaddingRight>3pt</PaddingRight>
@@ -963,9 +875,10 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Format(Fields!DocumentDate.Value, "dd-MMM-yyyy")</Value>
+                                  <Value>=Fields!Challan_Date.Value</Value>
                                   <Style>
-                                    <FontSize>7pt</FontSize>
+                                    <FontSize>5pt</FontSize>
+                                    <Format>dd MMM yyyy</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -975,6 +888,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
                             <PaddingRight>3pt</PaddingRight>
@@ -993,7 +909,7 @@
                                 <TextRun>
                                   <Value>=Fields!VendorName.Value</Value>
                                   <Style>
-                                    <FontSize>7pt</FontSize>
+                                    <FontSize>5pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1003,6 +919,74 @@
                             </Paragraph>
                           </Paragraphs>
                           <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="GRNNo">
+                          <rd:DefaultName>GRNNo</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!GRNNo.Value</Value>
+                                  <Style>
+                                    <FontSize>5pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox3">
+                          <rd:DefaultName>Textbox3</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!GRNDate.Value</Value>
+                                  <Style>
+                                    <FontSize>5pt</FontSize>
+                                    <Format>dd MMM yyyy</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
                             <PaddingRight>3pt</PaddingRight>
@@ -1019,9 +1003,10 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Format(Fields!DueDate.Value, "dd-MMM-yyyy")</Value>
+                                  <Value>=Fields!DueDate.Value</Value>
                                   <Style>
-                                    <FontSize>7pt</FontSize>
+                                    <FontSize>5pt</FontSize>
+                                    <Format>dd MMM yyyy</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1031,6 +1016,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
                             <PaddingRight>3pt</PaddingRight>
@@ -1049,7 +1037,8 @@
                                 <TextRun>
                                   <Value>=Fields!NetAmountText.Value</Value>
                                   <Style>
-                                    <FontSize>7pt</FontSize>
+                                    <FontSize>5pt</FontSize>
+                                    <Format>N2</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1059,6 +1048,41 @@
                             </Paragraph>
                           </Paragraphs>
                           <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>3pt</PaddingLeft>
+                            <PaddingRight>3pt</PaddingRight>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Event_Name">
+                          <rd:DefaultName>Event_Name</rd:DefaultName>
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Event_Name.Value</Value>
+                                  <Style>
+                                    <FontSize>5pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
                             <PaddingRight>3pt</PaddingRight>
@@ -1077,7 +1101,7 @@
                                 <TextRun>
                                   <Value>=Fields!Remarks.Value</Value>
                                   <Style>
-                                    <FontSize>7pt</FontSize>
+                                    <FontSize>5pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1087,6 +1111,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
                             <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>3pt</PaddingLeft>
                             <PaddingRight>3pt</PaddingRight>
@@ -1196,9 +1223,12 @@
                           <KeepTogether>true</KeepTogether>
                           <Style />
                         </Rectangle>
-                        <ColSpan>8</ColSpan>
+                        <ColSpan>11</ColSpan>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
                     <TablixCell />
                     <TablixCell />
                     <TablixCell />
@@ -1220,22 +1250,27 @@
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
               <TablixMembers>
                 <TablixMember>
-                  <Group Name="BillDocument">
+                  <Group Name="BillHandlingNumber">
                     <GroupExpressions>
-                      <GroupExpression>=Fields!DocumentNo.Value</GroupExpression>
-                      <GroupExpression>=Fields!LocationCode.Value</GroupExpression>
-                      <GroupExpression>=Fields!PostingDate.Value</GroupExpression>
-                      <GroupExpression>=Fields!VoucherTypeName.Value</GroupExpression>
+                      <GroupExpression>=Fields!BillHandlingNo.Value</GroupExpression>
                     </GroupExpressions>
                     <PageBreak>
                       <BreakLocation>Between</BreakLocation>
                     </PageBreak>
                   </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!BillHandlingNo.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
                   <TablixMembers>
                     <TablixMember>
                       <KeepWithGroup>After</KeepWithGroup>
@@ -1258,15 +1293,15 @@
             <DataSetName>DataSet_Result</DataSetName>
             <Top>0in</Top>
             <Left>0in</Left>
-            <Height>3.75167in</Height>
-            <Width>7.5in</Width>
+            <Height>3.09705in</Height>
+            <Width>7.50063in</Width>
             <Style />
           </Tablix>
         </ReportItems>
-        <Height>3.75167in</Height>
+        <Height>3.22205in</Height>
         <Style />
       </Body>
-      <Width>7.5in</Width>
+      <Width>7.50064in</Width>
       <Page>
         <PageFooter>
           <Height>0.35in</Height>
@@ -1280,7 +1315,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>="Printed by " &amp; First(Fields!PrintedBy.Value, "DataSet_Result") &amp; " on " &amp; Format(First(Fields!PrintedAt.Value, "DataSet_Result"), "dd-MMM-yyyy HH:mm")</Value>
+                      <Value>="Printed by " &amp; First(Fields!PrintedBy.Value, "DataSet_Result") &amp; " on " &amp; Format(First(Fields!PrintedAt.Value, "DataSet_Result"), "dd-MM-yyyy HH:mm")</Value>
                       <Style>
                         <FontSize>7pt</FontSize>
                       </Style>
@@ -1408,6 +1443,15 @@
         </Field>
         <Field Name="DueDate">
           <DataField>DueDate</DataField>
+        </Field>
+        <Field Name="Challan_No_">
+          <DataField>Challan_No_</DataField>
+        </Field>
+        <Field Name="Challan_Date">
+          <DataField>Challan_Date</DataField>
+        </Field>
+        <Field Name="Event_Name">
+          <DataField>Event_Name</DataField>
         </Field>
         <Field Name="Remarks">
           <DataField>Remarks</DataField>

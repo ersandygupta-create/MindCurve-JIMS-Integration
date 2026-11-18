@@ -6,7 +6,7 @@ page 50134 "E3 Gate Entry Outward Header"
     RefreshOnActivate = true;
     SourceTable = "E3 Gate Entry Header";
     SourceTableView = sorting("Entry No.") where("Entry Type" = Filter(Outward));
-
+    DeleteAllowed = false;
 
     layout
     {

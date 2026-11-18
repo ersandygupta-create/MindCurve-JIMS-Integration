@@ -11,10 +11,10 @@ report 50058 "E3 Bill Handling Print"
         dataitem(BillHandling; "E3 Bill Handling")
         {
             DataItemTableView = sorting("Entry No.");
-            RequestFilterFields = "No.", "Bill Handling No.";
+            RequestFilterFields = "Bill Handling No.";
             column(EntryNo; "Entry No.") { }
             column(DocumentNo; "No.") { }
-            column(PostingDate; "Posting Date") { }
+            column(PostingDate; SystemCreatedAt) { }
             column(LocationCode; "Location Code") { }
             column(VoucherTypeName; "Voucher Type Name") { }
             column(VendorName; "Vendor Name") { }
@@ -23,6 +23,9 @@ report 50058 "E3 Bill Handling Print"
             column(BillHandlingNo; "Bill Handling No.") { }
             column(DocumentDate; "Challan Date") { }
             column(DueDate; "Due Date") { }
+            column(Challan_No_; "Challan No.") { }
+            column(Challan_Date; "Challan Date") { }
+            column(Event_Name; "Event Name") { }
             column(Remarks; Remarks) { }
             column(PreparedBy; "Created By") { }
             column(CompanyPicture; CompanyInfo.Picture) { }

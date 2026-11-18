@@ -13,6 +13,7 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         ProcessPendingTransferJournals();
     end;
 
+    [CommitBehavior(CommitBehavior::Error)]
     procedure CreateItemReclassificationJournal(DocumentNo: Code[20])
     var
         TransferHeader: Record "E3 Transfer Header";
@@ -29,7 +30,7 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         if DocumentNo = '' then
             Error('Document No. must not be blank.');
 
-        // Find the transfer header by Document Number.
+        TransferHeader.LockTable();
         TransferHeader.Reset();
         TransferHeader.SetRange("Document Number", DocumentNo);
 
@@ -62,9 +63,10 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
                 'No transfer lines exist for Document No. %1.',
                 DocumentNo);
         // Validate all existing lot quantities before creating journal lines
-        ValidateTransferDocument(DocumentNo);
+        ValidateTransferDocument(TransferHeader);
 
-        // Find the next line number in the configured batch.
+        // Serialize journal line allocation within the shared batch.
+        ItemJournalLine.LockTable();
         ItemJournalLine.Reset();
         ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
         ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
@@ -342,6 +344,7 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
 
 
 
+    [CommitBehavior(CommitBehavior::Error)]
     procedure ProcessTransferDocument(
         DocumentNo: Code[20];
         AutoTransferJournal: Boolean)
@@ -351,10 +354,12 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         ItemJournalLine: Record "Item Journal Line";
         ItemJournalTemplate: Record "Item Journal Template";
         ItemJournalBatch: Record "Item Journal Batch";
+        ItemJnlPostBatch: Codeunit "Item Jnl.-Post Batch";
         JournalTemplateName: Code[10];
         JournalBatchName: Code[10];
+        TransferLineCount: Integer;
     begin
-        TransferHeader.Reset();
+        TransferHeader.LockTable();
         TransferHeader.SetRange("Document Number", DocumentNo);
 
         if not TransferHeader.FindFirst() then
@@ -379,10 +384,10 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
                 JournalTemplateName);
 
         // Validate complete document before journal creation.
-        ValidateTransferDocument(DocumentNo);
+        TransferLineCount := ValidateTransferDocument(TransferHeader);
 
-        // Check existing journal lines.
-        ItemJournalLine.Reset();
+        // Protect existing lines and tracking while processing this document.
+        ItemJournalLine.LockTable();
         ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
         ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
         ItemJournalLine.SetRange("Document No.", DocumentNo);
@@ -390,41 +395,20 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         if ItemJournalLine.IsEmpty() then
             CreateItemReclassificationJournal(DocumentNo);
 
-        // If automatic posting is disabled, do not post.
-        if not AutoTransferJournal then
-            exit;
+        if ItemJournalLine.Count() <> TransferLineCount then
+            Error('Journal line count for Transfer Document %1 does not match the transfer line count.', DocumentNo);
 
-        // Recheck header before posting.
-        TransferHeader.Reset();
-        TransferHeader.SetRange("Document Number", DocumentNo);
+        if AutoTransferJournal then begin
+            ItemJournalLine.FindFirst();
+            ItemJnlPostBatch.SetSuppressCommit(true);
+            ItemJnlPostBatch.Run(ItemJournalLine);
+            TransferHeader."Is Created" := true;
+        end;
 
-        if not TransferHeader.FindFirst() then
-            Error('Transfer Document %1 does not exist.', DocumentNo);
-
-        // IMPORTANT: Prevent duplicate posting.
-        if TransferHeader."Is Created" then
-            exit;
-
-        // Find only current document journal lines.
-        ItemJournalLine.Reset();
-        ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
-        ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
-        ItemJournalLine.SetRange("Document No.", DocumentNo);
-
-        if not ItemJournalLine.FindFirst() then
-            Error(
-                'No Item Journal Lines found for Document No. %1.',
-                DocumentNo);
-
-        // Post only if Is Created = FALSE.
-        Codeunit.Run(
-            Codeunit::"Item Jnl.-Post Batch",
-            ItemJournalLine);
-
-        // Mark completed after successful posting.
-        TransferHeader."Is Created" := true;
-        TransferHeader."Error Description" := '';
-        TransferHeader.Modify(true);
+        if AutoTransferJournal or (TransferHeader."Error Description" <> '') then begin
+            TransferHeader."Error Description" := '';
+            TransferHeader.Modify(true);
+        end;
     end;
 
 
@@ -456,69 +440,28 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         var TransferHeader: Record "E3 Transfer Header";
         AutoTransferJournal: Boolean)
     var
+        CurrentTransferHeader: Record "E3 Transfer Header";
+        TransferJournalDocument: Codeunit "E3 Transfer Journal Document";
         ErrorDescription: Text;
-        DocumentNo: Code[20];
     begin
-        DocumentNo := TransferHeader."Document Number";
-
-        if TransferHeader."Is Created" then
+        TransferJournalDocument.SetAutoTransferJournal(AutoTransferJournal);
+        ClearLastError();
+        // A Boolean Run commits on success and rolls back on error.
+        if TransferJournalDocument.Run(TransferHeader) then
             exit;
 
-        // Clear previous error before retry.
-        TransferHeader."Error Description" := '';
-        TransferHeader.Modify(true);
+        ErrorDescription := GetLastErrorText();
+        CurrentTransferHeader.LockTable();
+        if CurrentTransferHeader.Get(TransferHeader."Entry No.", TransferHeader."Entry Type",
+               TransferHeader."Document Type", TransferHeader."Entry Number")
+        then
+            if not CurrentTransferHeader."Is Created" then begin
+                CurrentTransferHeader."Error Description" :=
+                    CopyStr(ErrorDescription, 1, MaxStrLen(CurrentTransferHeader."Error Description"));
+                CurrentTransferHeader.Modify(true);
+            end;
 
-        ClearLastError();
-
-        if TryProcessTransferDocument(
-            DocumentNo,
-            AutoTransferJournal)
-        then begin
-            UpdateTransferError(DocumentNo, '');
-        end else begin
-            ErrorDescription := GetLastErrorText();
-
-            // Remove all unposted journal lines for this document.
-            CleanupTransferJournalLines(DocumentNo);
-
-            // Save error against failed document.
-            // Is Created remains FALSE.
-            UpdateTransferError(
-                DocumentNo,
-                ErrorDescription);
-        end;
-    end;
-
-    [TryFunction]
-    local procedure TryProcessTransferDocument(
-    DocumentNo: Code[20];
-    AutoTransferJournal: Boolean)
-    begin
-        ProcessTransferDocument(
-            DocumentNo,
-            AutoTransferJournal);
-    end;
-
-    local procedure UpdateTransferError(
-    DocumentNo: Code[20];
-    ErrorText: Text)
-    var
-        TransferHeader: Record "E3 Transfer Header";
-    begin
-        TransferHeader.Reset();
-        TransferHeader.SetRange(
-            "Document Number",
-            DocumentNo);
-
-        if TransferHeader.FindFirst() then begin
-            TransferHeader."Error Description" :=
-                CopyStr(
-                    ErrorText,
-                    1,
-                    MaxStrLen(TransferHeader."Error Description"));
-
-            TransferHeader.Modify(true);
-        end;
+        Commit();
     end;
 
     local procedure ValidateTransferLotAvailability(DocumentNo: Code[20])
@@ -564,75 +507,14 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
             until TransferLine.Next() = 0;
     end;
 
-    local procedure CleanupTransferJournalLines(
-        DocumentNo: Code[20])
-    var
-        ItemJournalLine: Record "Item Journal Line";
-        ReservationEntry: Record "Reservation Entry";
-        HISIntegrationSetupLine: Record "E3 HIS Integration Setup Line";
-        JournalTemplateName: Code[10];
-        JournalBatchName: Code[10];
-    begin
-        GetReclassJournalSetup(
-            HISIntegrationSetupLine,
-            JournalTemplateName,
-            JournalBatchName);
-
-        ItemJournalLine.Reset();
-        ItemJournalLine.SetRange(
-            "Journal Template Name",
-            JournalTemplateName);
-
-        ItemJournalLine.SetRange(
-            "Journal Batch Name",
-            JournalBatchName);
-
-        ItemJournalLine.SetRange(
-            "Document No.",
-            DocumentNo);
-
-        if ItemJournalLine.FindSet(true) then
-            repeat
-                // Delete tracking entries belonging only
-                // to the current journal line.
-                ReservationEntry.Reset();
-
-                ReservationEntry.SetRange(
-                    "Source Type",
-                    Database::"Item Journal Line");
-
-                // IMPORTANT: Source Subtype filter.
-                ReservationEntry.SetRange(
-                    "Source Subtype",
-                    ItemJournalLine."Entry Type".AsInteger());
-
-                ReservationEntry.SetRange(
-                    "Source ID",
-                    ItemJournalLine."Journal Template Name");
-
-                ReservationEntry.SetRange(
-                    "Source Batch Name",
-                    ItemJournalLine."Journal Batch Name");
-
-                ReservationEntry.SetRange(
-                    "Source Ref. No.",
-                    ItemJournalLine."Line No.");
-
-                if not ReservationEntry.IsEmpty() then
-                    ReservationEntry.DeleteAll(true);
-
-                // Delete incomplete journal line.
-                ItemJournalLine.Delete(true);
-
-            until ItemJournalLine.Next() = 0;
-    end;
-
-
-    local procedure ValidateTransferDocument(DocumentNo: Code[20])
+    local procedure ValidateTransferDocument(TransferHeader: Record "E3 Transfer Header"): Integer
     var
         TransferLine: Record "E3 Transfer Line";
         Item: Record Item;
+        DocumentNo: Text[50];
+        LineCount: Integer;
     begin
+        DocumentNo := TransferHeader."Document Number";
         TransferLine.Reset();
         TransferLine.SetRange("Document Number", DocumentNo);
 
@@ -640,6 +522,7 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
             Error('No transfer lines found for Document No. %1.', DocumentNo);
 
         repeat
+            LineCount += 1;
             // Quantity validation
             if TransferLine.Quantity <= 0 then
                 Error(
@@ -690,6 +573,11 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
             end;
 
         until TransferLine.Next() = 0;
+
+        if (TransferHeader."Number of Lines" > 0) and (LineCount <> TransferHeader."Number of Lines") then
+            Error('Transfer Document %1 has %2 lines. Expected %3.', DocumentNo, LineCount, TransferHeader."Number of Lines");
+
+        exit(LineCount);
     end;
 
 

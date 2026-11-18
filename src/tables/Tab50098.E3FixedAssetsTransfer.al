@@ -282,6 +282,11 @@ table 50098 "E3 Fixed Asset Transfer"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(26; "Indent Booklet No."; Text[60])
+        {
+            Caption = 'Indent Booklet No.';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

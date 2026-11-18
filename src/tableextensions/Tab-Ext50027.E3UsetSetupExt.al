@@ -324,5 +324,10 @@ tableextension 50027 "E3 Uset Setup Ext" extends "User Setup"
             Caption = 'Delete Transfer Entries';
             DataClassification = CustomerContent;
         }
+        field(50062; "GE Line Delete"; Boolean)
+        {
+            Caption = 'GE Line Delete';
+            DataClassification = CustomerContent;
+        }
     }
 }

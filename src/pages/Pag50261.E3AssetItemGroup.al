@@ -1,10 +1,14 @@
-page 50275 "E3 Asset Item Name Group"
+
+page 50261 "E3 Asset Item Group"
 {
-    Caption = 'Asset Item Category';
     PageType = List;
-    SourceTable = "E3 Asset Item Name Group";
+    SourceTable = "E3 Asset Item Group";
     ApplicationArea = All;
     UsageCategory = Lists;
+    Caption = 'Asset Item Group';
+    InsertAllowed = true;
+    ModifyAllowed = true;
+    DeleteAllowed = true;
 
     layout
     {
@@ -15,12 +19,12 @@ page 50275 "E3 Asset Item Name Group"
                 field(Code; Rec.Code)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the Asset Item Name Group code.';
+                    ToolTip = 'Specifies the asset item group code.';
                 }
                 field(Description; Rec.Description)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Specifies the Item Name Group description.';
+                    ToolTip = 'Specifies the asset item group description.';
                 }
             }
         }
