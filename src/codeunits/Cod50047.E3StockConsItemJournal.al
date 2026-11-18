@@ -23,7 +23,7 @@ codeunit 50047 "E3 Post Stock Consumption"
     procedure CreateItemJournal(
         var StockConsumptionHeader: Record "E3 Stock Consumption Header")
     begin
-        CreateItemJournalLines(StockConsumptionHeader);
+        ProcessStockConsumptionDocument(StockConsumptionHeader, false);
     end;
 
     local procedure CreateItemJournalLines(
@@ -44,10 +44,6 @@ codeunit 50047 "E3 Post Stock Consumption"
         // Prevent duplicate journal creation.
         if StockConsumptionHeader."Is Created" then
             exit;
-
-        // Validate all document lines before inserting any journal line.
-        ValidateStockConsumptionDocument(
-            StockConsumptionHeader."Document No.");
 
         StockConsumptionLine.Reset();
         StockConsumptionLine.SetRange(
@@ -415,124 +411,55 @@ codeunit 50047 "E3 Post Stock Consumption"
     end;
 
 
-    [TryFunction]
-    local procedure TryProcessStockConsumption(
+    [CommitBehavior(CommitBehavior::Error)]
+    internal procedure ProcessStockConsumptionDocument(
         var StockConsumptionHeader: Record "E3 Stock Consumption Header";
         AutoPostStockConsumption: Boolean)
     var
         ItemJournalLine: Record "Item Journal Line";
-        ItemJournalTemplate: Record "Item Journal Template";
-        ItemJournalBatch: Record "Item Journal Batch";
+        ItemJnlPostBatch: Codeunit "Item Jnl.-Post Batch";
         JournalTemplateName: Code[10];
         JournalBatchName: Code[10];
+        StockConsumptionLineCount: Integer;
     begin
-        // Lock and recheck document status before processing.
         StockConsumptionHeader.LockTable();
-
         StockConsumptionHeader.Get(
             StockConsumptionHeader."Entry No.",
             StockConsumptionHeader."Document No.",
             StockConsumptionHeader."Entry Type");
 
-        // Do not create or post duplicate entries.
         if StockConsumptionHeader."Is Created" then
             exit;
 
-        GetStockConsumptionJournalSetup(
-            JournalTemplateName,
-            JournalBatchName);
+        StockConsumptionLineCount := ValidateStockConsumptionDocument(StockConsumptionHeader."Document No.");
+        GetStockConsumptionJournalSetup(JournalTemplateName, JournalBatchName);
 
-        if not ItemJournalTemplate.Get(JournalTemplateName) then
-            Error(
-                'Item Journal Template %1 does not exist.',
-                JournalTemplateName);
+        ItemJournalLine.LockTable();
+        ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
+        ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
+        ItemJournalLine.SetRange("Document No.", StockConsumptionHeader."Document No.");
 
-        if not ItemJournalBatch.Get(
-            JournalTemplateName,
-            JournalBatchName)
-        then
-            Error(
-                'Item Journal Batch %1 does not exist for Template %2.',
-                JournalBatchName,
-                JournalTemplateName);
-
-        // IMPORTANT: Validate every line before creating journal lines.
-        ValidateStockConsumptionDocument(
-            StockConsumptionHeader."Document No.");
-
-        // Check existing journal lines for this document.
-        ItemJournalLine.Reset();
-        ItemJournalLine.SetRange(
-            "Journal Template Name",
-            JournalTemplateName);
-        ItemJournalLine.SetRange(
-            "Journal Batch Name",
-            JournalBatchName);
-        ItemJournalLine.SetRange(
-            "Document No.",
-            StockConsumptionHeader."Document No.");
-
-        // Create only if journal lines do not already exist.
         if ItemJournalLine.IsEmpty() then
             CreateItemJournalLines(StockConsumptionHeader);
 
-        // If Auto Post is disabled, do not post.
-        if not AutoPostStockConsumption then
-            exit;
-
-        // Recheck document status immediately before posting.
-        StockConsumptionHeader.Get(
-            StockConsumptionHeader."Entry No.",
-            StockConsumptionHeader."Document No.",
-            StockConsumptionHeader."Entry Type");
-
-        if StockConsumptionHeader."Is Created" then
-            exit;
-
-        // Get only current document journal lines.
-        ItemJournalLine.Reset();
-        ItemJournalLine.SetRange(
-            "Journal Template Name",
-            JournalTemplateName);
-        ItemJournalLine.SetRange(
-            "Journal Batch Name",
-            JournalBatchName);
-        ItemJournalLine.SetRange(
-            "Document No.",
-            StockConsumptionHeader."Document No.");
-
-        if not ItemJournalLine.FindFirst() then
+        if ItemJournalLine.Count() <> StockConsumptionLineCount then
             Error(
-                'No Item Journal Lines found for Document No. %1.',
+                'Journal line count does not match the stock consumption line count for document %1.',
                 StockConsumptionHeader."Document No.");
 
-        // Post current document.
-        Codeunit.Run(
-            Codeunit::"Item Jnl.-Post Batch",
-            ItemJournalLine);
+        if AutoPostStockConsumption then begin
+            ItemJournalLine.FindFirst();
+            ItemJnlPostBatch.SetSuppressCommit(true);
+            ItemJnlPostBatch.Run(ItemJournalLine);
+            StockConsumptionHeader."Is Created" := true;
+        end;
 
-        // Mark completed only after successful posting.
-        StockConsumptionHeader."Is Created" := true;
-        StockConsumptionHeader."Error Description" := '';
-        StockConsumptionHeader.Modify(true);
+        if AutoPostStockConsumption or (StockConsumptionHeader."Error Description" <> '') then begin
+            StockConsumptionHeader."Error Description" := '';
+            StockConsumptionHeader.Modify(true);
+        end;
     end;
 
-    local procedure UpdateStockConsumptionError(
-    var StockConsumptionHeader: Record "E3 Stock Consumption Header";
-    ErrorText: Text)
-    begin
-        StockConsumptionHeader."Error Description" :=
-            CopyStr(
-                ErrorText,
-                1,
-                MaxStrLen(StockConsumptionHeader."Error Description"));
-
-        if (ErrorText <> '') and
-   (not StockConsumptionHeader."Is Created") then
-            StockConsumptionHeader."Is Created" := false;
-
-        StockConsumptionHeader.Modify(true);
-    end;
 
     local procedure GetStockConsumptionJournalSetup(
     var JournalTemplateName: Code[10];
@@ -593,116 +520,42 @@ codeunit 50047 "E3 Post Stock Consumption"
     end;
 
     local procedure ProcessStockConsumptionWithErrorHandling(
-    var StockConsumptionHeader: Record "E3 Stock Consumption Header";
-    AutoPostStockConsumption: Boolean)
+        var StockConsumptionHeader: Record "E3 Stock Consumption Header";
+        AutoPostStockConsumption: Boolean)
     var
+        CurrentStockConsumptionHeader: Record "E3 Stock Consumption Header";
+        StockConsumptionDocument: Codeunit "E3 Stock Consumption Document";
         ErrorDescription: Text;
-        CleanupError: Text;
     begin
-        // Do not process an already created/posted document.
-        if StockConsumptionHeader."Is Created" then
+        StockConsumptionDocument.SetAutoPost(AutoPostStockConsumption);
+        ClearLastError();
+        // Boolean Run commits a successful document and rolls back its writes on error.
+        if StockConsumptionDocument.Run(StockConsumptionHeader) then
             exit;
 
-        ClearLastError();
-
-        if TryProcessStockConsumption(
-            StockConsumptionHeader,
-            AutoPostStockConsumption)
-        then begin
-            UpdateStockConsumptionError(
-                StockConsumptionHeader,
-                '');
-        end else begin
-            // Capture the original document processing/posting error.
-            ErrorDescription := GetLastErrorText();
-
-            // Attempt cleanup without allowing cleanup failure
-            // to stop processing of the next document.
-            ClearLastError();
-
-            if not TryCleanupStockConsumptionJournalLines(
-                StockConsumptionHeader)
-            then begin
-                CleanupError := GetLastErrorText();
-
-                if CleanupError <> '' then
-                    ErrorDescription :=
-                        CopyStr(
-                            ErrorDescription + ' | Cleanup Error: ' + CleanupError,
-                            1,
-                            MaxStrLen(StockConsumptionHeader."Error Description"));
+        ErrorDescription := GetLastErrorText();
+        CurrentStockConsumptionHeader.LockTable();
+        if CurrentStockConsumptionHeader.Get(
+            StockConsumptionHeader."Entry No.",
+            StockConsumptionHeader."Document No.",
+            StockConsumptionHeader."Entry Type")
+        then
+            if not CurrentStockConsumptionHeader."Is Created" then begin
+                CurrentStockConsumptionHeader."Error Description" :=
+                    CopyStr(ErrorDescription, 1, MaxStrLen(CurrentStockConsumptionHeader."Error Description"));
+                CurrentStockConsumptionHeader.Modify(true);
             end;
 
-            // Update only the current document's error.
-            UpdateStockConsumptionError(
-                StockConsumptionHeader,
-                ErrorDescription);
-        end;
-    end;
-
-    [TryFunction]
-    local procedure TryCleanupStockConsumptionJournalLines(
-    var StockConsumptionHeader: Record "E3 Stock Consumption Header")
-    begin
-        CleanupStockConsumptionJournalLines(
-            StockConsumptionHeader);
-    end;
-
-    local procedure CleanupStockConsumptionJournalLines(
-    var StockConsumptionHeader: Record "E3 Stock Consumption Header")
-    var
-        ItemJournalLine: Record "Item Journal Line";
-        ReservationEntry: Record "Reservation Entry";
-        JournalTemplateName: Code[10];
-        JournalBatchName: Code[10];
-    begin
-        GetStockConsumptionJournalSetup(
-            JournalTemplateName,
-            JournalBatchName);
-
-        ItemJournalLine.Reset();
-        ItemJournalLine.SetRange(
-            "Journal Template Name",
-            JournalTemplateName);
-        ItemJournalLine.SetRange(
-            "Journal Batch Name",
-            JournalBatchName);
-        ItemJournalLine.SetRange(
-            "Document No.",
-            StockConsumptionHeader."Document No.");
-
-        if ItemJournalLine.FindSet() then
-            repeat
-                ReservationEntry.Reset();
-                ReservationEntry.SetRange(
-                    "Source Type",
-                    Database::"Item Journal Line");
-                ReservationEntry.SetRange(
-                    "Source Subtype",
-                    ItemJournalLine."Entry Type".AsInteger());
-                ReservationEntry.SetRange(
-                    "Source ID",
-                    ItemJournalLine."Journal Template Name");
-                ReservationEntry.SetRange(
-                    "Source Batch Name",
-                    ItemJournalLine."Journal Batch Name");
-                ReservationEntry.SetRange(
-                    "Source Ref. No.",
-                    ItemJournalLine."Line No.");
-
-                if not ReservationEntry.IsEmpty() then
-                    ReservationEntry.DeleteAll(true);
-
-                ItemJournalLine.Delete(true);
-            until ItemJournalLine.Next() = 0;
+        Commit();
     end;
 
 
-    local procedure ValidateStockConsumptionDocument(DocumentNo: Code[20])
+    local procedure ValidateStockConsumptionDocument(DocumentNo: Code[20]): Integer
     var
         StockConsumptionLine: Record "E3 Stock Consumption Line";
         Item: Record Item;
         LotNoToUse: Code[50];
+        LineCount: Integer;
     begin
         StockConsumptionLine.Reset();
         StockConsumptionLine.SetRange("Document No.", DocumentNo);
@@ -713,6 +566,7 @@ codeunit 50047 "E3 Post Stock Consumption"
                 DocumentNo);
 
         repeat
+            LineCount += 1;
             if StockConsumptionLine."D365 Item Code" = '' then
                 Error(
                     'Item Code is blank. Document No.: %1, Line No.: %2.',
@@ -746,6 +600,8 @@ codeunit 50047 "E3 Post Stock Consumption"
                     ValidateLotRequirement(Item, '');
 
         until StockConsumptionLine.Next() = 0;
+
+        exit(LineCount);
     end;
 
 }
