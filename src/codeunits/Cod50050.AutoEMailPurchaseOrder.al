@@ -29,6 +29,7 @@ codeunit 50050 "E3 Purchase Order Auto E-Mail"
             if PurchaseHeader1.Status <> PurchaseHeader1.Status::Released then
                 exit;
 
+            PurchaseHeader1.TestField("Buy-from Vendor No.");
             Vendor.Get(PurchaseHeader1."Buy-from Vendor No.");
             if Vendor."Send Order Email" and (Vendor."Order Email" <> '') then begin
                 DocumentNo := DelChr(PurchaseHeader1."No.", '=', '\,/,-');
@@ -111,18 +112,21 @@ codeunit 50050 "E3 Purchase Order Auto E-Mail"
     local procedure AddPurchaseOrderAttachment(PurchHeader: Record "Purchase Header"; AttachmentName: Text)
     var
         TempBlob: Codeunit "Temp Blob";
+        ReportPurchaseHeader: Record "Purchase Header";
         PurchaseHeaderRef: RecordRef;
         PdfOutStream: OutStream;
         PdfInStream: InStream;
-        ReportGenerationErr: Label 'The PDF report for purchase order %1 could not be generated.', Comment = '%1 = purchase order number';
+        EmptyReportErr: Label 'Report %1 generated an empty PDF for purchase order %2.', Comment = '%1 = report ID, %2 = purchase order number';
     begin
-        PurchaseHeaderRef.GetTable(PurchHeader);
+        EMailSetup.TestField("Order Report ID");
+        ReportPurchaseHeader.SetRange("Document Type", PurchHeader."Document Type");
+        ReportPurchaseHeader.SetRange("No.", PurchHeader."No.");
+        PurchaseHeaderRef.GetTable(ReportPurchaseHeader);
         TempBlob.CreateOutStream(PdfOutStream);
 
-        if not Report.SaveAs(EMailSetup."Order Report ID", '', ReportFormat::Pdf, PdfOutStream, PurchaseHeaderRef) then
-            Error(ReportGenerationErr, PurchHeader."No.");
+        Report.SaveAs(EMailSetup."Order Report ID", '', ReportFormat::Pdf, PdfOutStream, PurchaseHeaderRef);
         if not TempBlob.HasValue() then
-            Error(ReportGenerationErr, PurchHeader."No.");
+            Error(EmptyReportErr, EMailSetup."Order Report ID", PurchHeader."No.");
 
         TempBlob.CreateInStream(PdfInStream);
         EmailMessage.AddAttachment(AttachmentName, 'application/pdf', PdfInStream);
