@@ -29,6 +29,11 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies a value Sub Location field.';
+                    trigger OnValidate()
+                    begin
+                        Rec.UpdateAssetsCardName();
+                        CurrPage.Update(false);
+                    end;
                 }
                 field("Asset Item Group"; Rec."Asset Item Group")
                 {
@@ -65,6 +70,8 @@ pageextension 50062 "E3 HIS Fixed Assets Card" extends "Fixed Asset Card"
                     trigger OnValidate()
                     begin
                         Rec."Asset Item Sub Group" := '';
+                        Rec.UpdateAssetsCardName();
+                        CurrPage.Update(false);
                     end;
                 }
                 field("Asset Item Sub Group"; Rec."Asset Item Sub Group")

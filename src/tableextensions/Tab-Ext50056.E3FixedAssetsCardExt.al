@@ -130,4 +130,31 @@ tableextension 50056 "E3 HIS Fixed Asset" extends "Fixed Asset"
         if (Rec."No." <> xRec."No.") and (xRec."No." <> '') then
             Error('You cannot modify the FA No.');
     end;
+
+    procedure UpdateAssetsCardName()
+    var
+        AssetItemNameGroup: Record "E3 Asset Item Name Group";
+        GeneratedName: Text;
+    begin
+        if (Rec."No." = '') or (Rec."Sub Location" = '') or
+           (Rec."Asset Item Name Group" = '')
+        then
+            exit;
+
+        if not AssetItemNameGroup.Get(Rec."Asset Item Name Group") then
+            exit;
+
+        if AssetItemNameGroup.Description = '' then
+            exit;
+
+        GeneratedName := StrSubstNo('%1/%2/%3/%4/%5',
+            CompanyName(),
+            Rec."No.",
+            Rec."Sub Location",
+            AssetItemNameGroup.Description,
+            Date2DMY(WorkDate(), 3));
+
+        Rec."Assets Name" := CopyStr(GeneratedName, 1, MaxStrLen(Rec."Assets Name"));
+    end;
+
 }
