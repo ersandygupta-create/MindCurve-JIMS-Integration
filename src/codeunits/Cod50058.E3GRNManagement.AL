@@ -113,11 +113,11 @@ codeunit 50058 "E3 GRN Invoice Management"
         PurchHeader.Validate("Document Date", PurchRcptHeader."Document Date");
         //ak
         if PurchHeader."Payment Terms Code" = '' then
-            PurchHeader."Due Date" := PurchHeader."Posting Date"
+            PurchHeader."Due Date" := WorkDate()
         else begin
             PaymentTerms.Get(PurchHeader."Payment Terms Code");
             PurchHeader."Due Date" :=
-                CalcDate(PaymentTerms."Due Date Calculation", PurchHeader."Posting Date");
+                CalcDate(PaymentTerms."Due Date Calculation", WorkDate());
         end;
         PurchHeader.Modify(true);
         //ak

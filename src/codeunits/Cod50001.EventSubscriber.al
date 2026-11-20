@@ -1331,9 +1331,7 @@ codeunit 50001 "E3 HIS Event Subscriber"
         var IsHandled: Boolean)
     var
         PurchasesPayablesSetup: Record "Purchases & Payables Setup";
-        ConfirmManagement: Codeunit "Confirm Management";
-        ReceiveOrderQst: Label 'Do you want to receive purchase order %1?',
-            Comment = '%1 is the purchase order number.';
+        ReceiveOptionLbl: Label 'Receive';
     begin
         if IsHandled then
             exit;
@@ -1343,9 +1341,7 @@ codeunit 50001 "E3 HIS Event Subscriber"
             exit;
 
         IsHandled := true;
-        Result := ConfirmManagement.GetResponseOrDefault(
-            StrSubstNo(ReceiveOrderQst, PurchaseHeader."No."), false);
-
+        Result := Dialog.StrMenu(ReceiveOptionLbl, 1) = 1;
         if not Result then
             exit;
 
@@ -1362,9 +1358,7 @@ codeunit 50001 "E3 HIS Event Subscriber"
     var IsHandled: Boolean)
     var
         PurchasesPayablesSetup: Record "Purchases & Payables Setup";
-        ConfirmManagement: Codeunit "Confirm Management";
-        ShipReturnOrderQst: Label 'Do you want to ship purchase return order %1?',
-        Comment = '%1 is the purchase return order number.';
+        ShipOptionLbl: Label 'Ship';
     begin
         if IsHandled then
             exit;
@@ -1374,9 +1368,7 @@ codeunit 50001 "E3 HIS Event Subscriber"
             exit;
 
         IsHandled := true;
-        Result := ConfirmManagement.GetResponseOrDefault(
-            StrSubstNo(ShipReturnOrderQst, PurchaseHeader."No."), false);
-
+        Result := Dialog.StrMenu(ShipOptionLbl, 1) = 1;
         if not Result then
             exit;
 

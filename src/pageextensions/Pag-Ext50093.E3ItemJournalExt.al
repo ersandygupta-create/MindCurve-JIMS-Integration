@@ -14,9 +14,23 @@ pageextension 50093 "E3 Item Journal Ext" extends "Item Journal"
 
     actions
     {
-        // Add changes to page actions here
-    }
+        addlast(Processing)
+        {
+            action(ImportAppliesToEntries)
+            {
+                ApplicationArea = All;
+                Caption = 'Import Applies-to Entries';
+                ToolTip = 'Upload item tracking applications for journal lines in the current batch.';
 
-    var
-        myInt: Integer;
+                trigger OnAction()
+                var
+                    TrackingImport: Codeunit "Item Tracking CSV Import";
+                begin
+                    CurrPage.SaveRecord();
+                    TrackingImport.ImportAppliesToEntries(Rec);
+                    CurrPage.Update(false);
+                end;
+            }
+        }
+    }
 }

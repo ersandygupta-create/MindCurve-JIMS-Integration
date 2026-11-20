@@ -129,6 +129,7 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 Image = Create;
+                Visible = AllowOrderAddressInsert;
                 trigger OnAction()
                 var
                     myInt: Integer;
@@ -252,6 +253,7 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
     trigger OnOpenPage()
     begin
         CheckVendorInsertPermission();
+        CheckOrderAddressPermission();
     end;
 
     trigger OnAfterGetRecord()
@@ -276,6 +278,16 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
             (Rec.Status <> Rec.Status::"Pending Approval");
     end;
 
+    local procedure CheckOrderAddressPermission()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        AllowOrderAddressInsert := false;
+
+        if UserSetup.Get(UserId()) then
+            AllowOrderAddressInsert := UserSetup."Order Address Insert";
+    end;
+
     local procedure CheckVendorInsertPermission()
     var
         UserSetup: Record "User Setup";
@@ -294,5 +306,6 @@ pageextension 50000 "E3 HIS Vendor Card" extends "Vendor Card"
         recVendor: Record Vendor;
         recTDSEntry: Record "TDS Entry";
         State: Record State;
+        AllowOrderAddressInsert: Boolean;
 
 }
