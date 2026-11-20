@@ -41,10 +41,17 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
 
         addafter("Cheque No.")
         {
+            field("E3 UTR No."; Rec."E3 UTR No.")
+            {
+                ApplicationArea = All;
+                ShowMandatory = true;
+                ToolTip = 'Specifies a value UTR field';
+            }
             field("E3 Narration"; Rec."E3 Narration")
             {
                 ApplicationArea = All;
                 Editable = IsEditable;
+                ShowMandatory = true;
                 ToolTip = 'Specifies a value Narration';
             }
             field("CheckPrinted"; Rec."Check Printed")

@@ -3,14 +3,23 @@ using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
 using System.IO;
 
-codeunit 50100 "Item Tracking CSV Import"
+codeunit 50068 "Item Tracking CSV Import"
 {
+    Permissions = tabledata "Reservation Entry" = rm;
+
+    [CommitBehavior(CommitBehavior::Error)]
     procedure ImportAppliesToEntries(SelectedLine: Record "Item Journal Line")
     var
         CSVBuffer: Record "CSV Buffer" temporary;
         JournalLine: Record "Item Journal Line";
         LedgerEntry: Record "Item Ledger Entry";
+        ExistingTracking: Record "Reservation Entry";
         FileStream: InStream;
+        ExistingTrackingByRow: Dictionary of [Integer, Integer];
+        MatchedTrackingEntries: Dictionary of [Integer, Boolean];
+        TrackingEntryNo: Integer;
+        AlreadyApplied: Boolean;
+        SkippedRows: Integer;
         TotalsByJournalLine: Dictionary of [Integer, Decimal];
         TotalsByLedgerEntry: Dictionary of [Integer, Decimal];
         SeenApplications: Dictionary of [Text, Boolean];
@@ -44,6 +53,7 @@ codeunit 50100 "Item Tracking CSV Import"
             Error('The CSV must contain at least one tracking row.');
 
         JournalLine.LockTable();
+        ExistingTracking.LockTable();
 
         for RowNo := 2 to LastRowNo do begin
             ReadRow(CSVBuffer, RowNo, JournalLineNo, LedgerEntryNo, QuantityBase);
@@ -61,21 +71,30 @@ codeunit 50100 "Item Tracking CSV Import"
 
             if not LedgerEntry.Get(LedgerEntryNo) then
                 Error('CSV row %1 refers to missing item ledger entry %2.', RowNo, LedgerEntryNo);
-            CheckLedgerEntry(JournalLine, LedgerEntry, QuantityBase, RowNo);
+            TrackingEntryNo := FindExistingTracking(JournalLine, LedgerEntry, QuantityBase, RowNo, AlreadyApplied);
+            if TrackingEntryNo <> 0 then begin
+                if MatchedTrackingEntries.ContainsKey(TrackingEntryNo) then
+                    Error('CSV row %1 matches a tracking row already used by another CSV row.', RowNo);
+                MatchedTrackingEntries.Add(TrackingEntryNo, true);
+                ExistingTrackingByRow.Add(RowNo, TrackingEntryNo);
+            end;
 
             if not TotalsByJournalLine.Get(JournalLineNo, JournalTotal) then
                 JournalTotal := 0;
             TotalsByJournalLine.Set(JournalLineNo, JournalTotal + QuantityBase);
 
-            if not TotalsByLedgerEntry.Get(LedgerEntryNo, EntryTotal) then
-                EntryTotal := 0;
-            EntryTotal += QuantityBase;
+            if not AlreadyApplied then begin
+                CheckLedgerEntry(JournalLine, LedgerEntry, QuantityBase, RowNo);
+                if not TotalsByLedgerEntry.Get(LedgerEntryNo, EntryTotal) then
+                    EntryTotal := 0;
+                EntryTotal += QuantityBase;
 
-            if EntryTotal > LedgerEntry."Remaining Quantity" then
-                Error(
-                    'CSV row %1 brings the total for entry %2 to %3 base units, but only %4 remain.',
-                    RowNo, LedgerEntryNo, EntryTotal, LedgerEntry."Remaining Quantity");
-            TotalsByLedgerEntry.Set(LedgerEntryNo, EntryTotal);
+                if EntryTotal > LedgerEntry."Remaining Quantity" then
+                    Error(
+                        'CSV row %1 brings the total for entry %2 to %3 base units, but only %4 remain.',
+                        RowNo, LedgerEntryNo, EntryTotal, LedgerEntry."Remaining Quantity");
+                TotalsByLedgerEntry.Set(LedgerEntryNo, EntryTotal);
+            end;
         end;
 
         foreach JournalLineNo in TotalsByJournalLine.Keys() do begin
@@ -91,10 +110,20 @@ codeunit 50100 "Item Tracking CSV Import"
             ReadRow(CSVBuffer, RowNo, JournalLineNo, LedgerEntryNo, QuantityBase);
             GetJournalLine(SelectedLine, JournalLineNo, JournalLine);
             LedgerEntry.Get(LedgerEntryNo);
-            CreateTrackingRow(JournalLine, LedgerEntry, QuantityBase);
+            if ExistingTrackingByRow.Get(RowNo, TrackingEntryNo) then begin
+                ExistingTracking.Get(TrackingEntryNo, false);
+                if ExistingTracking."Appl.-to Item Entry" = 0 then begin
+                    ExistingTracking.Validate("Appl.-to Item Entry", LedgerEntryNo);
+                    ExistingTracking.Modify(true);
+                end else
+                    SkippedRows += 1;
+            end else
+                CreateTrackingRow(JournalLine, LedgerEntry, QuantityBase);
         end;
 
-        Message('Imported %1 tracking rows. Review Item Tracking Lines before posting.', LastRowNo - 1);
+        Message(
+            'Applied %1 tracking rows. Skipped %2 rows that already had an applied entry.',
+            LastRowNo - 1 - SkippedRows, SkippedRows);
     end;
 
     local procedure ReadRow(
@@ -131,8 +160,6 @@ codeunit 50100 "Item Tracking CSV Import"
     end;
 
     local procedure CheckJournalLine(JournalLine: Record "Item Journal Line")
-    var
-        ExistingTracking: Record "Reservation Entry";
     begin
         JournalLine.TestField("Entry Type", JournalLine."Entry Type"::"Negative Adjmt.");
         JournalLine.TestField("Item No.");
@@ -142,14 +169,50 @@ codeunit 50100 "Item Tracking CSV Import"
            (JournalLine."Qty. per Unit of Measure" <= 0)
         then
             Error('Journal line %1 needs a positive quantity and a valid unit of measure.', JournalLine."Line No.");
+    end;
 
-        ExistingTracking.SetRange("Source Type", Database::"Item Journal Line");
-        ExistingTracking.SetRange("Source Subtype", JournalLine."Entry Type".AsInteger());
-        ExistingTracking.SetRange("Source ID", JournalLine."Journal Template Name");
-        ExistingTracking.SetRange("Source Batch Name", JournalLine."Journal Batch Name");
-        ExistingTracking.SetRange("Source Ref. No.", JournalLine."Line No.");
-        if not ExistingTracking.IsEmpty() then
-            Error('Journal line %1 already has tracking or reservations.', JournalLine."Line No.");
+    local procedure FindExistingTracking(
+        JournalLine: Record "Item Journal Line";
+        LedgerEntry: Record "Item Ledger Entry";
+        QuantityBase: Decimal;
+        RowNo: Integer;
+        var AlreadyApplied: Boolean): Integer
+    var
+        Tracking: Record "Reservation Entry";
+    begin
+        AlreadyApplied := false;
+        Tracking.SetRange("Source Type", Database::"Item Journal Line");
+        Tracking.SetRange("Source Subtype", JournalLine."Entry Type".AsInteger());
+        Tracking.SetRange("Source ID", JournalLine."Journal Template Name");
+        Tracking.SetRange("Source Batch Name", JournalLine."Journal Batch Name");
+        Tracking.SetRange("Source Ref. No.", JournalLine."Line No.");
+        if Tracking.IsEmpty() then
+            exit(0);
+
+        Tracking.SetFilter(
+            "Reservation Status", '%1|%2',
+            Tracking."Reservation Status"::Surplus,
+            Tracking."Reservation Status"::Prospect);
+        Tracking.SetRange(Positive, false);
+        Tracking.SetRange("Item No.", JournalLine."Item No.");
+        Tracking.SetRange("Variant Code", JournalLine."Variant Code");
+        Tracking.SetRange("Location Code", JournalLine."Location Code");
+        Tracking.SetRange("Lot No.", LedgerEntry."Lot No.");
+        Tracking.SetRange("Serial No.", LedgerEntry."Serial No.");
+        Tracking.SetRange("Package No.", LedgerEntry."Package No.");
+        Tracking.SetRange("Quantity (Base)", -QuantityBase);
+
+        if not Tracking.FindFirst() then
+            Error(
+                'CSV row %1 has no matching tracking row on journal line %2 for ledger entry %3 (lot %4, serial %5, package %6, base quantity %7).',
+                RowNo, JournalLine."Line No.", LedgerEntry."Entry No.", LedgerEntry."Lot No.",
+                LedgerEntry."Serial No.", LedgerEntry."Package No.", QuantityBase);
+
+        if Tracking.Count() > 1 then
+            Error('CSV row %1 matches multiple tracking rows on journal line %2.', RowNo, JournalLine."Line No.");
+
+        AlreadyApplied := Tracking."Appl.-to Item Entry" <> 0;
+        exit(Tracking."Entry No.");
     end;
 
     local procedure CheckLedgerEntry(

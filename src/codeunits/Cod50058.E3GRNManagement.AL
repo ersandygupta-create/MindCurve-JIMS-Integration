@@ -111,21 +111,18 @@ codeunit 50058 "E3 GRN Invoice Management"
         PurchHeader.Validate("Order Date", PurchRcptHeader."Order Date");
         PurchHeader.Validate("Posting Date", WorkDate());
         PurchHeader.Validate("Document Date", PurchRcptHeader."Document Date");
-        //ak
-        if PurchHeader."Payment Terms Code" = '' then
-            PurchHeader."Due Date" := WorkDate()
-        else begin
-            PaymentTerms.Get(PurchHeader."Payment Terms Code");
-            PurchHeader."Due Date" :=
-                CalcDate(PaymentTerms."Due Date Calculation", WorkDate());
-        end;
-        PurchHeader.Modify(true);
-        //ak
         PurchHeader.Validate("Pay-to Vendor No.", PurchRcptHeader."Pay-to Vendor No.");
         PurchHeader."Posting Description" := PurchRcptHeader."Posting Description";
         if PurchRcptHeader."Location Code" <> '' then
             PurchHeader.Validate("Location Code", PurchRcptHeader."Location Code");
         PurchHeader.Validate("Currency Code", PurchRcptHeader."Currency Code");
+        if PurchHeader."Payment Terms Code" = '' then
+            PurchHeader."Due Date" := PurchHeader."Posting Date"
+        else begin
+            PaymentTerms.Get(PurchHeader."Payment Terms Code");
+            PurchHeader."Due Date" :=
+                CalcDate(PaymentTerms."Due Date Calculation", PurchHeader."Posting Date");
+        end;
         PurchHeader.Modify(true);
 
         // Step 2: Collect valid lines for this single GRN into temporary buffer

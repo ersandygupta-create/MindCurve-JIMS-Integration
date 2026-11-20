@@ -6,11 +6,7 @@
             "request": "launch",
             "type": "al",
             "environmentType": "Sandbox",
-<<<<<<< HEAD
             "environmentName": "ZDummy16-11",
-=======
-            "environmentName": "Dummy_19-11",
->>>>>>> 166efc3cd1204cb27c71d86a620e65251325df6f
             "startupObjectId": 22,
             "startupObjectType": "Page",
             "tenant": "03698fc9-f9f4-4b50-a08a-e35a65aaa8b8",

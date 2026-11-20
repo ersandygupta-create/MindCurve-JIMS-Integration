@@ -6,21 +6,37 @@ codeunit 50050 "E3 Purchase Order Auto E-Mail"
     trigger OnRun()
     var
         PendingPurchaseOrder: Record "Purchase Header";
-        VoucherTypeCode: Code[20];
+        VoucherTypeCode: Text;
+        VoucherTypeFilter: Text;
+        InvalidVoucherTypeErr: Label 'Enter voucher type codes of up to 20 characters separated by |, for example 1|2|3.';
     begin
         TotalSend := 0;
         PendingPurchaseOrder.SetRange("Document Type", PendingPurchaseOrder."Document Type"::Order);
         PendingPurchaseOrder.SetRange("E3 Send E-Mail", false);
         PendingPurchaseOrder.SetRange(Status, PendingPurchaseOrder.Status::Released);
-        VoucherTypeCode := Rec."Parameter String";
-        if VoucherTypeCode <> '' then
-            PendingPurchaseOrder.SetRange("Voucher Type", VoucherTypeCode);
+        if Rec."Parameter String".Trim() <> '' then begin
+            foreach VoucherTypeCode in Rec."Parameter String".Split('|') do begin
+                VoucherTypeCode := UpperCase(VoucherTypeCode.Trim());
+                if (VoucherTypeCode = '') or
+                   (StrLen(VoucherTypeCode) > MaxStrLen(PendingPurchaseOrder."Voucher Type")) or
+                   (StrPos(VoucherTypeCode, '..') > 0) or
+                   (DelChr(VoucherTypeCode, '=', ',&<>*=?@()''') <> VoucherTypeCode)
+                then
+                    Error(InvalidVoucherTypeErr);
+
+                if VoucherTypeFilter <> '' then
+                    VoucherTypeFilter += '|';
+                VoucherTypeFilter += VoucherTypeCode;
+            end;
+            PendingPurchaseOrder.SetFilter("Voucher Type", VoucherTypeFilter);
+        end;
 
         if PendingPurchaseOrder.FindSet() then
             repeat
                 SendMailforPurchaseOrderJob(PendingPurchaseOrder);
             until (TotalSend >= 3) or (PendingPurchaseOrder.Next() = 0);
     end;
+
 
 
     procedure SendMailforPurchaseOrderJob(PurchHeader: Record "Purchase Header")

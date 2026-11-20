@@ -50,12 +50,12 @@ pageextension 50064 "Item Ext" extends "Item Card"
         modify("Purch. Unit of Measure")
         {
             ShowMandatory = true;
-            Editable = Rec."Purch. Unit of Measure" = '';
+            Editable = Rec."Status" = Rec."Status"::Created;
         }
         modify("Sales Unit of Measure")
         {
             ShowMandatory = true;
-            Editable = Rec."Sales Unit of Measure" = '';
+            Editable = Rec."Status" = Rec."Status"::Created;
         }
         modify("Gen. Prod. Posting Group")
         {
