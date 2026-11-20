@@ -145,6 +145,7 @@ page 50111 "Vendor Advance Pay. Against PO"
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 ToolTip = 'Print the Advance Request Receipt.';
+                Visible = ShowAdvanceRequestReceipt;
 
                 trigger OnAction()
                 var
@@ -225,6 +226,7 @@ page 50111 "Vendor Advance Pay. Against PO"
     }
     trigger OnOpenPage()
     begin
+        ShowAdvanceRequestReceipt := IsPurchaseOrderReleased();
         VendorAdvancePayAgainstPO.Reset();
         VendorAdvancePayAgainstPO.SetRange("Entry Type", Rec."Entry Type");
         VendorAdvancePayAgainstPO.SetRange("Purchase Order No.", Rec."Purchase Order No.");
@@ -254,6 +256,11 @@ page 50111 "Vendor Advance Pay. Against PO"
         end;
     end;
 
+    trigger OnAfterGetCurrRecord()
+    begin
+        ShowAdvanceRequestReceipt := IsPurchaseOrderReleased();
+    end;
+
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
         // Executes immediately when pressing Down Arrow to create a line
@@ -261,8 +268,22 @@ page 50111 "Vendor Advance Pay. Against PO"
         Rec."Advance Due Date" := WorkDate();
     end;
 
+    local procedure IsPurchaseOrderReleased(): Boolean
+    var
+        PurchaseHeader: Record "Purchase Header";
+    begin
+        if Rec."Purchase Order No." = '' then
+            exit(false);
+        if not PurchaseHeader.Get(PurchaseHeader."Document Type"::Order, Rec."Purchase Order No.") then
+            exit(false);
+        exit(PurchaseHeader.Status = PurchaseHeader.Status::Released);
+    end;
+
 
     var
         VendorAdvancePayAgainstPO: Record "Vendor Adv. Pay. Ag. PO";
+        ShowAdvanceRequestReceipt: Boolean;
+        PurchaseOrderMustBeReleasedErr: Label 'The purchase order must be released before you can print the advance request receipt.';
+
 
 }

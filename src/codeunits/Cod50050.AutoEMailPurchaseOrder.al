@@ -1,21 +1,27 @@
 codeunit 50050 "E3 Purchase Order Auto E-Mail"
 {
     Permissions = tabledata "Purchase Header" = rm;
+    TableNo = "Job Queue Entry";
 
     trigger OnRun()
     var
         PendingPurchaseOrder: Record "Purchase Header";
+        VoucherTypeCode: Code[20];
     begin
         TotalSend := 0;
         PendingPurchaseOrder.SetRange("Document Type", PendingPurchaseOrder."Document Type"::Order);
         PendingPurchaseOrder.SetRange("E3 Send E-Mail", false);
         PendingPurchaseOrder.SetRange(Status, PendingPurchaseOrder.Status::Released);
+        VoucherTypeCode := Rec."Parameter String";
+        if VoucherTypeCode <> '' then
+            PendingPurchaseOrder.SetRange("Voucher Type", VoucherTypeCode);
 
         if PendingPurchaseOrder.FindSet() then
             repeat
                 SendMailforPurchaseOrderJob(PendingPurchaseOrder);
             until (TotalSend >= 3) or (PendingPurchaseOrder.Next() = 0);
     end;
+
 
     procedure SendMailforPurchaseOrderJob(PurchHeader: Record "Purchase Header")
     begin

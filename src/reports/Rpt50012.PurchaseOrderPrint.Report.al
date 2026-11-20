@@ -364,8 +364,9 @@ report 50012 "Purchase Order Print"
                 ApprovalEntry.SETRANGE("Table ID", 38);
                 ApprovalEntry.SETRANGE("Document No.", "No.");
                 ApprovalEntry.SETRANGE(Status, ApprovalEntry.Status::Approved);
-                IF ApprovalEntry.FINDLAST THEN
-                    userId := ApprovalEntry."Last Modified By User ID";
+                IF ApprovalEntry.FindLast() THEN
+                    if PurchaseHeader.Status <> PurchaseHeader.Status::Open then
+                        userId := ApprovalEntry."Last Modified By User ID";
                 PreparedBy := ApprovalEntry."Sender ID";
 
                 Clear(TermsBuilder);

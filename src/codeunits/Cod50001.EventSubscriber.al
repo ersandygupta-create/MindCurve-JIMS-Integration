@@ -1298,4 +1298,90 @@ codeunit 50001 "E3 HIS Event Subscriber"
         if Rec."Cancelled Line" and (Rec."Qty. to Invoice" <> 0) then
             Error('You cannot invoice a cancelled PO line.');
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Undo Purchase Receipt Line", 'OnAfterPurchRcptLineModify', '', false, false)]
+    local procedure AppendVendorInvoiceNoSuffixOnUndo(var PurchRcptLine: Record "Purch. Rcpt. Line")
+    var
+        PurchRcptHeader: Record "Purch. Rcpt. Header";
+        VendorInvoiceNo: Text;
+        VendorInvoiceNoTooLongErr: Label 'Cannot append R to Vendor Invoice No. on receipt %1 because the field allows only %2 characters.', Comment = '%1 = receipt number, %2 = field length';
+    begin
+        PurchRcptHeader.LockTable();
+        PurchRcptHeader.Get(PurchRcptLine."Document No.");
+        VendorInvoiceNo := PurchRcptHeader."Vendor Invoice No.";
+        if VendorInvoiceNo = '' then
+            exit;
+        if CopyStr(VendorInvoiceNo, StrLen(VendorInvoiceNo), 1) = 'R' then
+            exit;
+
+        VendorInvoiceNo += 'R';
+        if StrLen(VendorInvoiceNo) > MaxStrLen(PurchRcptHeader."Vendor Invoice No.") then
+            Error(VendorInvoiceNoTooLongErr, PurchRcptHeader."No.", MaxStrLen(PurchRcptHeader."Vendor Invoice No."));
+
+        PurchRcptHeader."Vendor Invoice No." := VendorInvoiceNo;
+        PurchRcptHeader.Modify();
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)",
+                     'OnBeforeSelectPostOrderOption', '', false, false)]
+    local procedure SelectReceiveOnly(
+        var PurchaseHeader: Record "Purchase Header";
+        DefaultOption: Integer;
+        var Result: Boolean;
+        var IsHandled: Boolean)
+    var
+        PurchasesPayablesSetup: Record "Purchases & Payables Setup";
+        ConfirmManagement: Codeunit "Confirm Management";
+        ReceiveOrderQst: Label 'Do you want to receive purchase order %1?',
+            Comment = '%1 is the purchase order number.';
+    begin
+        if IsHandled then
+            exit;
+
+        PurchasesPayablesSetup.Get();
+        if PurchasesPayablesSetup."Allow Purchase Order Invoicing" then
+            exit;
+
+        IsHandled := true;
+        Result := ConfirmManagement.GetResponseOrDefault(
+            StrSubstNo(ReceiveOrderQst, PurchaseHeader."No."), false);
+
+        if not Result then
+            exit;
+
+        PurchaseHeader.Receive := true;
+        PurchaseHeader.Invoice := false;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)",
+                 'OnBeforeSelectPostReturnOrderOption', '', false, false)]
+    local procedure SelectShipOnly(
+    var PurchaseHeader: Record "Purchase Header";
+    DefaultOption: Integer;
+    var Result: Boolean;
+    var IsHandled: Boolean)
+    var
+        PurchasesPayablesSetup: Record "Purchases & Payables Setup";
+        ConfirmManagement: Codeunit "Confirm Management";
+        ShipReturnOrderQst: Label 'Do you want to ship purchase return order %1?',
+        Comment = '%1 is the purchase return order number.';
+    begin
+        if IsHandled then
+            exit;
+
+        PurchasesPayablesSetup.Get();
+        if PurchasesPayablesSetup."Allow Purchase Order Invoicing" then
+            exit;
+
+        IsHandled := true;
+        Result := ConfirmManagement.GetResponseOrDefault(
+            StrSubstNo(ShipReturnOrderQst, PurchaseHeader."No."), false);
+
+        if not Result then
+            exit;
+
+        PurchaseHeader.Ship := true;
+        PurchaseHeader.Invoice := false;
+    end;
+
 }

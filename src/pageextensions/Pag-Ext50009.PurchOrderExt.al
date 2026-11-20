@@ -59,7 +59,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
             field("Exp. CN Value"; Rec."Exp. CN Value")
             {
                 ApplicationArea = All;
-                Editable = CanEditCustomFields;
+                //Editable = CanEditCustomFields;
                 ToolTip = 'Exp. CN Value';
             }
             field("Item Make Code"; Rec."Item Make Code")
