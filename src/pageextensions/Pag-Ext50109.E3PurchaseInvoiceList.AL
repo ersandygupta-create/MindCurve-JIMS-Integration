@@ -164,6 +164,9 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                 trigger OnAction()
                 var
                     PurchaseHeader: Record "Purchase Header";
+                    CancelIndentDialog: Page "E3 Cancel Indent Dialog";
+                    CancelReason: Text[250];
+                    SelectedCount: Integer;
                 begin
                     // 1. Get selected records from the page
                     CurrPage.SetSelectionFilter(PurchaseHeader);
@@ -174,17 +177,38 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                     if PurchaseHeader.IsEmpty() then
                         Error('None of the selected records have a Submitted Document No.');
 
-                    // Insert Bill Handling records for matching selected records
+                    // 3. Open cancellation reason dialog
+                    if CancelIndentDialog.RunModal() <> Action::OK then
+                        exit;
+
+                    // 4. Get entered reason
+                    CancelReason := CancelIndentDialog.GetCancelReason();
+
+                    // 5. Validate reason
+                    if DelChr(CancelReason, '=', ' ') = '' then
+                        Error('Please enter the cancellation reason.');
+
+                    // 6. Insert Bill Handling with entered remarks
                     if PurchaseHeader.FindSet() then
                         repeat
-                            InsertBillHandling(PurchaseHeader, 'Submit to Store');
+                            InsertBillHandlingWithRemarks(
+                                PurchaseHeader,
+                                'Submit to Store',
+                                CancelReason);
+
+                            SelectedCount += 1;
                         until PurchaseHeader.Next() = 0;
 
-                    // 3. Clear fields across qualifying records
+                    // 7. Update Purchase Invoice fields
                     PurchaseHeader.ModifyAll("Receive Finance", false);
                     PurchaseHeader.ModifyAll("Submit to Finance", false);
 
-                    Message('%1 selected record(s) Submit to Store.', PurchaseHeader.Count());
+                    CurrPage.Update(false);
+
+                    // 8. Confirmation
+                    Message(
+                        '%1 selected record(s) submitted to Store successfully.',
+                        SelectedCount);
                 end;
             }
 
@@ -225,13 +249,54 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
         BillHandling."Due Date" := PurchaseHeader."Due Date";
         BillHandling.Remarks := PurchaseHeader."Posting Description";
         BillHandling."Event Name" := EventName;
+        BillHandling."Posting Date" := PurchaseHeader."Posting Date";
+        BillHandling."Location Code" := PurchaseHeader."Location Code";
+        BillHandling."Net Amount" := PurchaseHeader."Net Amount";
         BillHandling."Created By" := UserId();
+        BillHandling.Insert(true);
+    end;
+
+    local procedure InsertBillHandlingWithRemarks(
+    PurchaseHeader: Record "Purchase Header";
+    EventName: Text[100];
+    RemarksText: Text[250])
+    var
+        BillHandling: Record "E3 Bill Handling";
+    begin
+        BillHandling.Init();
+
+        BillHandling."No." := PurchaseHeader."No.";
+        BillHandling."Voucher Type Code" := PurchaseHeader."Voucher Type";
+        BillHandling."Voucher Type Name" := PurchaseHeader."GRN Voucher Type Name";
+        BillHandling."Vendor Code" := PurchaseHeader."Buy-from Vendor No.";
+        BillHandling."Vendor Name" := PurchaseHeader."Buy-from Vendor Name";
+        BillHandling."Challan No." := PurchaseHeader."Vendor Invoice No.";
+        BillHandling."Challan Date" := PurchaseHeader."Document Date";
+        BillHandling."GRN No." := PurchaseHeader."Receipt No.";
+        BillHandling."GRN Date" := PurchaseHeader."Receipt Date";
+        BillHandling."Bill Handling No." := PurchaseHeader."Submit Doc No.";
+        BillHandling."Due Date" := PurchaseHeader."Due Date";
+
+        // User-entered rejection reason
+        BillHandling.Remarks := RemarksText;
+
+        BillHandling."Event Name" := EventName;
+        BillHandling."Posting Date" := PurchaseHeader."Posting Date";
+        BillHandling."Location Code" := PurchaseHeader."Location Code";
+        BillHandling."Net Amount" := PurchaseHeader."Net Amount";
+        BillHandling."Created By" := UserId();
+
         BillHandling.Insert(true);
     end;
 
     trigger OnOpenPage()
     begin
         UpdateButtonVisibility();
+    end;
+
+    trigger OnAfterGetRecord()
+    begin
+        Rec.CalculateGSTAmount();
     end;
 
     local procedure UpdateButtonVisibility()

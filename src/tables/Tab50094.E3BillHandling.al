@@ -84,6 +84,21 @@ table 50094 "E3 Bill Handling"
             Caption = 'Created By';
             DataClassification = CustomerContent;
         }
+        field(16; "Posting Date"; Date)
+        {
+            Caption = 'Posting Date';
+            DataClassification = CustomerContent;
+        }
+        field(17; "Location Code"; Code[20])
+        {
+            Caption = 'Location Code';
+            DataClassification = CustomerContent;
+        }
+        field(18; "Net Amount"; Decimal)
+        {
+            Caption = 'Net Amount';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

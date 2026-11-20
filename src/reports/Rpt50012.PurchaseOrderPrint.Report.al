@@ -213,16 +213,18 @@ report 50012 "Purchase Order Print"
                 SupplierEmail := '';
                 SupplierPhoneNo := '';
                 SupplierGSTIN := '';
-                IF Customer.Get("Buy-from Vendor No.") THEN begin
-                    SupplierName := Customer.Name + '' + Customer."Name 2";
-                    IF recState.Get(Customer."State Code") THEN;
-                    IF CountryRegion.Get(Customer."Country/Region Code") THEN;
-                    SupplierAdd := Customer.Address + ', ' + Customer."Address 2" + ', ' + Customer.City + ', ' + FORMAT(Customer."Post Code") + ', ' + FORMAT(recState.Description) + ', ' + CountryRegion.Name;
-                    SupplierEmail := Customer."E-Mail";
-                    SupplierPhoneNo := Customer."Phone No.";
-                    SupplierGSTIN := Customer."GST Registration No.";
-                    SupplierPANNo := Customer."P.A.N. No.";
-                end;
+                PurchaseHeader.TestField("Buy-from Vendor No.");
+                Customer.Get(PurchaseHeader."Buy-from Vendor No.");
+                SupplierName := Customer.Name + '' + Customer."Name 2";
+                if not recState.Get(Customer."State Code") then
+                    Clear(recState);
+                if not CountryRegion.Get(Customer."Country/Region Code") then
+                    Clear(CountryRegion);
+                SupplierAdd := Customer.Address + ', ' + Customer."Address 2" + ', ' + Customer.City + ', ' + FORMAT(Customer."Post Code") + ', ' + FORMAT(recState.Description) + ', ' + CountryRegion.Name;
+                SupplierEmail := Customer."E-Mail";
+                SupplierPhoneNo := Customer."Phone No.";
+                SupplierGSTIN := Customer."GST Registration No.";
+                SupplierPANNo := Customer."P.A.N. No.";
 
                 LocationAdd := '';
                 LocationEmail := '';
@@ -233,8 +235,10 @@ report 50012 "Purchase Order Print"
                     Location.RESET;
                     Location.SETRANGE(Code, PurchaseHeader."Location Code");
                     IF Location.FINDFIRST THEN BEGIN
-                        recState.Get(Location."State Code");
-                        CountryRegion.Get(Location."Country/Region Code");
+                        if not recState.Get(Location."State Code") then
+                            Clear(recState);
+                        if not CountryRegion.Get(Location."Country/Region Code") then
+                            Clear(CountryRegion);
                         LocationName := Location.Name;
                         LocName2 := Location."Name 2";
                         LocName3 := Location."Name 3";
@@ -279,7 +283,6 @@ report 50012 "Purchase Order Print"
                 PurchaseLine.SetRange("Document No.", "No.");
                 PurchaseLine.CalcSums("Line Amount");
 
-                Customer.get("Buy-from Vendor No.");
                 IF (Customer."State Code" = "Location State Code") and (TotalInclTaxAmount <> 0) then begin
                     CGSTRsAmount_Var := (TotalInclTaxAmount / 2);
                     SGSTRsAmount_Var := (TotalInclTaxAmount / 2);
@@ -361,8 +364,9 @@ report 50012 "Purchase Order Print"
                 ApprovalEntry.SETRANGE("Table ID", 38);
                 ApprovalEntry.SETRANGE("Document No.", "No.");
                 ApprovalEntry.SETRANGE(Status, ApprovalEntry.Status::Approved);
-                IF ApprovalEntry.FINDLAST THEN
-                    userId := ApprovalEntry."Last Modified By User ID";
+                IF ApprovalEntry.FindLast() THEN
+                    if PurchaseHeader.Status <> PurchaseHeader.Status::Open then
+                        userId := ApprovalEntry."Last Modified By User ID";
                 PreparedBy := ApprovalEntry."Sender ID";
 
                 Clear(TermsBuilder);
@@ -550,8 +554,10 @@ report 50012 "Purchase Order Print"
     begin
         CompInfo.GET;
         CompInfo.CALCFIELDS(Picture);
-        recState.Get(CompInfo."State Code");
-        CountryRegion.Get(CompInfo."Country/Region Code");
+        if not recState.Get(CompInfo."State Code") then
+            Clear(recState);
+        if not CountryRegion.Get(CompInfo."Country/Region Code") then
+            Clear(CountryRegion);
         CompAdd := CompInfo.Address + ', ' + CompInfo."Address 2" + ', ' + CompInfo.City + ', ' + FORMAT(CompInfo."Post Code") + ', ' + FORMAT(recState.Description) + ', ' + CountryRegion.Name;
         Email := CompInfo."E-Mail";
         PhoneNo := CompInfo."Phone No.";

@@ -9,6 +9,7 @@ page 50106 "E3Posted Gate Ent Outward List"
     SourceTable = "E3 Posted Gate Entry Header";
     SourceTableView = sorting("Posted Entry No.") order(descending) where("Entry Type" = filter(Outward), Status = filter(Posted));
     UsageCategory = Lists;
+    ModifyAllowed = false;
     DeleteAllowed = false;
 
     layout

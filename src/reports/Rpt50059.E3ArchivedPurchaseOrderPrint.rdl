@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:am="http://schemas.microsoft.com/sqlserver/reporting/authoringmetadata" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:am="http://schemas.microsoft.com/sqlserver/reporting/authoringmetadata">
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
   <am:AuthoringMetadata>
@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-09-14T23:50:13.5592193Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-09-23T09:34:06.9362052Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -32,7 +32,7 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>0.27364in</Width>
+                  <Width>0.25975in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1.4199in</Width>
@@ -44,7 +44,7 @@
                   <Width>0.42247in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.7304in</Width>
+                  <Width>0.67484in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.43903in</Width>
@@ -62,7 +62,7 @@
                   <Width>0.51289in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.3618in</Width>
+                  <Width>0.43124in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.4789in</Width>
@@ -1557,7 +1557,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!Line_Amount.Value)+sum(Fields!Inv__Discount_Amount.Value)</Value>
+                                  <Value>=Sum(Fields!GrossAmt.Value)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>7pt</FontSize>
@@ -2061,13 +2061,12 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Round(Sum(Fields!Line_Amount.Value)+Sum(Fields!Line_Discount_Amount.Value)+Sum(Fields!LineGSTAmount.Value),0)
--(Sum(Fields!Line_Amount.Value)+Sum(Fields!Line_Discount_Amount.Value)+Sum(Fields!LineGSTAmount.Value))</Value>
+                                  <Value>=Fields!RoundoffAmt.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Format>0.00</Format>
+                                    <Format>n2</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2191,7 +2190,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>="Grand Total Amount (" &amp; Fields!Currency_Code.Value &amp;")"</Value>
+                                  <Value>="Grand Total Amount "</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -2238,22 +2237,12 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!TotalAmttoVendor.Value + Round(Sum(Fields!Line_Amount.Value)+Sum(Fields!Line_Discount_Amount.Value)+Sum(Fields!LineGSTAmount.Value),0)
--(Sum(Fields!Line_Amount.Value)+Sum(Fields!Line_Discount_Amount.Value)+Sum(Fields!LineGSTAmount.Value))</Value>
+                                  <Value>=Fields!TotalAmttoVendor.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>7pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Format>n0</Format>
-                                  </Style>
-                                </TextRun>
-                                <TextRun>
-                                  <Value>.00</Value>
-                                  <Style>
-                                    <FontFamily>Segoe UI</FontFamily>
-                                    <FontSize>7pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
-                                    <Format>n0</Format>
+                                    <Format>n2</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3046,33 +3035,33 @@
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
               <TablixMembers>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
+                <TablixMember />
+                <TablixMember />
                 <TablixMember>
                   <Group Name="Details" />
                   <Visibility>
                     <Hidden>=IIf(Fields!Line_No_.Value&lt;&gt;0,FALSE,TRUE)</Hidden>
                   </Visibility>
                 </TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
-                <TablixMember></TablixMember>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Top>1.70in</Top>
+            <Top>1.95in</Top>
             <Left>0.03104in</Left>
             <Height>4.30374in</Height>
-            <Width>7.80799in</Width>
+            <Width>7.80798in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -3247,7 +3236,8 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>W/S DL No</Value>
+                    <Label>WS</Label>
+                    <Value>=IIF(Fields!W_S_DL_No_.Value&lt;&gt;"","W/S DL No -","")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -3255,7 +3245,7 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value> - </Value>
+                    <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -3278,7 +3268,8 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Retail DL No</Value>
+                    <Label>RetailDLNo</Label>
+                    <Value>=IIF(Fields!Retail_DL_No_.Value &lt;&gt; "", "Retail DL No - ", "")</Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -3286,7 +3277,7 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value> - </Value>
+                    <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontFamily>Segoe UI</FontFamily>
                       <FontSize>8pt</FontSize>
@@ -3309,7 +3300,7 @@
             </Paragraphs>
             <Top>0.02652in</Top>
             <Left>3.17112in</Left>
-            <Height>1.47696in</Height>
+            <Height>1.56029in</Height>
             <Width>4.66791in</Width>
             <ZIndex>1</ZIndex>
             <Style>
@@ -3338,13 +3329,15 @@
                     </Style>
                   </TextRun>
                 </TextRuns>
-                <Style />
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>1.46181in</Top>
-            <Left>3.5293in</Left>
+            <Top>1.71181in</Top>
+            <Left>0.03104in</Left>
             <Height>0.24306in</Height>
-            <Width>1.35417in</Width>
+            <Width>7.80799in</Width>
             <ZIndex>2</ZIndex>
             <Style>
               <Border>
@@ -3373,35 +3366,6 @@
               </Border>
             </Style>
           </Image>
-          <Textbox Name="Textbox14">
-            <rd:DefaultName>Textbox14</rd:DefaultName>
-            <CanGrow>true</CanGrow>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value />
-                    <Style />
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <Top>0.02306in</Top>
-            <Left>0.03694in</Left>
-            <Height>2.37496in</Height>
-            <Width>7.80209in</Width>
-            <ZIndex>4</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
         </ReportItems>
         <Height>7.03in</Height>
         <Style>
@@ -3415,7 +3379,7 @@
           </BackgroundImage>
         </Style>
       </Body>
-      <Width>7.87in</Width>
+      <Width>7.83903in</Width>
       <Page>
         <PageFooter>
           <Height>0.29514in</Height>
@@ -3626,65 +3590,20 @@ End Function</Code>
         <Field Name="CompanyName">
           <DataField>CompanyName</DataField>
         </Field>
-        <Field Name="CompanyName2">
-          <DataField>CompanyName2</DataField>
-        </Field>
         <Field Name="CompanyAddress">
           <DataField>CompanyAddress</DataField>
         </Field>
         <Field Name="ComPANNo">
           <DataField>ComPANNo</DataField>
         </Field>
-        <Field Name="ComWebSite">
-          <DataField>ComWebSite</DataField>
+        <Field Name="CompInfoPicture">
+          <DataField>CompInfoPicture</DataField>
         </Field>
-        <Field Name="Email">
-          <DataField>Email</DataField>
-        </Field>
-        <Field Name="PhoneNo">
-          <DataField>PhoneNo</DataField>
-        </Field>
-        <Field Name="GSTIN">
-          <DataField>GSTIN</DataField>
-        </Field>
-        <Field Name="txtcomment">
-          <DataField>txtcomment</DataField>
-        </Field>
-        <Field Name="txtcommentNote">
-          <DataField>txtcommentNote</DataField>
-        </Field>
-        <Field Name="txtVendorComment">
-          <DataField>txtVendorComment</DataField>
-        </Field>
-        <Field Name="PayTerms">
-          <DataField>PayTerms</DataField>
-        </Field>
-        <Field Name="DrugLigNo">
-          <DataField>DrugLigNo</DataField>
-        </Field>
-        <Field Name="LocationAdd">
-          <DataField>LocationAdd</DataField>
-        </Field>
-        <Field Name="LocationEmail">
-          <DataField>LocationEmail</DataField>
-        </Field>
-        <Field Name="LocationPhoneNo">
-          <DataField>LocationPhoneNo</DataField>
-        </Field>
-        <Field Name="LocationGSTIN">
-          <DataField>LocationGSTIN</DataField>
-        </Field>
-        <Field Name="LocationWebsite">
-          <DataField>LocationWebsite</DataField>
-        </Field>
-        <Field Name="Document_Type">
-          <DataField>Document_Type</DataField>
+        <Field Name="DraftPicture">
+          <DataField>DraftPicture</DataField>
         </Field>
         <Field Name="PurchInvNo">
           <DataField>PurchInvNo</DataField>
-        </Field>
-        <Field Name="PurchInvPostingDate">
-          <DataField>PurchInvPostingDate</DataField>
         </Field>
         <Field Name="Order_Date">
           <DataField>Order_Date</DataField>
@@ -3695,68 +3614,38 @@ End Function</Code>
         <Field Name="Retail_DL_No_">
           <DataField>Retail_DL_No_</DataField>
         </Field>
-        <Field Name="Status">
-          <DataField>Status</DataField>
-        </Field>
-        <Field Name="SystemCreatedBy">
-          <DataField>SystemCreatedBy</DataField>
-        </Field>
-        <Field Name="SystemModifiedBy">
-          <DataField>SystemModifiedBy</DataField>
-        </Field>
-        <Field Name="ApprovedBy">
-          <DataField>ApprovedBy</DataField>
-        </Field>
-        <Field Name="CreatedBy">
-          <DataField>CreatedBy</DataField>
-        </Field>
-        <Field Name="SelltoCustomerNo">
-          <DataField>SelltoCustomerNo</DataField>
+        <Field Name="SupplierName">
+          <DataField>SupplierName</DataField>
         </Field>
         <Field Name="SupplierAdd">
           <DataField>SupplierAdd</DataField>
         </Field>
-        <Field Name="SupplierPhoneNo">
-          <DataField>SupplierPhoneNo</DataField>
-        </Field>
-        <Field Name="SupplierName">
-          <DataField>SupplierName</DataField>
-        </Field>
-        <Field Name="IGSTRsAmount_Var">
-          <DataField>IGSTRsAmount_Var</DataField>
-        </Field>
-        <Field Name="IGSTRsAmount_VarFormat">
-          <DataField>IGSTRsAmount_VarFormat</DataField>
-        </Field>
-        <Field Name="CGSTRsAmount_Var">
-          <DataField>CGSTRsAmount_Var</DataField>
-        </Field>
-        <Field Name="CGSTRsAmount_VarFormat">
-          <DataField>CGSTRsAmount_VarFormat</DataField>
-        </Field>
-        <Field Name="SGSTRsAmount_Var">
-          <DataField>SGSTRsAmount_Var</DataField>
-        </Field>
-        <Field Name="SGSTRsAmount_VarFormat">
-          <DataField>SGSTRsAmount_VarFormat</DataField>
-        </Field>
         <Field Name="SupplierEmail">
           <DataField>SupplierEmail</DataField>
+        </Field>
+        <Field Name="SupplierPhoneNo">
+          <DataField>SupplierPhoneNo</DataField>
         </Field>
         <Field Name="SupplierGSTIN">
           <DataField>SupplierGSTIN</DataField>
         </Field>
-        <Field Name="OrderaddGSTIN">
-          <DataField>OrderaddGSTIN</DataField>
-        </Field>
-        <Field Name="DelTerms">
-          <DataField>DelTerms</DataField>
-        </Field>
         <Field Name="SupplierPANNo">
           <DataField>SupplierPANNo</DataField>
         </Field>
-        <Field Name="LocationName">
-          <DataField>LocationName</DataField>
+        <Field Name="LocationAdd">
+          <DataField>LocationAdd</DataField>
+        </Field>
+        <Field Name="LocationEmail">
+          <DataField>LocationEmail</DataField>
+        </Field>
+        <Field Name="LocationPhoneNo">
+          <DataField>LocationPhoneNo</DataField>
+        </Field>
+        <Field Name="LocationWebsite">
+          <DataField>LocationWebsite</DataField>
+        </Field>
+        <Field Name="LocationGSTIN">
+          <DataField>LocationGSTIN</DataField>
         </Field>
         <Field Name="LocName2">
           <DataField>LocName2</DataField>
@@ -3764,8 +3653,14 @@ End Function</Code>
         <Field Name="LocName3">
           <DataField>LocName3</DataField>
         </Field>
+        <Field Name="Print_Caption">
+          <DataField>Print_Caption</DataField>
+        </Field>
         <Field Name="AmtWords">
           <DataField>AmtWords</DataField>
+        </Field>
+        <Field Name="Currency_Code">
+          <DataField>Currency_Code</DataField>
         </Field>
         <Field Name="TotalAmttoVendor">
           <DataField>TotalAmttoVendor</DataField>
@@ -3773,29 +3668,20 @@ End Function</Code>
         <Field Name="TotalAmttoVendorFormat">
           <DataField>TotalAmttoVendorFormat</DataField>
         </Field>
-        <Field Name="txtPurchaseHeader">
-          <DataField>txtPurchaseHeader</DataField>
+        <Field Name="RoundoffAmt">
+          <DataField>RoundoffAmt</DataField>
         </Field>
-        <Field Name="TotalTDS">
-          <DataField>TotalTDS</DataField>
+        <Field Name="RoundoffAmtFormat">
+          <DataField>RoundoffAmtFormat</DataField>
         </Field>
-        <Field Name="TotalTDSFormat">
-          <DataField>TotalTDSFormat</DataField>
+        <Field Name="CreatedBy">
+          <DataField>CreatedBy</DataField>
         </Field>
-        <Field Name="TotalGSTAmount">
-          <DataField>TotalGSTAmount</DataField>
+        <Field Name="ApprovedBy">
+          <DataField>ApprovedBy</DataField>
         </Field>
-        <Field Name="TotalGSTAmountFormat">
-          <DataField>TotalGSTAmountFormat</DataField>
-        </Field>
-        <Field Name="Currency_Code">
-          <DataField>Currency_Code</DataField>
-        </Field>
-        <Field Name="CompInfoPicture">
-          <DataField>CompInfoPicture</DataField>
-        </Field>
-        <Field Name="DraftPicture">
-          <DataField>DraftPicture</DataField>
+        <Field Name="TermsAndCondition">
+          <DataField>TermsAndCondition</DataField>
         </Field>
         <Field Name="TermName">
           <DataField>TermName</DataField>
@@ -3803,32 +3689,11 @@ End Function</Code>
         <Field Name="CommentNote">
           <DataField>CommentNote</DataField>
         </Field>
-        <Field Name="TermsAndCondition">
-          <DataField>TermsAndCondition</DataField>
-        </Field>
-        <Field Name="Print_Caption">
-          <DataField>Print_Caption</DataField>
-        </Field>
         <Field Name="Description">
           <DataField>Description</DataField>
         </Field>
         <Field Name="ExttxtDesc">
           <DataField>ExttxtDesc</DataField>
-        </Field>
-        <Field Name="Line_No_">
-          <DataField>Line_No_</DataField>
-        </Field>
-        <Field Name="UOM">
-          <DataField>UOM</DataField>
-        </Field>
-        <Field Name="HSN_SAC_Code">
-          <DataField>HSN_SAC_Code</DataField>
-        </Field>
-        <Field Name="Quantity">
-          <DataField>Quantity</DataField>
-        </Field>
-        <Field Name="QuantityFormat">
-          <DataField>QuantityFormat</DataField>
         </Field>
         <Field Name="Direct_Unit_Cost">
           <DataField>Direct_Unit_Cost</DataField>
@@ -3836,17 +3701,20 @@ End Function</Code>
         <Field Name="Direct_Unit_CostFormat">
           <DataField>Direct_Unit_CostFormat</DataField>
         </Field>
-        <Field Name="MRP">
-          <DataField>MRP</DataField>
+        <Field Name="GrossAmt">
+          <DataField>GrossAmt</DataField>
         </Field>
-        <Field Name="MRPFormat">
-          <DataField>MRPFormat</DataField>
+        <Field Name="GrossAmtFormat">
+          <DataField>GrossAmtFormat</DataField>
         </Field>
-        <Field Name="freeQty">
-          <DataField>freeQty</DataField>
+        <Field Name="Inv__Discount_Amount">
+          <DataField>Inv__Discount_Amount</DataField>
         </Field>
-        <Field Name="freeQtyFormat">
-          <DataField>freeQtyFormat</DataField>
+        <Field Name="Inv__Discount_AmountFormat">
+          <DataField>Inv__Discount_AmountFormat</DataField>
+        </Field>
+        <Field Name="Item_Make_Name">
+          <DataField>Item_Make_Name</DataField>
         </Field>
         <Field Name="Line_Amount">
           <DataField>Line_Amount</DataField>
@@ -3860,53 +3728,11 @@ End Function</Code>
         <Field Name="Line_Discount__Format">
           <DataField>Line_Discount__Format</DataField>
         </Field>
-        <Field Name="IGSTRatePercnt_Var">
-          <DataField>IGSTRatePercnt_Var</DataField>
+        <Field Name="Line_No_">
+          <DataField>Line_No_</DataField>
         </Field>
-        <Field Name="IGSTRatePercnt_VarFormat">
-          <DataField>IGSTRatePercnt_VarFormat</DataField>
-        </Field>
-        <Field Name="CGSTRatePercnt_Var">
-          <DataField>CGSTRatePercnt_Var</DataField>
-        </Field>
-        <Field Name="CGSTRatePercnt_VarFormat">
-          <DataField>CGSTRatePercnt_VarFormat</DataField>
-        </Field>
-        <Field Name="SGSTRatePercnt_Var">
-          <DataField>SGSTRatePercnt_Var</DataField>
-        </Field>
-        <Field Name="SGSTRatePercnt_VarFormat">
-          <DataField>SGSTRatePercnt_VarFormat</DataField>
-        </Field>
-        <Field Name="Line_Discount_Amount">
-          <DataField>Line_Discount_Amount</DataField>
-        </Field>
-        <Field Name="Line_Discount_AmountFormat">
-          <DataField>Line_Discount_AmountFormat</DataField>
-        </Field>
-        <Field Name="Inv__Discount_Amount">
-          <DataField>Inv__Discount_Amount</DataField>
-        </Field>
-        <Field Name="Inv__Discount_AmountFormat">
-          <DataField>Inv__Discount_AmountFormat</DataField>
-        </Field>
-        <Field Name="Amount">
-          <DataField>Amount</DataField>
-        </Field>
-        <Field Name="AmountFormat">
-          <DataField>AmountFormat</DataField>
-        </Field>
-        <Field Name="SNo">
-          <DataField>SNo</DataField>
-        </Field>
-        <Field Name="decGSTPer">
-          <DataField>decGSTPer</DataField>
-        </Field>
-        <Field Name="decGSTPerFormat">
-          <DataField>decGSTPerFormat</DataField>
-        </Field>
-        <Field Name="ItemCode">
-          <DataField>ItemCode</DataField>
+        <Field Name="Line_Remarks">
+          <DataField>Line_Remarks</DataField>
         </Field>
         <Field Name="LineGSTAmount">
           <DataField>LineGSTAmount</DataField>
@@ -3914,17 +3740,38 @@ End Function</Code>
         <Field Name="LineGSTAmountFormat">
           <DataField>LineGSTAmountFormat</DataField>
         </Field>
-        <Field Name="Line_Remarks">
-          <DataField>Line_Remarks</DataField>
+        <Field Name="decGSTPer">
+          <DataField>decGSTPer</DataField>
         </Field>
-        <Field Name="Item_Make_Name">
-          <DataField>Item_Make_Name</DataField>
+        <Field Name="decGSTPerFormat">
+          <DataField>decGSTPerFormat</DataField>
+        </Field>
+        <Field Name="MRP">
+          <DataField>MRP</DataField>
+        </Field>
+        <Field Name="MRPFormat">
+          <DataField>MRPFormat</DataField>
+        </Field>
+        <Field Name="HasLiveLine">
+          <DataField>HasLiveLine</DataField>
         </Field>
         <Field Name="Planned_Receipt_Date">
           <DataField>Planned_Receipt_Date</DataField>
         </Field>
+        <Field Name="Quantity">
+          <DataField>Quantity</DataField>
+        </Field>
+        <Field Name="QuantityFormat">
+          <DataField>QuantityFormat</DataField>
+        </Field>
         <Field Name="Scheme">
           <DataField>Scheme</DataField>
+        </Field>
+        <Field Name="SNo">
+          <DataField>SNo</DataField>
+        </Field>
+        <Field Name="UOM">
+          <DataField>UOM</DataField>
         </Field>
       </Fields>
       <Query>

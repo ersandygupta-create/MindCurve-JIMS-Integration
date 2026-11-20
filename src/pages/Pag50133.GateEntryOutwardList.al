@@ -9,6 +9,7 @@ page 50133 "E3 Gate Entry Outward List"
     SourceTable = "E3 Gate Entry Header";
     SourceTableView = sorting("Document No.") where("Entry Type" = filter(Outward));
     UsageCategory = Lists;
+    DeleteAllowed = false;
 
     layout
     {

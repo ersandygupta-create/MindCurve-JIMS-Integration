@@ -143,10 +143,16 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
             Editable = IsEditable;
             trigger OnAfterValidate()
             begin
-                if rec."Account Type" = rec."Account Type"::Vendor then begin
-                    Vendor.get(rec."Account No.");
-                    rec."Beneficiary Name" := Vendor."Beneficiary Name";
-                end;
+                if Rec."Account Type" <> Rec."Account Type"::Vendor then
+                    exit;
+
+                if not Vendor.Get(Rec."Account No.") then
+                    exit;
+
+                Rec."Beneficiary Name" := Vendor."Beneficiary Name";
+                // if Rec."Recipient Bank Account" = '' then
+                //     if Vendor."Preferred Bank Account Code" <> '' then
+                //         Rec.Validate("Recipient Bank Account", Vendor."Preferred Bank Account Code");
             end;
         }
         modify(Description)

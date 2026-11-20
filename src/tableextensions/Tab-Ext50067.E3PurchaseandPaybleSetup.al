@@ -70,6 +70,11 @@ tableextension 50067 "E3 Purchase & Payable Setup" extends "Purchases & Payables
             Caption = 'Enable Advance Settlement';
             DataClassification = CustomerContent;
         }
+        field(50012; "Allow Purchase Order Invoicing"; Boolean)
+        {
+            Caption = 'Allow Purchase Order Invoicing';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

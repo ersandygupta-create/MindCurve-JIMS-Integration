@@ -8,6 +8,7 @@ page 50135 "E3 Gate Entry Outward Subform"
     PageType = ListPart;
     SourceTable = "E3 Gate Entry Line";
     SourceTableView = sorting("Entry No.");
+    DeleteAllowed = false;
 
     layout
     {
@@ -108,4 +109,48 @@ page 50135 "E3 Gate Entry Outward Subform"
             }
         }
     }
+    actions
+    {
+        area(Processing)
+        {
+            action("Delete Line")
+            {
+                ApplicationArea = All;
+                Caption = 'Delete Line';
+                Image = Delete;
+                ToolTip = 'Delete the selected gate entry line.';
+                Visible = IsGEDeleteAllowed;
+
+                trigger OnAction()
+                begin
+                    if not IsGEDeleteAllowed then
+                        Error('You do not have permission to delete Gate Entry lines.');
+
+                    if Rec.IsEmpty() then
+                        exit;
+
+                    if Confirm('Do you want to delete the selected line?') then
+                        Rec.Delete(true);
+                end;
+            }
+        }
+    }
+
+    trigger OnOpenPage()
+    begin
+        SetGEDeletePermission();
+    end;
+
+    var
+        IsGEDeleteAllowed: Boolean;
+
+    local procedure SetGEDeletePermission()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        IsGEDeleteAllowed := false;
+
+        if UserSetup.Get(UserId()) then
+            IsGEDeleteAllowed := UserSetup."GE Line Delete";
+    end;
 }

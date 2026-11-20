@@ -56,6 +56,12 @@ pageextension 50075 "E3 Purchase & Payable Ext" extends "Purchases & Payables Se
                 ApplicationArea = All;
                 ToolTip = 'Specifies a value Allow Expiry Date';
             }
+            field("Allow Purchase Order Invoicing"; Rec."Allow Purchase Order Invoicing")
+            {
+                ApplicationArea = All;
+                Caption = 'Allow Purchase Order Invoicing';
+                ToolTip = 'Specifies whether the user is allowed to invoice purchase orders.';
+            }
             field("Enable Advance Settlement"; Rec."Enable Advance Settlement")
             {
                 ApplicationArea = All;

@@ -543,6 +543,11 @@ table 50052 "E3 Indent Line"
             Caption = 'Cancel Indent Remark';
             DataClassification = CustomerContent;
         }
+        field(74; "Sent Email"; Boolean)
+        {
+            Caption = 'Sent Email';
+            DataClassification = CustomerContent;
+        }
         field(80285; "Currency Code"; Code[10])
         {
             DataClassification = CustomerContent;

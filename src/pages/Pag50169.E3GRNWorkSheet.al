@@ -515,13 +515,13 @@ page 50169 "E3 GRN Work Sheet"
                     GRNWorksheet.SetRange("PO No.", Rec."PO No.");
                     if GRNWorksheet.FindSet() then
                         repeat
-                            if GRNWorksheet."Sale Rate" > GRNWorksheet."PO MRP" then
+                            if GRNWorksheet."Sale Rate" > GRNWorksheet.MRP then
                                 Error(
-                                    'Cannot receive PO %1, line %2. Sale Rate (%3) cannot exceed PO MRP (%4).',
+                                    'Cannot receive PO %1, line %2. Sale Rate (%3) cannot exceed MRP (%4).',
                                     GRNWorksheet."PO No.",
                                     GRNWorksheet."Line No.",
                                     GRNWorksheet."Sale Rate",
-                                    GRNWorksheet."PO MRP");
+                                    GRNWorksheet.MRP);
                         until GRNWorksheet.Next() = 0;
 
                     if not Confirm(CheckMRPConfirmLbl, false) then

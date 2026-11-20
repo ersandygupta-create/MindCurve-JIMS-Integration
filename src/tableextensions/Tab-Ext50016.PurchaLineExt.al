@@ -190,6 +190,12 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             DataClassification = CustomerContent;
             InitValue = false;
         }
+        field(70007; "Cancelled Line"; Boolean)
+        {
+            Caption = 'Cancelled Line';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
 
         modify("No.")
         {

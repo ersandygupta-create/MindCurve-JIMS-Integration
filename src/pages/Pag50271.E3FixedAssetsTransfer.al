@@ -144,6 +144,12 @@ page 50271 "E3 Fixed Asset Transfer List"
                     Editable = false;
                     ToolTip = 'Specifies the destination head of department name.';
                 }
+                field("Indent Booklet No."; Rec."Indent Booklet No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Indent Booklet No.';
+                    ToolTip = 'Specifies the Indent Booklet No.';
+                }
             }
         }
     }

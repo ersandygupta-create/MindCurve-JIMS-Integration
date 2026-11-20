@@ -214,6 +214,19 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 ShowMandatory = true;
                 ToolTip = 'Cancel Reason Code';
             }
+            field("Cancelled Line"; Rec."Cancelled Line")
+            {
+                ApplicationArea = All;
+                Editable = false;
+                ToolTip = 'Specifies whether the purchase order line has been cancelled.';
+            }
+            field("PO Qty"; Rec."PO Qty")
+            {
+                ApplicationArea = All;
+                Editable = false;
+                Caption = 'Cancelled Qty';
+                ToolTip = 'Cencelled PO Qty';
+            }
         }
     }
     actions
@@ -309,34 +322,57 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 trigger OnAction()
                 var
                     IndentLine: Record "E3 Indent Line";
-                    purchLine: Record "Purchase Line";
+                    PurchaseHeader: Record "Purchase Header";
+                    PurchaseLine: Record "Purchase Line";
                     CancelPOLines: Record "E3 Cancel PO Lines";
+                    ReleasePurchDoc: Codeunit "Release Purchase Document";
                 begin
-                    CheckPoStatus();
-                    rec.TestField("Cancel Reason");
-                    if ((rec."Qty. Invoiced (Base)" = 0) and (rec."Qty. Received (Base)" = 0)) then begin
-                        IndentLine.Reset();
-                        indentline.SetRange("No.", Rec."No.");
-                        IndentLine.SetRange("Purchase Order No.", rec."Document No.");
-                        if IndentLine.FindSet() then
-                            repeat
-                                IndentLine."PO Created" := false;
-                                IndentLine."Purchase Order No." := '';
-                                indentline."Order Line No." := 0;
-                                indentline."Closed Indent Grouped Line" := false;
-                                IndentLine."Released Stock Issue" := false;
-                                IndentLine.Modify();
+                    PurchaseHeader.Get(Rec."Document Type", Rec."Document No.");
+                    if PurchaseHeader.Status = PurchaseHeader.Status::Released then
+                        ReleasePurchDoc.PerformManualReopen(PurchaseHeader);
 
-                            until IndentLine.Next() = 0;
-                        purchLine := Rec;
-                        CancelPOLines.TransferFields(purchLine);
-                        CancelPOLines.Insert();
-                        purchLine.Delete(false);
-                        Message('Purchase line %1 has been cancled from indent.', rec."Line No.");
-                    end else
-                        Message('Purchase line %1 has been partially recived so can not be canceled from indent.', rec."Line No.");
+                    CheckPoStatus();
+                    CurrPage.SaveRecord();
+                    PurchaseLine.LockTable();
+                    PurchaseLine.Get(Rec."Document Type", Rec."Document No.", Rec."Line No.");
+                    PurchaseLine.TestField("Cancelled Line", false);
+                    PurchaseLine.TestField("Cancel Reason");
+                    PurchaseLine.TestField("Qty. Invoiced (Base)", 0);
+                    PurchaseLine.TestField("Qty. Received (Base)", 0);
+                    // Preserve the quantity before cancellation.
+                    PurchaseLine."PO Qty" := PurchaseLine.Quantity;
+
+                    CancelPOLines.TransferFields(PurchaseLine);
+                    CancelPOLines.Insert();
+
+                    PurchaseLine.Validate(Quantity, 0);
+                    PurchaseLine."Qty. to Receive" := 0;
+                    PurchaseLine."Qty. to Receive (Base)" := 0;
+                    PurchaseLine."Qty. to Invoice" := 0;
+                    PurchaseLine."Qty. to Invoice (Base)" := 0;
+                    PurchaseLine."Short Close Qty" := 0;
+                    PurchaseLine."Cancelled Line" := true;
+                    PurchaseLine.Modify(true);
+
+                    IndentLine.SetRange("Purchase Order No.", PurchaseLine."Document No.");
+                    IndentLine.SetRange("Order Line No.", PurchaseLine."Line No.");
+                    if IndentLine.FindSet(true) then
+                        repeat
+                            ReleaseCancelledLineIndent(IndentLine);
+                        until IndentLine.Next() = 0;
+
+                    if PurchaseLine."Indent No." <> '' then
+                        if IndentLine.Get(PurchaseLine."Indent No.", PurchaseLine."Indent Line No.") then
+                            if (IndentLine."Purchase Order No." = PurchaseLine."Document No.") and
+                               (IndentLine."Order Line No." = 0)
+                            then
+                                ReleaseCancelledLineIndent(IndentLine);
+
+                    Rec := PurchaseLine;
                     CurrPage.Update(false);
+                    Message('Purchase line %1 has been cancelled.', Rec."Line No.");
                 end;
+
             }
             action("Group Indent Lines")
             {
@@ -524,17 +560,29 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         if IndentLine.Remarks = 'Free Qty' then
             PurchLine.FOC := true;
         PurchLine.Insert(true);
-        UpdateIndentLine(IndentLine);
+        UpdateIndentLine(IndentLine, PurchLine."Line No.");
+
     end;
 
     local procedure UpdateIndentLine(
-        var IndentLine: Record "E3 Indent Line")
+        var IndentLine: Record "E3 Indent Line"; PurchaseLineNo: Integer)
     begin
         IndentLine."Purchase Order No." := Rec."Document No.";
+        IndentLine."Order Line No." := PurchaseLineNo;
 
         IndentLine."PO Created" := true;
 
         IndentLine.Modify(true);
+    end;
+
+    local procedure ReleaseCancelledLineIndent(var IndentLine: Record "E3 Indent Line")
+    begin
+        IndentLine."PO Created" := false;
+        IndentLine."Purchase Order No." := '';
+        IndentLine."Order Line No." := 0;
+        IndentLine."Closed Indent Grouped Line" := false;
+        IndentLine."Released Stock Issue" := false;
+        IndentLine.Modify();
     end;
 
     local procedure PurchaseLineAlreadyExists(
@@ -547,6 +595,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         PurchLine.SetRange("Document No.", Rec."Document No.");
         PurchLine.SetRange("Indent No.", IndentLine."Document No.");
         PurchLine.SetRange("Indent Line No.", IndentLine."Line No.");
+        PurchLine.SetRange("Cancelled Line", false);
 
         exit(PurchLine.FindFirst());
     end;
@@ -649,6 +698,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
         GetGroupingIndentLinesPage: Page "E3 Get Groupping Indent Lines";
         ProcessedGroups: Dictionary of [Text, Boolean];
         GroupKey: Text;
+        GroupedPurchaseLineNo: Integer;
         TotalQty: Decimal;
         FirstIndentLine: Record "E3 Indent Line";
         CommonMakeCode: Code[20];
@@ -745,9 +795,11 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                                 FirstIndentLine.Get(SelectedLines."Document No.", SelectedLines."Line No.");
                         until SelectedLines.Next() = 0;
 
+                    GroupedPurchaseLineNo := 0;
                     // Create the grouped Purchase Line
                     if (FirstIndentLine."Document No." <> '') and (TotalQty <> 0) then
-                        CreateGroupedPurchaseLine(FirstIndentLine, TotalQty);
+                        //CreateGroupedPurchaseLine(FirstIndentLine, TotalQty);
+                        GroupedPurchaseLineNo := CreateGroupedPurchaseLine(FirstIndentLine, TotalQty);
 
                     // Mark processed Indent Lines as closed and linked to Purchase Order
                     SelectedLines.Reset();
@@ -755,16 +807,18 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     SelectedLines.SetRange(Description, CurrentLine.Description);
                     SelectedLines.SetRange(Remarks, CurrentLine.Remarks);
 
-                    if SelectedLines.FindSet() then
+                    if (GroupedPurchaseLineNo <> 0) and SelectedLines.FindSet() then
                         repeat
                             if IndentLine.Get(SelectedLines."Document No.", SelectedLines."Line No.") then begin
                                 IndentLine."Purchase Order No." := PurchHeader."No.";
+                                IndentLine."Order Line No." := GroupedPurchaseLineNo;
                                 IndentLine."PO Created" := true;
                                 IndentLine."Closed Indent Grouped Line" := true;
                                 IndentLine."Released Stock Issue" := true;
                                 IndentLine.Modify(true);
                             end;
                         until SelectedLines.Next() = 0;
+
                 end;
             until CurrentLine.Next() = 0;
 
@@ -895,16 +949,16 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
 
     local procedure CreateGroupedPurchaseLine(
     FirstIndentLine: Record "E3 Indent Line";
-    TotalQty: Decimal)
+    TotalQty: Decimal): Integer
     var
         PurchLine: Record "Purchase Line";
         Location: Record Location;
     begin
         if FirstIndentLine."No." = '' then
-            exit;
+            exit(0);
 
         if TotalQty = 0 then
-            exit;
+            exit(0);
 
         PurchLine.Init();
 
@@ -944,6 +998,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
             PurchLine.FOC := true;
 
         PurchLine.Insert(true);
+        exit(PurchLine."Line No.");
     end;
 
     var

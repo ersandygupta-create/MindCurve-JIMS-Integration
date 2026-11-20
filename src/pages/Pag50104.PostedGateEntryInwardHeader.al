@@ -7,6 +7,8 @@ page 50104 "E3 Posted Gate Ent Inward Hdr"
     SourceTable = "E3 Posted Gate Entry Header";
     SourceTableView = sorting("Posted Entry No.") order(descending) where("Entry Type" = Filter(Inward));
     Editable = false;
+    ModifyAllowed = false;
+    DeleteAllowed = false;
 
     layout
     {

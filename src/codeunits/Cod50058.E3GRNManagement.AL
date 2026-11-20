@@ -108,20 +108,23 @@ codeunit 50058 "E3 GRN Invoice Management"
         PurchHeader."Purchase Narration" := PurchRcptHeader."Purchase Narration";
         PurchHeader."Receipt No." := PurchRcptHeader."No.";
         PurchHeader."Receipt Date" := WorkDate();
+        PurchHeader.Validate("Order Date", PurchRcptHeader."Order Date");
+        PurchHeader.Validate("Posting Date", WorkDate());
+        PurchHeader.Validate("Document Date", PurchRcptHeader."Document Date");
         //ak
-        if PurchHeader."Payment Terms Code" <> '' then begin
+        if PurchHeader."Payment Terms Code" = '' then
+            PurchHeader."Due Date" := PurchHeader."Posting Date"
+        else begin
             PaymentTerms.Get(PurchHeader."Payment Terms Code");
             PurchHeader."Due Date" :=
                 CalcDate(PaymentTerms."Due Date Calculation", PurchHeader."Posting Date");
-        end else
-            PurchHeader."Due Date" := PurchHeader."Posting Date";
+        end;
+        PurchHeader.Modify(true);
         //ak
         PurchHeader.Validate("Pay-to Vendor No.", PurchRcptHeader."Pay-to Vendor No.");
-        PurchHeader."Order Date" := PurchRcptHeader."Order Date";
+        PurchHeader."Posting Description" := PurchRcptHeader."Posting Description";
         if PurchRcptHeader."Location Code" <> '' then
             PurchHeader.Validate("Location Code", PurchRcptHeader."Location Code");
-        PurchHeader.Validate("Posting Date", PurchRcptHeader."Posting Date");
-        PurchHeader.Validate("Document Date", PurchRcptHeader."Document Date");
         PurchHeader.Validate("Currency Code", PurchRcptHeader."Currency Code");
         PurchHeader.Modify(true);
 

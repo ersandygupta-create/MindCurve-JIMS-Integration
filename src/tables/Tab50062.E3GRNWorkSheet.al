@@ -29,13 +29,11 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'PO Qty';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
         }
         field(6; "Free Qty"; Decimal)
         {
             Caption = 'Free Qty';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
             trigger OnValidate()
             begin
                 if "Free Qty" < 0 then
@@ -55,7 +53,6 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Outstanding Qty';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
             trigger OnValidate()
             begin
                 if (Rec."Quantity Received" + Rec."Outstanding Qty" > rec."PO Qty") then
@@ -67,7 +64,6 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Invoice Qty';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
             trigger OnValidate()
             begin
                 CalculateNetQtyReceived();
@@ -81,7 +77,6 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Receipt Qty';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
             trigger OnValidate()
             begin
 
@@ -94,7 +89,6 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Rejected Qty';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
             trigger OnValidate()
             begin
                 CalculateNetQtyReceived();
@@ -125,7 +119,6 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Line Gross';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
             trigger OnValidate()
             begin
                 CalculateLandedValue();
@@ -135,7 +128,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'MRP';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             BlankZero = true;
             trigger OnValidate()
             begin
@@ -171,7 +164,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'SKU MRP';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             trigger OnValidate()
             begin
                 CalculateLandedValue();
@@ -216,7 +209,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Staff Sale Rate';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             BlankZero = true;
             trigger OnValidate()
             begin
@@ -227,7 +220,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'SKU Staff Sale Rate';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             trigger OnValidate()
             begin
                 CalculateLandedValue();
@@ -252,7 +245,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Line Discount Amount';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             trigger OnValidate()
             begin
                 CalculateLandedValue();
@@ -262,7 +255,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Line Discount Percentage';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             trigger OnValidate()
             begin
                 CalculateLandedValue();
@@ -272,7 +265,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Taxable Amount';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             // trigger OnValidate()
             // begin
             //     CalculateLandedValue();
@@ -282,7 +275,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'CGST %';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             trigger OnValidate()
             begin
                 CalculateLandedValue();
@@ -292,14 +285,14 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'CGST Amount';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             Editable = false;
         }
         field(30; "SGST %"; Decimal)
         {
             Caption = 'SGST %';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             trigger OnValidate()
             begin
                 CalculateLandedValue();
@@ -309,13 +302,13 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'SGST Amount';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
         }
         field(32; "IGST %"; Decimal)
         {
             Caption = 'IGST %';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             trigger OnValidate()
             begin
                 CalculateLandedValue();
@@ -325,19 +318,19 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'IGST Amount';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
         }
         field(34; "Final Discount %"; Decimal)
         {
             Caption = 'Final Discount %';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
         }
         field(35; "Final Discount Amount"; Decimal)
         {
             Caption = 'Final Discount Amount';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
         }
         field(36; "Base Unit of Measure"; Code[10])
         {
@@ -352,7 +345,7 @@ table 50062 "E3 GRN Work Sheet"
             Caption = 'Quantity Received';
             Editable = false;
             ToolTip = 'Specifies how many units of the item on the line have been posted as received.';
-            DecimalPlaces = 2 : 2;
+
 
         }
         field(38; "Item Tracking Code"; Code[10])
@@ -412,7 +405,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Requested Quantity';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
         }
         field(46; "Item GST Nature"; Enum "E3 GLEN Type")
         {
@@ -423,7 +416,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Line Net Amount';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             trigger OnValidate()
             begin
                 CalculateLandedValue();
@@ -433,7 +426,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Line Landed SKU Value';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             // trigger OnValidate()
             // begin
             //     CalculateLandedValue();
@@ -443,7 +436,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Line Landed SKU Rate';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             trigger OnValidate()
             begin
                 CalculateLandedValue();
@@ -467,7 +460,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Rec SKU QTY';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             trigger OnValidate()
             begin
                 CalculateLandedValue();
@@ -477,7 +470,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'UGST %';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             trigger OnValidate()
             begin
                 "UGST Amount" := "Taxable Amount" * "UGST %" / 100;
@@ -488,7 +481,7 @@ table 50062 "E3 GRN Work Sheet"
             Caption = 'UGST Amount';
             AutoFormatType = 1;
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
         }
         field(55; "GRN Date"; Date)
         {
@@ -509,13 +502,13 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Challan Qty';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
         }
         field(59; "Accepted Qty"; Decimal)
         {
             Caption = 'Accepted Qty';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
         }
         field(60; "Supplier State"; Code[20])
         {
@@ -549,7 +542,7 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'PO MRP';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
         }
         field(66; Scheme; Text[30])
         {
@@ -561,7 +554,7 @@ table 50062 "E3 GRN Work Sheet"
             Caption = 'Net Qty Received';
             Editable = false;
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
             trigger OnValidate()
             begin
                 CalculateNetQtyReceived();
@@ -605,13 +598,13 @@ table 50062 "E3 GRN Work Sheet"
         {
             Caption = 'Company Value';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
         }
         field(75; "Patient Value"; Decimal)
         {
             Caption = 'Patient Value';
             DataClassification = CustomerContent;
-            DecimalPlaces = 2 : 2;
+
         }
         field(76; "Vendor Invoice No."; Code[35])
         {
@@ -631,7 +624,7 @@ table 50062 "E3 GRN Work Sheet"
             Caption = 'Qty. per Unit of Measure';
             Editable = false;
             InitValue = 1;
-            DecimalPlaces = 2 : 2;
+
             trigger OnValidate()
             begin
                 CalculateLandedValue();

@@ -473,54 +473,41 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
     procedure CalculateGSTAmount()
     var
         PurchLine: Record "Purchase Line";
+        TaxTransactionValue: Record "Tax Transaction Value";
+        GSTSetup: Record "GST Setup";
         GSTAmount: Decimal;
-        GrossLineAmount: Decimal;
-        DiscountAmount: Decimal;
-        TaxableAmount: Decimal;
-        GSTPercentage: Decimal;
         TotalAmt: Decimal;
+        HasGSTSetup: Boolean;
     begin
-        Clear(GSTAmount);
-        Clear(TotalAmt);
+        HasGSTSetup := GSTSetup.Get();
 
-        PurchLine.Reset();
-        PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+        PurchLine.SetRange("Document Type", Rec."Document Type");
         PurchLine.SetRange("Document No.", Rec."No.");
-
         if PurchLine.FindSet() then
             repeat
-                // Gross amount before line discount
-                GrossLineAmount :=
-                    PurchLine.Quantity * PurchLine."Direct Unit Cost";
+                // Amount includes both line and invoice discounts.
+                TotalAmt += PurchLine.Amount;
 
-                // Calculate line discount
-                DiscountAmount :=
-                    Round(
-                        GrossLineAmount *
-                        PurchLine."Line Discount %" / 100,
-                        0.01);
-
-                // Taxable amount after discount
-                TaxableAmount := GrossLineAmount - DiscountAmount;
-
-                // Calculate line amount
-                TotalAmt += PurchLine."Line Amount";
-
-                // Calculate GST
-                if PurchLine."GST Group Code" <> '' then begin
-                    GSTPercentage := 0;
-
-                    if Evaluate(GSTPercentage, PurchLine."GST Group Code") then
-                        GSTAmount +=
-                            Round(
-                                TaxableAmount * GSTPercentage / 100,
-                                0.01);
+                if HasGSTSetup and (GSTSetup."GST Tax Type" <> '') then begin
+                    TaxTransactionValue.Reset();
+                    TaxTransactionValue.SetRange("Tax Record ID", PurchLine.RecordId);
+                    TaxTransactionValue.SetRange("Tax Type", GSTSetup."GST Tax Type");
+                    TaxTransactionValue.SetRange("Value Type", TaxTransactionValue."Value Type"::COMPONENT);
+                    // Match the GST components used by the purchase order report.
+                    // Other components can contain the taxable base amount.
+                    TaxTransactionValue.SetFilter("Value ID", '%1|%2|%3', 2, 3, 6);
+                    TaxTransactionValue.SetFilter(Percent, '<>%1', 0);
+                    if TaxTransactionValue.FindSet() then
+                        repeat
+                            GSTAmount += TaxTransactionValue.Amount;
+                        until TaxTransactionValue.Next() = 0;
                 end;
             until PurchLine.Next() = 0;
 
-        // Update Net Amount
-        "Net Amount" := TotalAmt + GSTAmount;
-        Modify(false);
+        if "Net Amount" <> TotalAmt + GSTAmount then begin
+            "Net Amount" := TotalAmt + GSTAmount;
+            Modify(false);
+        end;
     end;
 
     procedure UpdateItemMakeName()

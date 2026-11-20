@@ -59,7 +59,7 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
             field("Exp. CN Value"; Rec."Exp. CN Value")
             {
                 ApplicationArea = All;
-                Editable = CanEditCustomFields;
+                //Editable = CanEditCustomFields;
                 ToolTip = 'Exp. CN Value';
             }
             field("Item Make Code"; Rec."Item Make Code")
@@ -169,17 +169,22 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                     purchaseline.reset();
                     purchaseline.SetRange("Document Type", rec."Document Type");
                     purchaseline.SetRange("Document No.", Rec."No.");
+                    purchaseline.SetRange("Cancelled Line", false);
                     if purchaseline.FindSet() then
                         repeat
+                            // Preserve the quantity before cancellation.
+                            PurchaseLine."PO Qty" := PurchaseLine.Quantity;
                             cancleIndentLine(purchaseline);
                         until purchaseline.Next() = 0;
                     rec.Cancelled := not FullyReceivedLineExists;
                     rec.Modify(false);
+                    CurrPage.Update(false);
                     if Rec.Cancelled then
                         Message('Purchase Order has been canceled from indent;')
                     else
                         Message('Eligible lines have been cancelled. The purchase order is not marked cancelled because it contains a fully received line.');
                 end;
+
             }
             action("Short Close PO")
             {
@@ -267,12 +272,14 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
 
                 //Sandeep
                 until IndentLine.Next() = 0;
+            purchLine."PO Qty" := purchLine.Quantity;
             CancelPoLines.TransferFields(purchLine);
             CancelPoLines.Insert();
-            purchLine.Delete(false);
+            //purchLine.Delete(false);
+            purchLine."Cancelled Line" := true;
+            purchLine.Modify(true);
         end else
             Message('Purchase line %1 is partially receive so it line can not be canceled.', purchLine."Line No.");
-        CurrPage.Update(false);
     end;
 
     var
