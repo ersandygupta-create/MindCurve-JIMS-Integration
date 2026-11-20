@@ -77,6 +77,11 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
                 ApplicationArea = All;
                 Editable = IsEditable;
                 Caption = 'Advance Document No.';
+                trigger OnValidate()
+                begin
+                    if Rec."Document No" <> '' then
+                        restrict := true;
+                end;
             }
             field("Beneficiary Name"; Rec."Beneficiary Name")
             {
@@ -287,10 +292,16 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         IsEditable := true;
         isEdit := true;
         if restrict then begin
-            message('You cannot create a new payment journal line because there is already a line with a Bank pay later.');
-            Error('You cannot create a new payment journal line because there is already a line with a non-blank "VLE Doc No." field.');
+            message('You cannot create a new payment journal line because there is already a line with a Bank pay later/Advance PO process.');
+            Error('You cannot create a new payment journal line because there is already a line with a Bank pay later/Advance PO process.');
         end;
 
+    end;
+
+    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
+    begin
+        if rec."Document No" <> '' then
+            restrict := true;
     end;
 
     local procedure AmountEdit()
