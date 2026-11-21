@@ -31,7 +31,8 @@ permissionset 50000 "E3 HIS Permission"
         table "E3 HIS Master Staging" = X,
         table "E3 HIS Pharmacy Entries" = X,
         table "E3 Settlement Mapping Setup" = x,
-
+        table "E3 Item Adj. Staging" = X,
+        tabledata "E3 Item Adj. Staging" = RIMD,
         table "E3 HIS Revenue Header" = X,
         table "E3 HIS Revenue Line" = X,
         table "E3 HIS Revenue Staging Table" = X,
