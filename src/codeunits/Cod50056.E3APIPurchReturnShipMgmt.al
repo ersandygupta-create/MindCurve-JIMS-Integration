@@ -217,9 +217,9 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
                         LineObj.Add('skuSaleRate', GRNWorkSheetLine."SKU Sale Rate");
                         LineObj.Add('skuStaffSaleRate', GRNWorkSheetLine."SKU Staff Sale Rate");
                         LineObj.Add('barcode', GRNWorkSheetLine.Barcode);
-                        LineObj.Add('batchNo', GRNWorkSheetLine."Batch No.");
+                        LineObj.Add('batchNo', PurchaseShipmentLine."Batch No.");
                         LineObj.Add('manufacturingDate', Format(WorkDate(), 0, 9));
-                        LineObj.Add('expiryDate', Format(GRNWorkSheetLine."Expiry Date", 0, 9));
+                        LineObj.Add('expiryDate', Format(PurchaseShipmentLine."Expiry Date", 0, 9));
 
                     end else begin
 
