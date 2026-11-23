@@ -124,7 +124,9 @@ page 50274 "E3 Item Adj. Staging"
                             recvalidate(Stagging);
                         until Stagging.Next() = 0;
                     markAllDocument();
+                    Message('Validation run successfully.');
                 end;
+
 
             }
             action(clearAll)
@@ -154,12 +156,13 @@ page 50274 "E3 Item Adj. Staging"
         ILE: Record "Item Ledger Entry";
     begin
         ILE.Reset();
+        //ILE.CalcFields("Remaining Quantity")
         ILE.SetRange("Entry No.", recstaging."Item Ledger Entry No.");
         ILE.SetRange("Item No.", recstaging."Item No.");
         ILE.SetRange("Document No.", recstaging."Document No.");
         ILE.SetRange(Open, true);
         if ILE.Find('-') then begin
-            if (abs(ILE.Quantity) = recstaging.Quantity) then
+            if (abs(ILE."Remaining Quantity") = recstaging.Quantity) then
                 exit
             else begin
                 recstaging.Error := true;
