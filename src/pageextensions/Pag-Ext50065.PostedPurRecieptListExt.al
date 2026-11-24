@@ -73,7 +73,6 @@ pageextension 50065 "Posted Pur Receipt List Ext" extends "Posted Purchase Recei
                 Image = Create;
                 Visible = false;
                 Promoted = true;
-                Visible = false;
                 PromotedCategory = Process;
                 ToolTip = 'Cleanup Data';
 
