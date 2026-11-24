@@ -90,12 +90,6 @@ codeunit 50047 "E3 Post Stock Consumption"
                     'Quantity must be greater than zero for Line No. %1.',
                     StockConsumptionLine."Line No.");
 
-            if StockConsumptionLine."Entry Type" <> StockConsumptionLine."Entry Type"
-             then
-                Error(
-                    'Stock Consumption Line %1 must have Entry Type',
-                    StockConsumptionLine."Line No.");
-
             LotNoToUse := ResolveLotNo(Item, StockConsumptionLine."Batch No.");
 
             ValidateLotRequirement(Item, LotNoToUse);
@@ -366,51 +360,6 @@ codeunit 50047 "E3 Post Stock Consumption"
             StockConsumptionLine."Expiry Date");
     end;
 
-    local procedure GetItemJournalTemplate(): Code[10]
-    var
-        ItemJournalTemplate: Record "Item Journal Template";
-    begin
-        ItemJournalTemplate.Reset();
-
-        ItemJournalTemplate.SetRange(
-            Type,
-            ItemJournalTemplate.Type::Item);
-
-        if ItemJournalTemplate.FindFirst() then
-            exit(ItemJournalTemplate.Name);
-
-        Error('Item Journal Template not found.');
-    end;
-
-    local procedure GetItemJournalBatch(): Code[10]
-    var
-        ItemJournalTemplate: Record "Item Journal Template";
-        ItemJournalBatch: Record "Item Journal Batch";
-    begin
-        ItemJournalTemplate.Reset();
-
-        ItemJournalTemplate.SetRange(
-            Type,
-            ItemJournalTemplate.Type::Item);
-
-        if not ItemJournalTemplate.FindFirst() then
-            Error('Item Journal Template not found.');
-
-        ItemJournalBatch.Reset();
-
-        ItemJournalBatch.SetRange(
-            "Journal Template Name",
-            ItemJournalTemplate.Name);
-
-        if ItemJournalBatch.FindFirst() then
-            exit(ItemJournalBatch.Name);
-
-        Error(
-            'Item Journal Batch not found for Template %1.',
-            ItemJournalTemplate.Name);
-    end;
-
-
     [CommitBehavior(CommitBehavior::Error)]
     internal procedure ProcessStockConsumptionDocument(
         var StockConsumptionHeader: Record "E3 Stock Consumption Header";
@@ -584,8 +533,7 @@ codeunit 50047 "E3 Post Stock Consumption"
                     'Quantity must be greater than zero. Document No.: %1, Line No.: %2.',
                     DocumentNo, StockConsumptionLine."Line No.");
 
-            if StockConsumptionLine."Entry Type" <>
-               StockConsumptionLine."Entry Type" then
+            if StockConsumptionLine."Entry Type" <> StockConsumptionLine."Entry Type"::"Negative Adjmt." then
                 Error(
                     'Entry Type must be Negative Adjmt. Document No.: %1, Line No.: %2.',
                     DocumentNo, StockConsumptionLine."Line No.");

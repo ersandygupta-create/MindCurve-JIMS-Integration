@@ -9,12 +9,6 @@ pageextension 50106 "E3 Posted Sales Invoice Card" extends 132
                 ApplicationArea = All;
                 ToolTip = 'Purchase Order No.';
             }
-            field(IsSent; Rec.IsSent)
-            {
-                ApplicationArea = All;
-                Editable = true;
-                ToolTip = 'Specified a value IsSent field';
-            }
         }
     }
 
