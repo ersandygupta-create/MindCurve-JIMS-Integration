@@ -357,7 +357,7 @@ report 50057 "E3 Purchase Credit Memo"
         CGSTLbl: Label 'CGST';
         CESSLbl: Label 'CESS';
         GSTLbl: Label 'GST';
-        PrintCaptionLbl: Label 'Purchase Credit Memo';
+        PrintCaptionLbl: Label 'Purchase Return';
         GSTCESSLbl: Label 'GST CESS';
         PreparedByUserName: Text[100];
         ApprovedByUserName: Text[100];

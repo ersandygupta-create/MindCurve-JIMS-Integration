@@ -97,6 +97,24 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
                 Editable = IsEditable;
                 //Editable = blnEdit;
             }
+            field(VendorDebitBalanceLCY; VendorDebitBalanceLCY)
+            {
+                ApplicationArea = All;
+                Caption = 'Vendor Debit Balance (LCY)';
+                AutoFormatType = 1;
+                BlankZero = true;
+                Editable = false;
+                ToolTip = 'Specifies the vendor''s net debit balance in local currency.';
+            }
+            field(VendorCreditBalanceLCY; VendorCreditBalanceLCY)
+            {
+                ApplicationArea = All;
+                Caption = 'Vendor Credit Balance (LCY)';
+                AutoFormatType = 1;
+                BlankZero = true;
+                Editable = false;
+                ToolTip = 'Specifies the vendor''s net credit balance in local currency.';
+            }
         }
 
         modify("Bal. Account No.")
@@ -120,7 +138,7 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
                     rec."Beneficiary Name" := '';
                     rec.Modify();
                 end;
-
+                UpdateVendorBalance();
                 CurrPage.Update(false);
 
             end;
@@ -150,6 +168,7 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
             Editable = IsEditable;
             trigger OnAfterValidate()
             begin
+                UpdateVendorBalance();
                 if Rec."Account Type" <> Rec."Account Type"::Vendor then
                     exit;
 
@@ -287,6 +306,7 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
 
     trigger OnAfterGetRecord()
     begin
+        UpdateVendorBalance();
         UpdateCardPaymentAction();
         AmountEdit();
         SetPageEditable();
@@ -294,6 +314,7 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
 
     trigger OnAfterGetCurrRecord()
     begin
+        UpdateVendorBalance();
         UpdateCardPaymentAction();
         AmountEdit();
         SetPageEditable();
@@ -370,6 +391,28 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
             IsEditable := false;
     end;
 
+    local procedure UpdateVendorBalance()
+    var
+        Vendor: Record Vendor;
+    begin
+        Clear(VendorDebitBalanceLCY);
+        Clear(VendorCreditBalanceLCY);
+
+        if (Rec."Account Type" <> Rec."Account Type"::Vendor) or
+           (Rec."Account No." = '')
+        then
+            exit;
+
+        if not Vendor.Get(Rec."Account No.") then
+            exit;
+
+        Vendor.CalcFields("Balance (LCY)");
+
+        if Vendor."Balance (LCY)" > 0 then
+            VendorDebitBalanceLCY := Vendor."Balance (LCY)"
+        else
+            VendorCreditBalanceLCY := -Vendor."Balance (LCY)";
+    end;
 
     var
         Vendor: Record Vendor;
@@ -380,4 +423,6 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         IsEditable: Boolean;
         restrict: boolean;
         ChequeFieldsEditable: Boolean;
+        VendorDebitBalanceLCY: Decimal;
+        VendorCreditBalanceLCY: Decimal;
 }

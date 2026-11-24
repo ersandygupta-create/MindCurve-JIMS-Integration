@@ -1376,4 +1376,42 @@ codeunit 50001 "E3 HIS Event Subscriber"
         PurchaseHeader.Invoice := false;
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnBeforeModifyEvent', '', false, false)]
+    local procedure CheckJournalVoucherBeforeModify(var Rec: Record "Gen. Journal Line"; var xRec: Record "Gen. Journal Line"; RunTrigger: Boolean)
+    begin
+        CheckJournalVoucherCreator(Rec);
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnBeforeDeleteEvent', '', false, false)]
+    local procedure CheckJournalVoucherBeforeDelete(var Rec: Record "Gen. Journal Line"; RunTrigger: Boolean)
+    begin
+        CheckJournalVoucherCreator(Rec);
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnBeforeRenameEvent', '', false, false)]
+    local procedure CheckJournalVoucherBeforeRename(var Rec: Record "Gen. Journal Line"; var xRec: Record "Gen. Journal Line"; RunTrigger: Boolean)
+    begin
+        CheckJournalVoucherCreator(xRec);
+    end;
+
+    local procedure CheckJournalVoucherCreator(JournalLine: Record "Gen. Journal Line")
+    var
+        JournalTemplate: Record "Gen. Journal Template";
+        StoredJournalLine: Record "Gen. Journal Line";
+        JournalVoucherCreatorErr: Label 'Only the user who created this journal voucher entry can modify or delete it.';
+    begin
+        if JournalLine.IsTemporary() then
+            exit;
+
+        if not JournalTemplate.Get(JournalLine."Journal Template Name") then
+            exit;
+
+        if JournalTemplate.Type <> JournalTemplate.Type::"Journal Voucher" then
+            exit;
+
+        if StoredJournalLine.Get(JournalLine."Journal Template Name", JournalLine."Journal Batch Name", JournalLine."Line No.") then
+            if StoredJournalLine.SystemCreatedBy <> UserSecurityId() then
+                Error(JournalVoucherCreatorErr);
+    end;
+
 }
