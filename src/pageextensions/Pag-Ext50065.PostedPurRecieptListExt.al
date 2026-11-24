@@ -71,6 +71,7 @@ pageextension 50065 "Posted Pur Receipt List Ext" extends "Posted Purchase Recei
                 ApplicationArea = All;
                 Caption = 'Cleanup Data';
                 Image = Create;
+                Visible = false;
                 Promoted = true;
                 PromotedCategory = Process;
                 ToolTip = 'Cleanup Data';

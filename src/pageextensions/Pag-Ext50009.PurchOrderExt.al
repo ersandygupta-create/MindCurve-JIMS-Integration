@@ -186,6 +186,26 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
                 end;
 
             }
+            action(RecreateLinesFromReceipt)
+            {
+                ApplicationArea = All;
+                Caption = 'Recreate Lines from Receipt';
+                Image = GetReceiptLines;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Recreate missing purchase lines from posted purchase receipt lines.';
+
+                trigger OnAction()
+                var
+                    RecreatePurchLines: Codeunit "Recreate Purch Lines From Rcpt";
+                begin
+                    if not Confirm('Recreate missing purchase lines from posted receipt lines for order %1?', false, Rec."No.") then
+                        exit;
+
+                    RecreatePurchLines.RecreateLinesFromReceipt(Rec."No.");
+                    CurrPage.Update(false);
+                end;
+            }
             action("Short Close PO")
             {
                 ApplicationArea = All;
