@@ -308,4 +308,22 @@ pageextension 50009 "E3 HIS Purchase Order" extends "Purchase Order"
             Error('Purchase order should be open');
     end;
 
+    trigger OnQueryClosePage(CloseAction: Action): Boolean
+    var
+        PurchaseLine: Record "Purchase Line";
+        PendingShortCloseErr: Label
+        'Line %1 has a Short Close Qty of %2. Choose Short Close PO Line or set the quantity to 0 before closing.';
+    begin
+        PurchaseLine.SetRange("Document Type", Rec."Document Type");
+        PurchaseLine.SetRange("Document No.", Rec."No.");
+        PurchaseLine.SetRange("Short Closed", false);
+        PurchaseLine.SetFilter("Short Close Qty", '<>%1', 0);
+
+        if PurchaseLine.FindFirst() then
+            Error(PendingShortCloseErr, PurchaseLine."Line No.",
+                PurchaseLine."Short Close Qty");
+
+        exit(true);
+    end;
+
 }

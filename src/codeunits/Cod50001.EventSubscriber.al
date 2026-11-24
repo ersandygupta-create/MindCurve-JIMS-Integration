@@ -1414,4 +1414,15 @@ codeunit 50001 "E3 HIS Event Subscriber"
                 Error(JournalVoucherCreatorErr);
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforeValidatePostingAndDocumentDate', '', false, false)]
+    local procedure SetInvoicePostingDate(
+        var PurchaseHeader: Record "Purchase Header";
+        CommitIsSupressed: Boolean)
+    begin
+        if PurchaseHeader."Document Type" <> PurchaseHeader."Document Type"::Invoice then
+            exit;
+
+        PurchaseHeader."Posting Date" := Today();
+    end;
+
 }

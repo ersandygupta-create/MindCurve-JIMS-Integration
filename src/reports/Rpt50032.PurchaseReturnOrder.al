@@ -118,6 +118,8 @@ report 50032 "E3 Purchase Return Order"
                 column(MRP; MRP) { }
                 column(Batch_No_; "Batch No.") { }
                 column(Expiry_Date; "Expiry Date") { }
+                column(Challan_No_; "Challan No.") { }
+                column(Challan_Date; "Challan Date") { }
 
                 trigger OnAfterGetRecord()
                 begin
@@ -129,30 +131,30 @@ report 50032 "E3 Purchase Return Order"
 
                     if PurchaseLine."Location Code" <> '' then
                         if Location.Get(PurchaseLine."Location Code") then begin
-                            LocationName := Location.Name;
-                            LocationName2 := Location."Name 2";
-                            LocationName3 := Location."Name 3";
-                            LocationAddress := Location.Address;
-                            LocationAddress2 := Location."Address 2";
-                            LocationCity := Location.City;
-                            LocationPostCode := Location."Post Code";
-                            LocationState := Location.County;
-                            LocationCountry := Location."Country/Region Code";
-                            LocationPhone := Location."Phone No.";
-                            LocationEmail := Location."E-Mail";
-                            LocationGSTIN := Location."GST Registration No.";
+                        LocationName := Location.Name;
+                        LocationName2 := Location."Name 2";
+                        LocationName3 := Location."Name 3";
+                        LocationAddress := Location.Address;
+                        LocationAddress2 := Location."Address 2";
+                        LocationCity := Location.City;
+                        LocationPostCode := Location."Post Code";
+                        LocationState := Location.County;
+                        LocationCountry := Location."Country/Region Code";
+                        LocationPhone := Location."Phone No.";
+                        LocationEmail := Location."E-Mail";
+                        LocationGSTIN := Location."GST Registration No.";
 
-                            LocationFullAddress := Location.Address;
+                        LocationFullAddress := Location.Address;
 
-                            if Location."Address 2" <> '' then
+                        if Location."Address 2" <> '' then
                                 LocationFullAddress += ' ' + Location."Address 2";
 
-                            if Location.City <> '' then
+                        if Location.City <> '' then
                                 LocationFullAddress += ' ' + Location.City;
 
-                            if Location."Post Code" <> '' then
+                        if Location."Post Code" <> '' then
                                 LocationFullAddress += ' - ' + Location."Post Code";
-                        end;
+                    end;
 
                     Clear(VendorPAN);
                     Clear(VendorGSTIN);

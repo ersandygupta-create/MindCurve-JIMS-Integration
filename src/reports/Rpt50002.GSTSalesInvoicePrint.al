@@ -363,6 +363,7 @@ report 50002 "GST Sales Invoice Print"
             // column(ROUNDValue; ROUNDValue)
             // {
             // }
+            column(Posting_Description; "Posting Description") { }
             column(SalesPerson_Name; SalesPersonRec.Name)
             {
             }
@@ -497,6 +498,7 @@ report 50002 "GST Sales Invoice Print"
                         {
 
                         }
+                        column(MakeName; MakeName) { }
                         column(P_LineCount; P_LineCount)
                         {
 
@@ -557,7 +559,7 @@ report 50002 "GST Sales Invoice Print"
                             Cust_rec.SetRange("No.", "Sales Invoice Line"."Bill-to Customer No.");
                             if Cust_rec.FindFirst() then begin
                                 CustomerPANNo := Cust_rec."P.A.N. No.";
-                                CustDLNo := Cust_rec."DL No.";
+                                CustDLNo := Cust_rec."Home Page";
                                 CustPostRec.Reset();
                                 CustPostRec.SetRange(Code, Cust_rec."Customer Posting Group");
                                 if CustPostRec.FindFirst() then
@@ -570,6 +572,7 @@ report 50002 "GST Sales Invoice Print"
                             HSNCode := '';
                             IF ItemRec.GET("Sales invoice Line"."No.") THEN
                                 HSNCode := ItemRec."HSN/SAC Code";
+                            MakeName := ItemRec."Make Name";
                             TotalLineAmt := 0;
                             //ak
                             Salesheadrec.Reset();
@@ -1027,7 +1030,7 @@ report 50002 "GST Sales Invoice Print"
         IGST28: Decimal;
         fromFunction: Boolean;
         CustomerPANNo: Code[10];
-        CustDLNo: Text[60];
+        CustDLNo: Text;
         IGST_recrate: Decimal;
         Qrinstream: InStream;
         qrboolean: Boolean;
@@ -1078,7 +1081,7 @@ report 50002 "GST Sales Invoice Print"
 
         State_rec: Record State;
         QRCode_text12: Text;
-
+        MakeName: Text;
         Blank: Integer;
         LocationName: Text[100];
         LocationName2: Text[100];
