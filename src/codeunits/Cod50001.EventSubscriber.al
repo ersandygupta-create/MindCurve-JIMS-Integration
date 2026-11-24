@@ -1425,4 +1425,61 @@ codeunit 50001 "E3 HIS Event Subscriber"
         PurchaseHeader."Posting Date" := Today();
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Approval Entry",
+                 'OnAfterInsertEvent', '', false, false)]
+    local procedure AddShortCloseComment(
+    var Rec: Record "Approval Entry"; RunTrigger: Boolean)
+    var
+        PurchaseLine: Record "Purchase Line";
+        ShortClosedCommentLbl: Label 'Short Closed line', Locked = true;
+        CancelledCommentLbl: Label 'Cancelled PO Line', Locked = true;
+    begin
+        if Rec.IsTemporary() then
+            exit;
+
+        if Rec."Table ID" <> Database::"Purchase Header" then
+            exit;
+
+        if Rec."Document Type" <> Rec."Document Type"::Order then
+            exit;
+
+        PurchaseLine.SetRange("Document Type", PurchaseLine."Document Type"::Order);
+        PurchaseLine.SetRange("Document No.", Rec."Document No.");
+
+        PurchaseLine.SetRange("Short Closed", true);
+        if not PurchaseLine.IsEmpty() then
+            InsertApprovalComment(Rec, ShortClosedCommentLbl);
+
+        PurchaseLine.SetRange("Short Closed"); // Clear this filter before checking Cancelled.
+        PurchaseLine.SetRange("Cancelled Line", true);
+        if not PurchaseLine.IsEmpty() then
+            InsertApprovalComment(Rec, CancelledCommentLbl);
+    end;
+
+    local procedure InsertApprovalComment(
+        ApprovalEntry: Record "Approval Entry"; CommentText: Text[80])
+    var
+        ApprovalComment: Record "Approval Comment Line";
+    begin
+        ApprovalComment.LockTable();
+        ApprovalComment.SetRange("Record ID to Approve", ApprovalEntry."Record ID to Approve");
+        ApprovalComment.SetRange("Workflow Step Instance ID", ApprovalEntry."Workflow Step Instance ID");
+        ApprovalComment.SetRange(Comment, CommentText);
+        if not ApprovalComment.IsEmpty() then
+            exit;
+
+        ApprovalComment.Reset();
+        ApprovalComment.Init();
+        ApprovalComment."Entry No." := ApprovalComment.GetLastEntryNo() + 1;
+        ApprovalComment."Table ID" := ApprovalEntry."Table ID";
+        ApprovalComment."Document Type" := ApprovalEntry."Document Type";
+        ApprovalComment."Document No." := ApprovalEntry."Document No.";
+        ApprovalComment."Record ID to Approve" := ApprovalEntry."Record ID to Approve";
+        ApprovalComment."Workflow Step Instance ID" := ApprovalEntry."Workflow Step Instance ID";
+        ApprovalComment."User ID" := ApprovalEntry."Sender ID";
+        ApprovalComment."Date and Time" := CurrentDateTime();
+        ApprovalComment.Comment := CommentText;
+        ApprovalComment.Insert(true);
+    end;
+
 }

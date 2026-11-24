@@ -339,7 +339,11 @@ report 50011 "Purchase Order Register"
         ExcelBuf.AddColumn('Payment Terms', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Payment Terms
         ExcelBuf.AddColumn('Remarks ', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Comment
         ExcelBuf.AddColumn('Delivery Terms ', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Delivery Terms
-
+        ExcelBuf.AddColumn('Short Closed', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Short Close
+        ExcelBuf.AddColumn('Short Close Reason', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Short Close
+        ExcelBuf.AddColumn('Short Closed Qty', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Short Close
+        ExcelBuf.AddColumn('Cancelled PO Line', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Cancel Line
+        ExcelBuf.AddColumn('Cancelled Reason', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Cancel Reason
 
     end;
 
@@ -483,6 +487,12 @@ report 50011 "Purchase Order Register"
         End;
         ExcelBuf.AddColumn(txtcommentNote, false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//company
         ExcelBuf.AddColumn(PurchaseHeader."E3 Delivery Terms", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//Delivery terms
+        ExcelBuf.AddColumn("Purchase Line"."Short Closed", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//short close
+        ExcelBuf.AddColumn("Purchase Line"."Short Close Reason", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//short close
+        ExcelBuf.AddColumn("Purchase Line"."Short Close Qty", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//short close
+        ExcelBuf.AddColumn("Purchase Line"."Cancelled Line", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//Cancel Line
+        ExcelBuf.AddColumn("Purchase Line"."Cancel Reason", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//Cancel Line
+
     end;
 
 
