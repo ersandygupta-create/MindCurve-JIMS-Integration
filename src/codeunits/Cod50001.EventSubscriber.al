@@ -1376,4 +1376,110 @@ codeunit 50001 "E3 HIS Event Subscriber"
         PurchaseHeader.Invoice := false;
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnBeforeModifyEvent', '', false, false)]
+    local procedure CheckJournalVoucherBeforeModify(var Rec: Record "Gen. Journal Line"; var xRec: Record "Gen. Journal Line"; RunTrigger: Boolean)
+    begin
+        CheckJournalVoucherCreator(Rec);
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnBeforeDeleteEvent', '', false, false)]
+    local procedure CheckJournalVoucherBeforeDelete(var Rec: Record "Gen. Journal Line"; RunTrigger: Boolean)
+    begin
+        CheckJournalVoucherCreator(Rec);
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnBeforeRenameEvent', '', false, false)]
+    local procedure CheckJournalVoucherBeforeRename(var Rec: Record "Gen. Journal Line"; var xRec: Record "Gen. Journal Line"; RunTrigger: Boolean)
+    begin
+        CheckJournalVoucherCreator(xRec);
+    end;
+
+    local procedure CheckJournalVoucherCreator(JournalLine: Record "Gen. Journal Line")
+    var
+        JournalTemplate: Record "Gen. Journal Template";
+        StoredJournalLine: Record "Gen. Journal Line";
+        JournalVoucherCreatorErr: Label 'Only the user who created this journal voucher entry can modify or delete it.';
+    begin
+        if JournalLine.IsTemporary() then
+            exit;
+
+        if not JournalTemplate.Get(JournalLine."Journal Template Name") then
+            exit;
+
+        if JournalTemplate.Type <> JournalTemplate.Type::"Journal Voucher" then
+            exit;
+
+        if StoredJournalLine.Get(JournalLine."Journal Template Name", JournalLine."Journal Batch Name", JournalLine."Line No.") then
+            if StoredJournalLine.SystemCreatedBy <> UserSecurityId() then
+                Error(JournalVoucherCreatorErr);
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforeValidatePostingAndDocumentDate', '', false, false)]
+    local procedure SetInvoicePostingDate(
+        var PurchaseHeader: Record "Purchase Header";
+        CommitIsSupressed: Boolean)
+    begin
+        if PurchaseHeader."Document Type" <> PurchaseHeader."Document Type"::Invoice then
+            exit;
+
+        PurchaseHeader."Posting Date" := Today();
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Approval Entry",
+                 'OnAfterInsertEvent', '', false, false)]
+    local procedure AddShortCloseComment(
+    var Rec: Record "Approval Entry"; RunTrigger: Boolean)
+    var
+        PurchaseLine: Record "Purchase Line";
+        ShortClosedCommentLbl: Label 'Short Closed line', Locked = true;
+        CancelledCommentLbl: Label 'Cancelled PO Line', Locked = true;
+    begin
+        if Rec.IsTemporary() then
+            exit;
+
+        if Rec."Table ID" <> Database::"Purchase Header" then
+            exit;
+
+        if Rec."Document Type" <> Rec."Document Type"::Order then
+            exit;
+
+        PurchaseLine.SetRange("Document Type", PurchaseLine."Document Type"::Order);
+        PurchaseLine.SetRange("Document No.", Rec."Document No.");
+
+        PurchaseLine.SetRange("Short Closed", true);
+        if not PurchaseLine.IsEmpty() then
+            InsertApprovalComment(Rec, ShortClosedCommentLbl);
+
+        PurchaseLine.SetRange("Short Closed"); // Clear this filter before checking Cancelled.
+        PurchaseLine.SetRange("Cancelled Line", true);
+        if not PurchaseLine.IsEmpty() then
+            InsertApprovalComment(Rec, CancelledCommentLbl);
+    end;
+
+    local procedure InsertApprovalComment(
+        ApprovalEntry: Record "Approval Entry"; CommentText: Text[80])
+    var
+        ApprovalComment: Record "Approval Comment Line";
+    begin
+        ApprovalComment.LockTable();
+        ApprovalComment.SetRange("Record ID to Approve", ApprovalEntry."Record ID to Approve");
+        ApprovalComment.SetRange("Workflow Step Instance ID", ApprovalEntry."Workflow Step Instance ID");
+        ApprovalComment.SetRange(Comment, CommentText);
+        if not ApprovalComment.IsEmpty() then
+            exit;
+
+        ApprovalComment.Reset();
+        ApprovalComment.Init();
+        ApprovalComment."Entry No." := ApprovalComment.GetLastEntryNo() + 1;
+        ApprovalComment."Table ID" := ApprovalEntry."Table ID";
+        ApprovalComment."Document Type" := ApprovalEntry."Document Type";
+        ApprovalComment."Document No." := ApprovalEntry."Document No.";
+        ApprovalComment."Record ID to Approve" := ApprovalEntry."Record ID to Approve";
+        ApprovalComment."Workflow Step Instance ID" := ApprovalEntry."Workflow Step Instance ID";
+        ApprovalComment."User ID" := ApprovalEntry."Sender ID";
+        ApprovalComment."Date and Time" := CurrentDateTime();
+        ApprovalComment.Comment := CommentText;
+        ApprovalComment.Insert(true);
+    end;
+
 }

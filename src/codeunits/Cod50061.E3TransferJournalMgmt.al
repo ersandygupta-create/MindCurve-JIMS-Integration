@@ -4,7 +4,7 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
     Permissions =
         tabledata "E3 Transfer Header" = rm,
         tabledata "E3 Transfer Line" = r,
-        tabledata "Item Journal Line" = rim,
+        tabledata "Item Journal Line" = rimd,
         tabledata "Item Ledger Entry" = r,
         tabledata "Reservation Entry" = rim;
 
@@ -24,6 +24,7 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         HISIntegrationSetupLine: Record "E3 HIS Integration Setup Line";
         Item: Record Item;
         LineNo: Integer;
+        TransferLineCount: Integer;
         JournalTemplateName: Code[10];
         JournalBatchName: Code[10];
     begin
@@ -48,28 +49,23 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         if not ItemJournalTemplate.Get(JournalTemplateName) then
             Error('Item Journal Template %1 does not exist.', JournalTemplateName);
 
+        ItemJournalBatch.LockTable();
         if not ItemJournalBatch.Get(JournalTemplateName, JournalBatchName)
         then
             Error(
                 'Item Journal Batch %1 does not exist for template %2.', JournalBatchName, JournalTemplateName);
 
-        // Get lines linked to the selected transfer header.
-        TransferLine.Reset();
-        //TransferLine.SetRange("Entry Type", TransferHeader."Entry Type");
-        TransferLine.SetRange("Document Number", TransferHeader."Document Number");
+        TransferLineCount := ValidateTransferDocument(TransferHeader);
 
-        if not TransferLine.FindSet() then
-            Error(
-                'No transfer lines exist for Document No. %1.',
-                DocumentNo);
-        // Validate all existing lot quantities before creating journal lines
-        ValidateTransferDocument(TransferHeader);
-
-        // Serialize journal line allocation within the shared batch.
         ItemJournalLine.LockTable();
-        ItemJournalLine.Reset();
-        ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
-        ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
+        SetTransferJournalFilters(ItemJournalLine, JournalTemplateName, JournalBatchName, DocumentNo);
+        if ItemJournalLine.Count() = TransferLineCount then
+            exit;
+
+        // Run the journal line delete trigger to remove its item tracking.
+        ItemJournalLine.DeleteAll(true);
+        ItemJournalLine.SetRange("Document No.");
+        ItemJournalLine.SetRange("Entry Type");
 
         if ItemJournalLine.FindLast() then
             LineNo := ItemJournalLine."Line No." + 10000
@@ -83,46 +79,7 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
             Error('No transfer lines exist for Document No. %1.', DocumentNo);
 
         repeat
-            if TransferLine.Quantity <= 0 then
-                Error(
-                    'Quantity must be greater than zero for Document No. %1, Line No. %2.',
-                    DocumentNo,
-                    TransferLine."Line Number");
-
-            if TransferLine."D365 Item Code" = '' then
-                Error(
-                    'Item Code must not be blank for Document No. %1, Line No. %2.',
-                    DocumentNo,
-                    TransferLine."Line Number");
-
-            if not Item.Get(TransferLine."D365 Item Code") then
-                Error(
-                    'Item %1 does not exist in Business Central.',
-                    TransferLine."D365 Item Code");
-
-            if TransferLine."D365 From Department Code" = '' then
-                Error(
-                    'From Department Code must not be blank for Document No. %1, Line No. %2.',
-                    DocumentNo,
-                    TransferLine."Line Number");
-
-            if TransferLine."D365 To Department Code" = '' then
-                Error(
-                    'To Department Code must not be blank for Document No. %1, Line No. %2.',
-                    DocumentNo,
-                    TransferLine."Line Number");
-
-            // Check existing lot availability for tracked items.
-            if Item."Item Tracking Code" <> '' then begin
-                if TransferLine."Batch No." = '' then
-                    Error(
-                        'An existing Batch No. is required for item %1, Document No. %2, Line No. %3.',
-                        Item."No.", DocumentNo, TransferLine."Line Number");
-
-                CheckExistingLotAvailability(Item."No.", TransferLine."D365 From Department Code",
-                    TransferLine."Batch No.",
-                    TransferLine.Quantity);
-            end;
+            Item.Get(TransferLine."D365 Item Code");
 
             // Create Item Reclassification Journal line.
             ItemJournalLine.Init();
@@ -136,16 +93,18 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
             ItemJournalLine.Validate(Quantity, TransferLine.Quantity);
             ItemJournalLine.Validate("Location Code", TransferLine."D365 From Department Code");
             ItemJournalLine.Validate("New Location Code", TransferLine."D365 To Department Code");
-            ItemjournalLine."Bin Code" := TransferLine."D365 From Department Code";
             ItemJournalLine.Validate("Shortcut Dimension 1 Code", TransferLine."Business Unit");
             ItemJournalLine.Validate("New Shortcut Dimension 1 Code", TransferLine."Business Unit");
 
             if TransferLine."D365 Unit Code" <> '' then
                 ItemJournalLine.Validate("Unit of Measure Code", TransferLine."D365 Unit Code");
 
-            // Retain the existing lot. Do not assign New Lot No.
-            if Item."Item Tracking Code" <> '' then
+            ItemJournalLine.Validate("Bin Code", TransferLine."D365 From Department Code");
+
+            if Item."Item Tracking Code" <> '' then begin
                 ItemJournalLine.Validate("Lot No.", TransferLine."Batch No.");
+                CheckExistingLotAvailability(ItemJournalLine);
+            end;
 
             if ItemJournalLine."Item No." = '' then
                 Error(
@@ -209,34 +168,63 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
                 MaxStrLen(JournalBatchName));
     end;
 
-    local procedure CheckExistingLotAvailability(
-        ItemNo: Code[20];
-        LocationCode: Code[10];
-        LotNo: Code[50];
-        RequiredQty: Decimal)
+    local procedure CheckExistingLotAvailability(JournalLine: Record "Item Journal Line")
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
+        BatchLine: Record "Item Journal Line";
+        ReservationEntry: Record "Reservation Entry";
         AvailableQty: Decimal;
     begin
-        ItemLedgerEntry.Reset();
-        ItemLedgerEntry.SetRange("Item No.", ItemNo);
-        ItemLedgerEntry.SetRange("Location Code", LocationCode);
-        ItemLedgerEntry.SetRange("Lot No.", LotNo);
+        ItemLedgerEntry.SetRange("Item No.", JournalLine."Item No.");
+        ItemLedgerEntry.SetRange("Variant Code", JournalLine."Variant Code");
+        ItemLedgerEntry.SetRange("Location Code", JournalLine."Location Code");
+        ItemLedgerEntry.SetRange("Lot No.", JournalLine."Lot No.");
         ItemLedgerEntry.SetFilter("Remaining Quantity", '>0');
+        ItemLedgerEntry.CalcSums("Remaining Quantity");
+        AvailableQty := ItemLedgerEntry."Remaining Quantity";
 
-        if ItemLedgerEntry.FindSet() then
+        BatchLine.SetRange("Journal Template Name", JournalLine."Journal Template Name");
+        BatchLine.SetRange("Journal Batch Name", JournalLine."Journal Batch Name");
+        BatchLine.SetRange("Entry Type", BatchLine."Entry Type"::Transfer);
+        BatchLine.SetRange("Item No.", JournalLine."Item No.");
+        BatchLine.SetRange("Variant Code", JournalLine."Variant Code");
+        BatchLine.SetRange("Location Code", JournalLine."Location Code");
+        BatchLine.SetFilter("Quantity (Base)", '>0');
+
+        ReservationEntry.SetRange("Source Type", Database::"Item Journal Line");
+        ReservationEntry.SetRange("Source Subtype", BatchLine."Entry Type"::Transfer.AsInteger());
+        ReservationEntry.SetRange("Source ID", JournalLine."Journal Template Name");
+        ReservationEntry.SetRange("Source Batch Name", JournalLine."Journal Batch Name");
+        ReservationEntry.SetRange(Positive, false);
+
+        if BatchLine.FindSet() then
             repeat
-                AvailableQty += ItemLedgerEntry."Remaining Quantity";
-            until ItemLedgerEntry.Next() = 0;
+                ReservationEntry.SetRange("Source Ref. No.", BatchLine."Line No.");
+                ReservationEntry.SetFilter("Lot No.", '<>%1', '');
+                if ReservationEntry.IsEmpty() then begin
+                    if BatchLine."Lot No." = JournalLine."Lot No." then
+                        AvailableQty -= BatchLine."Quantity (Base)";
+                end else begin
+                    ReservationEntry.SetRange("Lot No.", JournalLine."Lot No.");
+                    ReservationEntry.CalcSums("Quantity (Base)");
+                    AvailableQty -= Abs(ReservationEntry."Quantity (Base)");
+                end;
+            until BatchLine.Next() = 0;
 
-        if AvailableQty < RequiredQty then
+        if AvailableQty < JournalLine."Quantity (Base)" then
             Error(
-                'Insufficient existing lot quantity for item %1, lot %2, source location %3. Available: %4; required: %5.',
-                ItemNo,
-                LotNo,
-                LocationCode,
-                AvailableQty,
-                RequiredQty);
+                'Insufficient existing lot quantity for item %1, lot %2, source location %3. Available (base): %4; required (base): %5.',
+                JournalLine."Item No.", JournalLine."Lot No.", JournalLine."Location Code",
+                AvailableQty, JournalLine."Quantity (Base)");
+    end;
+
+    local procedure SetTransferJournalFilters(var ItemJournalLine: Record "Item Journal Line"; JournalTemplateName: Code[10]; JournalBatchName: Code[10]; DocumentNo: Code[20])
+    begin
+        ItemJournalLine.Reset();
+        ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
+        ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
+        ItemJournalLine.SetRange("Document No.", DocumentNo);
+        ItemJournalLine.SetRange("Entry Type", ItemJournalLine."Entry Type"::Transfer);
     end;
 
     local procedure CreateExistingLotTracking(
@@ -377,6 +365,7 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         if not ItemJournalTemplate.Get(JournalTemplateName) then
             Error('Journal Template %1 does not exist.', JournalTemplateName);
 
+        ItemJournalBatch.LockTable();
         if not ItemJournalBatch.Get(JournalTemplateName, JournalBatchName) then
             Error(
                 'Journal Batch %1 does not exist for Template %2.',
@@ -386,14 +375,12 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         // Validate complete document before journal creation.
         TransferLineCount := ValidateTransferDocument(TransferHeader);
 
-        // Protect existing lines and tracking while processing this document.
         ItemJournalLine.LockTable();
-        ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
-        ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
-        ItemJournalLine.SetRange("Document No.", DocumentNo);
-
-        if ItemJournalLine.IsEmpty() then
+        SetTransferJournalFilters(ItemJournalLine, JournalTemplateName, JournalBatchName, DocumentNo);
+        if ItemJournalLine.Count() <> TransferLineCount then begin
             CreateItemReclassificationJournal(DocumentNo);
+            SetTransferJournalFilters(ItemJournalLine, JournalTemplateName, JournalBatchName, DocumentNo);
+        end;
 
         if ItemJournalLine.Count() <> TransferLineCount then
             Error('Journal line count for Transfer Document %1 does not match the transfer line count.', DocumentNo);
@@ -464,49 +451,6 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         Commit();
     end;
 
-    local procedure ValidateTransferLotAvailability(DocumentNo: Code[20])
-    var
-        TransferLine: Record "E3 Transfer Line";
-        Item: Record Item;
-    begin
-        TransferLine.Reset();
-        TransferLine.SetRange("Document Number", DocumentNo);
-
-        if TransferLine.FindSet() then
-            repeat
-                if not Item.Get(TransferLine."D365 Item Code") then
-                    Error(
-                        'Item %1 does not exist in Business Central.',
-                        TransferLine."D365 Item Code");
-
-                // Item Tracking Code is blank.
-                // Batch No. must also be blank.
-                if Item."Item Tracking Code" = '' then begin
-                    if TransferLine."Batch No." <> '' then
-                        Error(
-                            'Batch No. %1 is not allowed because Item Tracking Code is blank for item %2, Document No. %3, Line No. %4.',
-                            TransferLine."Batch No.",
-                            Item."No.",
-                            DocumentNo,
-                            TransferLine."Line Number");
-                end else begin
-                    // Item Tracking Code is configured.
-                    if TransferLine."Batch No." = '' then
-                        Error(
-                            'Batch No. is required for tracked item %1, Document No. %2, Line No. %3.',
-                            Item."No.",
-                            DocumentNo,
-                            TransferLine."Line Number");
-
-                    CheckExistingLotAvailability(
-                        Item."No.",
-                        TransferLine."D365 From Department Code",
-                        TransferLine."Batch No.",
-                        TransferLine.Quantity);
-                end;
-            until TransferLine.Next() = 0;
-    end;
-
     local procedure ValidateTransferDocument(TransferHeader: Record "E3 Transfer Header"): Integer
     var
         TransferLine: Record "E3 Transfer Line";
@@ -564,12 +508,6 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
                     Error(
                         'Batch No. is required for item %1. Document No.: %2, Line No.: %3.',
                         Item."No.", DocumentNo, TransferLine."Line Number");
-
-                CheckExistingLotAvailability(
-                    Item."No.",
-                    TransferLine."D365 From Department Code",
-                    TransferLine."Batch No.",
-                    TransferLine.Quantity);
             end;
 
         until TransferLine.Next() = 0;

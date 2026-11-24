@@ -281,8 +281,10 @@ page 50077 "Create Bank Payment"
     local procedure CopyTempPaymentBufferToGenJournalLines(var TempVendorPaymentBuffer: Record "Vendor Payment Buffer" temporary; var GenJnlLine: Record "Gen. Journal Line"; DocumentsToApply: List of [Text])
     var
         Vendor: Record Vendor;
+        VendorBankAccount: Record "Vendor Bank Account";
         GenJournalTemplate: Record "Gen. Journal Template";
         GenJournalBatch: Record "Gen. Journal Batch";
+        RecipientBankAccountCode: Code[20];
         LastLineNo: Integer;
     begin
         GenJnlLine.LockTable();
@@ -348,6 +350,20 @@ page 50077 "Create Bank Payment"
                 TempVendorPaymentBuffer.CopyFieldsToGenJournalLine(GenJnlLine);
                 OnBeforeUpdateGnlJnlLineDimensionsFromVendorPayment(GenJnlLine, TempVendorPaymentBuffer);
                 UpdateDimensions(GenJnlLine, TempVendorPaymentBuffer);
+
+                GenJnlLine."Beneficiary Name" := Vendor."Beneficiary Name";
+                RecipientBankAccountCode := GenJnlLine."Recipient Bank Account";
+                if RecipientBankAccountCode = '' then
+                    RecipientBankAccountCode := Vendor."Preferred Bank Account Code";
+                if VendorBankAccount.Get(Vendor."No.", RecipientBankAccountCode) then begin
+                    GenJnlLine."E3 Bank Account No." := VendorBankAccount."Bank Account No.";
+                    GenJnlLine."E3 IFSC Code" := VendorBankAccount."E3 IFSC Code";
+                    GenJnlLine."Beneficiary Name" :=
+                        CopyStr(Vendor."Beneficiary Name", 1,
+                            MaxStrLen(GenJnlLine."Beneficiary Name") -
+                            StrLen(GenJnlLine."E3 Bank Account No.") - StrLen(GenJnlLine."E3 IFSC Code") - 2) +
+                        '-' + GenJnlLine."E3 Bank Account No." + '-' + GenJnlLine."E3 IFSC Code";
+                end;
 
                 GenJnlLine.Insert();
             until TempVendorPaymentBuffer.Next() = 0;
