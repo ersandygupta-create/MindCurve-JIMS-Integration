@@ -218,8 +218,8 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
                         LineObj.Add('skuStaffSaleRate', GRNWorkSheetLine."SKU Staff Sale Rate");
                         LineObj.Add('barcode', GRNWorkSheetLine.Barcode);
                         LineObj.Add('batchNo', PurchaseShipmentLine."Batch No.");
-                        LineObj.Add('manufacturingDate', Format(WorkDate(), 0, 9));
-                        LineObj.Add('expiryDate', Format(PurchaseShipmentLine."Expiry Date", 0, 9));
+                        //LineObj.Add('manufacturingDate', Format(WorkDate(), 0, 9));
+                        //LineObj.Add('expiryDate', Format(PurchaseShipmentLine."Expiry Date", 0, 9));
 
                     end else begin
 
@@ -231,12 +231,14 @@ codeunit 50056 "E3 Purch. Shipment Cons. Mgmt."
                         LineObj.Add('skuStaffSaleRate', 0);
                         LineObj.Add('barcode', '');
                         LineObj.Add('batchNo', '');
-                        LineObj.Add('manufacturingDate', Format(WorkDate(), 0, 9));
-                        ExpiryDate := CalcDate('<1Y>', PurchaseShipmentHeader."Posting Date");
-                        LineObj.Add('expiryDate', Format(ExpiryDate, 0, '<Year4>-<Month,2>-<Day,2>'));
-
 
                     end;
+                    LineObj.Add('manufacturingDate', Format(WorkDate(), 0, 9));
+                    ExpiryDate := PurchaseShipmentLine."Expiry Date";
+                    if ExpiryDate = 0D then
+                        ExpiryDate := WorkDate();
+
+                    LineObj.Add('expiryDate', Format(ExpiryDate, 0, '<Year4>-<Month,2>-<Day,2>'));
                     LineObj.Add('itemMakeCode', PurchaseShipmentLine."Item Make Code");
                     if PurchaseShipmentHeader."Buy-from Vendor No." <> '' then begin
                         if Vendor.Get(PurchaseShipmentHeader."Buy-from Vendor No.") then
