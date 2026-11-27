@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-11-24T07:37:04.6453847Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-11-27T11:15:17.5960585Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -5958,7 +5958,7 @@ Value</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>6pt</FontSize>
-                        <FontWeight>Bold</FontWeight>
+                        <FontWeight>Normal</FontWeight>
                         <Format>dd-MM-yyyy</Format>
                       </Style>
                     </TextRun>
