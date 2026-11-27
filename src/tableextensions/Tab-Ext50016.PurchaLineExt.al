@@ -196,6 +196,11 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(70008; "Bill Handling Line Created"; Boolean)
+        {
+            Caption = 'Bill Handling Line Created';
+            DataClassification = CustomerContent;
+        }
 
         modify("No.")
         {
