@@ -11,6 +11,16 @@ pageextension 50105 "E3 Posted Sales Invoice" extends 143
                 Editable = false;
                 ToolTip = 'Specifies the posted sales invoice amount including VAT and GST.';
             }
+            field(IsSent; Rec.IsSent)
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies a value Issent';
+            }
+            field(Response; Rec.Response)
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies a value Response from api';
+            }
         }
     }
     actions

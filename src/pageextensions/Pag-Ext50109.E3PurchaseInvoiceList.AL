@@ -2,6 +2,14 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
 {
     layout
     {
+        addbefore("No.")
+        {
+            field("Voucher Type"; Rec."Voucher Type")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies a value Vourcher type';
+            }
+        }
         addbefore("Assigned User ID")
         {
             field("Submit to Finance"; Rec."Submit to Finance")
