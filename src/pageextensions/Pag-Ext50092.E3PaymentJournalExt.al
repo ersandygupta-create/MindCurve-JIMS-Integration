@@ -199,7 +199,7 @@ pageextension 50092 "E3 Payment Journal Ext" extends "Payment Journal"
         }
         modify("TDS Section Code")
         {
-            Editable = IsEditable;
+            Editable = true;
         }
         modify("Posting Group")
         {
