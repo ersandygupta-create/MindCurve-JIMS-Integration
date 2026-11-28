@@ -201,6 +201,13 @@ tableextension 50016 "E3 HIS Purcha Line" extends "Purchase Line"
             Caption = 'Bill Handling Line Created';
             DataClassification = CustomerContent;
         }
+        field(70009; "Cancelled Line Qty"; Decimal)
+        {
+            Caption = 'Cancelled Line Qty';
+            DataClassification = CustomerContent;
+            Editable = false;
+            MinValue = 0;
+        }
 
         modify("No.")
         {

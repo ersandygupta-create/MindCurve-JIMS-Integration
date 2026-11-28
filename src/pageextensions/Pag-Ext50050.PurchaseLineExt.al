@@ -220,12 +220,11 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                 Editable = false;
                 ToolTip = 'Specifies whether the purchase order line has been cancelled.';
             }
-            field("PO Qty"; Rec."PO Qty")
+            field("Cancelled Line Qty"; Rec."Cancelled Line Qty")
             {
                 ApplicationArea = All;
                 Editable = false;
-                Caption = 'Cancelled Qty';
-                ToolTip = 'Cencelled PO Qty';
+                ToolTip = 'Specifies the outstanding quantity when the purchase order line was cancelled.';
             }
         }
     }
@@ -340,7 +339,7 @@ pageextension 50050 "E3 HIS Purch. Order Subform" extends "Purchase Order Subfor
                     PurchaseLine.TestField("Qty. Invoiced (Base)", 0);
                     PurchaseLine.TestField("Qty. Received (Base)", 0);
                     // Preserve the quantity before cancellation.
-                    PurchaseLine."PO Qty" := PurchaseLine.Quantity;
+                    PurchaseLine."Cancelled Line Qty" := PurchaseLine.Quantity;
 
                     CancelPOLines.TransferFields(PurchaseLine);
                     CancelPOLines.Insert();

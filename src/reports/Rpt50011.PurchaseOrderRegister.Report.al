@@ -343,6 +343,7 @@ report 50011 "Purchase Order Register"
         ExcelBuf.AddColumn('Short Close Reason', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Short Close
         ExcelBuf.AddColumn('Short Closed Qty', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Short Close
         ExcelBuf.AddColumn('Cancelled PO Line', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Cancel Line
+        ExcelBuf.AddColumn('Cancelled PO Line Qty', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Cancel Qty
         ExcelBuf.AddColumn('Cancelled Reason', false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);//Cancel Reason
 
     end;
@@ -405,7 +406,10 @@ report 50011 "Purchase Order Register"
         ExcelBuf.AddColumn("Purchase Line"."Unit of Measure Code", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//UOM
         ExcelBuf.AddColumn("Purchase Line"."Quantity Received", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//company
         ExcelBuf.AddColumn(("Purchase Line".Quantity * "Purchase Line"."Direct Unit Cost") - "Purchase Line"."Line Discount Amount", false, '', false, false, false, '', ExcelBuf."Cell Type"::Number);
-        ExcelBuf.AddColumn("Purchase Line"."Outstanding Quantity", false, '', false, false, false, '', ExcelBuf."Cell Type"::Number);//company
+        if "Purchase Line"."Cancelled Line" then
+            ExcelBuf.AddColumn(0, false, '', false, false, false, '', ExcelBuf."Cell Type"::Number)
+        else
+            ExcelBuf.AddColumn("Purchase Line"."Outstanding Quantity", false, '', false, false, false, '', ExcelBuf."Cell Type"::Number);
         ExcelBuf.AddColumn("Purchase Line"."Qty. Rcd. Not Invoiced (Base)", false, '', false, false, false, '', ExcelBuf."Cell Type"::Number);//company
         ExcelBuf.AddColumn("Purchase Line"."GST Group Code", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//company
         ExcelBuf.AddColumn("Purchase Line"."Direct Unit Cost", false, '', false, false, false, '', ExcelBuf."Cell Type"::Number);//company
@@ -491,6 +495,7 @@ report 50011 "Purchase Order Register"
         ExcelBuf.AddColumn("Purchase Line"."Short Close Reason", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//short close
         ExcelBuf.AddColumn("Purchase Line"."Short Close Qty", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//short close
         ExcelBuf.AddColumn("Purchase Line"."Cancelled Line", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//Cancel Line
+        ExcelBuf.AddColumn("Purchase Line"."Cancelled Line Qty", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//Cancel Qty
         ExcelBuf.AddColumn("Purchase Line"."Cancel Reason", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);//Cancel Line
 
     end;
