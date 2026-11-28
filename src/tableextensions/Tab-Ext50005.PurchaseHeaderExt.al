@@ -352,8 +352,11 @@ tableextension 50005 "E3 HIS Purchase Header" extends "Purchase Header"
             DataClassification = CustomerContent;
             InitValue = false;
         }
-
-
+        field(81107; "Bill Handling Invoice Created"; Boolean)
+        {
+            Caption = 'Bill Handling Invoice Created';
+            DataClassification = CustomerContent;
+        }
     }
 
 

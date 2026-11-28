@@ -25,7 +25,7 @@ report 50002 "GST Sales Invoice Print"
             {
 
             }
-            column(Work_Description; "Work Description")
+            column(Work_Description; "Sales Header".GetWorkDescription)
             {
             }
             column(Order_Date; "Order Date")

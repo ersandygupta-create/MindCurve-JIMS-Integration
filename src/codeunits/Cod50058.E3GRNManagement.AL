@@ -94,6 +94,7 @@ codeunit 50058 "E3 GRN Invoice Management"
         TempPurchRcptLine: Record "Purch. Rcpt. Line" temporary;
         PurchGetReceipt: Codeunit "Purch.-Get Receipt";
         PaymentTerms: Record "Payment Terms";
+        PurchLine: Record "Purchase Line";
     begin
         // Step 1: Create Purchase Invoice Header for this specific GRN
         Clear(PurchHeader);
@@ -141,6 +142,23 @@ codeunit 50058 "E3 GRN Invoice Management"
             // Step 3: Attach lines using Standard Codeunit 74
             PurchGetReceipt.SetPurchHeader(PurchHeader);
             PurchGetReceipt.CreateInvLines(TempPurchRcptLine);
+
+            PurchLine.SetRange("Document Type", PurchHeader."Document Type");
+            PurchLine.SetRange("Document No.", PurchHeader."No.");
+            PurchLine.SetRange("Receipt No.", PurchRcptHeader."No.");
+            PurchLine.SetFilter("Receipt Line No.", '<>%1', 0);
+            PurchLine.SetFilter(Type, '<>%1', PurchLine.Type::" ");
+
+            if PurchLine.FindSet(true) then begin
+                repeat
+                    PurchLine."Bill Handling Line Created" := true;
+                    PurchLine.Modify();
+                until PurchLine.Next() = 0;
+
+                PurchHeader.Get(PurchHeader."Document Type", PurchHeader."No.");
+                PurchHeader."Bill Handling Invoice Created" := true;
+                PurchHeader.Modify(true);
+            end;
 
             // Step 4: Mark original lines as invoiced
             if TempPurchRcptLine.FindSet() then begin

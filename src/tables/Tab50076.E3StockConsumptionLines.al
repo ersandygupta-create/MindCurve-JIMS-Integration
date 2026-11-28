@@ -138,6 +138,7 @@ table 50076 "E3 Stock Consumption Line"
             Caption = 'Batch No.';
             DataClassification = CustomerContent;
             TableRelation = "Lot No. Information"."Lot No.";
+            ValidateTableRelation = false;
         }
         field(18; Quantity; Decimal)
         {

@@ -94,6 +94,7 @@ table 50091 "E3 Transfer Line"
             Caption = 'Batch No.';
             DataClassification = CustomerContent;
             TableRelation = "Lot No. Information"."Lot No.";
+            ValidateTableRelation = false;
         }
         field(18; Quantity; Decimal)
         {

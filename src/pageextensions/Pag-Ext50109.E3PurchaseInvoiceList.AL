@@ -2,6 +2,14 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
 {
     layout
     {
+        addbefore("No.")
+        {
+            field("Voucher Type"; Rec."Voucher Type")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies a value Vourcher type';
+            }
+        }
         addbefore("Assigned User ID")
         {
             field("Submit to Finance"; Rec."Submit to Finance")
@@ -79,13 +87,16 @@ pageextension 50109 "E3 Purchase Invoice" extends 9308
                     CurrPage.SetSelectionFilter(PurchaseHeader);
 
                     // 2. Fetch the No. Series code from your setup table
-                    VoucherType.Reset();
-                    VoucherType.SetFilter("Finance Doc. No.", '<>%1', '');
-                    if not VoucherType.FindFirst() then
-                        Error('Specify Finance doc no series in voucehr setup table.');
+                    if FirstVoucherType = '' then
+                        Error('Specify a Voucher Type on the selected Purchase Invoices.');
 
-                    // 3. Generate ONE new document number from the No. Series
-                    NewDocNo := NoSeriesMgt.GetNextNo(VoucherType."Finance Doc. No.", WorkDate(), true);
+                    VoucherType.Reset();
+                    VoucherType.SetRange(Code, FirstVoucherType);
+                    if not VoucherType.FindFirst() then
+                        Error('Voucher Type %1 is missing from E3 Voucher Type setup.', FirstVoucherType);
+
+                    VoucherType.TestField("Finance Doc. No.");
+                    NewDocNo := NoSeriesMgt.GetNextNo(VoucherType."Finance Doc. No.", WorkDate());
 
                     // 4. Update all selected records with the same generated Document No.
                     if PurchaseHeader.FindSet(true) then

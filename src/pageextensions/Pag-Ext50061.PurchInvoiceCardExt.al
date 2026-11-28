@@ -29,6 +29,50 @@ pageextension 50061 "E3 HIS Purchase Invoice Card" extends "Purchase Invoice"
                 ToolTip = 'Specifies a value Voucher Type';
             }
         }
+        addbefore("Invoice Details")
+        {
+            group("JIMS Attributes")
+            {
+                field("DueDate"; Rec."Due Date")
+                {
+                    Caption = 'Due Date';
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies when the invoice is due. The program calculates the date using the Payment Terms Code and Document Date fields.';
+                }
+            }
+        }
+        modify(General)
+        {
+            Editable = CanEditBillHandlingHeader;
+        }
+        modify("Buy-from")
+        {
+            Editable = CanEditBillHandlingHeader;
+        }
+        modify(Control93)
+        {
+            Editable = CanEditBillHandlingHeader;
+        }
+        modify("Invoice Details")
+        {
+            Editable = CanEditBillHandlingHeader;
+        }
+        modify("Shipping and Payment")
+        {
+            Editable = CanEditBillHandlingHeader;
+        }
+        modify("Foreign Trade")
+        {
+            Editable = CanEditBillHandlingHeader;
+        }
+        modify(Application)
+        {
+            Editable = CanEditBillHandlingHeader;
+        }
+        modify("Tax Information")
+        {
+            Editable = CanEditBillHandlingHeader;
+        }
     }
     actions
     {
@@ -152,5 +196,13 @@ pageextension 50061 "E3 HIS Purchase Invoice Card" extends "Purchase Invoice"
                 PurchCommentLine.Delete();
         end;
     end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        CanEditBillHandlingHeader := not Rec."Bill Handling Invoice Created";
+    end;
+
+    var
+        CanEditBillHandlingHeader: Boolean;
 
 }

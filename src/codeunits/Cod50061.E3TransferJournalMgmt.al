@@ -99,12 +99,16 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
             if TransferLine."D365 Unit Code" <> '' then
                 ItemJournalLine.Validate("Unit of Measure Code", TransferLine."D365 Unit Code");
 
-            ItemJournalLine.Validate("Bin Code", TransferLine."D365 From Department Code");
+            //ItemJournalLine.Validate("Bin Code", TransferLine."D365 From Department Code");
 
             if Item."Item Tracking Code" <> '' then begin
+                if TransferLine."Batch No." = '' then
+                    Error('Enter the source lot in Batch No. for transfer %1, line %2, item %3, location %4.',
+                        DocumentNo, TransferLine."Line Number", ItemJournalLine."Item No.", ItemJournalLine."Location Code");
                 ItemJournalLine.Validate("Lot No.", TransferLine."Batch No.");
-                CheckExistingLotAvailability(ItemJournalLine);
+                CheckExistingLotAvailability(ItemJournalLine, TransferLine."Batch No.");
             end;
+
 
             if ItemJournalLine."Item No." = '' then
                 Error(
@@ -168,7 +172,7 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
                 MaxStrLen(JournalBatchName));
     end;
 
-    local procedure CheckExistingLotAvailability(JournalLine: Record "Item Journal Line")
+    local procedure CheckExistingLotAvailability(JournalLine: Record "Item Journal Line"; LotNo: Code[50])
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
         BatchLine: Record "Item Journal Line";
@@ -178,7 +182,7 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         ItemLedgerEntry.SetRange("Item No.", JournalLine."Item No.");
         ItemLedgerEntry.SetRange("Variant Code", JournalLine."Variant Code");
         ItemLedgerEntry.SetRange("Location Code", JournalLine."Location Code");
-        ItemLedgerEntry.SetRange("Lot No.", JournalLine."Lot No.");
+        ItemLedgerEntry.SetRange("Lot No.", LotNo);
         ItemLedgerEntry.SetFilter("Remaining Quantity", '>0');
         ItemLedgerEntry.CalcSums("Remaining Quantity");
         AvailableQty := ItemLedgerEntry."Remaining Quantity";
@@ -202,10 +206,10 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
                 ReservationEntry.SetRange("Source Ref. No.", BatchLine."Line No.");
                 ReservationEntry.SetFilter("Lot No.", '<>%1', '');
                 if ReservationEntry.IsEmpty() then begin
-                    if BatchLine."Lot No." = JournalLine."Lot No." then
+                    if BatchLine."Lot No." = LotNo then
                         AvailableQty -= BatchLine."Quantity (Base)";
                 end else begin
-                    ReservationEntry.SetRange("Lot No.", JournalLine."Lot No.");
+                    ReservationEntry.SetRange("Lot No.", LotNo);
                     ReservationEntry.CalcSums("Quantity (Base)");
                     AvailableQty -= Abs(ReservationEntry."Quantity (Base)");
                 end;
@@ -214,7 +218,7 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
         if AvailableQty < JournalLine."Quantity (Base)" then
             Error(
                 'Insufficient existing lot quantity for item %1, lot %2, source location %3. Available (base): %4; required (base): %5.',
-                JournalLine."Item No.", JournalLine."Lot No.", JournalLine."Location Code",
+                JournalLine."Item No.", LotNo, JournalLine."Location Code",
                 AvailableQty, JournalLine."Quantity (Base)");
     end;
 
@@ -372,6 +376,11 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
                 JournalBatchName,
                 JournalTemplateName);
 
+        if TransferHeader."Error Description" <> '' then begin
+            TransferHeader."Error Description" := '';
+            TransferHeader.Modify(true);
+        end;
+
         // Validate complete document before journal creation.
         TransferLineCount := ValidateTransferDocument(TransferHeader);
 
@@ -390,10 +399,6 @@ codeunit 50061 "E3 Transfer Journal Mgmt."
             ItemJnlPostBatch.SetSuppressCommit(true);
             ItemJnlPostBatch.Run(ItemJournalLine);
             TransferHeader."Is Created" := true;
-        end;
-
-        if AutoTransferJournal or (TransferHeader."Error Description" <> '') then begin
-            TransferHeader."Error Description" := '';
             TransferHeader.Modify(true);
         end;
     end;
