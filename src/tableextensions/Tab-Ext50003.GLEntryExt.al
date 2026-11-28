@@ -106,5 +106,10 @@ tableextension 50003 "E3 HIS G/L Entry" extends "G/L Entry"
             FieldClass = FlowField;
             CalcFormula = lookup("Posted Narration".Narration where("Entry No." = const(0), "Transaction No." = field("Transaction No.")));
         }
+        field(50122; "Med Refund created"; Boolean)
+        {
+            Caption = 'Med Refund created';
+            DataClassification = CustomerContent;
+        }
     }
 }

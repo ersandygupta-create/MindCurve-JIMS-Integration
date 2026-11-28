@@ -25,6 +25,8 @@ permissionset 50000 "E3 HIS Permission"
         table "E3 HIS Delete Document" = X,
         table "E3 HIS E-Mail Setup" = X,
         table "E3 HIS GL Accounts Mapping" = X,
+        table "E3 Med PRD Refund" = X,
+        tabledata "E3 Med PRD Refund" = RIMD,
         table "E3 HIS Integartion Setup" = X,
         table "E3 HIS Integration Setup Line" = X,
         table "E3 HIS Item Mapping" = X,
